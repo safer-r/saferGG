@@ -1,12 +1,14 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE FUNCTIONS v1.0                             ##
+##     CUTE LITTLE FUNCTIONS v1.1                             ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
 ##     Compatible with R v3.5.1                               ##
 ##                                                            ##
 ################################################################
+
+
 
 
 
@@ -80,6 +82,7 @@ fun_param_check <- function(data, data.name = NULL, class = NULL, typeof = NULL,
 # EXAMPLES
 # test <- 1:3 ; fun_param_check(data = test, data.name = NULL, print = TRUE, options = NULL, all.options.in.data = FALSE, class = NULL, typeof = NULL, mode = NULL, prop = TRUE, double.as.integer.allowed = FALSE, length = NULL)
 # test <- 1:3 ; fun_param_check(data = test, print = TRUE, class = "numeric", typeof = NULL, double.as.integer.allowed = FALSE)
+# DEBUGGING
 # data = 1:3 ; data.name = NULL ; print = TRUE; options = NULL ; all.options.in.data = FALSE ; class = "numeric" ; typeof = NULL ; mode = NULL ; prop = NULL ; double.as.integer.allowed = TRUE ; length = NULL # for function debugging
 # argument checking
 if( ! is.null(data.name)){
@@ -297,25 +300,35 @@ fun_object_info <- function(data){
 # a list containing the info
 # EXAMPLES
 # fun_object_info(data = 1:3)
+# DEBUGGING
+# data = NULL # for function debugging
+# data = 1:3 # for function debugging
+# data = matrix(1:3) # for function debugging
 # data = data.frame(a = 1:3) # for function debugging
+# data = factor(1:3) # for function debugging
+# data = list(1:3) # for function debugging
 data.name <- deparse(substitute(data))
 output <- list("FILE_NAME" = data.name)
 tempo <- list("FILE_HEAD" = head(data))
 output <- c(output, tempo)
+if( ! is.null(data)){
 tempo <- list("FILE_TAIL" = tail(data))
 output <- c(output, tempo)
+if( ! is.null(dim(data))){
 tempo <- list("FILE_DIMENSION" = dim(data))
 names(tempo[[1]]) <- c("NROW", "NCOL")
 output <- c(output, tempo)
-tempo <- list("STRUCTURE" = ls.str(data))
-output <- c(output, tempo)
+}
 tempo <- list("SUMMARY" = summary(data))
 output <- c(output, tempo)
+}
 if(class(data) == "data.frame" | class(data) == "matrix"){
 tempo <- list("COLUM_NAMES" = names(data))
 output <- c(output, tempo)
 }
 if(class(data) == "data.frame"){
+tempo <- list("STRUCTURE" = ls.str(data))
+output <- c(output, tempo)
 tempo <- list("COLUMN_TYPE" = sapply(data, FUN = "typeof"))
 output <- c(output, tempo)
 }
@@ -373,6 +386,7 @@ fun_1D_comp <- function(data1, data2){
 # obs1 = 1:5 ; obs2 = 1.1:6.1 ; fun_1D_comp(obs1, obs2)
 # obs1 = as.table(1:5); obs2 = as.table(1:5) ; fun_1D_comp(obs1, obs2)
 # obs1 = as.table(1:5); obs2 = 1:5 ; fun_1D_comp(obs1, obs2)
+# DEBUGGING
 # data1 = 1:5 ; data2 = 1:5 ; names(data1) <- LETTERS[1:5] ; names(data2) <- LETTERS[1:5] # for function debugging
 # argument checking
 if( ! any(class(data1) %in% c("logical", "integer", "numeric", "character", "factor", "table"))){
@@ -559,6 +573,7 @@ fun_2D_comp <- function(data1, data2){
 # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
 # EXAMPLES
 # obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; fun_2D_comp(obs1, obs2)
+# DEBUGGING
 # data1 = matrix(1:10, ncol = 5) ; data2 = matrix(1:10, ncol = 5) # for function debugging
 # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
 # data1 = matrix(1:15, byrow = TRUE, ncol = 5, dimnames = list(letters[1:3], LETTERS[1:5])) ; data2 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -794,6 +809,7 @@ fun_list_comp <- function(data1, data2){
 # obs1 = list(1:5, LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2]) ; fun_list_comp(obs1, obs2)
 # obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_list_comp(obs1, obs2)
 # obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(LETTERS[5:9], matrix(1:6), 1:5) ; fun_list_comp(obs1, obs2)
+# DEBUGGING
 # data1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
 # data1 = list(a = 1:5, b = LETTERS[1:2]) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
 # argument checking
@@ -906,6 +922,7 @@ fun_dataframe_flipping <- function(data, quanti.col.name = "quanti", quali.col.n
 # obs <- data.frame(a = 1:3, b = c("A", "B", "A")) ; fun_dataframe_flipping(obs)
 # obs <- data.frame(a = 1:3, b = c("A", "B", "A")) ; fun_dataframe_flipping(obs, quanti.col.name = "quanti", quali.col.name = "quali")
 # obs <- data.frame(a = 1:3, b = 4:6) ; fun_dataframe_flipping(obs)
+# DEBUGGING
 # data = data.frame(a = 1:3, b = 4:6) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
 # data = data.frame(a = 1:3, b = 4:6, c = 11:13) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
 # data = data.frame(a = 1:3, b = letters[1:3]) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
@@ -914,21 +931,16 @@ fun_dataframe_flipping <- function(data, quanti.col.name = "quanti", quali.col.n
 # data = data.frame(b = c("e", "e", "h"), a = 1:3) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data, class = "data.frame") ; eval(ee)
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = quanti.col.name, class = "character", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = quali.col.name, class = "character", length = 1) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
+if( ! any(class(data) %in% "data.frame")){
+tempo.cat <- paste0("\n\n================\n\nERROR: THE data ARGUMENT MUST BE A DATA FRAME\n\n================\n\n")
 stop(tempo.cat)
 }
 # end argument checking
@@ -1003,26 +1015,19 @@ fun_refactorization <- function(data, also.ordered = TRUE){
 # obs <- factor(LETTERS[1:6])[-c(1:2)] ; fun_refactorization(obs, TRUE)
 # obs <- ordered(LETTERS[1:6])[-c(1:2)] ; fun_refactorization(obs, TRUE)
 # obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; fun_refactorization(obs, FALSE)
+# DEBUGGING
 # data <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6) ; data <- data[-c(1:2),] ; also.ordered <- TRUE # for function debugging
 # data <- factor(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
 # data <- ordered(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = also.ordered, class = "logical", length = 1) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 if(also.ordered == FALSE){
 if( ! (all(class(data) == "data.frame") | all(class(data) == "factor"))){
 tempo.cat <- paste0("\n\n================\n\nERROR: data ARGUMENT MUST BE A FACTOR (NON ORDERED BECAUSE THE also.ordered ARGUMENT IS SET TO FALSE) OR A DATA FRAME\n\n================\n\n")
@@ -1097,6 +1102,7 @@ fun_rounding <- function(data, dec.nb = 2, after.lead.zero = TRUE){
 # EXAMPLES
 # fun_rounding(data = c(10, 100.001, 333.0001254, 12312.1235), dec.nb = 2, after.lead.zero = FALSE)
 # fun_rounding(data = c("10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = FALSE)
+# DEBUGGING
 # data = data = c(10, 100.001, 333.0001254, 12312.1235) ; dec.nb = 2 ; after.lead.zero = FALSE # # for function debugging
 # data = data = c("10", "100.001", "333.0001254", "12312.1235") ; dec.nb = 2 ; after.lead.zero = TRUE # # for function debugging
 # argument checking
@@ -1105,22 +1111,14 @@ tempo.cat <- paste0("\n\n================\n\nERROR: data ARGUMENT MUST BE A VECT
 stop(tempo.cat)
 }
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = dec.nb, typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = after.lead.zero, class = "logical", length = 1) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 # end argument checking
 tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
 ini.mode <- mode(data)
@@ -1164,23 +1162,11 @@ fun_90clock_matrix_rot <- function(data){
 # RETURN
 # the modified matrix
 # EXAMPLES
-# obs <- matrix(1:10, ncol = 1) ; obs ; fun_matrix_flip(obs)
-# obs <- matrix(LETTERS[1:10], ncol = 5) ; obs ; fun_matrix_flip(obs)
+# obs <- matrix(1:10, ncol = 1) ; obs ; fun_90clock_matrix_rot(obs)
+# obs <- matrix(LETTERS[1:10], ncol = 5) ; obs ; fun_90clock_matrix_rot(obs)
 # argument checking
-arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data, class = "matrix") ; eval(ee)
-if(any(arg.check) == TRUE){
-stop()
-}
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
+if( ! any(class(data) %in% "matrix")){
+tempo.cat <- paste0("\n\n================\n\nERROR: THE data ARGUMENT MUST BE A MATRIX\n\n================\n\n")
 stop(tempo.cat)
 }
 # end argument checking
@@ -1212,18 +1198,14 @@ fun_hexa_hsv_color_matrix <- function(mat1, mat.hsv.h = TRUE, notch = 1, s = 1, 
 # $colored.mat: colors of mat1 in hexa
 # $problem: logical. Is any colors of forced.color overlap the colors designed by the function. NULL if forced.color = NULL
 # $text.problem: text when overlapping colors. NULL if forced.color = NULL or problem == FALSE
-# EXAMPLES:
+# EXAMPLES
 # mat1 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; dimnames(mat1) <- list(LETTERS[1:4], letters[1:2]) ; fun_hexa_hsv_color_matrix(mat1, mat.hsv.h = FALSE, notch = 1, s = 1, v = 1, forced.color = NULL)
+# DEBUGGING
 # mat1 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; dimnames(mat1) <- list(LETTERS[1:4], letters[1:2]); mat.hsv.h = FALSE ; notch = 1 ; s = 1 ; v = 1 ; forced.color = c(hsv(1,1,1), hsv(0,0,0)) # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = mat1, mode = "numeric", class = "matrix", na.contain = TRUE, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = mat.hsv.h, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = notch, mode = "numeric", length = 1, prop = TRUE) ; eval(ee)
@@ -1232,10 +1214,7 @@ tempo <- fun_param_check(data = v, mode = "numeric", length = 1, prop = TRUE) ; 
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 if(mat.hsv.h == TRUE & fun_param_check(data = mat1, mode = "numeric", prop = TRUE, print = FALSE)$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR: mat1 ARGUMENT MUST BE A MATRIX OF PROPORTIONS SINCE THE mat.hsv.h ARGUMENT IS SET TO TRUE\n\n================\n\n")
 stop(tempo.cat)
@@ -1350,16 +1329,12 @@ fun_window_width_resizing <- function(class.nb, inches.per.class.nb = 1, ini.win
 # the new window width in inches
 # EXAMPLES
 # fun_window_width_resizing(class.nb = 10, inches.per.class.nb = 0.2, ini.window.width = 7, inch.left.space = 1, inch.right.space = 1, boundarie.space = 0.5)
+# DEBUGGING
 # class.nb = 10 ; inches.per.class.nb = 0.2 ; ini.window.width = 7 ; inch.left.space = 1 ; inch.right.space = 1 ; boundarie.space = 0.5 # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = class.nb, typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = inches.per.class.nb, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = ini.window.width, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
@@ -1369,10 +1344,7 @@ tempo <- fun_param_check(data = boundarie.space, mode = "numeric", length = 1, n
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 # end argument checking
 range.max <- class.nb + boundarie.space # the max range of the future plot
 range.min <- boundarie.space # the min range of the future plot
@@ -1412,18 +1384,14 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
 # $pdf.loc: path of the pdf created
 # $ini.par: initial par() parameters (to reset in a new graph)
 # $zone.ini: initial window spliting (to reset in a new graph)
-# EXAMPLES:
+# EXAMPLES
 # fun_open_window(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
+# DEBUGGING
 # pdf.disp = TRUE ; path.fun = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = pdf.disp, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = path.fun, class = "character", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = pdf.name.file, class = "character", length = 1) ; eval(ee)
@@ -1436,16 +1404,13 @@ tempo <- fun_param_check(data = return.output, class = "logical", length = 1) ; 
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 # end argument checking
 if(path.fun == "working.dir"){
 path.fun <- getwd()
 }else{
 if(dir.exists(path.fun) == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR: path.fun ARGUMENT DOES NOT CORRESPOND DO EXISTING DIRECTORY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR: path.fun ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
 stop(tempo.cat)
 }
 }
@@ -1534,16 +1499,12 @@ fun_graph_param_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FAL
 # return graphic parameter modification
 # EXAMPLES
 # fun_graph_param_prior_plot(param.reinitial = FALSE, xlog.scale = FALSE, ylog.scale = FALSE, remove.label = TRUE, remove.x.axis = TRUE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 4.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = FALSE)
+# DEBUGGING
 # param.reinitial = FALSE ; xlog.scale = FALSE ; ylog.scale = FALSE ; remove.label = TRUE ; remove.x.axis = TRUE ; remove.y.axis = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 1 ; right.space = 1 ; orient = 1 ; dist.legend = 4.5 ; tick.length = 0.5 ; box.type = "n" ; amplif.label = 1 ; amplif.axis = 1 ; display.extend = FALSE ; return.par = FALSE # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = param.reinitial, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = xlog.scale, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = ylog.scale, class = "logical", length = 1) ; eval(ee)
@@ -1567,14 +1528,7 @@ tempo <- fun_param_check(data = return.par, class = "logical", length = 1) ; eva
 if(any(arg.check) == TRUE){
 stop()
 }
-if(any(duplicated(arg.names))){ # for function debbuging
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE DUPLICATED IN CHECK: ", paste(arg.names[duplicated(arg.names)], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 # end argument checking
 if(param.reinitial == TRUE){
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
@@ -1641,7 +1595,8 @@ return(tempo.par)
 ######## fun_feature_post_plot() #### Graph param before plotting
 
 
-fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL, x.lab = "", x.dist.legend = 0.5, x.log.scale = FALSE, x.nb.inter.tick = 1, y.side = 0, y.categ = NULL, y.lab = "", y.dist.legend = 0.5, y.log.scale = FALSE, y.nb.inter.tick = 1, text.angle = 90, tick.length = 0.5, sec.tick.length = 0.3, bg.color = NULL, grid.lwd = NULL, grid.col = "white", corner.text = "", magnific = 1.5, magnific.corner.text = 1, just.label.add = FALSE, par.reset = FALSE, custom.par = NULL){
+# Check OK: clear to go Apollo
+fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL, x.lab = "", x.dist.legend = 0.5, x.log.scale = FALSE, x.nb.inter.tick = 1, y.side = 0, y.categ = NULL, y.categ.pos = NULL, y.lab = "", y.dist.legend = 0.5, y.log.scale = FALSE, y.nb.inter.tick = 1, text.angle = 90, tick.length = 0.5, sec.tick.length = 0.3, bg.color = NULL, grid.lwd = NULL, grid.col = "white", corner.text = "", magnific = 1.5, magnific.corner.text = 1, just.label.add = FALSE, par.reset = FALSE, custom.par = NULL){
 # AIM:
 # redesign axis. If x.side = 0, y.side = 0, the function just adds text at topright of the graph and reset par() for next graphics and provides outputs (see below)
 # provide also positions for legend or additional text on the graph
@@ -1659,6 +1614,7 @@ fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL
 # x.nb.inter.tick: number of secondary ticks between main ticks on x-axis (only if not log scale). 0 means no secondary ticks
 # y.side: axis at the left (2) or right (4) of the region figure. Write 0 for no change
 # y.categ: classes (levels()) to specify when the y-axis is qualititative(stripchart, boxplot)
+# y.categ.pos: position of the classes names (numeric vector of identical length than y.categ). If left NULL, this will be 1:length(levels())
 # y.lab: label of the y-axis. If y.side == 0 and y.lab != "", then y.lab is printed
 # y.dist.legend: increase the number to move y-axis legends away in inches (first number of mgp argument of par() but in inches)
 # y.log.scale: Log scale for the y-axis? Either TRUE or FALSE
@@ -1697,16 +1653,12 @@ fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL
 # prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE, xlog.scale = FALSE, ylog.scale = TRUE, remove.label = TRUE, remove.x.axis = FALSE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 0.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = TRUE) ; plot(1:100, log = "y") ; fun_feature_post_plot(y.side = 2, x.lab = "Values", y.lab = "TEST", y.dist.legend = 0.7, y.log.scale = prior.par$ylog, just.label.add = ! prior.par$ann)
 # Example of log axis with redrawn x-axis and y-axis:
 # prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE) ; plot(1:100) ; fun_feature_post_plot(x.side = 1, x.lab = "Values", y.side = 2, y.lab = "TEST", y.dist.legend = 0.7)
+# DEBUGGING
 # x.side = 0 ; x.categ = NULL ; x.categ.pos = NULL ; x.lab = "" ; x.dist.legend = 1 ; x.log.scale = FALSE ; x.nb.inter.tick = 1 ; y.side = 0 ; y.categ = NULL ; y.categ.pos = NULL ; y.lab = "" ; y.dist.legend = 0.7 ; y.log.scale = FALSE ; y.nb.inter.tick = 1 ; text.angle = 90 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; bg.color = NULL ; grid.lwd = NULL ; grid.col = "white" ; corner.text = "" ; magnific = 1.5 ; magnific.corner.text = 1 ; par.reset = FALSE ; custom.par = NULL # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = x.side, options = c(0, 1, 3), length = 1) ; eval(ee)
 if( ! is.null(x.categ)){
 tempo <- fun_param_check(data = x.categ, class = "character", na.contain = TRUE) ; eval(ee)
@@ -1760,14 +1712,7 @@ tempo <- fun_param_check(data = custom.par, typeof = "list", length = 1) ; eval(
 if(any(arg.check) == TRUE){
 stop()
 }
-if(any(duplicated(arg.names))){ # for function debbuging
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE DUPLICATED IN CHECK: ", paste(arg.names[duplicated(arg.names)], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
-if( ! (all(arg.names %in% names(arg.list)) & all(names(arg.list) %in% arg.names))){ # check the correct number of args # for function debbuging # names(arg.list) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(arg.list)], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(arg.list)[ ! names(arg.list) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 # end argument checking
 text <- NULL
 par(tcl = -par()$mgp[2] * tick.length)
@@ -1970,27 +1915,20 @@ fun_close_specif_window <- function(kind = "pdf", return.text = FALSE){
 # return.text: print text regarding the kind parameter and the devices that were finally closed?
 # RETURN
 # text regarding the kind parameter and the devices that were finally closed
-# EXAMPLES:
+# EXAMPLES
 # windows() ; windows() ; pdf() ; dev.list() ; fun_close_specif_window(kind = c("pdf", "x11"), return.text = TRUE) ; dev.list()
+# DEBUGGING
 # kind = c("windows", "pdf") ; return.text = FALSE # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = kind, options = c("windows", "quartz", "x11", "X11", "pdf", "bmp", "png", "tiff")) ; eval(ee)
 tempo <- fun_param_check(data = return.text, class = "logical", length = 1) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
 # end argument checking
 text <- paste0("THE REQUIRED KIND OF GRAPHIC DEVICES TO CLOSE ARE ", paste(kind, collapse = " "))
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
@@ -2054,16 +1992,12 @@ fun_export_data <- function(data, output, path = "C:/Users/Gael/Desktop", no.ove
 # nothing
 # EXAMPLES
 # fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2)
-data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; sep = 2 # for function debugging
+# DEBUGGING
+# data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; sep = 2 # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
-arg.list <- formals(fun = sys.function(sys.parent()))
-if(any(sapply(arg.list, FUN = is.null))){
-arg.names <- names(arg.list)[sapply(arg.list, FUN = is.null)] # null argument names added now because null arguments will not be inserted thenafter
-}else{
-arg.names <- NULL # for function debbuging
-}
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , arg.names <- c(arg.names, tempo$param.name))
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = output, class = "character", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = path, class = "character", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = no.overwrite, class = "logical", length = 1) ; eval(ee)
@@ -2073,8 +2007,21 @@ tempo <- fun_param_check(data = sep, typeof = "integer", length = 1, double.as.i
 if(any(arg.check) == TRUE){
 stop()
 }
-if( ! (all(arg.names %in% names(formals(fun = sys.function(sys.parent())))) & all(names(formals(fun = sys.function(sys.parent()))) %in% arg.names))){ # check the correct number of args # for function debbuging # names(formals(fun = sys.function(sys.parent()))) can be replaced by formalArgs('name of the created function')
-tempo.cat <- paste0("\n\n================\n\nERROR: THESE ARGUMENTS ARE MISSING DURING ARGUMENT CHECKING:\narg.names MISSING IN ARGUMENTS OF THE FUNCTION ARE: ", paste(arg.names[ ! arg.names %in% names(formals(fun = sys.function(sys.parent())))], collapse = " "), "\nARGUMENTS OF THE FUNCTION MISSING IN arg.names ARE: ", paste(names(formals(fun = sys.function(sys.parent())))[ ! names(formals(fun = sys.function(sys.parent()))) %in% arg.names], collapse = " "), "\n\n================\n\n")
+# source("C:\\Users\\Gael\\Documents\\Git_projects\\debug_code.R") ; eval(parse(text = debug_code)) # to debug the code
+# the 4 next lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
+arg.user.list <- as.list(match.call(expand.dots=FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
+default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
+arg.without.default.value <- sapply(default.arg.list, is.symbol) & sapply(sapply(default.arg.list, as.character), identical, "") # logical to detect argument without default values (these are typeof "symbol" and class "name" and empty character
+if( ! all(names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list))){ # test that the arguments with no null values are provided by the user
+tempo.cat <- paste0("\n\n================\n\nERROR: VALUE REQUIRED FOR THESE ARGUMENTS WITH NO DEFAULTS VALUES: ", paste(names(default.arg.list)[arg.without.default.value][ ! names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list)], collapse = " "), "\n\n================\n\n")
+stop(tempo.cat)
+}
+if(output == ""){
+tempo.cat <- paste0("\n\n================\n\nERROR: output ARGUMENT DOES NOT CORRESPOND TO A VALID CHARACTER STRING\n\n================\n\n")
+stop(tempo.cat)
+}
+if(dir.exists(path) == FALSE){
+tempo.cat <- paste0("\n\n================\n\nERROR: path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
 stop(tempo.cat)
 }
 # end argument checking
