@@ -9,3 +9,11 @@ Description of the functions is at the beginning of the function body, to obtain
 	1) Open the cute_little_functions.docx or cute_little_functions.R file.
 	
 	2) In the R/RStudio console, type the name of the function without brackets. Example : fun_object_info
+
+
+WHAT'S NEW IN v1.2
+
+1) Debugging code added in each function to work on the argument values
+
+2) examples_alone.txt file added to facilitate the use of examples 
+
