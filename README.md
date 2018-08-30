@@ -26,8 +26,6 @@ The cute_little_functions.docx is just for easier reading.
 Check for updated versions (more recent release tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions
 
 
-#### WHAT'S NEW IN v1.2
+#### WHAT'S NEW IN v1.3
 
-1) Debugging code added in each function to work on the argument values
-
-2) examples_alone.txt file added to facilitate the use of examples 
+1) fun_1D_comp() function improved: provide the common elements, common names and common levels if exist 

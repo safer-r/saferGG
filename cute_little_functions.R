@@ -10,7 +10,7 @@
 
 
 
-
+# BEWARE: do not forget to save the modifications in the .R file
 
 
 ################################ OUTLINE ################################
@@ -18,27 +18,27 @@
 
 ################ Object analysis    1
 ######## fun_param_check() #### Checking class, type, length, etc. of objects   1
-######## fun_object_info() #### Recovering object information   6
+######## fun_object_info() #### Recovering object information   7
 ######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 7
 ######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   11
-######## fun_list_comp() #### comparison of two lists   15
+######## fun_list_comp() #### comparison of two lists   16
 
-################ Object modification    17
-######## fun_dataframe_flipping() #### flipping a data frame to have column name as a qualitative column and vice-versa 17
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor comns in data frames   20
+################ Object modification    18
+######## fun_dataframe_flipping() #### flipping a data frame to have column name as a qualitative column and vice-versa 18
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 20
 ######## fun_rounding() #### Rounding number if decimal present 22
 ######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    23
-######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  24
+######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  23
 
-################ Graphics   27
-######## fun_window_width_resizing() #### window width depending on classes to plot 27
-######## fun_open_window() #### Open a GUI or pdf graphic window    28
-######## fun_graph_param_prior_plot() #### Graph param before plotting  31
-######## fun_feature_post_plot() #### Graph param before plotting   34
-######## fun_close_specif_window() #### Closing specific graphic windows    43
+################ Graphics   26
+######## fun_window_width_resizing() #### window width depending on classes to plot 26
+######## fun_open_window() #### Open a GUI or pdf graphic window    27
+######## fun_graph_param_prior_plot() #### Graph param before plotting  30
+######## fun_feature_post_plot() #### Graph param after plotting    33
+######## fun_close_specif_window() #### Closing specific graphic windows    41
 
-################ Exporting results (text & tables)  44
-######## fun_export_data() #### Print string or data object into output file    44
+################ Exporting results (text & tables)  42
+######## fun_export_data() #### Print string or data object into output file    42
 
 
 ################################ FUNCTIONS ################################
@@ -56,7 +56,6 @@ fun_param_check <- function(data, data.name = NULL, class = NULL, typeof = NULL,
 # Check the class, type, mode and length of the data argument
 # Mainly used to check the arguments of other functions
 # Check also other kind of data parameters, is it a proportion? Is it type double even if it is an integer?
-# Check also the options of an argument of function
 # If options = NULL, then at least class, type, mode or length must be non null
 # If options is non null, then class, type and mode must be NULL, and length can be NULL or specified
 # REQUIRED FUNCTIONS
@@ -371,19 +370,23 @@ fun_1D_comp <- function(data1, data2){
 # $any.id.levels: logical. Is there any identical levels? (NULL if data1 and data2 are not factors)
 # $same.levels.pos1: position, in data1, of the levels identical in data2 (NULL if data1 and data2 are not factors)
 # $same.levels.pos2: position, in data2, of the levels identical in data1 (NULL if data1 and data2 are not factors)
+# $common.levels: common levels between data1 and data2 (can be a subset of $levels or not). NULL if no common levels or if data1 and data2 are not factors
 # $same.name: logical. Are element names identical ?
 # $name: name of elements of the 2 datasets if identical (NULL otherwise)
 # $any.id.name: logical. Is there any element names identical ?
 # $same.name.pos1: position, in data1, of the element names identical in data2
 # $same.name.pos2: position, in data2, of the elements names identical in data1
+# $common.names: common element names between data1 and data2 (can be a subset of $name or not). NULL if no common element names
 # $any.id.element: logical. is there any identical elements ?
 # $same.element.pos1: position, in data1, of the elements identical in data2
 # $same.element.pos2: position, in data2, of the elements identical in data1
+# $common.elements: common elements between data1 and data2. NULL if no common elements
 # $identical.object: logical. Are objects identical (kind of object, element names and content)?
 # $identical.content: logical. Are content objects identical (identical elements excluding kind of object and element names)?
 # EXAMPLES
 # obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:5] ; fun_1D_comp(obs1, obs2)
 # obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; fun_1D_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 3:6 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:4] ; fun_1D_comp(obs1, obs2)
 # obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[1:5]) ; fun_1D_comp(obs1, obs2)
 # obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[10:11]) ; fun_1D_comp(obs1, obs2)
 # obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[4:7]) ; fun_1D_comp(obs1, obs2)
@@ -423,14 +426,17 @@ levels <- NULL
 any.id.levels <- NULL
 same.levels.pos1 <- NULL
 same.levels.pos2 <- NULL
+common.levels <- NULL
 same.name <- NULL
 name <- NULL
 any.id.name <- NULL
 same.name.pos1 <- NULL
 same.name.pos2 <- NULL
+common.names <- NULL
 any.id.element <- NULL
 same.element.pos1 <- NULL
 same.element.pos2 <- NULL
+common.elements <- NULL
 identical.object <- NULL
 identical.content <- NULL
 if(identical(data1, data2)){
@@ -444,6 +450,7 @@ levels <- levels(data1)
 any.id.levels <- TRUE
 same.levels.pos1 <- 1:length(levels(data1))
 same.levels.pos2 <- 1:length(levels(data2))
+common.levels <- levels(data1)
 }
 if( ! is.null(names(data1))){
 same.name <- TRUE
@@ -451,10 +458,12 @@ name <- names(data1)
 any.id.name <- TRUE
 same.name.pos1 <- 1:length(data1)
 same.name.pos2 <- 1:length(data2)
+common.names <- names(data1)
 }
 any.id.element <- TRUE
 same.element.pos1 <- 1:length(data1)
 same.element.pos2 <- 1:length(data2)
+common.elements <- data1
 identical.object <- TRUE
 identical.content <- TRUE
 }else{
@@ -487,6 +496,9 @@ if(any(levels(data2) %in% levels(data1))){
 any.id.levels <- TRUE
 same.levels.pos2 <- which(levels(data2) %in% levels(data1))
 }
+if(any.id.levels == TRUE){
+common.levels <- unique(c(levels(data1)[same.levels.pos1], levels(data2)[same.levels.pos2]))
+}
 }
 if(any(class(data1) %in% "factor")){ # to compare content
 data1 <- as.character(data1)
@@ -510,6 +522,9 @@ if(any(names(data2) %in% names(data1))){
 any.id.name <- TRUE
 same.name.pos2 <- which(names(data2) %in% names(data1))
 }
+if(any.id.name == TRUE){
+common.names <- unique(c(names(data1)[same.name.pos1], names(data2)[same.name.pos2]))
+}
 }
 any.id.element <- FALSE
 if(any(data1 %in% data2)){
@@ -519,6 +534,9 @@ same.element.pos1 <- which(data1 %in% data2)
 if(any(data2 %in% data1)){
 any.id.element <- TRUE
 same.element.pos2 <- which(data2 %in% data1)
+}
+if(any.id.element == TRUE){
+common.elements <- unique(c(data1[same.element.pos1], data2[same.element.pos2]))
 }
 if(same.length == TRUE & ! all(is.null(same.element.pos1), is.null(same.element.pos2))){
 names(same.element.pos1) <- NULL
@@ -532,7 +550,7 @@ identical.content <- FALSE
 identical.content <- FALSE
 }
 }
-output <- list(same.class = same.class, class = class, same.length = same.length, length = length, same.levels = same.levels, levels = levels, any.id.levels = any.id.levels, same.levels.pos1 = same.levels.pos1, same.levels.pos2 = same.levels.pos2, same.name = same.name, name = name, any.id.name = any.id.name, same.name.pos1 = same.name.pos1, same.name.pos2 = same.name.pos2, any.id.element = any.id.element, same.element.pos1 = same.element.pos1, same.element.pos2 = same.element.pos2, identical.object = identical.object, identical.content = identical.content)
+output <- list(same.class = same.class, class = class, same.length = same.length, length = length, same.levels = same.levels, levels = levels, any.id.levels = any.id.levels, same.levels.pos1 = same.levels.pos1, same.levels.pos2 = same.levels.pos2, common.levels = common.levels, same.name = same.name, name = name, any.id.name = any.id.name, same.name.pos1 = same.name.pos1, same.name.pos2 = same.name.pos2, common.names = common.names, any.id.element = any.id.element, same.element.pos1 = same.element.pos1, same.element.pos2 = same.element.pos2, common.elements = common.elements, identical.object = identical.object, identical.content = identical.content)
 return(output)
 }
 
@@ -1603,7 +1621,7 @@ return(tempo.par)
 }
 
 
-######## fun_feature_post_plot() #### Graph param before plotting
+######## fun_feature_post_plot() #### Graph param after plotting
 
 
 # Check OK: clear to go Apollo
