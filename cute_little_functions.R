@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE FUNCTIONS v1.2                             ##
+##     CUTE LITTLE FUNCTIONS v1.3                             ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -10,7 +10,7 @@
 
 
 
-# BEWARE: do not forget to save the modifications in the .R file
+
 
 
 ################################ OUTLINE ################################
