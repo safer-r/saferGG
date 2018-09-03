@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE FUNCTIONS v1.3                             ##
+##     CUTE LITTLE FUNCTIONS v2.0.0                           ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -10,7 +10,6 @@
 
 
 
-# BEWARE: do not forget to save the modifications in the .R file
 
 
 ################################ OUTLINE ################################
@@ -309,7 +308,7 @@ fun_object_info <- function(data){
 # data = factor(1:3) # for function debugging
 # data = list(1:3) # for function debugging
 # argument checking
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 data.name <- deparse(substitute(data))
 output <- list("FILE_NAME" = data.name)
@@ -397,7 +396,7 @@ fun_1D_comp <- function(data1, data2){
 # DEBUGGING
 # data1 = 1:5 ; data2 = 1:5 ; names(data1) <- LETTERS[1:5] ; names(data2) <- LETTERS[1:5] # for function debugging
 # argument checking
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if( ! any(class(data1) %in% c("logical", "integer", "numeric", "character", "factor", "table"))){
 tempo.cat <- paste0("\n\n================\n\nERROR: THE data1 ARGUMENT MUST BE A NON NULL VECTOR, FACTOR OR 1D TABLE\n\n================\n\n")
 stop(tempo.cat)
@@ -609,7 +608,7 @@ fun_2D_comp <- function(data1, data2){
 # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) # for function debugging
 # data1 = table(Exp1 = c("A", "A", "A", "B", "B", "B"), Exp2 = c("A1", "B1", "A1", "C1", "C1", "B1")) ; data2 = data.frame(A = 1:3, B= letters[1:3]) # for function debugging
 # argument checking
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
 tempo.cat <- paste0("\n\n================\n\nERROR: THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
 stop(tempo.cat)
@@ -838,7 +837,7 @@ fun_list_comp <- function(data1, data2){
 # data1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
 # data1 = list(a = 1:5, b = LETTERS[1:2]) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
 # argument checking
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if( ! any(class(data1) %in% "list")){
 tempo.cat <- paste0("\n\n================\n\nERROR: THE data1 ARGUMENT MUST BE A LIST\n\n================\n\n")
 stop(tempo.cat)
@@ -964,7 +963,7 @@ tempo <- fun_param_check(data = quali.col.name, class = "character", length = 1)
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if( ! any(class(data) %in% "data.frame")){
 tempo.cat <- paste0("\n\n================\n\nERROR: THE data ARGUMENT MUST BE A DATA FRAME\n\n================\n\n")
 stop(tempo.cat)
@@ -1036,13 +1035,13 @@ fun_refactorization <- function(data, also.ordered = TRUE){
 # $data: the modified object
 # $removed: the removed classes for a factor and a list of the removed classes for each factor class of the data frame
 # EXAMPLES
-# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6)[-c(1:2),] ; fun_refactorization(obs, FALSE)
-# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6)[-c(1:2),] ; fun_refactorization(obs, TRUE)
-# obs <- factor(LETTERS[1:6])[-c(1:2)] ; fun_refactorization(obs, TRUE)
-# obs <- ordered(LETTERS[1:6])[-c(1:2)] ; fun_refactorization(obs, TRUE)
-# obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; fun_refactorization(obs, FALSE)
+# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, FALSE)
+# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, TRUE)
+# obs <- factor(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refactorization(obs, TRUE)
+# obs <- ordered(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refactorization(obs, TRUE)
+# obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; obs ; fun_refactorization(obs, FALSE)
 # DEBUGGING
-# data <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6) ; data <- data[-c(1:2),] ; also.ordered <- TRUE # for function debugging
+# data <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A") ; data <- data[-c(1:2),] ; also.ordered <- TRUE # for function debugging
 # data <- factor(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
 # data <- ordered(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
 # argument checking
@@ -1053,7 +1052,7 @@ tempo <- fun_param_check(data = also.ordered, class = "logical", length = 1) ; e
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if(also.ordered == FALSE){
 if( ! (all(class(data) == "data.frame") | all(class(data) == "factor"))){
 tempo.cat <- paste0("\n\n================\n\nERROR: data ARGUMENT MUST BE A FACTOR (NON ORDERED BECAUSE THE also.ordered ARGUMENT IS SET TO FALSE) OR A DATA FRAME\n\n================\n\n")
@@ -1070,16 +1069,12 @@ stop(tempo.cat)
 text <- NULL
 if(all(class(data) == "factor")){
 tempo.keep.log <- levels(data) %in% unique(data)
-if(any(tempo.factor.col == TRUE)){
 text <- levels(data)[ ! tempo.keep.log]
 data <- factor(data, levels = levels(data)[tempo.keep.log])
-}
 }else if(all(class(data) %in% c("ordered", "factor"))){
 tempo.keep.log <- levels(data) %in% unique(data)
-if(any(tempo.factor.col == TRUE)){
 text <- levels(data)[ ! tempo.keep.log]
 data <- ordered(data, levels = levels(data)[tempo.keep.log])
-}
 }else if(all(class(data) == "data.frame")){
 text <- vector("list", length(data))
 names(text) <- names(data)
@@ -1091,8 +1086,8 @@ text[[i]] <- levels(data[[i]])[ ! tempo.keep.log]
 data[[i]] <- factor(data[[i]], levels = levels(data[[i]])[tempo.keep.log])
 }
 }
+tempo.ordered.col <- sapply(sapply(lapply(data, class), FUN = "%in%", "ordered"), FUN = "any") # get the ordered factor column (logical) if they exist
 if(also.ordered == TRUE){
-tempo.ordered.col <- sapply(sapply(lapply(data, class), FUN = "%in%", "ordered"), FUN = "any") # get the ordered factor column (logical)
 for(i in 1:length(tempo.ordered.col)){
 if(tempo.ordered.col[i] == TRUE){
 tempo.keep.log <- levels(data[[i]]) %in% unique(data[[i]])
@@ -1101,6 +1096,7 @@ data[[i]] <- ordered(data[[i]], levels = levels(data[[i]])[tempo.keep.log])
 }
 }
 }
+text <- text[(tempo.factor.col | tempo.ordered.col) & ! (sapply(text, FUN = length) == 0)] # remove the compartments of text that are not modified factors columns of data frame
 }
 output <- list(data = data, removed = text)
 return(output)
@@ -1144,7 +1140,7 @@ tempo <- fun_param_check(data = after.lead.zero, class = "logical", length = 1) 
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
 ini.mode <- mode(data)
@@ -1193,7 +1189,7 @@ fun_90clock_matrix_rot <- function(data){
 # DEBUGGING
 # data = matrix(1:10, ncol = 1)
 # argument checking
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if( ! any(class(data) %in% "matrix")){
 tempo.cat <- paste0("\n\n================\n\nERROR: THE data ARGUMENT MUST BE A MATRIX\n\n================\n\n")
 stop(tempo.cat)
@@ -1243,7 +1239,7 @@ tempo <- fun_param_check(data = v, mode = "numeric", length = 1, prop = TRUE) ; 
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if(mat.hsv.h == TRUE & fun_param_check(data = mat1, mode = "numeric", prop = TRUE, print = FALSE)$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR: mat1 ARGUMENT MUST BE A MATRIX OF PROPORTIONS SINCE THE mat.hsv.h ARGUMENT IS SET TO TRUE\n\n================\n\n")
 stop(tempo.cat)
@@ -1373,7 +1369,7 @@ tempo <- fun_param_check(data = boundarie.space, mode = "numeric", length = 1, n
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 range.max <- class.nb + boundarie.space # the max range of the future plot
 range.min <- boundarie.space # the min range of the future plot
@@ -1433,7 +1429,7 @@ tempo <- fun_param_check(data = return.output, class = "logical", length = 1) ; 
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 if(path.fun == "working.dir"){
 path.fun <- getwd()
@@ -1557,7 +1553,7 @@ tempo <- fun_param_check(data = return.par, class = "logical", length = 1) ; eva
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 if(param.reinitial == TRUE){
 if( ! all(names(dev.cur()) == "null device")){
@@ -1627,7 +1623,7 @@ return(tempo.par)
 
 
 # Check OK: clear to go Apollo
-fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL, x.lab = "", x.dist.legend = 0.5, x.log.scale = FALSE, x.nb.inter.tick = 1, y.side = 0, y.categ = NULL, y.categ.pos = NULL, y.lab = "", y.dist.legend = 0.5, y.log.scale = FALSE, y.nb.inter.tick = 1, text.angle = 90, tick.length = 0.5, sec.tick.length = 0.3, bg.color = NULL, grid.lwd = NULL, grid.col = "white", corner.text = "", magnific = 1.5, magnific.corner.text = 1, just.label.add = FALSE, par.reset = FALSE, custom.par = NULL){
+fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NULL, x.categ.pos = NULL, x.lab = "", x.axis.magnific = 1.5, x.label.magnific = 1.5, x.dist.legend = 0.5, x.nb.inter.tick = 1, y.side = 0, y.log.scale = FALSE, y.categ = NULL, y.categ.pos = NULL, y.lab = "", y.axis.magnific = 1.5, y.label.magnific = 1.5, y.dist.legend = 0.5, y.nb.inter.tick = 1, text.angle = 90, tick.length = 0.5, sec.tick.length = 0.3, bg.color = NULL, grid.lwd = NULL, grid.col = "white", corner.text = "", magnific = 1.5, magnific.corner.text = 1, just.label.add = FALSE, par.reset = FALSE, custom.par = NULL){
 # AIM:
 # redesign axis. If x.side = 0, y.side = 0, the function just adds text at topright of the graph and reset par() for next graphics and provides outputs (see below)
 # provide also positions for legend or additional text on the graph
@@ -1637,18 +1633,22 @@ fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL
 # fun_open_window() to reinitialize graph parameters if par.reset = TRUE and custom.par = NULL
 # ARGUMENTS
 # x.side: axis at the bottom (1) or top (3) of the region figure. Write 0 for no change
+# x.log.scale: Log scale for the x-axis? Either TRUE or FALSE
 # x.categ: character vector representing the classes (levels()) to specify when the x-axis is qualititative(stripchart, boxplot)
 # x.categ.pos: position of the classes names (numeric vector of identical length than x.categ). If left NULL, this will be 1:length(levels())
 # x.lab: label of the x-axis. If x.side == 0 and x.lab != "", then x.lab is printed
+# x.axis.magnific: increase or decrease the value to increase or decrease the size of the x axis numbers. Also control the size of displayed categories
+# x.label.magnific: increase or decrease the value to increase or decrease the size of the x axis legend
 # x.dist.legend: increase the number to move x-axis legends away in inches (first number of mgp argument of par() but in inches)
-# x.log.scale: Log scale for the x-axis? Either TRUE or FALSE
 # x.nb.inter.tick: number of secondary ticks between main ticks on x-axis (only if not log scale). 0 means no secondary ticks
 # y.side: axis at the left (2) or right (4) of the region figure. Write 0 for no change
+# y.log.scale: Log scale for the y-axis? Either TRUE or FALSE
 # y.categ: classes (levels()) to specify when the y-axis is qualititative(stripchart, boxplot)
 # y.categ.pos: position of the classes names (numeric vector of identical length than y.categ). If left NULL, this will be 1:length(levels())
 # y.lab: label of the y-axis. If y.side == 0 and y.lab != "", then y.lab is printed
+# y.axis.magnific: increase or decrease the value to increase or decrease the size of the y axis numbers. Also control the size of displayed categories
+# y.label.magnific: increase or decrease the value to increase or decrease the size of the y axis legend
 # y.dist.legend: increase the number to move y-axis legends away in inches (first number of mgp argument of par() but in inches)
-# y.log.scale: Log scale for the y-axis? Either TRUE or FALSE
 # y.nb.inter.tick: number of secondary ticks between main ticks on y-axis (only if not log scale). 0 means non secondary ticks
 # text.angle: angle of the text when axis is qualitative
 # tick.length: length of the main ticks (1 means complete the distance between the plot region and the axis numbers, 0.5 means half the length, etc., 0 for no ticks)
@@ -1657,7 +1657,6 @@ fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL
 # grid.lwd: if non NULL, activate the grid line (specify the line width)
 # grid.col: grid line color (only if grid.lwd non NULL)
 # corner.text: text to add at the top right corner of the window
-# magnific: increase or decrease the value to increase or decrease the size of the axis (numbers and legends)
 # magnific.corner.text: increase or decrease the size of the text
 # par.reset: to reset all the graphics parameters. BEWARE: TRUE can generate display problems, mainly in graphic devices with multiple figure regions
 # just.label.add: just add axis labels (legend)? Either TRUE or FALSE. If TRUE, at least (x.side == 0 & x.lab != "") or (y.side == 0 & y.lab != "") must be set to display the corresponding x.lab or y.lab
@@ -1681,16 +1680,17 @@ fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL
 # $text: warning text
 # EXAMPLES
 # Example of log axis with log y-axis and unmodified x-axis:
-# prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE, xlog.scale = FALSE, ylog.scale = TRUE, remove.label = TRUE, remove.x.axis = FALSE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 0.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = TRUE) ; plot(1:100, log = "y") ; fun_feature_post_plot(y.side = 2, x.lab = "Values", y.lab = "TEST", y.dist.legend = 0.7, y.log.scale = prior.par$ylog, just.label.add = ! prior.par$ann)
+# prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE, xlog.scale = FALSE, ylog.scale = TRUE, remove.label = TRUE, remove.x.axis = FALSE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 0.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = TRUE) ; plot(1:100, log = "y") ; fun_feature_post_plot(y.side = 2, y.log.scale = prior.par$ylog, x.lab = "Values", y.lab = "TEST", y.axis.magnific = 1.25, y.label.magnific = 1.5, y.dist.legend = 0.7, just.label.add = ! prior.par$ann)
 # Example of log axis with redrawn x-axis and y-axis:
-# prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE) ; plot(1:100) ; fun_feature_post_plot(x.side = 1, x.lab = "Values", y.side = 2, y.lab = "TEST", y.dist.legend = 0.7)
+# prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE) ; plot(1:100) ; fun_feature_post_plot(x.side = 1, x.lab = "Values", y.side = 2, y.lab = "TEST", y.axis.magnific = 1, y.label.magnific = 2, y.dist.legend = 0.6)
 # DEBUGGING
-# x.side = 0 ; x.categ = NULL ; x.categ.pos = NULL ; x.lab = "" ; x.dist.legend = 1 ; x.log.scale = FALSE ; x.nb.inter.tick = 1 ; y.side = 0 ; y.categ = NULL ; y.categ.pos = NULL ; y.lab = "" ; y.dist.legend = 0.7 ; y.log.scale = FALSE ; y.nb.inter.tick = 1 ; text.angle = 90 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; bg.color = NULL ; grid.lwd = NULL ; grid.col = "white" ; corner.text = "" ; magnific = 1.5 ; magnific.corner.text = 1 ; par.reset = FALSE ; custom.par = NULL # for function debugging
+# x.side = 0 ; x.log.scale = FALSE ; x.categ = NULL ; x.categ.pos = NULL ; x.lab = "" ; x.axis.magnific = 1.5 ; x.label.magnific = 1.5 ; x.dist.legend = 1 ; x.nb.inter.tick = 1 ; y.side = 0 ; y.log.scale = FALSE ; y.categ = NULL ; y.categ.pos = NULL ; y.lab = "" ; y.axis.magnific = 1.5 ; y.label.magnific = 1.5 ; y.dist.legend = 0.7 ; y.nb.inter.tick = 1 ; text.angle = 90 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; bg.color = NULL ; grid.lwd = NULL ; grid.col = "white" ; corner.text = "" ; magnific.corner.text = 1 ; just.label.add = FALSE ; par.reset = FALSE ; custom.par = NULL # for function debugging
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = x.side, options = c(0, 1, 3), length = 1) ; eval(ee)
+tempo <- fun_param_check(data = x.log.scale, class = "logical", length = 1) ; eval(ee)
 if( ! is.null(x.categ)){
 tempo <- fun_param_check(data = x.categ, class = "character", na.contain = TRUE) ; eval(ee)
 }
@@ -1698,10 +1698,12 @@ if( ! is.null(x.categ.pos)){
 tempo <- fun_param_check(data = x.categ.pos, class = "numeric") ; eval(ee)
 }
 tempo <- fun_param_check(data = x.lab, class = "character", length = 1) ; eval(ee)
+tempo <- fun_param_check(data = x.axis.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+tempo <- fun_param_check(data = x.label.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = x.dist.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-tempo <- fun_param_check(data = x.log.scale, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = x.nb.inter.tick, typeof = "integer", length = 1, double.as.integer.allowed = TRUE) ; eval(ee)
 tempo <- fun_param_check(data = y.side, options = c(0, 2, 4), length = 1) ; eval(ee)
+tempo <- fun_param_check(data = y.log.scale, class = "logical", length = 1) ; eval(ee)
 if( ! is.null(y.categ)){
 tempo <- fun_param_check(data = y.categ, class = "character", na.contain = TRUE) ; eval(ee)
 }
@@ -1709,8 +1711,9 @@ if( ! is.null(y.categ.pos)){
 tempo <- fun_param_check(data = y.categ.pos, class = "numeric") ; eval(ee)
 }
 tempo <- fun_param_check(data = y.lab, class = "character", length = 1) ; eval(ee)
+tempo <- fun_param_check(data = y.axis.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+tempo <- fun_param_check(data = y.label.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = y.dist.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-tempo <- fun_param_check(data = y.log.scale, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = y.nb.inter.tick, typeof = "integer", length = 1, double.as.integer.allowed = TRUE) ; eval(ee)
 tempo <- fun_param_check(data = text.angle, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
@@ -1733,7 +1736,6 @@ stop(tempo.cat)
 }
 }
 tempo <- fun_param_check(data = corner.text, class = "character", length = 1) ; eval(ee)
-tempo <- fun_param_check(data = magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = magnific.corner.text, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
 tempo <- fun_param_check(data = just.label.add, class = "logical", length = 1) ; eval(ee)
 tempo <- fun_param_check(data = par.reset, class = "logical", length = 1) ; eval(ee)
@@ -1743,7 +1745,7 @@ tempo <- fun_param_check(data = custom.par, typeof = "list", length = 1) ; eval(
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 text <- NULL
 par(tcl = -par()$mgp[2] * tick.length)
@@ -1809,16 +1811,16 @@ par(xaxp = c(par()$xaxp[1], 10^-30, par()$xaxp[3])) # because log10(par()$xaxp[2
 }
 }
 axis(side=x.side, at=c(10^par()$usr[1], 10^par()$usr[2]), labels=rep("", 2), lwd=1, lwd.ticks=0) # draw the axis line
-mtext(side = x.side, text = x.lab, line = x.dist.legend / 0.2, las = 0, cex = magnific)
+mtext(side = x.side, text = x.lab, line = x.dist.legend / 0.2, las = 0, cex = x.label.magnific)
 par(tcl = -par()$mgp[2] * sec.tick.length) # length of the secondary ticks are reduced
 suppressWarnings(rug(10^outer(c((log10(par("xaxp")[1]) -1):log10(par("xaxp")[2])), log10(1:10), "+"), ticksize = NA, side = x.side)) # ticksize = NA to allow the use of par()$tcl value
 par(tcl = -par()$mgp[2] * tick.length) # back to main ticks
-axis(side = x.side, at = c(1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10), labels = expression(10^-15, 10^-14, 10^-13, 10^-12, 10^-11, 10^-10, 10^-9, 10^-8, 10^-7, 10^-6, 10^-5, 10^-4, 10^-3, 10^-2, 10^-1, 10^0, 10^1, 10^2, 10^3, 10^4, 10^5, 10^6, 10^7, 10^8, 10^9, 10^10), lwd = 0, lwd.ticks = 1, cex.axis = magnific)
+axis(side = x.side, at = c(1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10), labels = expression(10^-15, 10^-14, 10^-13, 10^-12, 10^-11, 10^-10, 10^-9, 10^-8, 10^-7, 10^-6, 10^-5, 10^-4, 10^-3, 10^-2, 10^-1, 10^0, 10^1, 10^2, 10^3, 10^4, 10^5, 10^6, 10^7, 10^8, 10^9, 10^10), lwd = 0, lwd.ticks = 1, cex.axis = x.axis.magnific)
 x.text <- 10^par("usr")[2]
 }else if(is.null(x.categ) & x.log.scale == FALSE){
 axis(side=x.side, at=c(par()$usr[1], par()$usr[2]), labels=rep("", 2), lwd=1, lwd.ticks=0) # draw the axis line
-axis(side=x.side, at=round(seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1), 2))
-mtext(side = x.side, text = x.lab, line = x.dist.legend / 0.2, las = 0, cex = magnific)
+axis(side=x.side, at=round(seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1), 2), cex.axis = x.axis.magnific)
+mtext(side = x.side, text = x.lab, line = x.dist.legend / 0.2, las = 0, cex = x.label.magnific)
 if(x.nb.inter.tick > 0){
 inter.tick.unit <- (par("xaxp")[2] - par("xaxp")[1]) / par("xaxp")[3]
 par(tcl = -par()$mgp[2] * sec.tick.length) # length of the ticks are reduced
@@ -1835,10 +1837,10 @@ stop("\n\nPROBLEM: x.categ.pos MUST BE THE SAME LENGTH AS x.categ\n\n")
 par(xpd = TRUE)
 if(x.side == 1){
 segments(x0 = x.left.plot.region, x1 = x.right.plot.region, y0 = y.bottom.plot.region, y1 = y.bottom.plot.region) # draw the line of the axis
-text(x = x.categ.pos, y = y.mid.bottom.fig.region, labels = x.categ, srt = text.angle, cex = magnific)
+text(x = x.categ.pos, y = y.mid.bottom.fig.region, labels = x.categ, srt = text.angle, cex = x.axis.magnific)
 }else if(x.side == 3){
 segments(x0 = x.left.plot.region, x1 = x.right.plot.region, y0 = y.top.plot.region, y1 = y.top.plot.region) # draw the line of the axis
-text(x = x.categ.pos, y = y.mid.top.fig.region, labels = x.categ, srt = text.angle, cex = magnific)
+text(x = x.categ.pos, y = y.mid.top.fig.region, labels = x.categ, srt = text.angle, cex = x.axis.magnific)
 }else{
 stop("\n\nARGUMENT x.side CAN ONLY BE 1 OR 3\n\n")
 }
@@ -1862,17 +1864,16 @@ par(yaxp = c(par()$yaxp[1], 10^-30, par()$yaxp[3])) # because log10(par()$yaxp[2
 }
 }
 axis(side=y.side, at=c(10^par()$usr[3], 10^par()$usr[4]), labels=rep("", 2), lwd=1, lwd.ticks=0) # draw the axis line
-mtext(side = y.side, text = y.lab, line = y.dist.legend / 0.2, las = 0, cex = magnific)
 par(tcl = -par()$mgp[2] * sec.tick.length) # length of the ticks are reduced
 suppressWarnings(rug(10^outer(c((log10(par("yaxp")[1])-1):log10(par("yaxp")[2])), log10(1:10), "+"), ticksize = NA, side = y.side)) # ticksize = NA to allow the use of par()$tcl value
 par(tcl = -par()$mgp[2] * tick.length) # back to main tick length
-axis(side = y.side, at = c(1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10), labels = expression(10^-15, 10^-14, 10^-13, 10^-12, 10^-11, 10^-10, 10^-9, 10^-8, 10^-7, 10^-6, 10^-5, 10^-4, 10^-3, 10^-2, 10^-1, 10^0, 10^1, 10^2, 10^3, 10^4, 10^5, 10^6, 10^7, 10^8, 10^9, 10^10), lwd = 0, lwd.ticks = 1, cex.axis = magnific)
+axis(side = y.side, at = c(1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10), labels = expression(10^-15, 10^-14, 10^-13, 10^-12, 10^-11, 10^-10, 10^-9, 10^-8, 10^-7, 10^-6, 10^-5, 10^-4, 10^-3, 10^-2, 10^-1, 10^0, 10^1, 10^2, 10^3, 10^4, 10^5, 10^6, 10^7, 10^8, 10^9, 10^10), lwd = 0, lwd.ticks = 1, cex.axis = y.axis.magnific)
 y.text <- 10^(par("usr")[4] + (par("usr")[4] -  par("usr")[3]) / (par("plt")[4] - par("plt")[3]) * (1 - par("plt")[4]))
-mtext(side = y.side, text = y.lab, line = y.dist.legend / 0.2, las = 0, cex = magnific)
+mtext(side = y.side, text = y.lab, line = y.dist.legend / 0.2, las = 0, cex = y.label.magnific)
 }else if(is.null(y.categ) & y.log.scale == FALSE){
 axis(side=y.side, at=c(par()$usr[3], par()$usr[4]), labels=rep("", 2), lwd=1, lwd.ticks=0) # draw the axis line
-axis(side=y.side, at=round(seq(par()$yaxp[1], par()$yaxp[2], length.out=par()$yaxp[3]+1), 2))
-mtext(side = y.side, text = y.lab, line = y.dist.legend / 0.2, las = 0, cex = magnific)
+axis(side=y.side, at=round(seq(par()$yaxp[1], par()$yaxp[2], length.out=par()$yaxp[3]+1), 2), cex.axis = y.axis.magnific)
+mtext(side = y.side, text = y.lab, line = y.dist.legend / 0.2, las = 0, cex = y.label.magnific)
 if(y.nb.inter.tick > 0){
 inter.tick.unit <- (par("yaxp")[2] - par("yaxp")[1]) / par("yaxp")[3]
 par(tcl = -par()$mgp[2] * sec.tick.length) # length of the ticks are reduced
@@ -1889,9 +1890,9 @@ stop("\n\nPROBLEM: y.categ.pos MUST BE THE SAME LENGTH AS y.categ\n\n")
 axis(side = y.side, at = y.categ.pos, labels = rep("", length(y.categ)), lwd=0, lwd.ticks=1) # draw the line of the axis
 par(xpd = TRUE)
 if(y.side == 2){
-text(x = x.mid.left.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = magnific)
+text(x = x.mid.left.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = y.axis.magnific)
 }else if(y.side == 4){
-text(x = x.mid.right.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = magnific)
+text(x = x.mid.right.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = y.axis.magnific)
 }else{
 stop("\n\nARGUMENT y.side CAN ONLY BE 2 OR 4\n\n")
 }
@@ -1906,10 +1907,10 @@ y.text <- (par("usr")[4] + (par("usr")[4] -  par("usr")[3]) / (par("plt")[4] - p
 par(xpd=NA)
 text(x = x.mid.right.fig.region, y = y.text, corner.text, adj=c(1, 1.1), cex = magnific.corner.text) # text at the topright corner. Replace x.right.fig.region by x.text if text at the right edge of the plot region
 if(just.label.add == TRUE & x.side == 0 & x.lab != ""){
-text(x = x.mid.plot.region, y = y.mid.bottom.fig.region, x.lab, adj=c(0.5, 0.5), cex = magnific) # x label
+text(x = x.mid.plot.region, y = y.mid.bottom.fig.region, x.lab, adj=c(0.5, 0.5), cex = x.label.magnific) # x label
 }
 if(just.label.add == TRUE & y.side == 0 & y.lab != ""){
-text(x = y.mid.plot.region, y = x.mid.left.fig.region, y.lab, adj=c(0.5, 0.5), cex = magnific) # x label
+text(x = y.mid.plot.region, y = x.mid.left.fig.region, y.lab, adj=c(0.5, 0.5), cex = y.label.magnific) # x label
 }
 par(xpd=FALSE)
 if(par.reset == TRUE){
@@ -1959,7 +1960,7 @@ tempo <- fun_param_check(data = return.text, class = "logical", length = 1) ; ev
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 text <- paste0("THE REQUIRED KIND OF GRAPHIC DEVICES TO CLOSE ARE ", paste(kind, collapse = " "))
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
@@ -2038,7 +2039,7 @@ tempo <- fun_param_check(data = sep, typeof = "integer", length = 1, double.as.i
 if(any(arg.check) == TRUE){
 stop()
 }
-# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # the 4 next lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
 arg.user.list <- as.list(match.call(expand.dots=FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
 default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
