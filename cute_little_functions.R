@@ -10,7 +10,7 @@
 
 
 
-
+# BEWARE: do not forget to save the modifications in the .R file
 
 
 ################################ OUTLINE ################################
@@ -1560,25 +1560,27 @@ stop()
 # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
 if(param.reinitial == TRUE){
+if( ! all(names(dev.cur()) == "null device")){
+active.wind.nb <- dev.cur()
+}else{
+active.wind.nb <- 0
+}
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
 windows()
-ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset)
-invisible(dev.off()) # close the new window
-par(ini.par) # apply the initial par to current window
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! file.exists(paste0(getwd(), "/Rplots.pdf"))){
 tempo <- suppressWarnings(try(X11(), silent = TRUE))[] # open a X11 window or a pdf. So no need to use again X11(). tempo == NULL if no problem, meaning that the X11 window is opened. If tempo != NULL, a pdf is open here paste0(getwd(), "/Rplots.pdf")
-ini.par <- par(no.readonly = TRUE) # recover the initial graphical parameters. Works even if X11 is not working as R opens a pdf
-invisible(dev.off()) # can be used here to close the pdf windows if tempo != NULL and to close the X11 window if tempo == NULL
-par(ini.par) # apply the initial par to current window
 }else{
 tempo.cat <- paste0("\n\n================\n\nPROBLEM: THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET.\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
 stop(tempo.cat)
 }
 }else{ # macOS
 quartz()
+}
 ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset)
 invisible(dev.off()) # close the new window
+if( ! all(names(dev.cur()) == "null device")){
+dev.set(active.wind.nb) # go back to the active windows if exists
 par(ini.par) # apply the initial par to current window
 }
 }
@@ -1659,9 +1661,9 @@ fun_feature_post_plot <- function(x.side = 0, x.categ = NULL, x.categ.pos = NULL
 # magnific.corner.text: increase or decrease the size of the text
 # par.reset: to reset all the graphics parameters. BEWARE: TRUE can generate display problems, mainly in graphic devices with multiple figure regions
 # just.label.add: just add axis labels (legend)? Either TRUE or FALSE. If TRUE, at least (x.side == 0 & x.lab != "") or (y.side == 0 & y.lab != "") must be set to display the corresponding x.lab or y.lab
-# custom.par: list that provides the parameters that reset all the graphics parameters. BEWARE: if NULL and par.rest == TRUE, the default par() parameters are used
+# custom.par: list that provides the parameters that reset all the graphics parameters. BEWARE: if NULL and par.reset == TRUE, the default par() parameters are used
 # RETURN
-# a list containing:: 
+# a list containing: 
 # $x.mid.left.fig.region: middle of the left margin of the figure region, in coordinates of the x-axis
 # $x.left.fig.region: left side of the left margin, in coordinates of the x-axis
 # $x.mid.right.fig.region: middle of the right margin of the figure region, in coordinates of the x-axis
