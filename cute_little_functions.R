@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE FUNCTIONS v2.0.0                           ##
+##     CUTE LITTLE FUNCTIONS v2.0.1                           ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -954,7 +954,12 @@ fun_dataframe_flipping <- function(data, quanti.col.name = "quanti", quali.col.n
 # data = data.frame(a = 1:3, b = letters[1:3]) ; quanti.col.name = "TEST" ; quali.col.name = "quali" # for function debugging
 # data = data.frame(b = letters[1:3], a = 1:3) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
 # data = data.frame(b = c("e", "e", "h"), a = 1:3) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
-# argument checking
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
@@ -1044,6 +1049,12 @@ fun_refactorization <- function(data, also.ordered = TRUE){
 # data <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A") ; data <- data[-c(1:2),] ; also.ordered <- TRUE # for function debugging
 # data <- factor(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
 # data <- ordered(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -1188,6 +1199,12 @@ fun_90clock_matrix_rot <- function(data){
 # obs <- matrix(LETTERS[1:10], ncol = 5) ; obs ; fun_90clock_matrix_rot(obs)
 # DEBUGGING
 # data = matrix(1:10, ncol = 1)
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 if( ! any(class(data) %in% "matrix")){
@@ -1227,6 +1244,12 @@ fun_hexa_hsv_color_matrix <- function(mat1, mat.hsv.h = TRUE, notch = 1, s = 1, 
 # mat1 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; dimnames(mat1) <- list(LETTERS[1:4], letters[1:2]) ; fun_hexa_hsv_color_matrix(mat1, mat.hsv.h = FALSE, notch = 1, s = 1, v = 1, forced.color = NULL)
 # DEBUGGING
 # mat1 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; dimnames(mat1) <- list(LETTERS[1:4], letters[1:2]); mat.hsv.h = FALSE ; notch = 1 ; s = 1 ; v = 1 ; forced.color = c(hsv(1,1,1), hsv(0,0,0)) # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -1356,6 +1379,12 @@ fun_window_width_resizing <- function(class.nb, inches.per.class.nb = 1, ini.win
 # fun_window_width_resizing(class.nb = 10, inches.per.class.nb = 0.2, ini.window.width = 7, inch.left.space = 1, inch.right.space = 1, boundarie.space = 0.5)
 # DEBUGGING
 # class.nb = 10 ; inches.per.class.nb = 0.2 ; ini.window.width = 7 ; inch.left.space = 1 ; inch.right.space = 1 ; boundarie.space = 0.5 # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -1413,6 +1442,12 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
 # fun_open_window(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
 # DEBUGGING
 # pdf.disp = TRUE ; path.fun = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -1526,6 +1561,12 @@ fun_graph_param_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FAL
 # fun_graph_param_prior_plot(param.reinitial = FALSE, xlog.scale = FALSE, ylog.scale = FALSE, remove.label = TRUE, remove.x.axis = TRUE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 4.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = FALSE)
 # DEBUGGING
 # param.reinitial = FALSE ; xlog.scale = FALSE ; ylog.scale = FALSE ; remove.label = TRUE ; remove.x.axis = TRUE ; remove.y.axis = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 1 ; right.space = 1 ; orient = 1 ; dist.legend = 4.5 ; tick.length = 0.5 ; box.type = "n" ; amplif.label = 1 ; amplif.axis = 1 ; display.extend = FALSE ; return.par = FALSE # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -1685,6 +1726,16 @@ fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NUL
 # prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE) ; plot(1:100) ; fun_feature_post_plot(x.side = 1, x.lab = "Values", y.side = 2, y.lab = "TEST", y.axis.magnific = 1, y.label.magnific = 2, y.dist.legend = 0.6)
 # DEBUGGING
 # x.side = 0 ; x.log.scale = FALSE ; x.categ = NULL ; x.categ.pos = NULL ; x.lab = "" ; x.axis.magnific = 1.5 ; x.label.magnific = 1.5 ; x.dist.legend = 1 ; x.nb.inter.tick = 1 ; y.side = 0 ; y.log.scale = FALSE ; y.categ = NULL ; y.categ.pos = NULL ; y.lab = "" ; y.axis.magnific = 1.5 ; y.label.magnific = 1.5 ; y.dist.legend = 0.7 ; y.nb.inter.tick = 1 ; text.angle = 90 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; bg.color = NULL ; grid.lwd = NULL ; grid.col = "white" ; corner.text = "" ; magnific.corner.text = 1 ; just.label.add = FALSE ; par.reset = FALSE ; custom.par = NULL # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+if(length(find("fun_open_window", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_open_window() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -1951,6 +2002,12 @@ fun_close_specif_window <- function(kind = "pdf", return.text = FALSE){
 # windows() ; windows() ; pdf() ; dev.list() ; fun_close_specif_window(kind = c("pdf", "x11"), return.text = TRUE) ; dev.list()
 # DEBUGGING
 # kind = c("windows", "pdf") ; return.text = FALSE # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -2026,6 +2083,12 @@ fun_export_data <- function(data, output ="results.txt", path = "C:/Users/Gael/D
 # fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2)
 # DEBUGGING
 # data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; sep = 2 # for function debugging
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR: REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging

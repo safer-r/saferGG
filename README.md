@@ -47,6 +47,11 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 #### WHAT'S NEW IN
 
+## v2.0.1
+
+1) functions that use other functions from this toolset now check if these required functions are indeed present in the R environment
+
+
 ## v2.0.0
 
 1) fun_feature_post_plot() function improved: Now independent magnification for x axis/labels and y axis/labels. BEWARE: argument names have been modified
