@@ -47,6 +47,13 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 #### WHAT'S NEW IN
 
+## v3.0.0
+
+1) function fun_dataframe_flipping() has been renamed fun_dataframe_remodeling()
+
+2) examples and draws added
+
+
 ## v2.0.1
 
 1) functions that use other functions from this toolset now check if these required functions are indeed present in the R environment
