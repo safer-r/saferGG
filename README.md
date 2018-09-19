@@ -1,6 +1,6 @@
 #### DESCRIPTION
 
-Cute Little Functions contains 16 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 16 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 The function names are:
 fun_param_check()
 fun_object_info()
@@ -24,19 +24,19 @@ fun_export_data()
 
 Download the desired Tagged version, never the current master.
 
-Source the cute_little_functions.R into R/RStudio to have the functions available in the working environment.
+Source the cute_little_R_functions.R into R/RStudio to have the functions available in the working environment.
 
 Description of the functions is at the beginning of the function body. To obtain it:
 
-	Either read the cute_little_functions.docx (or open the cute_little_functions.R file).
+	Either read the cute_little_functions.docx (or open the cute_little_R_functions.R file).
 	
 	Or in the R/RStudio console, type the name of the function without brackets. Example : fun_object_info.
 
 
 #### FILE DESCRIPTIONS
 
-cute_little_functions.R	file that has to be sourced
-cute_little_functions.docx	just for easier code reading
+cute_little_R_functions.R	file that has to be sourced
+cute_little_R_functions.docx	just for easier code reading
 examples_alone.txt	compile all the examples of each of the 16 functions into a single file
 
 

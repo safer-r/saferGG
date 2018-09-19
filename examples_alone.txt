@@ -1,4 +1,4 @@
-# COMPILATION OF THE EXAMPLES PRESENTS IN cute_little_functions.R
+# COMPILATION OF THE EXAMPLES PRESENTS IN cute_little_R_functions.R
 
 test <- 1:3 ; fun_param_check(data = test, data.name = NULL, print = TRUE, options = NULL, all.options.in.data = FALSE, class = NULL, typeof = NULL, mode = NULL, prop = TRUE, double.as.integer.allowed = FALSE, length = NULL)
 test <- 1:3 ; fun_param_check(data = test, print = TRUE, class = "numeric", typeof = NULL, double.as.integer.allowed = FALSE)
