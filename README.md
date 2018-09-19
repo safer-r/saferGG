@@ -49,9 +49,11 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 ## v3.0.0
 
-1) function fun_dataframe_flipping() has been renamed fun_dataframe_remodeling()
+1) cute_little_functions.R renamed cute_little_R_functions.R
 
-2) examples and draws added
+2) function fun_dataframe_flipping() has been renamed fun_dataframe_remodeling()
+
+3) examples and draws added
 
 
 ## v2.0.1
