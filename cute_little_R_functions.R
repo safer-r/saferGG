@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v3.0.0                         ##
+##     CUTE LITTLE R FUNCTIONS v3.1.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -84,7 +84,7 @@ fun_param_check <- function(data, data.name = NULL, class = NULL, typeof = NULL,
     # DEBUGGING
     # data = 1:3 ; data.name = NULL ; print = TRUE; options = NULL ; all.options.in.data = FALSE ; class = "numeric" ; typeof = NULL ; mode = NULL ; prop = NULL ; double.as.integer.allowed = TRUE ; length = NULL # for function debugging
     # argument checking
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev))
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev))
     if( ! is.null(data.name)){
         if( ! (length(data.name) == 1 & class(data.name) == "character")){
             tempo.cat <- paste0("\n\n================\n\nERROR: data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
@@ -308,7 +308,7 @@ fun_object_info <- function(data){
     # data = factor(1:3) # for function debugging
     # data = list(1:3) # for function debugging
     # argument checking
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     data.name <- deparse(substitute(data))
     output <- list("FILE_NAME" = data.name)
@@ -397,7 +397,7 @@ fun_1D_comp <- function(data1, data2){
     # DEBUGGING
     # data1 = 1:5 ; data2 = 1:5 ; names(data1) <- LETTERS[1:5] ; names(data2) <- LETTERS[1:5] # for function debugging
     # argument checking
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if( ! any(class(data1) %in% c("logical", "integer", "numeric", "character", "factor", "table"))){
         tempo.cat <- paste0("\n\n================\n\nERROR: THE data1 ARGUMENT MUST BE A NON NULL VECTOR, FACTOR OR 1D TABLE\n\n================\n\n")
         stop(tempo.cat)
@@ -610,7 +610,7 @@ fun_2D_comp <- function(data1, data2){
     # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) # for function debugging
     # data1 = table(Exp1 = c("A", "A", "A", "B", "B", "B"), Exp2 = c("A1", "B1", "A1", "C1", "C1", "B1")) ; data2 = data.frame(A = 1:3, B= letters[1:3]) # for function debugging
     # argument checking
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
         tempo.cat <- paste0("\n\n================\n\nERROR: THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
         stop(tempo.cat)
@@ -839,7 +839,7 @@ fun_list_comp <- function(data1, data2){
     # data1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
     # data1 = list(a = 1:5, b = LETTERS[1:2]) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
     # argument checking
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if( ! any(class(data1) %in% "list")){
         tempo.cat <- paste0("\n\n================\n\nERROR: THE data1 ARGUMENT MUST BE A LIST\n\n================\n\n")
         stop(tempo.cat)
@@ -976,7 +976,7 @@ fun_dataframe_remodeling <- function(data, quanti.col.name = "quanti", quali.col
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if( ! any(class(data) %in% "data.frame")){
         tempo.cat <- paste0("\n\n================\n\nERROR: THE data ARGUMENT MUST BE A DATA FRAME\n\n================\n\n")
         stop(tempo.cat)
@@ -1071,7 +1071,7 @@ fun_refactorization <- function(data, also.ordered = TRUE){
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if(also.ordered == FALSE){
         if( ! (all(class(data) == "data.frame") | all(class(data) == "factor"))){
             tempo.cat <- paste0("\n\n================\n\nERROR: data ARGUMENT MUST BE A FACTOR (NON ORDERED BECAUSE THE also.ordered ARGUMENT IS SET TO FALSE) OR A DATA FRAME\n\n================\n\n")
@@ -1159,7 +1159,7 @@ fun_rounding <- function(data, dec.nb = 2, after.lead.zero = TRUE){
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
     ini.mode <- mode(data)
@@ -1214,7 +1214,7 @@ fun_90clock_matrix_rot <- function(data){
     }
     # end required function checking
     # argument checking
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if( ! any(class(data) %in% "matrix")){
         tempo.cat <- paste0("\n\n================\n\nERROR: THE data ARGUMENT MUST BE A MATRIX\n\n================\n\n")
         stop(tempo.cat)
@@ -1270,7 +1270,7 @@ fun_hexa_hsv_color_matrix <- function(mat1, mat.hsv.h = TRUE, notch = 1, s = 1, 
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     if(mat.hsv.h == TRUE & fun_param_check(data = mat1, mode = "numeric", prop = TRUE, print = FALSE)$problem == TRUE){
         tempo.cat <- paste0("\n\n================\n\nERROR: mat1 ARGUMENT MUST BE A MATRIX OF PROPORTIONS SINCE THE mat.hsv.h ARGUMENT IS SET TO TRUE\n\n================\n\n")
         stop(tempo.cat)
@@ -1406,7 +1406,7 @@ fun_window_width_resizing <- function(class.nb, inches.per.class.nb = 1, ini.win
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     range.max <- class.nb + boundarie.space # the max range of the future plot
     range.min <- boundarie.space # the min range of the future plot
@@ -1472,7 +1472,7 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     if(path.fun == "working.dir"){
         path.fun <- getwd()
@@ -1602,7 +1602,7 @@ fun_graph_param_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FAL
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     if(param.reinitial == TRUE){
         if( ! all(names(dev.cur()) == "null device")){
@@ -1804,7 +1804,7 @@ fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NUL
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     text <- NULL
     par(tcl = -par()$mgp[2] * tick.length)
@@ -2025,7 +2025,7 @@ fun_close_specif_window <- function(kind = "pdf", return.text = FALSE){
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     text <- paste0("THE REQUIRED KIND OF GRAPHIC DEVICES TO CLOSE ARE ", paste(kind, collapse = " "))
     if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
@@ -2072,13 +2072,13 @@ fun_close_specif_window <- function(kind = "pdf", return.text = FALSE){
 
 
 # Check OK: clear to go Apollo
-fun_export_data <- function(data, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2){
+fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2){
     # AIM:
     # print a character string or a data object into an output file
     # REQUIRED FUNCTIONS
     # fun_param_check()
     # ARGUMENTS
-    # data: object to print in the output file
+    # data: object to print in the output file. cannot be NULL
     # output: name of the output file
     # path: location of the output file
     # no.overwrite: (logical) if output file already exists, defines if the printing is appended (default TRUE) or if the output file content is erased before printing (FALSE)
@@ -2088,6 +2088,7 @@ fun_export_data <- function(data, output ="results.txt", path = "C:/Users/Gael/D
     # RETURN
     # nothing
     # EXAMPLES
+    # fun_export_data()
     # fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2)
     # DEBUGGING
     # data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; sep = 2 # for function debugging
@@ -2098,6 +2099,10 @@ fun_export_data <- function(data, output ="results.txt", path = "C:/Users/Gael/D
     }
     # end required function checking
     # argument checking
+    if(is.null(data)){
+        tempo.cat <- paste0("\n\n================\n\nERROR: data ARGUMENT CANNOT BE NULL\n\n================\n\n")
+        stop(tempo.cat)
+    }
     arg.check <- NULL # for function debbuging
     checked.arg.names <- NULL # for function debbuging
     ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
@@ -2110,15 +2115,15 @@ fun_export_data <- function(data, output ="results.txt", path = "C:/Users/Gael/D
     if(any(arg.check) == TRUE){
         stop()
     }
-    # source("C:/Users/Gael/Documents/Sources/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
-    # the 4 next lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
-    arg.user.list <- as.list(match.call(expand.dots=FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
-    default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
-    arg.without.default.value <- sapply(default.arg.list, is.symbol) & sapply(sapply(default.arg.list, as.character), identical, "") # logical to detect argument without default values (these are typeof "symbol" and class "name" and empty character
-    if( ! all(names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list))){ # test that the arguments with no null values are provided by the user
-        tempo.cat <- paste0("\n\n================\n\nERROR: VALUE REQUIRED FOR THESE ARGUMENTS WITH NO DEFAULTS VALUES: ", paste(names(default.arg.list)[arg.without.default.value][ ! names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list)], collapse = " "), "\n\n================\n\n")
-        stop(tempo.cat)
-    }
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    # the 4 next lines are inactivated but kept because at a time, I might have a problem with data (solved with data = NULL). These 4 lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
+    # arg.user.list <- as.list(match.call(expand.dots=FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
+    # default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
+    # arg.without.default.value <- sapply(default.arg.list, is.symbol) & sapply(sapply(default.arg.list, as.character), identical, "") # logical to detect argument without default values (these are typeof "symbol" and class "name" and empty character
+    # if( ! all(names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list))){ # test that the arguments with no null values are provided by the user
+    # tempo.cat <- paste0("\n\n================\n\nERROR: VALUE REQUIRED FOR THESE ARGUMENTS WITH NO DEFAULTS VALUES: ", paste(names(default.arg.list)[arg.without.default.value][ ! names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list)], collapse = " "), "\n\n================\n\n")
+    #stop(tempo.cat)
+    # }
     if(output == ""){
         tempo.cat <- paste0("\n\n================\n\nERROR: output ARGUMENT DOES NOT CORRESPOND TO A VALID CHARACTER STRING\n\n================\n\n")
         stop(tempo.cat)

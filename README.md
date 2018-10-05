@@ -47,6 +47,13 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 #### WHAT'S NEW IN
 
+## v3.1.0
+
+1) fun_export_data() function modified: argument data cannot be NULL
+
+2) the debugging line containing r_debugging_tools-v1.2.R updated for the new position of this script
+
+
 ## v3.0.0
 
 1) cute_little_functions.R renamed cute_little_R_functions.R
