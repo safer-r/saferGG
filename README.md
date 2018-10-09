@@ -1,23 +1,24 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 16 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 17 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 The function names are:
-fun_param_check()
-fun_object_info()
-fun_1D_comp()
-fun_2D_comp()
-fun_list_comp()
-fun_dataframe_flipping()
-fun_refactorization()
-fun_rounding()
-fun_90clock_matrix_rot()
-fun_hexa_hsv_color_matrix()
-fun_window_width_resizing()
-fun_open_window()
-fun_graph_param_prior_plot()
-fun_feature_post_plot()
-fun_close_specif_window()
-fun_export_data()
+fun_param_check()	Check the class, type, mode and length, prop, neg values, na.contains, etc., of an object
+fun_object_info()	provide a full description of the object
+fun_1D_comp()	compare two 1D datasets (vector of factor or 1D table) of the same class or not
+fun_2D_comp()	compare two 2D datasets of the same class or not
+fun_list_comp()	compare two lists
+fun_dataframe_remodeling()	remodel data frames
+fun_refactorization()	refactorize a factor or the factor columns of a data frame, such as only the class present are in the levels (no empty levels). The class order in levels is kept
+fun_rounding()	round a vector of values, if decimal, with the desired number of decimal digits after the decimal leading zeros
+fun_90clock_matrix_rot()	90° clockwise matrix rotation
+fun_hexa_hsv_color_matrix()	convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
+fun_window_width_resizing()	rescale the width of a window to open depending on the number of classes to plot
+fun_open_window()	open a pdf or screen (GUI) graphic window
+fun_graph_param_prior_plot()	very convenient to erase the axes for post plot axis redrawing using fun_feature_post_plot()
+fun_feature_post_plot()	redesign axis and provide convenients coordinates for adding elements on the drawn graph
+fun_close_specif_window()	close only specific graphic windows (devices)
+fun_var_trim_display()	trim and display values from a numeric vector or matrix
+fun_export_data()	log file function: print a character string or a data object into a same output file
 
 
 #### HOW TO USE IT
@@ -46,6 +47,17 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 
 #### WHAT'S NEW IN
+
+## v4.0.0
+
+1) fun_var_trim_display() function added
+
+2) fun_feature_post_plot() function now provides additional coordinates when there are margins between the figure region and the device region
+
+3) fun_2D_comp() function now provide the common row and column names, and a bug fixed in the detection of identical row or column content
+
+4) error messages now mention the function that generates this message 
+
 
 ## v3.1.0
 
