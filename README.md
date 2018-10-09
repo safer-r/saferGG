@@ -48,6 +48,11 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 #### WHAT'S NEW IN
 
+## v4.1.0
+
+1) text.corner replaced by corner.text everywhere
+
+
 ## v4.0.0
 
 1) fun_var_trim_display() function added

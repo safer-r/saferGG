@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.0.0                         ##
+##     CUTE LITTLE R FUNCTIONS v4.1.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -15,27 +15,27 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis	1
-######## fun_param_check() #### Checking class, type, length, etc. of objects	1
-######## fun_object_info() #### Recovering object information	7
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	8
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	11
-######## fun_list_comp() #### comparison of two lists	16
-################ Object modification	18
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa	18
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames	21
-######## fun_rounding() #### Rounding number if decimal present	23
-######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation	24
-######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix	25
-################ Graphics	28
-######## fun_window_width_resizing() #### window width depending on classes to plot	28
-######## fun_open_window() #### Open a GUI or pdf graphic window	29
-######## fun_graph_param_prior_plot() #### Graph param before plotting	32
-######## fun_feature_post_plot() #### Graph param after plotting	35
-######## fun_close_specif_window() #### Closing specific graphic windows	43
-######## fun_quant_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs	45
-################ Exporting results (text & tables)	52
-######## fun_export_data() #### Print string or data object into output file	52
+################ Object analysis    1
+######## fun_param_check() #### Checking class, type, length, etc. of objects   1
+######## fun_object_info() #### Recovering object information   7
+######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 8
+######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   11
+######## fun_list_comp() #### comparison of two lists   16
+################ Object modification    18
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa 18
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 21
+######## fun_rounding() #### Rounding number if decimal present 23
+######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    24
+######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  25
+################ Graphics   28
+######## fun_window_width_resizing() #### window width depending on classes to plot 28
+######## fun_open_window() #### Open a GUI or pdf graphic window    29
+######## fun_graph_param_prior_plot() #### Graph param before plotting  32
+######## fun_feature_post_plot() #### Graph param after plotting    35
+######## fun_close_specif_window() #### Closing specific graphic windows    43
+######## fun_quant_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs   45
+################ Exporting results (text & tables)  52
+######## fun_export_data() #### Print string or data object into output file    52
 
 
 ################################ FUNCTIONS ################################
@@ -2145,7 +2145,7 @@ fun_close_specif_window <- function(kind = "pdf", return.text = FALSE){
 ######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs
 
 
-fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display = FALSE, trim.method = "", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 1, sec.tick.length = 0.75, text.corner = "", amplif.legend = 1, magnific.text.corner = 0.75, trim.return = FALSE){
+fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display = FALSE, trim.method = "", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 1, sec.tick.length = 0.75, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = FALSE){
     # AIM:
     # trim and display values from a numeric vector or matrix
     # plot 4 graphs: stripchart of values, stripchart of rank of values, hitogramme and normal QQPlot
@@ -2178,9 +2178,9 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
     # y.nb.inter.tick: number of secondary ticks between main ticks on y-axis (only if not log scale). Zero means non secondary ticks
     # tick.length: length of the ticks (1 means complete the distance between the plot region and the axis numbers, 0.5 means half the length, etc. 0 means no tick
     # sec.tick.length: length of the secondary ticks (1 means complete the distance between the plot region and the axis numbers, 0.5 means half the length, etc., 0 for no ticks)
-    # text.corner: text to add at the top right corner of the window
+    # corner.text: text to add at the top right corner of the window
     # amplif.legend: increase or decrease the size of the text of legend
-    # magnific.text.corner: increase or decrease the size of the text
+    # magnific.corner.text: increase or decrease the size of the text
     # trim.return: return the trimmed and non trimmed values? NULL returned for trimmed and non trimmed values if trim.method == ""
     # RETURN
     # a list containing:
@@ -2190,9 +2190,9 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
     # $trimmed.values: the values outside of the trimming interval as defined in trim.cutoffs above
     # $kept.values: the values inside the trimming interval as defined in trim.cutoffs above
     # EXAMPLES
-    # fun_var_trim_display(data = c(1:100, 1:10), displayed.nb = NULL, single.value.display = FALSE, trim.method = "mean.sd", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 0.5, sec.tick.length = 0.3, text.corner = "", amplif.legend = 1, magnific.text.corner = 0.75, trim.return = TRUE)
+    # fun_var_trim_display(data = c(1:100, 1:10), displayed.nb = NULL, single.value.display = FALSE, trim.method = "mean.sd", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 0.5, sec.tick.length = 0.3, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = TRUE)
     # DEBUGGING
-    # data = c(1:100, 1:10) ; displayed.nb = NULL ; single.value.display = FALSE ; trim.method = "quantile" ; trim.cutoffs = c(0.05, 0.975) ; interval.scale.disp = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 0.5 ; right.space = 0.25 ; orient = 1 ; dist.legend = 0.5 ; box.type = "l" ; amplif.label = 1 ; amplif.axis = 1 ; std.x.range = TRUE ; std.y.range = TRUE ; cex.pt = 0.1 ; col.box = hsv(0.55, 0.8, 0.8) ; x.nb.inter.tick = 4 ; y.nb.inter.tick = 0 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; text.corner = "" ; amplif.legend = 1 ; magnific.text.corner = 0.75 ; trim.return = TRUE # for function debugging
+    # data = c(1:100, 1:10) ; displayed.nb = NULL ; single.value.display = FALSE ; trim.method = "quantile" ; trim.cutoffs = c(0.05, 0.975) ; interval.scale.disp = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 0.5 ; right.space = 0.25 ; orient = 1 ; dist.legend = 0.5 ; box.type = "l" ; amplif.label = 1 ; amplif.axis = 1 ; std.x.range = TRUE ; std.y.range = TRUE ; cex.pt = 0.1 ; col.box = hsv(0.55, 0.8, 0.8) ; x.nb.inter.tick = 4 ; y.nb.inter.tick = 0 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; corner.text = "" ; amplif.legend = 1 ; magnific.corner.text = 0.75 ; trim.return = TRUE # for function debugging
     # required function checking
     if(length(find("fun_param_check", mode = "function")) == 0){
         tempo.cat <- paste0("\n\n================\n\nERROR IN fun_var_trim_display(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
@@ -2235,9 +2235,9 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
     tempo <- fun_param_check(data = y.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = sec.tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
-    tempo <- fun_param_check(data = text.corner, class = "character", length = 1) ; eval(ee)
+    tempo <- fun_param_check(data = corner.text, class = "character", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = amplif.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = magnific.text.corner, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = magnific.corner.text, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = trim.return, class = "logical", length = 1) ; eval(ee)
     if(any(arg.check) == TRUE){
         stop()
@@ -2329,25 +2329,25 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
         par(tcl = -par()$mgp[2] * tick.length) # tcl gives the length of the ticks as proportion of line text, knowing that mgp is in text lines. So the main ticks are a 0.5 of the distance of the axis numbers by default. The sign provides the side of the tick (negative for outside of the plot region)
         if(is.null(displayed.nb)){
             sampled.data <- as.vector(data)
-            if(text.corner == ""){
-                text.corner <- paste0("ALL VALUES OF THE DATASET DISPLAYED")
+            if(corner.text == ""){
+                corner.text <- paste0("ALL VALUES OF THE DATASET DISPLAYED")
             }else{
-                text.corner <- paste0(text.corner, "\nALL VALUES OF THE DATASET DISPLAYED")
+                corner.text <- paste0(corner.text, "\nALL VALUES OF THE DATASET DISPLAYED")
             }
         }else{
             if(length(as.vector(data)) > displayed.nb){
                 sampled.data <- sample(as.vector(data), displayed.nb, replace = FALSE)
-                if(text.corner == ""){
-                    text.corner <- paste0("BEWARE: ONLY ", displayed.nb, " VALUES ARE DISPLAYED AMONG THE ", length(as.vector(data)), " VALUES OF THE DATASET ANALYZED")
+                if(corner.text == ""){
+                    corner.text <- paste0("BEWARE: ONLY ", displayed.nb, " VALUES ARE DISPLAYED AMONG THE ", length(as.vector(data)), " VALUES OF THE DATASET ANALYZED")
                 }else{
-                    text.corner <- paste0(text.corner, "\nBEWARE: ONLY ", displayed.nb, " VALUES ARE DISPLAYED AMONG THE ", length(as.vector(data)), " VALUES OF THE DATASET ANALYZED")
+                    corner.text <- paste0(corner.text, "\nBEWARE: ONLY ", displayed.nb, " VALUES ARE DISPLAYED AMONG THE ", length(as.vector(data)), " VALUES OF THE DATASET ANALYZED")
                 }
             }else{
                 sampled.data <- as.vector(data)
-                if(text.corner == ""){
-                    text.corner <- paste0("BEWARE: THE DISPLAYED NUMBER OF VALUES PARAMETER ", deparse(substitute(displayed.nb)), " HAS BEEN SET TO ", displayed.nb, " WHICH IS ABOVE THE NUMBER OF VALUES OF THE DATASET ANALYZED -> ALL VALUES DISPLAYED")
+                if(corner.text == ""){
+                    corner.text <- paste0("BEWARE: THE DISPLAYED NUMBER OF VALUES PARAMETER ", deparse(substitute(displayed.nb)), " HAS BEEN SET TO ", displayed.nb, " WHICH IS ABOVE THE NUMBER OF VALUES OF THE DATASET ANALYZED -> ALL VALUES DISPLAYED")
                 }else{
-                    text.corner <- paste0(text.corner, "\nBEWARE: THE DISPLAYED NUMBER OF VALUES PARAMETER ", deparse(substitute(displayed.nb)), " HAS BEEN SET TO ", displayed.nb, " WHICH IS ABOVE THE NUMBER OF VALUES OF THE DATASET ANALYZED -> ALL VALUES DISPLAYED")
+                    corner.text <- paste0(corner.text, "\nBEWARE: THE DISPLAYED NUMBER OF VALUES PARAMETER ", deparse(substitute(displayed.nb)), " HAS BEEN SET TO ", displayed.nb, " WHICH IS ABOVE THE NUMBER OF VALUES OF THE DATASET ANALYZED -> ALL VALUES DISPLAYED")
                 }
             }
         }
@@ -2361,10 +2361,10 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
         graph.xlim <- par()$usr[1:2] # for hist() and qqnorm() below
         if(interval.scale.disp == TRUE){
             fun.interval.scale.display(data.f = data)
-            if(text.corner == ""){
-                text.corner <-  paste0("MULTIPLYING FACTOR DISPLAYED (MEAN +/- SD) ON SCALES: ", paste(formatC(round(qnorm(quantiles.selection), 2))[-(1:(length(quantiles.selection) - 1) / 2)], collapse = ", "), "\nQUANTILES DISPLAYED ON SCALES: ", paste(quantiles.selection, collapse = ", "))
+            if(corner.text == ""){
+                corner.text <-  paste0("MULTIPLYING FACTOR DISPLAYED (MEAN +/- SD) ON SCALES: ", paste(formatC(round(qnorm(quantiles.selection), 2))[-(1:(length(quantiles.selection) - 1) / 2)], collapse = ", "), "\nQUANTILES DISPLAYED ON SCALES: ", paste(quantiles.selection, collapse = ", "))
             }else{
-                text.corner <-  paste0(text.corner, "\nMULTIPLYING FACTOR DISPLAYED (MEAN +/- SD) ON SCALES: ", paste(formatC(round(qnorm(quantiles.selection), 2))[-(1:(length(quantiles.selection) - 1) / 2)], collapse = ", "), "\nQUANTILES DISPLAYED ON SCALES: ", paste(quantiles.selection, collapse = ", "))
+                corner.text <-  paste0(corner.text, "\nMULTIPLYING FACTOR DISPLAYED (MEAN +/- SD) ON SCALES: ", paste(formatC(round(qnorm(quantiles.selection), 2))[-(1:(length(quantiles.selection) - 1) / 2)], collapse = ", "), "\nQUANTILES DISPLAYED ON SCALES: ", paste(quantiles.selection, collapse = ", "))
             }
         }
         output.tempo <- fun.add.cut(data.f = data, return.f = TRUE) # to recover real.trim.cutoffs
@@ -2373,10 +2373,10 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
         }
         par(xpd = NA)
         if(trim.method != ""){
-            if(text.corner == ""){
-                text.corner <-  paste0("SELECTED CUT-OFFS (PROPORTION): ", paste(trim.cutoffs, collapse = ", "), "\nSELECTED CUT-OFFS: ", paste(output.tempo$real.trim.cutoffs, collapse = ", "))
+            if(corner.text == ""){
+                corner.text <-  paste0("SELECTED CUT-OFFS (PROPORTION): ", paste(trim.cutoffs, collapse = ", "), "\nSELECTED CUT-OFFS: ", paste(output.tempo$real.trim.cutoffs, collapse = ", "))
             }else{
-                text.corner <-  paste0(text.corner, "\nSELECTED CUT-OFFS (PROPORTION): ", paste(trim.cutoffs, collapse = ", "), "\nSELECTED CUT-OFFS: ", paste(output.tempo$real.trim.cutoffs, collapse = ", "))
+                corner.text <-  paste0(corner.text, "\nSELECTED CUT-OFFS (PROPORTION): ", paste(trim.cutoffs, collapse = ", "), "\nSELECTED CUT-OFFS: ", paste(output.tempo$real.trim.cutoffs, collapse = ", "))
             }
             if(interval.scale.disp == TRUE){
                 legend(x = (par("usr")[1] - ((par("usr")[2] -  par("usr")[1]) / (par("plt")[2] - par("plt")[1])) * par("plt")[1] - ((par("usr")[2] -  par("usr")[1]) / (par("omd")[2] - par("omd")[1])) * par("omd")[1]), y = (par("usr")[4] + ((par("usr")[4] -  par("usr")[3]) / (par("plt")[4] - par("plt")[3])) * (1 - par("plt")[4]) + ((par("usr")[4] -  par("usr")[3]) / (par("omd")[4] - par("omd")[3])) * (1 - par("omd")[4]) / 2), legend = c(c("min, Q1, Median, Q3, max"), "mean +/- 1.96sd", paste0("Trimming interval: ", paste0(trim.cutoffs, collapse = " , ")), "Mean +/- sd multiplying factor", "Quantile"), yjust = 0, lty=1, col=c(col.box, "red", color.cut, col.mean, col.quantile), bty="n", cex = amplif.legend)
@@ -2404,7 +2404,7 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
         x.text <- par("usr")[2] + (par("usr")[2] -  par("usr")[1]) / (par("plt")[2] - par("plt")[1]) * (1 - par("plt")[2]) / 2
         y.text <- (par("usr")[4] + ((par("usr")[4] -  par("usr")[3]) / (par("plt")[4] - par("plt")[3])) * (1 - par("plt")[4]) + ((par("usr")[4] -  par("usr")[3]) / ((par()$omd[4] / 2) * ((par("plt")[4] - par("plt")[3])))) * (1 - par("omd")[4])) # BEWARE. Here in "(par()$omd[4] / 2", division by two because there are 2 graphs staked on the y axis, and not one
         par(xpd=NA)
-        text(x = x.text, y = y.text, paste0(text.corner), adj=c(1, 1.1), cex = magnific.text.corner) # text at the topright corner
+        text(x = x.text, y = y.text, paste0(corner.text), adj=c(1, 1.1), cex = magnific.corner.text) # text at the topright corner
         par(xpd=FALSE)
         par(xaxs = ifelse(std.x.range, "i", "r"), yaxs = ifelse(std.y.range, "i", "r"))
         qqnorm(as.vector(sampled.data), main = "", datax = TRUE, ylab = "Value", pch = 1, col = "red", cex = cex.pt / 0.2)
