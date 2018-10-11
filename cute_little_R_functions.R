@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.2.0                         ##
+##     CUTE LITTLE R FUNCTIONS v4.3.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -15,27 +15,27 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis	1
-######## fun_param_check() #### Checking class, type, length, etc. of objects	1
-######## fun_object_info() #### Recovering object information	7
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	8
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	11
-######## fun_list_comp() #### comparison of two lists	16
-################ Object modification	18
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa	18
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames	21
-######## fun_rounding() #### Rounding number if decimal present	23
-######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation	24
-######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix	25
-################ Graphics	28
-######## fun_window_width_resizing() #### window width depending on classes to plot	28
-######## fun_open_window() #### Open a GUI or pdf graphic window	29
-######## fun_graph_param_prior_plot() #### Graph param before plotting	32
-######## fun_feature_post_plot() #### Graph param after plotting	35
-######## fun_close_specif_window() #### Closing specific graphic windows	43
-######## fun_quant_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs	45
-################ Exporting results (text & tables)	52
-######## fun_export_data() #### Print string or data object into output file	52
+################ Object analysis    1
+######## fun_param_check() #### Checking class, type, length, etc. of objects   1
+######## fun_object_info() #### Recovering object information   7
+######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 8
+######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   11
+######## fun_list_comp() #### comparison of two lists   16
+################ Object modification    18
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa 18
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 21
+######## fun_rounding() #### Rounding number if decimal present 23
+######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    24
+######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  25
+################ Graphics   28
+######## fun_window_width_resizing() #### window width depending on classes to plot 28
+######## fun_open_window() #### Open a GUI or pdf graphic window    29
+######## fun_graph_param_prior_plot() #### Graph param before plotting  32
+######## fun_feature_post_plot() #### Graph param after plotting    35
+######## fun_close_specif_window() #### Closing specific graphic windows    43
+######## fun_quant_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs   45
+################ Exporting results (text & tables)  52
+######## fun_export_data() #### Print string or data object into output file    52
 
 
 ################################ FUNCTIONS ################################
@@ -298,18 +298,23 @@ fun_object_info <- function(data){
     # a list containing the info
     # EXAMPLES
     # fun_object_info(data = 1:3)
+    # fun_object_info(list(a = 1:3, b = ordered(factor(c("A", "B")))))
     # DEBUGGING
     # data = NULL # for function debugging
     # data = 1:3 # for function debugging
     # data = matrix(1:3) # for function debugging
-    # data = data.frame(a = 1:3) # for function debugging
-    # data = factor(1:3) # for function debugging
-    # data = list(1:3) # for function debugging
+    # data = data.frame(a = 1:2, b = c("A", "B")) # for function debugging
+    # data = factor(c("b", "a")) # for function debugging
+    # data = ordered(factor(c("b", "a"))) # for function debugging
+    # data = list(a = 1:3, b = factor(c("A", "B"))) # for function debugging
+    # data = list(a = 1:3, b = ordered(factor(c("A", "B")))) # for function debugging
     # argument checking
     # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
     # end argument checking
     data.name <- deparse(substitute(data))
     output <- list("FILE_NAME" = data.name)
+    tempo <- list("CLASS" = class(data))
+    output <- c(output, tempo)
     tempo <- list("FILE_HEAD" = head(data))
     output <- c(output, tempo)
     if( ! is.null(data)){
@@ -323,18 +328,40 @@ fun_object_info <- function(data){
         tempo <- list("SUMMARY" = summary(data))
         output <- c(output, tempo)
     }
-    if(class(data) == "data.frame" | class(data) == "matrix"){
-        tempo <- list("COLUM_NAMES" = names(data))
+    if(all(class(data) == "data.frame" | class(data) == "matrix")){
+        tempo <- list("ROW_NAMES" = dimnames(data)[[1]])
+        output <- c(output, tempo)
+        tempo <- list("COLUM_NAMES" = dimnames(data)[[2]])
         output <- c(output, tempo)
     }
-    if(class(data) == "data.frame"){
+    if(all(class(data) == "data.frame")){
         tempo <- list("STRUCTURE" = ls.str(data))
         output <- c(output, tempo)
         tempo <- list("COLUMN_TYPE" = sapply(data, FUN = "typeof"))
+        if(any(sapply(data, FUN = "class") %in% "factor")){ # if an ordered factor is present, then sapply(data, FUN = "class") return a list but works with any(sapply(data, FUN = "class") %in% "factor") 
+            tempo.class <- sapply(data, FUN = "class")
+            if(any(unlist(tempo.class) %in% "ordered")){
+                tempo2 <- sapply(tempo.class, paste, collapse = " ") # paste the "ordered" factor" in "ordered factor"
+            }else{
+                tempo2 <- unlist(tempo.class)
+            }
+            tempo[["COLUMN_TYPE"]][grepl(x = tempo2, pattern = "factor")] <- tempo2[grepl(x = tempo2, pattern = "factor")]
+        }
         output <- c(output, tempo)
     }
-    if(class(data) == "list"){
+    if(all(class(data) == "list")){
         tempo <- list("COMPARTMENT_NAMES" = names(data))
+        output <- c(output, tempo)
+        tempo <- list("COMPARTMENT_TYPE" = sapply(data, FUN = "typeof"))
+        if(any(unlist(sapply(data, FUN = "class")) %in% "factor")){ # if an ordered factor is present, then sapply(data, FUN = "class") return a list but works with any(sapply(data, FUN = "class") %in% "factor") 
+            tempo.class <- sapply(data, FUN = "class")
+            if(any(unlist(tempo.class) %in% "ordered")){
+                tempo2 <- sapply(tempo.class, paste, collapse = " ") # paste the "ordered" factor" in "ordered factor"
+            }else{
+                tempo2 <- unlist(tempo.class)
+            }
+            tempo[["COMPARTMENT_TYPE"]][grepl(x = tempo2, pattern = "factor")] <- tempo2[grepl(x = tempo2, pattern = "factor")]
+        }
         output <- c(output, tempo)
     }
     return(output)

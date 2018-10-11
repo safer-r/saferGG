@@ -38,7 +38,7 @@ Description of the functions is at the beginning of the function body. To obtain
 
 cute_little_R_functions.R	file that has to be sourced
 cute_little_R_functions.docx	just for easier code reading
-examples_alone.txt	compile all the examples of each of the 16 functions into a single file
+examples_alone.txt	compile all the examples of each of the 17 functions into a single file
 
 
 #### WEB LOCATION
@@ -47,6 +47,11 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 
 #### WHAT'S NEW IN
+
+## v4.3.0
+
+1) fun_object_info() now manages object class "ordered" "factor"
+
 
 ## v4.2.0
 
