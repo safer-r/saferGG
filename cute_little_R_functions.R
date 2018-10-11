@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.1.0                         ##
+##     CUTE LITTLE R FUNCTIONS v4.2.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -15,27 +15,27 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis    1
-######## fun_param_check() #### Checking class, type, length, etc. of objects   1
-######## fun_object_info() #### Recovering object information   7
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 8
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   11
-######## fun_list_comp() #### comparison of two lists   16
-################ Object modification    18
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa 18
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 21
-######## fun_rounding() #### Rounding number if decimal present 23
-######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    24
-######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  25
-################ Graphics   28
-######## fun_window_width_resizing() #### window width depending on classes to plot 28
-######## fun_open_window() #### Open a GUI or pdf graphic window    29
-######## fun_graph_param_prior_plot() #### Graph param before plotting  32
-######## fun_feature_post_plot() #### Graph param after plotting    35
-######## fun_close_specif_window() #### Closing specific graphic windows    43
-######## fun_quant_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs   45
-################ Exporting results (text & tables)  52
-######## fun_export_data() #### Print string or data object into output file    52
+################ Object analysis	1
+######## fun_param_check() #### Checking class, type, length, etc. of objects	1
+######## fun_object_info() #### Recovering object information	7
+######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	8
+######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	11
+######## fun_list_comp() #### comparison of two lists	16
+################ Object modification	18
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa	18
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames	21
+######## fun_rounding() #### Rounding number if decimal present	23
+######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation	24
+######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix	25
+################ Graphics	28
+######## fun_window_width_resizing() #### window width depending on classes to plot	28
+######## fun_open_window() #### Open a GUI or pdf graphic window	29
+######## fun_graph_param_prior_plot() #### Graph param before plotting	32
+######## fun_feature_post_plot() #### Graph param after plotting	35
+######## fun_close_specif_window() #### Closing specific graphic windows	43
+######## fun_quant_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs	45
+################ Exporting results (text & tables)	52
+######## fun_export_data() #### Print string or data object into output file	52
 
 
 ################################ FUNCTIONS ################################
@@ -604,11 +604,13 @@ fun_2D_comp <- function(data1, data2){
     # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
     # EXAMPLES
     # obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
+    # obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
     # obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
     # obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
     # DEBUGGING
     # data1 = matrix(1:10, ncol = 5) ; data2 = matrix(1:10, ncol = 5) # for function debugging
     # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
+    # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5) # for function debugging
     # data1 = matrix(1:15, byrow = TRUE, ncol = 5, dimnames = list(letters[1:3], LETTERS[1:5])) ; data2 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
     # data1 = matrix(1:15, ncol = 5, dimnames = list(letters[1:3], LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
     # data1 = matrix(1:15, ncol = 5, dimnames = list(paste0("A", letters[1:3]), LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -671,13 +673,13 @@ fun_2D_comp <- function(data1, data2){
         any.id.row.name <- TRUE
         same.row.name.pos1 <- 1:row.nb
         same.row.name.pos2 <- 1:row.nb
-        common.row.names <- dimnames(mat1)[[1]]
+        common.row.names <- dimnames(data1)[[1]]
         same.col.name <- TRUE
         col.name <- dimnames(data1)[[2]]
         any.id.col.name <- TRUE
         same.col.name.pos1 <- 1:col.nb
         same.col.name.pos2 <- 1:col.nb
-        common.col.names <- dimnames(mat1)[[2]]
+        common.col.names <- dimnames(data1)[[2]]
         any.id.row <- TRUE
         same.row.pos1 <- 1:row.nb
         same.row.pos2 <- 1:row.nb
@@ -842,6 +844,8 @@ fun_2D_comp <- function(data1, data2){
         if(same.dim == TRUE & ! all(is.null(same.row.pos1), is.null(same.row.pos2), is.null(same.col.pos1), is.null(same.col.pos2))){ # same.dim == TRUE means that same.row.nb == TRUE and same.col.nb == TRUE, meaning that row.nb != NULL and col.nb != NULL. Thus, no need to include these checkings
             if(identical(same.row.pos1, 1:row.nb) & identical(same.row.pos2, 1:row.nb) & identical(same.col.pos1, 1:col.nb) & identical(same.col.pos2, 1:col.nb)){
                 identical.content <- TRUE
+            }else{
+                identical.content <- FALSE
             }
         }else{
             identical.content <- FALSE

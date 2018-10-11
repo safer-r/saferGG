@@ -43,10 +43,15 @@ examples_alone.txt	compile all the examples of each of the 16 functions into a s
 
 #### WEB LOCATION
 
-Check for updated versions (more recent release tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions
+Check for updated versions (more recent release tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions/tags
 
 
 #### WHAT'S NEW IN
+
+## v4.2.0
+
+1) bug in the fun_2D_comp() function fixed
+
 
 ## v4.1.0
 
