@@ -10,6 +10,7 @@
 
 
 
+# BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
 
 
 ################################ OUTLINE ################################
@@ -296,8 +297,10 @@ fun_object_info <- function(data){
     # data: object to test
     # RETURN
     # a list containing the info
+    # use names(fun_object_info()) and remove what can be to big for easy analysis
     # EXAMPLES
     # fun_object_info(data = 1:3)
+    # fun_object_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B")))))
     # fun_object_info(list(a = 1:3, b = ordered(factor(c("A", "B")))))
     # DEBUGGING
     # data = NULL # for function debugging
@@ -1588,7 +1591,7 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
     if(pdf.disp == TRUE){
         pdf.loc <- paste0(path.fun, "/", pdf.name.file, ".pdf")
         if(file.exists(pdf.loc) == TRUE & no.pdf.overwrite == TRUE){
-            tempo.cat <- paste0("\n\n================\n\nERROR IN fun_open_window(): pdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO no.pdf.overwrite ARGUMENT SET TO TRUE\n\n================\n\n")
+            tempo.cat <- paste0("\n\n================\n\nERROR IN fun_open_window(): pdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO no.pdf.overwrite ARGUMENT SET TO TRUE: ", pdf.loc, "\n\n================\n\n")
             stop(tempo.cat)
         }else{
             pdf(width = width.fun, height = height.fun, file=pdf.loc, paper = paper)
