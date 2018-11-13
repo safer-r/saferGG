@@ -31,6 +31,7 @@ obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(LETTERS[5:9], matrix(1:6), 
 
 obs <- data.frame(col1 = (1:4)*10, col2 = c("A", "B", "A", "A")) ; obs ; fun_dataframe_remodeling(obs)
 obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; obs ; fun_dataframe_remodeling(obs, quanti.col.name = "quanti", quali.col.name = "quali")
+obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; rownames(obs) <- paste0("row", 1:4) ; obs ; fun_dataframe_remodeling(obs, quanti.col.name = "quanti", quali.col.name = "quali")
 
 obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, FALSE)
 obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, TRUE)
