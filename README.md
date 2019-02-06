@@ -48,6 +48,13 @@ Check for updated versions (more recent release tags) at https://gitlab.pasteur.
 
 #### WHAT'S NEW IN
 
+## v4.5.0
+
+1) fun_open_window() improved to deal with Linux systems
+
+2) fun_graph_param_prior_plot() improved to deal with Linux systems
+
+
 ## v4.4.0
 
 1) fun_dataframe_remodeling() now add a ini_rowname column in the output data frame when it is coherent and when initial row names are available (not NULL)

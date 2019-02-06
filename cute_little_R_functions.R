@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.4.0                         ##
+##     CUTE LITTLE R FUNCTIONS v4.5.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -1527,7 +1527,7 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
 # fun_param_check()
 # ARGUMENTS:
 # pdf.disp: use pdf or not
-# path.fun: where the pdf is saved. Must not finish by a path separator. Write "working.dir" if working directory is required (default)
+# path.fun: where the pdf is saved. Write "working.dir" if working directory is required (default)
 # pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function)
 # width.fun: width of the windows (in inches)
 # height.fun: height of the windows (in inches)
@@ -1543,6 +1543,7 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
 # fun_open_window(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
 # DEBUGGING
 # pdf.disp = TRUE ; path.fun = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
+# pdf.disp = TRUE ; path.fun = "/pasteur/homes/gmillot/" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
 # required function checking
 if(length(find("fun_param_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_open_window(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
@@ -1570,29 +1571,51 @@ stop()
 if(path.fun == "working.dir"){
 path.fun <- getwd()
 }else{
+if(grepl(x = path.fun, pattern = ".+/$")){
+path.fun <- substr(path.fun, 1, nchar(path.fun) - 1) # remove the last /
+}
 if(dir.exists(path.fun) == FALSE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_open_window(): path.fun ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
-tempo <- NULL
+open.fail <- NULL
 windows()
-ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset)
+ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
-if( ! file.exists(paste0(getwd(), "/Rplots.pdf"))){
-tempo <- suppressWarnings(try(X11(), silent = TRUE))[] # open a X11 window or a pdf. So no need to use again X11(). tempo == NULL if no problem, meaning that the X11 window is opened. If tempo != NULL, a pdf is open here paste0(getwd(), "/Rplots.pdf")
-ini.par <- par(no.readonly = TRUE) # recover the initial graphical parameters. Works even if X11 is not working as R opens a pdf
-invisible(dev.off()) # can be used here to close the pdf windows if tempo != NULL and to close the X11 window if tempo == NULL
-}else{
-tempo.cat <- paste0("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET.\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+if(pdf.disp == TRUE){
+if(file.exists(paste0(path.fun, "/recover_ini_par.pdf"))){
+tempo.cat <- paste0("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT BE USED ON LINUX IF A recover_ini_par.pdf FILE ALREADY EXISTS HERE: ", paste(path.fun, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
+}else{
+pdf(width = width.fun, height = height.fun, file=paste0(path.fun, "/recover_ini_par.pdf"), paper = paper)
+ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
+invisible(dev.off()) # close the pdf windows
+file.remove(paste0(path.fun, "/recover_ini_par.pdf")) # remove the pdf file
 }
 }else{
-tempo <- NULL
+# test if X11 can be opened
+if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_open_window(): THIS FUNCTION CANNOT BE USED ON LINUX IF A Rplots.pdf FILE ALREADY EXISTS HERE: ", getwd(), "\n\n================\n\n")
+stop(tempo.cat)
+}else{
+open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
+if(is.null(open.fail)){
+ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
+invisible(dev.off()) # close the new window
+}else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
+file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
+tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+stop(tempo.cat)
+}
+}
+}
+}else{
+open.fail <- NULL
 quartz()
-ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset)
+ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
 invisible(dev.off()) # close the new window
 }
 zone.ini <- matrix(1, ncol=1) # to recover the initial parameters for next figure region when device region split into several figure regions
@@ -1609,8 +1632,8 @@ pdf.loc <- NULL
 if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
 windows(width = width.fun, height = height.fun, rescale="fixed")
 }else if(Sys.info()["sysname"] == "Linux"){
-if( ! is.null(tempo)){
-stop("PROBLEM IN fun_open_window(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET.\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN")
+if( ! is.null(open.fail)){
+stop("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
 }else{
 X11(width = width.fun, height = height.fun)
 }
@@ -1633,6 +1656,7 @@ fun_graph_param_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FAL
 # AIM:
 # very convenient to erase the axes for post plot axis redrawing using fun_feature_post_plot()
 # reinitialize and set the graphic parameters before plotting
+# CANNOT be used if no graphic device already opened
 # REQUIRED FUNCTIONS
 # fun_param_check()
 # ARGUMENTS
@@ -1659,9 +1683,9 @@ fun_graph_param_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FAL
 # RETURN
 # return graphic parameter modification
 # EXAMPLES
-# fun_graph_param_prior_plot(param.reinitial = FALSE, xlog.scale = FALSE, ylog.scale = FALSE, remove.label = TRUE, remove.x.axis = TRUE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 4.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = FALSE)
+# fun_graph_param_prior_plot(param.reinitial = FALSE, xlog.scale = FALSE, ylog.scale = FALSE, remove.label = TRUE, remove.x.axis = TRUE, remove.y.axis = TRUE, std.x.range = TRUE, std.y.range = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 4.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = FALSE)
 # DEBUGGING
-# param.reinitial = FALSE ; xlog.scale = FALSE ; ylog.scale = FALSE ; remove.label = TRUE ; remove.x.axis = TRUE ; remove.y.axis = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 1 ; right.space = 1 ; orient = 1 ; dist.legend = 4.5 ; tick.length = 0.5 ; box.type = "n" ; amplif.label = 1 ; amplif.axis = 1 ; display.extend = FALSE ; return.par = FALSE # for function debugging
+# param.reinitial = FALSE ; xlog.scale = FALSE ; ylog.scale = FALSE ; remove.label = TRUE ; remove.x.axis = TRUE ; remove.y.axis = TRUE ; std.x.range = TRUE ; std.y.range = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 1 ; right.space = 1 ; orient = 1 ; dist.legend = 4.5 ; tick.length = 0.5 ; box.type = "n" ; amplif.label = 1 ; amplif.axis = 1 ; display.extend = FALSE ; return.par = FALSE # for function debugging
 # required function checking
 if(length(find("fun_param_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_graph_param_prior_plot(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
@@ -1697,6 +1721,10 @@ stop()
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
 # end argument checking
+if(is.null(dev.list())){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_graph_param_prior_plot(): THIS FUNCTION CANNOT BE USED IF NO GRAPHIC DEVICE ALREADY OPENED (dev.list() IS CURRENTLY NULL)\n\n================\n\n")
+stop(tempo.cat)
+}
 if(param.reinitial == TRUE){
 if( ! all(names(dev.cur()) == "null device")){
 active.wind.nb <- dev.cur()
@@ -1705,18 +1733,31 @@ active.wind.nb <- 0
 }
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
 windows()
+ini.par <- par(no.readonly = TRUE)  # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
+invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
-if( ! file.exists(paste0(getwd(), "/Rplots.pdf"))){
-tempo <- suppressWarnings(try(X11(), silent = TRUE))[] # open a X11 window or a pdf. So no need to use again X11(). tempo == NULL if no problem, meaning that the X11 window is opened. If tempo != NULL, a pdf is open here paste0(getwd(), "/Rplots.pdf")
-}else{
-tempo.cat <- paste0("\n\n================\n\nPROBLEM IN fun_graph_param_prior_plot(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET.\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_graph_param_prior_plot(): THIS FUNCTION CANNOT BE USED ON LINUX WITH param.reinitial SET TO TRUE IF A Rplots.pdf FILE ALREADY EXISTS HERE: ", getwd(), "\n\n================\n\n")
 stop(tempo.cat)
+}else{
+open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
+if(is.null(open.fail)){
+ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
+invisible(dev.off()) # close the new window
+}else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
+ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened
+invisible(dev.off()) # close the new window
+file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
+}else{
+tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_graph_param_prior_plot(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE USE PDF GRAPHIC INTERFACES AND RERUN\n\n================\n\n")
+stop(tempo.cat)
+}
 }
 }else{ # macOS
 quartz()
-}
-ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset)
+ini.par <- par(no.readonly = TRUE)  # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code bacause always a tempo window opened)
 invisible(dev.off()) # close the new window
+}
 if( ! all(names(dev.cur()) == "null device")){
 dev.set(active.wind.nb) # go back to the active windows if exists
 par(ini.par) # apply the initial par to current window
@@ -1997,7 +2038,7 @@ axis(side = x.side, at = c(1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8,
 x.text <- 10^par("usr")[2]
 }else if(is.null(x.categ) & x.log.scale == FALSE){
 axis(side=x.side, at=c(par()$usr[1], par()$usr[2]), labels=rep("", 2), lwd=1, lwd.ticks=0) # draw the axis line
-axis(side=x.side, at=round(seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1), 2), cex.axis = x.axis.magnific)
+axis(side=x.side, at=round(seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1), 2), cex.axis = x.axis.magnific) # axis(side=x.side, at=round(seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1), 2), labels = format(round(seq(par()$xaxp[1], par()$xaxp[2], length.out=par()$xaxp[3]+1), 2), big.mark=','), cex.axis = x.axis.magnific) # to get the 1000 comma separator
 mtext(side = x.side, text = x.lab, line = x.dist.legend / 0.2, las = 0, cex = x.label.magnific)
 if(x.nb.inter.tick > 0){
 inter.tick.unit <- (par("xaxp")[2] - par("xaxp")[1]) / par("xaxp")[3]
