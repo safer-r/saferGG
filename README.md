@@ -1,7 +1,9 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 17 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 18 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+
 The function names are:
+
 fun_param_check()	Check the class, type, mode and length, prop, neg values, na.contains, etc., of an object
 fun_object_info()	provide a full description of the object
 fun_1D_comp()	compare two 1D datasets (vector of factor or 1D table) of the same class or not
@@ -12,6 +14,7 @@ fun_refactorization()	refactorize a factor or the factor columns of a data frame
 fun_rounding()	round a vector of values, if decimal, with the desired number of decimal digits after the decimal leading zeros
 fun_90clock_matrix_rot()	90° clockwise matrix rotation
 fun_hexa_hsv_color_matrix()	convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
+fun_by_case_matrix_op()	assemble several matrices of same dimensions by performing by case operation
 fun_window_width_resizing()	rescale the width of a window to open depending on the number of classes to plot
 fun_open_window()	open a pdf or screen (GUI) graphic window
 fun_graph_param_prior_plot()	very convenient to erase the axes for post plot axis redrawing using fun_feature_post_plot()
@@ -43,10 +46,15 @@ examples_alone.txt	compile all the examples of each of the 17 functions into a s
 
 #### WEB LOCATION
 
-Check for updated versions (more recent release tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions/tags
+Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions/tags
 
 
 #### WHAT'S NEW IN
+
+## v4.6.0
+
+1) fun_by_case_matrix_op() added
+
 
 ## v4.5.0
 
