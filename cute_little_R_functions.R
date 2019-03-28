@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.6.0                         ##
+##     CUTE LITTLE R FUNCTIONS v4.7.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -15,28 +15,28 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis	1
-######## fun_param_check() #### Checking class, type, length, etc. of objects	1
-######## fun_object_info() #### Recovering object information	7
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	8
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	12
-######## fun_list_comp() #### comparison of two lists	18
-################ Object modification	21
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa	21
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames	23
-######## fun_rounding() #### Rounding number if decimal present	25
-######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation	27
-######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix	28
-######## fun_by_case_matrix_op() #### assembling of several matrices with operation	30
-################ Graphics	32
-######## fun_window_width_resizing() #### window width depending on classes to plot	33
-######## fun_open_window() #### Open a GUI or pdf graphic window	34
-######## fun_graph_param_prior_plot() #### Graph param before plotting	37
-######## fun_feature_post_plot() #### Graph param after plotting	41
-######## fun_close_specif_window() #### Closing specific graphic windows	52
-######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs	54
-################ Exporting results (text & tables)	62
-######## fun_export_data() #### Print string or data object into output file	62
+################ Object analysis    1
+######## fun_param_check() #### Checking class, type, length, etc. of objects   1
+######## fun_object_info() #### Recovering object information   7
+######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 8
+######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   12
+######## fun_list_comp() #### comparison of two lists   18
+################ Object modification    21
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa 21
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 23
+######## fun_rounding() #### Rounding number if decimal present 25
+######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    27
+######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  28
+######## fun_by_case_matrix_op() #### assembling of several matrices with operation 30
+################ Graphics   32
+######## fun_window_width_resizing() #### window width depending on classes to plot 33
+######## fun_open_window() #### Open a GUI or pdf graphic window    34
+######## fun_graph_param_prior_plot() #### Graph param before plotting  37
+######## fun_feature_post_plot() #### Graph param after plotting    41
+######## fun_close_specif_window() #### Closing specific graphic windows    52
+######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 54
+################ Exporting results (text & tables)  62
+######## fun_export_data() #### Print string or data object into output file    62
 
 
 ################################ FUNCTIONS ################################
@@ -1800,16 +1800,16 @@ fun_graph_param_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FAL
     tempo <- fun_param_check(data = remove.y.axis, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = std.x.range, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = std.y.range, class = "logical", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = down.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = left.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = up.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = right.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = orient, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = dist.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
+    tempo <- fun_param_check(data = down.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = left.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = up.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = right.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = orient, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = dist.legend, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = tick.length, mode = "numeric", length = 1, prop = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = box.type, options = c("o", "l", "7", "c", "u", "]", "n"), length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = amplif.label, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = amplif.axis, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = amplif.label, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = amplif.axis, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = display.extend, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = return.par, class = "logical", length = 1) ; eval(ee)
     if(any(arg.check) == TRUE){
@@ -1994,12 +1994,12 @@ fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NUL
         tempo <- fun_param_check(data = x.categ, class = "character", na.contain = TRUE) ; eval(ee)
     }
     if( ! is.null(x.categ.pos)){
-        tempo <- fun_param_check(data = x.categ.pos, class = "numeric") ; eval(ee)
+        tempo <- fun_param_check(data = x.categ.pos, mode = "numeric") ; eval(ee)
     }
     tempo <- fun_param_check(data = x.lab, class = "character", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = x.axis.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = x.label.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = x.dist.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = x.axis.magnific, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = x.label.magnific, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = x.dist.legend, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = x.nb.inter.tick, typeof = "integer", length = 1, double.as.integer.allowed = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = y.side, options = c(0, 2, 4), length = 1) ; eval(ee)
     tempo <- fun_param_check(data = y.log.scale, class = "logical", length = 1) ; eval(ee)
@@ -2007,16 +2007,16 @@ fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NUL
         tempo <- fun_param_check(data = y.categ, class = "character", na.contain = TRUE) ; eval(ee)
     }
     if( ! is.null(y.categ.pos)){
-        tempo <- fun_param_check(data = y.categ.pos, class = "numeric") ; eval(ee)
+        tempo <- fun_param_check(data = y.categ.pos, mode = "numeric") ; eval(ee)
     }
     tempo <- fun_param_check(data = y.lab, class = "character", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = y.axis.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = y.label.magnific, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = y.dist.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = y.axis.magnific, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = y.label.magnific, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = y.dist.legend, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = y.nb.inter.tick, typeof = "integer", length = 1, double.as.integer.allowed = TRUE) ; eval(ee)
-    tempo <- fun_param_check(data = text.angle, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
-    tempo <- fun_param_check(data = sec.tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
+    tempo <- fun_param_check(data = text.angle, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = tick.length, mode = "numeric", length = 1, prop = TRUE) ; eval(ee)
+    tempo <- fun_param_check(data = sec.tick.length, mode = "numeric", length = 1, prop = TRUE) ; eval(ee)
     if( ! is.null(bg.color)){
         tempo <- fun_param_check(data = bg.color, class = "character", length = 1) ; eval(ee)
         if( ! (bg.color %in% colors() | grepl(pattern = "^#", bg.color))){ # check color
@@ -2025,7 +2025,7 @@ fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NUL
         }
     }
     if( ! is.null(grid.lwd)){
-        tempo <- fun_param_check(data = grid.lwd, class = "numeric", neg.values = FALSE) ; eval(ee)
+        tempo <- fun_param_check(data = grid.lwd, mode = "numeric", neg.values = FALSE) ; eval(ee)
     }
     if( ! is.null(grid.col)){
         tempo <- fun_param_check(data = grid.col, class = "character", length = 1) ; eval(ee)
@@ -2035,7 +2035,7 @@ fun_feature_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NUL
         }
     }
     tempo <- fun_param_check(data = corner.text, class = "character", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = magnific.corner.text, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = magnific.corner.text, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = just.label.add, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = par.reset, class = "logical", length = 1) ; eval(ee)
     if( ! is.null(custom.par)){
@@ -2387,7 +2387,7 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
         stop(tempo.cat)
     }
     if( ! is.null(displayed.nb)){
-        tempo <- fun_param_check(data = displayed.nb, class = "numeric", length = 1) ; eval(ee)
+        tempo <- fun_param_check(data = displayed.nb, mode = "numeric", length = 1) ; eval(ee)
         if(displayed.nb < 2){
             tempo.cat <- paste0("\n\n================\n\nERROR IN fun_var_trim_display(): displayed.nb ARGUMENT MUST BE A SINGLE INTEGER VALUE GREATER THAN 1 AND NOT: ", paste(displayed.nb, collapse = " "), "\n\n================\n\n")
             stop(tempo.cat)
@@ -2395,28 +2395,28 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
     }
     tempo <- fun_param_check(data = single.value.display, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = trim.method, options = c("", "mean.sd", "quantile"), length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = trim.cutoffs, class = "numeric", length = 2, prop = TRUE) ; eval(ee)
+    tempo <- fun_param_check(data = trim.cutoffs, mode = "numeric", length = 2, prop = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = interval.scale.disp, class = "logical", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = down.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = left.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = up.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = right.space, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = orient, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = dist.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = down.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = left.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = up.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = right.space, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = orient, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = dist.legend, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = box.type, options = c("o", "l", "7", "c", "u", "]", "n"), length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = amplif.label, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = amplif.axis, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = amplif.label, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = amplif.axis, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = std.x.range, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = std.y.range, class = "logical", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = cex.pt, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = cex.pt, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = col.box, class = "character", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = x.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = y.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE) ; eval(ee)
-    tempo <- fun_param_check(data = tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
-    tempo <- fun_param_check(data = sec.tick.length, class = "numeric", length = 1, prop = TRUE) ; eval(ee)
+    tempo <- fun_param_check(data = tick.length, mode = "numeric", length = 1, prop = TRUE) ; eval(ee)
+    tempo <- fun_param_check(data = sec.tick.length, mode = "numeric", length = 1, prop = TRUE) ; eval(ee)
     tempo <- fun_param_check(data = corner.text, class = "character", length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = amplif.legend, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
-    tempo <- fun_param_check(data = magnific.corner.text, class = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = amplif.legend, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
+    tempo <- fun_param_check(data = magnific.corner.text, mode = "numeric", length = 1, neg.values = FALSE) ; eval(ee)
     tempo <- fun_param_check(data = trim.return, class = "logical", length = 1) ; eval(ee)
     if(any(arg.check) == TRUE){
         stop() # nothing else because print = TRUE by default in fun_param_check()

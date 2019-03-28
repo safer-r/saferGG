@@ -24,6 +24,18 @@ fun_var_trim_display()	trim and display values from a numeric vector or matrix
 fun_export_data()	log file function: print a character string or a data object into a same output file
 
 
+#### LICENCE
+
+This package of scripts can be redistributed and/or modified under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details at https://www.gnu.org/licenses.
+
+
+#### CREDITS
+
+Gael A. Millot, Hub-C3BI, Institut Pasteur, USR 3756 IP CNRS, Paris, France
+
+
 #### HOW TO USE IT
 
 Download the desired Tagged version, never the current master.
@@ -50,6 +62,11 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 
 #### WHAT'S NEW IN
+
+## v4.7.0
+
+1) check of numeric arguments: class = "numeric" -> mode = "numeric" to allow for integers values in these arguments
+
 
 ## v4.6.0
 
