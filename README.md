@@ -63,6 +63,11 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 #### WHAT'S NEW IN
 
+## v4.8.0
+
+1) magnific argument removed in fun_feature_post_plot() because no need anymore
+
+
 ## v4.7.0
 
 1) check of numeric arguments: class = "numeric" -> mode = "numeric" to allow for integers values in these arguments
