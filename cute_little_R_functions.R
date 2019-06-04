@@ -1,13 +1,12 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.8.0                         ##
+##     CUTE LITTLE R FUNCTIONS v4.9.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
 ##     Compatible with R v3.5.2                               ##
 ##                                                            ##
 ################################################################
-
 
 
 
@@ -28,15 +27,16 @@
 ######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    27
 ######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  28
 ######## fun_by_case_matrix_op() #### assembling of several matrices with operation 30
-################ Graphics   32
-######## fun_window_width_resizing() #### window width depending on classes to plot 33
-######## fun_open_window() #### Open a GUI or pdf graphic window    34
-######## fun_graph_param_prior_plot() #### Graph param before plotting  37
-######## fun_feature_post_plot() #### Graph param after plotting    41
-######## fun_close_specif_window() #### Closing specific graphic windows    52
-######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 54
-################ Exporting results (text & tables)  62
-######## fun_export_data() #### Print string or data object into output file    62
+######## fun_mat_inv() #### return the inverse of a square matrix   33
+################ Graphics   34
+######## fun_window_width_resizing() #### window width depending on classes to plot 34
+######## fun_open_window() #### Open a GUI or pdf graphic window    35
+######## fun_graph_param_prior_plot() #### Graph param before plotting  39
+######## fun_feature_post_plot() #### Graph param after plotting    43
+######## fun_close_specif_window() #### Closing specific graphic windows    53
+######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 55
+################ Exporting results (text & tables)  63
+######## fun_export_data() #### Print string or data object into output file    63
 
 
 ################################ FUNCTIONS ################################
@@ -225,63 +225,63 @@ fun_param_check <- function(data, data.name = NULL, class = NULL, typeof = NULL,
             if( ! is.null(get(arg.names[i2]))){
                 # script to execute
                 tempo.script <- '
-                problem <- TRUE ;
-                if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
-                text <- paste0("PROBLEM: THE ", data.name, " PARAMETER MUST BE ") ;
-                }else{
-                text <- paste0(text, " AND "); 
-                }
-                text <- paste0(text, toupper(arg.names[i2]), " ", get(arg.names[i2]))
-                '
-                if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & get(arg.names[i2]) == "integer") | (arg.names[i2] == "typeof" & get(arg.names[i2]) == "integer"))){
-                    if(! all(data%%1 == 0)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line
-                        eval(parse(text = tempo.script)) # execute tempo.script
-                    }
-                }else if(eval(parse(text = paste0(arg.names[i2], "(data)"))) != get(arg.names[i2])){
+problem <- TRUE ;
+if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
+text <- paste0("PROBLEM: THE ", data.name, " PARAMETER MUST BE ") ;
+}else{
+text <- paste0(text, " AND "); 
+}
+text <- paste0(text, toupper(arg.names[i2]), " ", get(arg.names[i2]))
+'
+            if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & get(arg.names[i2]) == "integer") | (arg.names[i2] == "typeof" & get(arg.names[i2]) == "integer"))){
+                if(! all(data%%1 == 0)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line
                     eval(parse(text = tempo.script)) # execute tempo.script
                 }
+            }else if(eval(parse(text = paste0(arg.names[i2], "(data)"))) != get(arg.names[i2])){
+                eval(parse(text = tempo.script)) # execute tempo.script
             }
-    }
-        }
-    if( ! is.null(prop)){
-        if(prop == TRUE){
-            if(any(data < 0 | data > 1, na.rm = TRUE)){
-                problem <- TRUE
-                if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
-                    text <- paste0("PROBLEM: ")
-                }else{
-                    text <- paste0(text, " AND ")
-                }
-                text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
             }
         }
     }
-    if(na.contain == FALSE & any(is.na(data)) == TRUE){
-        problem <- TRUE
-        if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
-            text <- paste0("PROBLEM: ")
-        }else{
-            text <- paste0(text, " AND ")
-        }
-        text <- paste0(text, "THE ", data.name, " PARAMETER CONTAINS NA WHILE NOT AUTHORIZED (na.contain ARGUMENT SET TO FALSE)")
-    }
-    if(neg.values == FALSE){
-        if(any(data < 0, na.rm = TRUE)){
+if( ! is.null(prop)){
+    if(prop == TRUE){
+        if(any(data < 0 | data > 1, na.rm = TRUE)){
             problem <- TRUE
             if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
                 text <- paste0("PROBLEM: ")
             }else{
                 text <- paste0(text, " AND ")
             }
-            text <- paste0(text, "THE ", data.name, " PARAMETER MUST NON NEGATIVE NUMERIC VALUES")
+            text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
         }
     }
-    if(print == TRUE & problem == TRUE){
-        cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
+}
+if(na.contain == FALSE & any(is.na(data)) == TRUE){
+    problem <- TRUE
+    if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
+        text <- paste0("PROBLEM: ")
+    }else{
+        text <- paste0(text, " AND ")
     }
-    output <- list(problem = problem, text = text, param.name = data.name)
-    return(output)
+    text <- paste0(text, "THE ", data.name, " PARAMETER CONTAINS NA WHILE NOT AUTHORIZED (na.contain ARGUMENT SET TO FALSE)")
+}
+if(neg.values == FALSE){
+    if(any(data < 0, na.rm = TRUE)){
+        problem <- TRUE
+        if(identical(text, paste0("NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
+            text <- paste0("PROBLEM: ")
+        }else{
+            text <- paste0(text, " AND ")
+        }
+        text <- paste0(text, "THE ", data.name, " PARAMETER MUST NON NEGATIVE NUMERIC VALUES")
     }
+}
+if(print == TRUE & problem == TRUE){
+    cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
+}
+output <- list(problem = problem, text = text, param.name = data.name)
+return(output)
+}
 
 
 ######## fun_object_info() #### Recovering object information
@@ -1531,6 +1531,71 @@ fun_by_case_matrix_op <- function(mat.list, kind.of.operation = "+"){
         colnames(output) <- colnames(mat.list[[1]])
     }
     return(output)
+}
+
+
+######## fun_mat_inv() #### return the inverse of a square matrix
+
+
+# Check OK: clear to go Apollo
+fun_mat_inv <- function(mat){
+    # AIM:
+    # return the inverse of a square matrix when solve() cannot
+    # REQUIRED FUNCTIONS
+    # fun_param_check()
+    # ARGUMENTS:
+    # mat: a square numeric matrix without NULL, NA, Inf or single case (dimension 1, 1) of 0
+    # RETURN
+    # the inversed matrix
+    # EXAMPLES
+    # mat1 = matrix(c(1,1,1,2,1,5,9,8,9), ncol = 3) ; fun_mat_inv(mat = mat1) # use solve()
+    # mat1 = matrix(c(0,0,0,0,0,0,0,0,0), ncol = 3) ; fun_mat_inv(mat = mat1) # use the trick
+    # mat1 = matrix(c(1,1,1,2,Inf,5,9,8,9), ncol = 3) ; fun_mat_inv(mat = mat1)
+    # mat1 = matrix(c(1,1,1,2,NA,5,9,8,9), ncol = 3) ; fun_mat_inv(mat = mat1)
+    # mat1 = matrix(c(1,2), ncol = 1) ; fun_mat_inv(mat = mat1)
+    # mat1 = matrix(0, ncol = 1) ; fun_mat_inv(mat = mat1)
+    # mat1 = matrix(2, ncol = 1) ; fun_mat_inv(mat = mat1)
+    # DEBUGGING
+    # mat = matrix(c(1,1,1,2,1,5,9,8,9), ncol = 3) # for function debugging
+    # required function checking
+    if(length(find("fun_param_check", mode = "function")) == 0){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_mat_inv(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    # end required function checking
+    # argument checking
+    arg.check <- NULL # for function debbuging
+    checked.arg.names <- NULL # for function debbuging
+    ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+    tempo <- fun_param_check(data = mat, class = "matrix", mode = "numeric") ; eval(ee)
+    if(any(arg.check) == TRUE){
+        stop() # nothing else because print = TRUE by default in fun_param_check()
+    }
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    if(ncol(mat) != nrow(mat)){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_mat_inv(): mat ARGUMENT MUST BE A SQUARE MATRIX\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    if(any(mat %in% c(Inf, -Inf, NA))){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_mat_inv(): mat ARGUMENT MUST BE A MATRIX WITHOUT Inf, -Inf OR NA\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    if(all(mat == 0) & ncol(mat) == 1){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_mat_inv(): mat ARGUMENT CANNOT BE A SQUARE MATRIX MADE OF A SINGLE CASE OF 0\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    # end argument checking
+    if(any(grepl(x = try(solve(mat), silent = TRUE)[], pattern = "Error"))){
+        tempo <- svd(mat)
+        val.critique <- which(tempo$d < 10^-8)
+        Diag.mod <- diag(1 / tempo$d)
+        for(i in val.critique){
+            Diag.mod[i, i] <- 0
+        }
+        return(tempo$v %*% Diag.mod %*% t(tempo$u))
+    }else{
+        return(solve(mat))
+    }
 }
 
 

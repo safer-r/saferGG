@@ -1,6 +1,6 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 18 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 19 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
@@ -15,6 +15,7 @@ fun_rounding()	round a vector of values, if decimal, with the desired number of 
 fun_90clock_matrix_rot()	90° clockwise matrix rotation
 fun_hexa_hsv_color_matrix()	convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
 fun_by_case_matrix_op()	assemble several matrices of same dimensions by performing by case operation
+fun_mat_inv()	return the inverse of a square matrix when solve() cannot
 fun_window_width_resizing()	rescale the width of a window to open depending on the number of classes to plot
 fun_open_window()	open a pdf or screen (GUI) graphic window
 fun_graph_param_prior_plot()	very convenient to erase the axes for post plot axis redrawing using fun_feature_post_plot()
@@ -62,6 +63,11 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 
 #### WHAT'S NEW IN
+
+## v4.9.0
+
+1) fun_mat_inv() function added
+
 
 ## v4.8.0
 
