@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v5.0.0                         ##
+##     CUTE LITTLE R FUNCTIONS v5.1.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -892,7 +892,7 @@ fun_2D_comp <- function(data1, data2){
 
 
 # Check OK: clear to go Apollo
-fun_2D_head <- function(data1, n = 10, side = left){
+fun_2D_head <- function(data1, n = 10, side = "l"){
     # AIM:
     # display the head of the left or right of big 2D objects
     # REQUIRED FUNCTIONS
@@ -900,15 +900,15 @@ fun_2D_head <- function(data1, n = 10, side = left){
     # ARGUMENTS
     # data1: matrix, data frame or table
     # n: number of dimension to print (10 means 10 rows and columns)
-    # side: either "left" or "right" for the left or right side of the 2D object
+    # side: either "l" or "r" for the left or right side of the 2D object
     # RETURN
     # the head
     # EXAMPLES
-    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3, "left")
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3)
     # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3, "right")
     # DEBUGGING
-    # data1 = matrix(1:10, ncol = 5) # for function debugging
-    # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
+    # data1 = matrix(1:30, ncol = 5) # for function debugging
+    # data1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
     # argument checking
     if(length(find("fun_param_check", mode = "function")) == 0){
         tempo.cat <- paste0("\n\n================\n\nERROR IN fun_dataframe_remodeling(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
@@ -919,7 +919,7 @@ fun_2D_head <- function(data1, n = 10, side = left){
     checked.arg.names <- NULL # for function debbuging
     ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
     tempo <- fun_param_check(data = n, typeof = "integer", double.as.integer.allowed = TRUE, length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = side, options = c("left", "right"), length = 1) ; eval(ee)
+    tempo <- fun_param_check(data = side, options = c("l", "r"), length = 1) ; eval(ee)
     if(any(arg.check) == TRUE){
         stop() # nothing else because print = TRUE by default in fun_param_check()
     }
@@ -931,10 +931,10 @@ fun_2D_head <- function(data1, n = 10, side = left){
     # end argument checking
     obs.dim <- dim(data1)
     row <- 1:ifelse(obs.dim[1] < n, obs.dim[1], n)
-    if(side == "left"){
+    if(side == "l"){
         col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
     }
-    if(side == "right"){
+    if(side == "r"){
         col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
     }
     return(data1[row, col])
@@ -945,7 +945,7 @@ fun_2D_head <- function(data1, n = 10, side = left){
 
 
 # Check OK: clear to go Apollo
-fun_2D_tail <- function(data1, n = 10, side = left){
+fun_2D_tail <- function(data1, n = 10, side = "l"){
     # AIM:
     # display the tail of the left or right of big 2D objects
     # REQUIRED FUNCTIONS
@@ -953,12 +953,12 @@ fun_2D_tail <- function(data1, n = 10, side = left){
     # ARGUMENTS
     # data1: matrix, data frame or table
     # n: number of dimension to print (10 means 10 rows and columns)
-    # side: either "left" or "right" for the left or right side of the 2D object
+    # side: either "l" or "r" for the left or right side of the 2D object
     # RETURN
     # the tail
     # EXAMPLES
-    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "left")
-    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "right")
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3)
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "r")
     # DEBUGGING
     # data1 = matrix(1:10, ncol = 5) # for function debugging
     # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -972,7 +972,7 @@ fun_2D_tail <- function(data1, n = 10, side = left){
     checked.arg.names <- NULL # for function debbuging
     ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
     tempo <- fun_param_check(data = n, typeof = "integer", double.as.integer.allowed = TRUE, length = 1) ; eval(ee)
-    tempo <- fun_param_check(data = side, options = c("left", "right"), length = 1) ; eval(ee)
+    tempo <- fun_param_check(data = side, options = c("l", "r"), length = 1) ; eval(ee)
     if(any(arg.check) == TRUE){
         stop() # nothing else because print = TRUE by default in fun_param_check()
     }
@@ -984,10 +984,10 @@ fun_2D_tail <- function(data1, n = 10, side = left){
     # end argument checking
     obs.dim <- dim(data1)
     row <- ifelse(obs.dim[1] < n, 1, obs.dim[1] - n + 1):obs.dim[1]
-    if(side == "left"){
+    if(side == "l"){
         col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
     }
-    if(side == "right"){
+    if(side == "r"){
         col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
     }
     return(data1[row, col])

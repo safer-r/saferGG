@@ -66,6 +66,11 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 #### WHAT'S NEW IN
 
+## v5.1.0
+
+1) bugs corrected in fun_2D_head() and fun_2D_tail() functions
+
+
 ## v5.0.0
 
 1) fun_2D_head() function added
