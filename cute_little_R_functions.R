@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v4.9.0                         ##
+##     CUTE LITTLE R FUNCTIONS v5.0.0                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -19,24 +19,26 @@
 ######## fun_object_info() #### Recovering object information   7
 ######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 8
 ######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   12
-######## fun_list_comp() #### comparison of two lists   18
-################ Object modification    21
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa 21
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 23
-######## fun_rounding() #### Rounding number if decimal present 25
-######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    27
-######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  28
-######## fun_by_case_matrix_op() #### assembling of several matrices with operation 30
-######## fun_mat_inv() #### return the inverse of a square matrix   33
-################ Graphics   34
-######## fun_window_width_resizing() #### window width depending on classes to plot 34
-######## fun_open_window() #### Open a GUI or pdf graphic window    35
-######## fun_graph_param_prior_plot() #### Graph param before plotting  39
-######## fun_feature_post_plot() #### Graph param after plotting    43
-######## fun_close_specif_window() #### Closing specific graphic windows    53
-######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 55
-################ Exporting results (text & tables)  63
-######## fun_export_data() #### Print string or data object into output file    63
+######## fun_2D_head() #### head of the left or right of big 2D objects 19
+######## fun_2D_tail() #### tail of the left or right of big 2D objects 20
+######## fun_list_comp() #### comparison of two lists   21
+################ Object modification    23
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa 23
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 26
+######## fun_rounding() #### Rounding number if decimal present 27
+######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    29
+######## fun_hexa_hsv_color_matrix() #### Conversion of a numeric matrix into hexadecimal color matrix  30
+######## fun_by_case_matrix_op() #### assembling of several matrices with operation 32
+######## fun_mat_inv() #### return the inverse of a square matrix   35
+################ Graphics   36
+######## fun_window_width_resizing() #### window width depending on classes to plot 36
+######## fun_open_window() #### Open a GUI or pdf graphic window    37
+######## fun_graph_param_prior_plot() #### Graph param before plotting  41
+######## fun_feature_post_plot() #### Graph param after plotting    45
+######## fun_close_specif_window() #### Closing specific graphic windows    55
+######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 57
+################ Exporting results (text & tables)  65
+######## fun_export_data() #### Print string or data object into output file    65
 
 
 ################################ FUNCTIONS ################################
@@ -883,6 +885,112 @@ fun_2D_comp <- function(data1, data2){
     }
     output <- list(same.class = same.class, class = class, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.name.pos1 = same.row.name.pos1, same.row.name.pos2 = same.row.name.pos2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.name.pos1 = same.col.name.pos1, same.col.name.pos2 = same.col.name.pos2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, identical.object = identical.object, identical.content = identical.content)
     return(output)
+}
+
+
+######## fun_2D_head() #### head of the left or right of big 2D objects
+
+
+# Check OK: clear to go Apollo
+fun_2D_head <- function(data1, n = 10, side = left){
+    # AIM:
+    # display the head of the left or right of big 2D objects
+    # REQUIRED FUNCTIONS
+    # fun_param_check()
+    # ARGUMENTS
+    # data1: matrix, data frame or table
+    # n: number of dimension to print (10 means 10 rows and columns)
+    # side: either "left" or "right" for the left or right side of the 2D object
+    # RETURN
+    # the head
+    # EXAMPLES
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3, "left")
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3, "right")
+    # DEBUGGING
+    # data1 = matrix(1:10, ncol = 5) # for function debugging
+    # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
+    # argument checking
+    if(length(find("fun_param_check", mode = "function")) == 0){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_dataframe_remodeling(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    # end required function checking
+    arg.check <- NULL # for function debbuging
+    checked.arg.names <- NULL # for function debbuging
+    ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+    tempo <- fun_param_check(data = n, typeof = "integer", double.as.integer.allowed = TRUE, length = 1) ; eval(ee)
+    tempo <- fun_param_check(data = side, options = c("left", "right"), length = 1) ; eval(ee)
+    if(any(arg.check) == TRUE){
+        stop() # nothing else because print = TRUE by default in fun_param_check()
+    }
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_2D_comp(): THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    # end argument checking
+    obs.dim <- dim(data1)
+    row <- 1:ifelse(obs.dim[1] < n, obs.dim[1], n)
+    if(side == "left"){
+        col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
+    }
+    if(side == "right"){
+        col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
+    }
+    return(data1[row, col])
+}
+
+
+######## fun_2D_tail() #### tail of the left or right of big 2D objects
+
+
+# Check OK: clear to go Apollo
+fun_2D_tail <- function(data1, n = 10, side = left){
+    # AIM:
+    # display the tail of the left or right of big 2D objects
+    # REQUIRED FUNCTIONS
+    # fun_param_check()
+    # ARGUMENTS
+    # data1: matrix, data frame or table
+    # n: number of dimension to print (10 means 10 rows and columns)
+    # side: either "left" or "right" for the left or right side of the 2D object
+    # RETURN
+    # the tail
+    # EXAMPLES
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "left")
+    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "right")
+    # DEBUGGING
+    # data1 = matrix(1:10, ncol = 5) # for function debugging
+    # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
+    # argument checking
+    if(length(find("fun_param_check", mode = "function")) == 0){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_dataframe_remodeling(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    # end required function checking
+    arg.check <- NULL # for function debbuging
+    checked.arg.names <- NULL # for function debbuging
+    ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+    tempo <- fun_param_check(data = n, typeof = "integer", double.as.integer.allowed = TRUE, length = 1) ; eval(ee)
+    tempo <- fun_param_check(data = side, options = c("left", "right"), length = 1) ; eval(ee)
+    if(any(arg.check) == TRUE){
+        stop() # nothing else because print = TRUE by default in fun_param_check()
+    }
+    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status and if they have been checked using fun_param_check()
+    if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+        tempo.cat <- paste0("\n\n================\n\nERROR IN fun_2D_comp(): THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
+        stop(tempo.cat)
+    }
+    # end argument checking
+    obs.dim <- dim(data1)
+    row <- ifelse(obs.dim[1] < n, 1, obs.dim[1] - n + 1):obs.dim[1]
+    if(side == "left"){
+        col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
+    }
+    if(side == "right"){
+        col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
+    }
+    return(data1[row, col])
 }
 
 
@@ -2674,7 +2782,7 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
 
 
 # Check OK: clear to go Apollo
-fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2){
+fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
     # AIM:
     # log file function: print a character string or a data object into a same output file
     # REQUIRED FUNCTIONS
@@ -2686,14 +2794,15 @@ fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users
     # no.overwrite: (logical) if output file already exists, defines if the printing is appended (default TRUE) or if the output file content is erased before printing (FALSE)
     # rownames.kept: (logical) defines whether row names have to be removed or not in small tables (less than length.rows rows)
     # vector.cat (logical). If TRUE print a vector of length > 1 using cat() instead of capture.output(). Otherwise (default FALSE) the opposite
+    # noquote: (logical). If TRUE no quote are present for the characters
     # sep: number of separating lines after printed data (must be integer)
     # RETURN
     # nothing
     # EXAMPLES
     # fun_export_data()
-    # fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2)
+    # fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = FALSE, sep = 2)
     # DEBUGGING
-    # data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; sep = 2 # for function debugging
+    # data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; noquote = FALSE ; sep = 2 # for function debugging
     # required function checking
     if(length(find("fun_param_check", mode = "function")) == 0){
         tempo.cat <- paste0("\n\n================\n\nERROR IN fun_export_data(): REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
@@ -2713,6 +2822,7 @@ fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users
     tempo <- fun_param_check(data = no.overwrite, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = rownames.kept, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = vector.cat, class = "logical", length = 1) ; eval(ee)
+    tempo <- fun_param_check(data = noquote, class = "logical", length = 1) ; eval(ee)
     tempo <- fun_param_check(data = sep, typeof = "integer", length = 1, double.as.integer.allowed = TRUE) ; eval(ee)
     if(any(arg.check) == TRUE){
         stop() # nothing else because print = TRUE by default in fun_param_check()
@@ -2746,11 +2856,23 @@ fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users
         }else if(rownames.kept == FALSE & all(class(data) %in% c("matrix", "table"))){
             rownames(data) <- rep("", nrow(data))  # identical row names allowed in matrices and tables
         }
-        capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+        if(noquote == TRUE){
+            capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
+        }else{
+            capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+        }
     }else if(is.vector(data) & all(class(data) != "list") & (length(data) == 1 | vector.cat == TRUE)){
-        cat(data, file= paste0(path, "/", output), append = no.overwrite)
+        if(noquote == TRUE){
+            cat(noquote(data), file= paste0(path, "/", output), append = no.overwrite)
+        }else{
+            cat(data, file= paste0(path, "/", output), append = no.overwrite)
+        }
     }else{ # other (array, list, factor or vector with vector.cat = FALSE)
-        capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+        if(noquote == TRUE){
+            capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
+        }else{
+            capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+        }
     }
     sep.final <- paste0(rep("\n", sep), collapse = "")
     write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep

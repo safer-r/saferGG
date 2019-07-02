@@ -1,6 +1,6 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 19 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 21 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
@@ -8,6 +8,8 @@ fun_param_check()	Check the class, type, mode and length, prop, neg values, na.c
 fun_object_info()	provide a full description of the object
 fun_1D_comp()	compare two 1D datasets (vector of factor or 1D table) of the same class or not
 fun_2D_comp()	compare two 2D datasets of the same class or not
+fun_2D_head()	display the left/right head of 2D objects
+fun_2D_tail()	display the left/right tail of 2D objects
 fun_list_comp()	compare two lists
 fun_dataframe_remodeling()	remodel data frames
 fun_refactorization()	refactorize a factor or the factor columns of a data frame, such as only the class present are in the levels (no empty levels). The class order in levels is kept
@@ -63,6 +65,13 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 
 #### WHAT'S NEW IN
+
+## v5.0.0
+
+1) fun_2D_head() function added
+2) fun_2D_tail() function added
+3) argument "noquote" added in fun_export_data()
+
 
 ## v4.9.0
 
