@@ -16,51 +16,52 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis	2
-######## fun_param_check() #### Checking class, type, length, etc. of objects	2
-######## fun_object_info() #### Recovering object information	8
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	9
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	13
-######## fun_2D_head() #### head of the left or right of big 2D objects	19
-######## fun_2D_tail() #### tail of the left or right of big 2D objects	21
-######## fun_list_comp() #### comparison of two lists	22
-################ Object modification	24
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa	24
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames	27
-######## fun_round() #### Rounding number if decimal present	29
-######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation	31
-######## fun_num2color_mat() #### Conversion of a numeric matrix into hexadecimal color matrix	32
-######## fun_by_case_matrix_op() #### assembling of several matrices with operation	35
-######## fun_mat_inv() #### return the inverse of a square matrix	37
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix	38
-######## fun_consec_pos_perm() #### progressively breaks a vector order	41
-################ Graphics management	46
-######## fun_window_width_resizing() #### window width depending on classes to plot	46
-######## fun_open_window() #### Open a GUI or pdf graphic window	47
-######## fun_prior_plot() #### Graph param before plotting	51
-######## fun_post_plot() #### Graph param after plotting	55
-######## fun_close_specif_window() #### Closing specific graphic windows	66
-################ Standard graphics	67
-######## fun_empty_graph() #### text to display for empty graphs	67
-################ gg graphics	69
-######## fun_gg_palette() #### ggplot2 default color palette	69
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)	70
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required	89
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required	110
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot	130
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median	130
-######## fun_gg_violin() #### ggplot2 violins	130
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars	130
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required	130
-######## fun_gg_empty_graph() #### text to display for empty graphs	135
-################ Graphic extraction	136
-######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs	137
-######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation	145
-################ Import	160
-######## fun_pack_import() #### Check if R packages are present and import into the working environment	160
-######## fun_python_pack_import() #### Check if python packages are present	162
-################ Exporting results (text & tables)	163
-######## fun_export_data() #### Print string or data object into output file	163
+################ Object analysis    2
+######## fun_param_check() #### Checking class, type, length, etc. of objects   2
+######## fun_object_info() #### Recovering object information   8
+######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
+######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
+######## fun_2D_head() #### head of the left or right of big 2D objects 19
+######## fun_2D_tail() #### tail of the left or right of big 2D objects 21
+######## fun_list_comp() #### comparison of two lists   22
+################ Object modification    24
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 28
+######## fun_round() #### Rounding number if decimal present    31
+######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    32
+######## fun_num2color_mat() #### Conversion of a numeric matrix into hexadecimal color matrix  33
+######## fun_by_case_matrix_op() #### assembling of several matrices with operation 36
+######## fun_mat_inv() #### return the inverse of a square matrix   38
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  40
+######## fun_consec_pos_perm() #### progressively breaks a vector order 43
+################ Graphics management    47
+######## fun_window_width_resizing() #### window width depending on classes to plot 47
+######## fun_open_window() #### Open a GUI or pdf graphic window    49
+######## fun_prior_plot() #### Graph param before plotting  52
+######## fun_post_plot() #### Graph param after plotting    56
+######## fun_close_specif_window() #### Closing specific graphic windows    67
+################ Standard graphics  69
+######## fun_empty_graph() #### text to display for empty graphs    69
+################ gg graphics    70
+######## fun_gg_palette() #### ggplot2 default color palette    70
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   71
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    90
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    117
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  122
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   122
+######## fun_gg_violin() #### ggplot2 violins   122
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  122
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  122
+######## fun_gg_empty_graph() #### text to display for empty graphs 128
+################ Graphic extraction 129
+######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 129
+######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   137
+################ Import 153
+######## fun_pack_import() #### Check if R packages are present and import into the working environment 153
+######## fun_python_pack_import() #### Check if python packages are present 154
+################ Exporting results (text & tables)  156
+######## fun_export_data() #### Print string or data object into output file    156
 
 
 ################################ FUNCTIONS ################################
@@ -1189,7 +1190,80 @@ return(output)
 ################ Object modification
 
 
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector
+
+
+# Check OK: clear to go Apollo
+fun_name_change <- function(data1, data2, added.string = "_modif"){
+# AIM
+# this function allow to check if a vector of character strings, like column names of a data frame, has elements present in another vector (vector of reserved words or column names of another data frame before merging)
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_param_check()
+# ARGUMENTS
+# data1: vector of character strings to check and modify
+# data2: reference vector of character strings
+# added.string: string added at the end of the modified string in data1 if present in data2
+# RETURN
+# a list containing
+# data: the modified or unmodified data1 (in the same order as in the initial data1)
+# ini: the initial elements before modification. NULL if no modification
+# post: the modified elements in the same order as in ini. NULL if no modification
+# EXAMPLES
+# obs1 <- c("A", "B", "C", "D") ; obs2 <- c("A", "C") ; fun_name_change(obs1, obs2)
+# obs1 <- c("A", "B", "C", "C_modif1", "D") ; obs2 <- c("A", "A_modif1", "C") ; fun_name_change(obs1, obs2) # the function checks that the new names are neither in obs1 nor in obs2 (increment the number after the added string)
+# DEBUGGING
+# data1 = c("A", "B", "C", "D") ; data2 <- c("A", "C") ; added.string = "_modif" # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_param_check(data = data1, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = data2, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = added.string, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_param_check()
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking
+# main code
+ini <- NULL
+post <- NULL
+if(any(data1 %in% data2)){
+tempo.names <- data1[data1 %in% data2]
+ini <- NULL
+post <- NULL
+for(i3 in 1:length(tempo.names)){
+count <- 0
+tempo <- tempo.names[i3]
+while(any(tempo %in% data2) | any(tempo %in% data1)){
+count <- count + 1
+tempo <- paste0(tempo.names[i3], "_modif", count)
+}
+data1[data1 %in% tempo.names[i3]] <- paste0(tempo.names[i3], "_modif", count)
+if(count != 0){
+ini <- c(ini, tempo.names[i3])
+post <- c(post, paste0(tempo.names[i3], "_modif", count))
+}
+}
+data <- data1
+}else{
+data <- data1
+}
+output <- list(data = data, ini = ini, post = post)
+return(output)
+}
+
+
+######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative values and vice-versa
 
 
 # Check OK: clear to go Apollo
@@ -3108,7 +3182,7 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # ylab: a character string y-axis legend. If NULL, y of the first data frame in data1. Warning message if the y are different between data frames in data1
 # pt.size: numeric value of point size
 # li.size: numeric value of line size
-# alpha: numeric value (from 0 to 1) of the mask transparency
+# alpha: numeric value (from 0 to 1) of the dot transparency
 # title: character string of the graph title
 # text.size: numeric value of the text size (in points)
 # return: logical. Return the graph parameters?
@@ -3685,7 +3759,6 @@ return(output)
 
   
 
-# verif all coord objects, and output of aggregate anf merge to forbide some column names (like x.y) or pass them to upper case + warning
 
 # Check OK: clear to go Apollo
 fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, title = "", text.size = 12, classic = FALSE, grid = FALSE, return = FALSE, path.lib = NULL){
@@ -3698,9 +3771,9 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # to have a single bar, create a factor column with a single class and specify the name of this column in categ argument as unique element (no categ2 in categ argument). For a single set of grouped bars, create a factor column with a single class and specify this column in categ argument as first element (categ1). See categ below
 # with several single bars (categ argument with only one element), bar.width argument (i.e., width argument of ggplot2::geom_bar()) defines each bar width. The bar.width argument also defines the space between bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each bar)
 # with several sets of grouped bars (categ argument with two elements), bar.width argument defines each set of grouped bar width. The bar.width argument also defines the space between set of grouped bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped bar)
-# to manually change the 0 base bar, see https://stackoverflow.com/questions/35324892/ggplot2-setting-geom-bar-baseline-to-1-instead-of-zero
+# to manually change the 0 base bar into this code, see https://stackoverflow.com/questions/35324892/ggplot2-setting-geom-bar-baseline-to-1-instead-of-zero
 # ARGUMENTS
-# data1: a dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below)
+# data1: a dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below). Duplicated column names not allowed
 # y: character string of the data1 column name for y-axis (containing numeric values). Numeric values will be averaged by categ to generate the bars and will also be used to plot the dots
 # categ: vector of character strings of the data1 column name for categories (column of characters or factor). Must either be one or two column names. If a single column name (further refered to as categ1), then one bar per class of categ1. If two column names (further refered to as categ1 and categ2), then one bar per class of categ2, which form a group of bars in each class of categ1. Beware, categ1 (and categ2 if it exists) must have a single value of y per class of categ1 (and categ2). To have a single bar, create a factor column with a single class and specify the name of this column in categ argument as unique element (no categ2 in categ argument). For a single set of grouped bars, create a factor column with a single class and specify this column in categ argument as first element (categ1)
 # categ.class.order: list indicating the order of the classes of categ1 and categ2 represented on the barplot (the first compartment for categ1 and and the second for categ2). If categ.class.order = NULL, classes are represented according to the alphabetical order. Some compartment can be NULL and other not
@@ -3742,6 +3815,7 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # fun_gg_palette()
 # fun_round()
 # fun_2D_comp()
+# fun_name_change()
 # RETURN
 # a barplot
 # a list of the graph info if return argument is TRUE:
@@ -3814,15 +3888,13 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # orientation example. Beware: log scale automatically set to FALSE for horizontal display, because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
 # obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 1, vertical = FALSE)
 # many arguments
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", vertical = TRUE, title = "GRAPH1", text.size = 14, classic = TRUE, grid = TRUE, return = TRUE, path.lib = NULL)
+# obs1 <- data.frame(x = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", vertical = TRUE, title = "GRAPH1", text.size = 14, classic = TRUE, grid = TRUE, return = TRUE, path.lib = NULL)
 # DEBUGGING
 # data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
 # data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
 # data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
 # set.seed(1) ; data1 <- data.frame(a = c(rnorm(25, 0), rnorm(25, -10), rnorm(25, 10), rnorm(25, 20)), group1 = rep(c("G", "H"), times = 50), group2 = rep(c("A", "B", "C", "D"), each = 25)) ; set.seed(NULL) ; y = "a" ; categ = c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; title = "GRAPH1" ; text.size = 20 ; return = TRUE ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 1)
-
-# set.seed(1) ; data1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "a" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = NULL ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = TRUE ; title = "GRAPH1" ; text.size = 20 ; return = TRUE ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
+# set.seed(1) ; data1 <- data.frame(x = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "x" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = NULL ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = TRUE ; title = "GRAPH1" ; text.size = 20 ; return = TRUE ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3847,20 +3919,40 @@ if(length(find("fun_2D_comp", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2D_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
+if(length(find("fun_2D_comp", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
 # end required function checking
+# reserved words to avoid bugs (used in this function)
+reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.max", "dot.min", "ERROR.INF", "ERROR.SUP", "group", "group.check", "max.dot.error", "MEAN", "min.dot.error", "SD", "SEM", "tempo.categ1", "tempo.categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax")
+# end reserved words to avoid bugs (used in this function)
 # argument checking (and modification for proper color management)
 warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(duplicated(names(data1)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
+stop(tempo.cat)
+}
 tempo <- fun_param_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y %in% names(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
 stop(tempo.cat)
 }else if(tempo$problem == FALSE){
-if(any(y %in% c("x", "y", "ymax", "x.y", "group"))){
-tempo.warning <- paste0("RISK OF BUG BECAUSE NAMES IN y ARGUMENT ARE ALSO USED BY FUNCTIONS LIKE merge() OR aggregate()\nIT IS RECOMMENDED TO AVOID THESE COLUMN NAMES IN data1: \"x\", \"y\", \"ymax\", \"x.y\", \"group\"")
+if(any(y %in% reserved.words)){
+if(any(duplicated(names(data1)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
+stop(tempo.cat)
+}
+tempo.output <- fun_name_change(y, reserved.words)
+y <- tempo.output$data
+for(i3 in 1:length(tempo.output$ini)){
+names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
+}
+tempo.warning <- paste0("IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", paste(tempo.output$ini, collapse = " "), "\nELEMENTS HAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "), "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THIS FUNCTION")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 tempo <- fun_param_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
@@ -3872,8 +3964,17 @@ stop(tempo.cat)
 }else if(tempo$problem == FALSE & ! all(categ %in% names(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", paste(categ, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
-}else if(any(categ %in% c("x", "y", "ymax", "x.y", "group"))){
-tempo.warning <- paste0("RISK OF BUG BECAUSE NAMES IN categ ARGUMENT ARE ALSO USED BY FUNCTIONS LIKE merge() OR aggregate()\nIT IS RECOMMENDED TO AVOID THESE COLUMN NAMES IN data1: \"x\", \"y\", \"ymax\", \"x.y\", \"group\"")
+}else if(any(categ %in% reserved.words)){
+if(any(duplicated(names(data1)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
+stop(tempo.cat)
+}
+tempo.output <- fun_name_change(categ, reserved.words)
+categ <- tempo.output$data
+for(i3 in 1:length(tempo.output$ini)){
+names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
+}
+tempo.warning <- paste0("IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", paste(tempo.output$ini, collapse = " "), "\nELEMENTS HAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "), "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THIS FUNCTION")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # na detection and removal (done now to be sure of the correct length of categ)

@@ -64,6 +64,13 @@ obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(LETTERS[5:9], matrix(1:6), 
 
 
 
+######## fun_name_change()
+
+obs1 <- c("A", "B", "C", "D") ; obs2 <- c("A", "C") ; fun_change_name(obs1, obs2)
+obs1 <- c("A", "B", "C", "C_modif1", "D") ; obs2 <- c("A", "A_modif1", "C") ; fun_change_name(obs1, obs2) # the function checks that the new names are neither in obs1 nor in obs2 (increment the number after the added string)
+
+
+
 ######## fun_dataframe_remodeling()
 
 obs <- data.frame(col1 = (1:4)*10, col2 = c("A", "B", "A", "A")) ; obs ; fun_dataframe_remodeling(obs)

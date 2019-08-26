@@ -1,13 +1,13 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 32 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 33 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
 ## Object analysis
 
-fun_param_check() #### Checking class, type, length, etc. of objects
-fun_object_info() #### Recovering object information
+fun_param_check() #### checking class, type, length, etc. of objects
+fun_object_info() #### recovering object information
 fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)
 fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
 fun_2D_head() #### head of the left or right of big 2D objects
@@ -17,6 +17,7 @@ fun_list_comp() #### comparison of two lists
 
 ## Object modification
 
+fun_name_change() #### check a vector of character strings and modify any string if present in another vector
 fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa
 fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames
 fun_round() #### Rounding number if decimal present
@@ -31,10 +32,10 @@ fun_consec_pos_perm() #### progressively breaks a vector order
 ## Graphics management
 
 fun_window_width_resizing() #### window width depending on classes to plot
-fun_open_window() #### Open a GUI or pdf graphic window
-fun_prior_plot() #### Graph param before plotting
-fun_post_plot() #### Graph param after plotting
-fun_close_specif_window() #### Closing specific graphic windows
+fun_open_window() #### open a GUI or pdf graphic window
+fun_prior_plot() #### graph param before plotting
+fun_post_plot() #### graph param after plotting
+fun_close_specif_window() #### closing specific graphic windows
 
 
 ## Standard graphics
@@ -53,19 +54,19 @@ fun_gg_empty_graph() #### text to display for empty graphs
 
 ## Graphic extraction
 
-fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs
-fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation
+fun_var_trim_display() #### display values from a quantitative variable and trim according to defined cut-offs
+fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation
 
 
 ## Import
 
-fun_pack_import() #### Check if R packages are present and import into the working environment
-fun_python_pack_import() #### Check if python packages are present
+fun_pack_import() #### check if R packages are present and import into the working environment
+fun_python_pack_import() #### check if python packages are present
 
 
 ## Exporting results (text & tables)
 
-fun_export_data() #### Print string or data object into output file
+fun_export_data() #### print string or data object into output file
 
 
 
@@ -118,6 +119,7 @@ fun_graph_param_prior_plot()	fun_prior_plot()
 fun_feature_post_plot()	fun_post_plot()
 
 2) new functions added:
+fun_name_change()
 fun_mat_fill()
 fun_consec_pos_perm()
 fun_empty_graph()
