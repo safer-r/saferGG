@@ -1,30 +1,72 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 21 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 32 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
-fun_param_check()	Check the class, type, mode and length, prop, neg values, na.contains, etc., of an object
-fun_object_info()	provide a full description of the object
-fun_1D_comp()	compare two 1D datasets (vector of factor or 1D table) of the same class or not
-fun_2D_comp()	compare two 2D datasets of the same class or not
-fun_2D_head()	display the left/right head of 2D objects
-fun_2D_tail()	display the left/right tail of 2D objects
-fun_list_comp()	compare two lists
-fun_dataframe_remodeling()	remodel data frames
-fun_refactorization()	refactorize a factor or the factor columns of a data frame, such as only the class present are in the levels (no empty levels). The class order in levels is kept
-fun_rounding()	round a vector of values, if decimal, with the desired number of decimal digits after the decimal leading zeros
-fun_90clock_matrix_rot()	90° clockwise matrix rotation
-fun_hexa_hsv_color_matrix()	convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
-fun_by_case_matrix_op()	assemble several matrices of same dimensions by performing by case operation
-fun_mat_inv()	return the inverse of a square matrix when solve() cannot
-fun_window_width_resizing()	rescale the width of a window to open depending on the number of classes to plot
-fun_open_window()	open a pdf or screen (GUI) graphic window
-fun_graph_param_prior_plot()	very convenient to erase the axes for post plot axis redrawing using fun_feature_post_plot()
-fun_feature_post_plot()	redesign axis and provide convenients coordinates for adding elements on the drawn graph
-fun_close_specif_window()	close only specific graphic windows (devices)
-fun_var_trim_display()	trim and display values from a numeric vector or matrix
-fun_export_data()	log file function: print a character string or a data object into a same output file
+## Object analysis
+
+fun_param_check() #### Checking class, type, length, etc. of objects
+fun_object_info() #### Recovering object information
+fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)
+fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
+fun_2D_head() #### head of the left or right of big 2D objects
+fun_2D_tail() #### tail of the left or right of big 2D objects
+fun_list_comp() #### comparison of two lists
+
+
+## Object modification
+
+fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa
+fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames
+fun_round() #### Rounding number if decimal present
+fun_90clock_matrix_rot() #### 90° clockwise matrix rotation
+fun_num2color_mat() #### Conversion of a numeric matrix into hexadecimal color matrix
+fun_by_case_matrix_op() #### assembling of several matrices with operation
+fun_mat_inv() #### return the inverse of a square matrix
+fun_mat_fill() #### fill the empty half part of a symmetric square matrix
+fun_consec_pos_perm() #### progressively breaks a vector order
+
+
+## Graphics management
+
+fun_window_width_resizing() #### window width depending on classes to plot
+fun_open_window() #### Open a GUI or pdf graphic window
+fun_prior_plot() #### Graph param before plotting
+fun_post_plot() #### Graph param after plotting
+fun_close_specif_window() #### Closing specific graphic windows
+
+
+## Standard graphics
+
+fun_empty_graph() #### text to display for empty graphs
+
+
+## gg graphics
+
+fun_gg_palette() #### ggplot2 default color palette
+fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)
+fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required
+fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required
+fun_gg_empty_graph() #### text to display for empty graphs
+
+
+## Graphic extraction
+
+fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs
+fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation
+
+
+## Import
+
+fun_pack_import() #### Check if R packages are present and import into the working environment
+fun_python_pack_import() #### Check if python packages are present
+
+
+## Exporting results (text & tables)
+
+fun_export_data() #### Print string or data object into output file
+
 
 
 #### LICENCE
@@ -56,7 +98,7 @@ Description of the functions is at the beginning of the function body. To obtain
 
 cute_little_R_functions.R	file that has to be sourced
 cute_little_R_functions.docx	just for easier code reading
-examples_alone.txt	compile all the examples of each of the 17 functions into a single file
+examples_alone.txt	compile all the examples of the functions into a single file
 
 
 #### WEB LOCATION
@@ -65,6 +107,35 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 
 #### WHAT'S NEW IN
+
+
+## v6.0.0
+
+1) name of functions changed:
+fun_rounding()	fun_round()
+fun_hexa_hsv_color_matrix()	fun_num2color_mat()
+fun_graph_param_prior_plot()	fun_prior_plot()
+fun_feature_post_plot()	fun_post_plot()
+
+2) new functions added:
+fun_mat_fill()
+fun_consec_pos_perm()
+fun_empty_graph()
+fun_gg_palette()
+fun_gg_scatter()
+fun_gg_bar_mean()
+fun_gg_heatmap()
+fun_gg_empty_graph()
+fun_segmentation()
+fun_pack_import()
+fun_python_pack_import()
+
+3) text error modified in fun_2D_head() and fun_2D_tail()
+
+4) in fun_param_check(): (1) has now the class = "vector", (2) argument fun.name added
+
+5) writiing and debugging message errors improved in all the functions
+
 
 ## v5.1.0
 
@@ -168,6 +239,6 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 
 ## v1.3
 
-1) fun_1D_comp() function improved: provide the common elements, common names and common levels if exist.
+1) fun_1D_comp() function improved: provide the common elements, common names and common levels if exist
 
 

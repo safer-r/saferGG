@@ -1,11 +1,23 @@
-# COMPILATION OF THE EXAMPLES PRESENTS IN cute_little_R_functions.R
+################ COMPILATION OF THE EXAMPLES PRESENTS IN cute_little_R_functions.R ################
+
+######## fun_param_check()
 
 test <- 1:3 ; fun_param_check(data = test, data.name = NULL, print = TRUE, options = NULL, all.options.in.data = FALSE, class = NULL, typeof = NULL, mode = NULL, prop = TRUE, double.as.integer.allowed = FALSE, length = NULL)
 test <- 1:3 ; fun_param_check(data = test, print = TRUE, class = "numeric", typeof = NULL, double.as.integer.allowed = FALSE)
+test <- 1:3 ; fun_param_check(data = test, print = TRUE, class = "vector", mode = "numeric")
+test <- matrix(1:3) ; fun_param_check(data = test, print = TRUE, class = "vector", mode = "numeric")
+
+
+
+######## fun_object_info()
 
 fun_object_info(data = 1:3)
- fun_object_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B")))))
+fun_object_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B")))))
 fun_object_info(list(a = 1:3, b = ordered(factor(c("A", "B")))))
+
+
+
+######## fun_1D_comp()
 
 obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:5] ; fun_1D_comp(obs1, obs2)
 obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; fun_1D_comp(obs1, obs2)
@@ -18,25 +30,49 @@ obs1 = 1:5 ; obs2 = 1.1:6.1 ; fun_1D_comp(obs1, obs2)
 obs1 = as.table(1:5); obs2 = as.table(1:5) ; fun_1D_comp(obs1, obs2)
 obs1 = as.table(1:5); obs2 = 1:5 ; fun_1D_comp(obs1, obs2)
 
+
+
+######## fun_2D_comp()
+
 obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
 obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
 obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
 obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
 
+
+
+######## fun_2D_head()
+
 obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3)
 obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3, "r")
 
+
+
+######## fun_2D_tail()
+
 obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3)
 obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "r")
+
+
+
+######## fun_list_comp()
 
 obs1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_list_comp(obs1, obs2)
 obs1 = list(1:5, LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2]) ; fun_list_comp(obs1, obs2)
 obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_list_comp(obs1, obs2)
 obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(LETTERS[5:9], matrix(1:6), 1:5) ; fun_list_comp(obs1, obs2)
 
+
+
+######## fun_dataframe_remodeling()
+
 obs <- data.frame(col1 = (1:4)*10, col2 = c("A", "B", "A", "A")) ; obs ; fun_dataframe_remodeling(obs)
 obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; obs ; fun_dataframe_remodeling(obs, quanti.col.name = "quanti", quali.col.name = "quali")
 obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; rownames(obs) <- paste0("row", 1:4) ; obs ; fun_dataframe_remodeling(obs, quanti.col.name = "quanti", quali.col.name = "quali")
+
+
+
+######## fun_refactorization()
 
 obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, FALSE)
 obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, TRUE)
@@ -44,18 +80,40 @@ obs <- factor(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refactorization(obs, TRUE)
 obs <- ordered(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refactorization(obs, TRUE)
 obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; obs ; fun_refactorization(obs, FALSE)
 
-cat(fun_rounding(data = c(10, 100.001, 333.0001254, 12312.1235), dec.nb = 2, after.lead.zero = FALSE))
-cat(fun_rounding(data = c("10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = FALSE))
+
+
+######## fun_round()
+
+cat(fun_round(data = c(10, 100.001, 333.0001254, 12312.1235), dec.nb = 2, after.lead.zero = FALSE), "\n\n")
+cat(fun_round(data = c("10", "100.001", "333un_var_trim_display().0001254", "12312.1235"), dec.nb = 2, after.lead.zero = FALSE), "\n\n")
+cat(fun_round(data = c("10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = TRUE), "\n\n")
+
+
+
+######## fun_90clock_matrix_rot()
 
 obs <- matrix(1:10, ncol = 1) ; obs ; fun_90clock_matrix_rot(obs)
 obs <- matrix(LETTERS[1:10], ncol = 5) ; obs ; fun_90clock_matrix_rot(obs)
 
-mat1 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; dimnames(mat1) <- list(LETTERS[1:4], letters[1:2]) ; fun_hexa_hsv_color_matrix(mat1, mat.hsv.h = FALSE, notch = 1, s = 1, v = 1, forced.color = NULL)
+
+
+
+######## fun_num2color_mat()
+
+mat1 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; dimnames(mat1) <- list(LETTERS[1:4], letters[1:2]) ; fun_num2color_mat(mat1, mat.hsv.h = FALSE, notch = 1, s = 1, v = 1, forced.color = NULL)
+
+
+
+######## fun_by_case_matrix_op()
 
 mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2), kind.of.operation = "+")
 mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2), kind.of.operation = "*")
 mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], c(NA, NA))) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2), kind.of.operation = "-")
 mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(c("A1", "A2", "A3", "A4"), letters[1:2])) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat3 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2, mat3), kind.of.operation = "+")
+
+
+
+######## fun_mat_inv()
 
 mat1 = matrix(c(1,1,1,2,1,5,9,8,9), ncol = 3) ; fun_mat_inv(mat = mat1) # use solve()
 mat1 = matrix(c(0,0,0,0,0,0,0,0,0), ncol = 3) ; fun_mat_inv(mat = mat1) # use the trick
@@ -65,25 +123,171 @@ mat1 = matrix(c(1,2), ncol = 1) ; fun_mat_inv(mat = mat1)
 mat1 = matrix(0, ncol = 1) ; fun_mat_inv(mat = mat1)
 mat1 = matrix(2, ncol = 1) ; fun_mat_inv(mat = mat1)
 
+
+
+######## fun_mat_fill()
+
+mat1 = matrix(c(1,NA,NA,NA, 0,2,NA,NA, NA,3,4,NA, 5,6,7,8), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = NA, warning.print = TRUE) # bottomleft example
+mat1 = matrix(c(1,1,1,2, 0,2,3,0, NA,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = NA, warning.print = TRUE) # error example
+mat1 = matrix(c(1,1,1,2, 0,2,3,0, NA,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warning.print = TRUE) # bottomright example
+mat1 = matrix(c(1,1,1,2, "a",2,3,NA, "a","a",0,0, "a","a","a",0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = "a", warning.print = TRUE) # topright example
+mat1 = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,NA, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warning.print = TRUE) # topleft example
+mat1 = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warning.print = TRUE) # error example
+
+
+
+######## fun_consec_pos_perm()
+
+fun_consec_pos_perm(data1 = LETTERS[1:5], data2 = NULL, n = 20, seed = 1, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2)
+fun_consec_pos_perm(data1 = 101:110, data2 = 21:30, n = 20, seed = 1, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2)
+
+
+
+######## fun_window_width_resizing()
+
 fun_window_width_resizing(class.nb = 10, inches.per.class.nb = 0.2, ini.window.width = 7, inch.left.space = 1, inch.right.space = 1, boundarie.space = 0.5)
+
+
+
+######## fun_open_window()
 
 fun_open_window(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
 
-fun_graph_param_prior_plot(param.reinitial = FALSE, xlog.scale = FALSE, ylog.scale = FALSE, remove.label = TRUE, remove.x.axis = TRUE, remove.y.axis = TRUE, std.x.range = TRUE, std.y.range = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 4.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = FALSE)
+
+
+######## fun_prior_plot()
+
+fun_prior_plot(param.reinitial = FALSE, xlog.scale = FALSE, ylog.scale = FALSE, remove.label = TRUE, remove.x.axis = TRUE, remove.y.axis = TRUE, std.x.range = TRUE, std.y.range = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 4.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = FALSE)
+
+
+
+######## fun_post_plot()
+
 # Example of log axis with log y-axis and unmodified x-axis:
-prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE, xlog.scale = FALSE, ylog.scale = TRUE, remove.label = TRUE, remove.x.axis = FALSE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 0.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = TRUE) ; plot(1:100, log = "y") ; fun_feature_post_plot(y.side = 2, y.log.scale = prior.par$ylog, x.lab = "Values", y.lab = "TEST", y.axis.magnific = 1.25, y.label.magnific = 1.5, y.dist.legend = 0.7, just.label.add = ! prior.par$ann)
+prior.par <- fun_prior_plot(param.reinitial = TRUE, xlog.scale = FALSE, ylog.scale = TRUE, remove.label = TRUE, remove.x.axis = FALSE, remove.y.axis = TRUE, down.space = 1, left.space = 1, up.space = 1, right.space = 1, orient = 1, dist.legend = 0.5, tick.length = 0.5, box.type = "n", amplif.label = 1, amplif.axis = 1, display.extend = FALSE, return.par = TRUE) ; plot(1:100, log = "y") ; fun_post_plot(y.side = 2, y.log.scale = prior.par$ylog, x.lab = "Values", y.lab = "TEST", y.axis.magnific = 1.25, y.label.magnific = 1.5, y.dist.legend = 0.7, just.label.add = ! prior.par$ann)
 # Example of log axis with redrawn x-axis and y-axis:
-prior.par <- fun_graph_param_prior_plot(param.reinitial = TRUE) ; plot(1:100) ; fun_feature_post_plot(x.side = 1, x.lab = "Values", y.side = 2, y.lab = "TEST", y.axis.magnific = 1, y.label.magnific = 2, y.dist.legend = 0.6)
+prior.par <- fun_prior_plot(param.reinitial = TRUE) ; plot(1:100) ; fun_post_plot(x.side = 1, x.lab = "Values", y.side = 2, y.lab = "TEST", y.axis.magnific = 1, y.label.magnific = 2, y.dist.legend = 0.6)
 # example with margins in the device region:
-windows(5,5) ; par(mai=c(0.5,0.5,0.5,0.5), omi = c(0.25,0.25,1,0.25), xaxs = "i", yaxs = "i") ; plot(0:10) ; a <- fun_feature_post_plot(x.side = 0, y.side = 0) ; x <- c(a$x.mid.left.dev.region, a$x.left.dev.region, a$x.mid.right.dev.region, a$x.right.dev.region, a$x.mid.left.fig.region, a$x.left.fig.region, a$x.mid.right.fig.region, a$x.right.fig.region, a$x.right.plot.region, a$x.left.plot.region, a$x.mid.plot.region) ; y <- c(a$y.mid.bottom.dev.region, a$y.bottom.dev.region, a$y.mid.top.dev.region, a$y.top.dev.region, a$y.mid.bottom.fig.region, a$y.bottom.fig.region, a$y.mid.top.fig.region, a$y.top.fig.region, a$y.top.plot.region, a$y.bottom.plot.region, a$y.mid.plot.region) ; par(xpd = NA) ; points(x = rep(5, length(y)), y = y, pch = 16, col = "red") ; text(x = rep(5, length(y)), y = y, c("y.mid.bottom.dev.region", "y.bottom.dev.region", "y.mid.top.dev.region", "y.top.dev.region", "y.mid.bottom.fig.region", "y.bottom.fig.region", "y.mid.top.fig.region", "y.top.fig.region", "y.top.plot.region", "y.bottom.plot.region", "y.mid.plot.region"), cex = 0.65, col = grey(0.25)) ; points(y = rep(5, length(x)), x = x, pch = 16, col = "blue") ; text(y = rep(5, length(x)), x = x, c("x.mid.left.dev.region", "x.left.dev.region", "x.mid.right.dev.region", "x.right.dev.region", "x.mid.left.fig.region", "x.left.fig.region", "x.mid.right.fig.region", "x.right.fig.region", "x.right.plot.region", "x.left.plot.region", "x.mid.plot.region"), cex = 0.65, srt = 90, col = grey(0.25))
- 
+windows(5,5) ; par(mai=c(0.5,0.5,0.5,0.5), omi = c(0.25,0.25,1,0.25), xaxs = "i", yaxs = "i") ; plot(0:10) ; a <- fun_post_plot(x.side = 0, y.side = 0) ; x <- c(a$x.mid.left.dev.region, a$x.left.dev.region, a$x.mid.right.dev.region, a$x.right.dev.region, a$x.mid.left.fig.region, a$x.left.fig.region, a$x.mid.right.fig.region, a$x.right.fig.region, a$x.right.plot.region, a$x.left.plot.region, a$x.mid.plot.region) ; y <- c(a$y.mid.bottom.dev.region, a$y.bottom.dev.region, a$y.mid.top.dev.region, a$y.top.dev.region, a$y.mid.bottom.fig.region, a$y.bottom.fig.region, a$y.mid.top.fig.region, a$y.top.fig.region, a$y.top.plot.region, a$y.bottom.plot.region, a$y.mid.plot.region) ; par(xpd = NA) ; points(x = rep(5, length(y)), y = y, pch = 16, col = "red") ; text(x = rep(5, length(y)), y = y, c("y.mid.bottom.dev.region", "y.bottom.dev.region", "y.mid.top.dev.region", "y.top.dev.region", "y.mid.bottom.fig.region", "y.bottom.fig.region", "y.mid.top.fig.region", "y.top.fig.region", "y.top.plot.region", "y.bottom.plot.region", "y.mid.plot.region"), cex = 0.65, col = grey(0.25)) ; points(y = rep(5, length(x)), x = x, pch = 16, col = "blue") ; text(y = rep(5, length(x)), x = x, c("x.mid.left.dev.region", "x.left.dev.region", "x.mid.right.dev.region", "x.right.dev.region", "x.mid.left.fig.region", "x.left.fig.region", "x.mid.right.fig.region", "x.right.fig.region", "x.right.plot.region", "x.left.plot.region", "x.mid.plot.region"), cex = 0.65, srt = 90, col = grey(0.25))
+
+
+
+######## fun_close_specif_window()
+
 windows() ; windows() ; pdf() ; dev.list() ; fun_close_specif_window(kind = c("pdf", "x11"), return.text = TRUE) ; dev.list()
 
-fun_var_trim_display(data = c(1:100, 1:10), displayed.nb = NULL, single.value.display = FALSE, trim.method = "mean.sd", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 0.5, sec.tick.length = 0.3, text.corner = "", amplif.legend = 1, magnific.text.corner = 0.75, trim.return = TRUE)
+
+
+######## fun_empty_graph()
+
+fun_empty_graph(text = "NO GRAPH", title = "GRAPH1")
+
+
+
+######## fun_gg_palette()
+
+fun_gg_palette(n = 2)
+plot(1, pch = 16, cex = 5, col = fun_gg_palette(n = 2)[2]) # second color of the two color ggplot2 palette
+
+
+
+######## fun_gg_scatter()
+
+obs1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = names(obs1)[1]), y = list(L1 = names(obs1)[2]), categ = list(L1 = names(obs1)[3]), legend.name = NULL, color = NULL, geom = list(L1 = "geom_point"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 1, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = FALSE, classic = FALSE)
+obs1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = names(obs1)[1]), y = list(L1 = names(obs1)[2]), categ = NULL, legend.name = NULL, geom = list(L1 = "geom_point"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = "test_x", ylab = "test_y", color = list(L1 = 5), pt.size = 2, li.size = 0.5, alpha = 1, title = "GRAPH1", text.size = 15, return = TRUE, classic = FALSE)
+obs1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = names(obs1)[1]), y = list(L1 = names(obs1)[2]), categ = NULL, legend.name = NULL, geom = list(L1 = "geom_path"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = "test_x", ylab = "test_y", color = list(L1 = 5), pt.size = 2, li.size = 0.5, alpha = 1, title = "GRAPH1", text.size = 15, return = TRUE, classic = FALSE)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]), legend.name = list(L1 = "GROUP1", L2 = "GROUP2"), color = list(L1 = fun_gg_palette(4)[1:2], L2 = fun_gg_palette(4)[3:4]), geom = list(L1 = "geom_point", L2 = "geom_point"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 2, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = TRUE, classic = FALSE, path.lib = NULL)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A2", "A2", "A3", "A3", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = names(data1$L3)[2]), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]), legend.name = NULL, color = list(L1 = fun_gg_palette(7)[1:2], L2 = fun_gg_palette(7)[3:4], L3 = fun_gg_palette(7)[5:7]), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_path"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 4, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = TRUE, classic = FALSE, path.lib = NULL)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A2", "A2", "A3", "A3", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = names(data1$L3)[2]), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], NULL), legend.name = NULL, color = list(L1 = fun_gg_palette(7)[1:2], L2 = fun_gg_palette(7)[3:4], L3 = NULL), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_path"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 4, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = TRUE, classic = FALSE, path.lib = NULL)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]), legend.name = NULL, color = list(L1 = "red", L2 = "blue", L3 = "green"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 4, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = TRUE, classic = FALSE, path.lib = NULL)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]), legend.name = NULL, color = list(L1 = "red", L2 = "blue", L3 = "green"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 4, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = TRUE, classic = FALSE, path.lib = NULL)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A2", "A2", "A3", "A3", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = names(data1$L3)[2]), categ = NULL, legend.name = list(L1 = "A", L2 = "B", L3 = "C"), color = list(L1 = "black", L2 = 2, L3 = "purple"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_point"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 1, li.size = 0.5, alpha = 1, title = "GRAPH1", text.size = 20, return = TRUE, classic = TRUE, path.lib = NULL)
+data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1]), y = list(L1 = NULL), categ = list(L1 = names(data1$L1)[3]), legend.name = list(L1 = "VALUE"), color = list(L1 = "red"), geom = list(L1 = "geom_hline"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 1, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = TRUE, classic = TRUE, path.lib = NULL)
+
+
+
+######## fun_gg_bar_mean()
+
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = "white") # separate bars, modification of bar color 1 (a single value)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = c("red", "blue")) # separate bars, modification of bar color 2 (one value par class of categ2)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), bar.color = rep(c("brown", "orange"), time = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = obs1$bar.color) # separate bars, modification of bar color 3 (one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = "same") # separate bars, modification of dot color 1 (same dot color as the corresponding bar)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = "green") # separate bars, modification of dot color 2 (single color for all the dots)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = c("green", "brown")) # separate bars, modification of dot color 3 (one value par class of categ2)
+obs1 <- data.frame(a = 1:10, group1 = rep(c("G", "H"), times = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1))) # separate bars, modification of dot color 4 (any color for each dot)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2")) # grouped bars, default arguments
+obs1 <- data.frame(a = 1:24, group1 = rep(c("G", "H"), times = 12), group2 = rep(c("A", "B", "C", "D"), each = 6)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), return = TRUE) # more grouped bars
+obs1 <- data.frame(a = log10((1:20) * 100), group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), ylog = TRUE) # grouped bars, log scale. Beware, y column must be log, otherwise incoherent scale
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL) # grouped bars, no dots
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.color = "white") # grouped bars, modification of bar color 1 (a single value)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.color = c("red", "blue")) # grouped bars, modification of bar color 2 (one value par class of categ2)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.color = obs1$bar.color) # grouped bars, modification of bar color 3 (one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "same") # grouped bars, modification of dot color 1 (same dot color as the corresponding bar)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "green") # grouped bars, modification of dot color 2 (single color for all the dots)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = c("green", "brown")) # grouped bars, modification of dot color 3 (one value par class of categ2)
+obs1 <- data.frame(a = 1:10, group1 = rep(c("G", "H"), times = 5), group2 = rep(c("A", "B"), each = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1))) # grouped bars, modification of dot color 4 (any color for each dot)
+obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), class.order = list(NULL, c("B", "A")), legend.name = "", categ.color = c("red", "blue"), dot.color = "grey", error.bar = "SD", bar.width = 0.25, error.bar.width = 0.8, jitter = 1, ylim = c(10, 30), y.include.zero = FALSE, top.extra.margin = 0.5, bottom.extra.margin = 1, xlab = "GROUP", ylab = "MEAN", pt.size = 4, pt.border.size = 0, alpha = 1, show.stat = "above", stat.size = 4, title = "GRAPH1", text.size = 20, return = TRUE, break.nb = 10, classic = TRUE, grid = TRUE) # grouped bars, all the argumentsobs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = NULL, bar.width = 0.25) # width example. With bar.width = 0.25, three times more space between single bars than the bar width
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = NULL, bar.width = 1) # width example. With bar.width = 1, no space between single bars
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, bar.width = 0.25) # width example. With bar.width = 0.25, three times more space between sets of grouped bars than the set width
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, bar.width = 1) # width example. With bar.width = 0, no space between sets of grouped bars
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, error.bar = "SD", error.bar.width = 1) # width example. With error.bar.width = 1, whiskers have the width of the corresponding bar
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, error.bar = "SD", error.bar.width = 0) # width example. No whiskers
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", pt.size = 3, alpha = 1,  jitter = 1) # width example. With jitter = 1, dispersion around the corresponding bar width
+obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", pt.size = 3, alpha = 1,  jitter = 0) # width example. No dispersion
+
+
+
+######## fun_gg_heatmap()
+
+fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), title = "GRAPH 1")
+fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), return = TRUE)
+fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), legend.name = "VALUE", title = "GRAPH 1", text.size  = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
+fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5))
+fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
+fun_gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
+
+
+
+######## fun_gg_empty_graph()
+
+fun_gg_empty_graph(text = "NO GRAPH", title = "GRAPH1")
+
+
+
+######## fun_var_trim_display()
+
+fun_var_trim_display(data = c(1:100, 1:10), displayed.nb = NULL, single.value.display = FALSE, trim.method = "mean.sd", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 0.5, sec.tick.length = 0.3, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = TRUE)
+
+
+
+######## fun_segmentation()
+
+set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2,  x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "|", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
+set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = NULL, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2,  x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "|", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
+set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2,  x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "&", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
+
+
+
+######## fun_pack_import()
+
+fun_pack_import(req.package = "nopackage")
+fun_pack_import(req.package = "ggplot2")
+fun_pack_import(req.package = "ggplot2", path.lib = "blablabla")
+
+
+
+######## fun_python_pack_import()
+
+fun_python_pack_import(req.package = "nopackage")
+fun_python_pack_import(req.package = "serpentine")
+fun_python_pack_import(req.package = "serpentine", path.lib = "blablabla")
+
+
+
+######## fun_export_data()
 
 fun_export_data()
-fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, sep = 2)
-
+fun_export_data(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = FALSE, sep = 2)
 
 
 
