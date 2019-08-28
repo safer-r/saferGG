@@ -194,7 +194,8 @@ fun_empty_graph(text = "NO GRAPH", title = "GRAPH1")
 ######## fun_gg_palette()
 
 fun_gg_palette(n = 2)
-plot(1, pch = 16, cex = 5, col = fun_gg_palette(n = 2)[2]) # second color of the two color ggplot2 palette
+plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)) # the ggplot2 palette when 7 different colors
+plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette when 7 different colors
 
 
 

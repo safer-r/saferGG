@@ -13,7 +13,8 @@
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
 
 # update graphic examples with good comment, as in barplot
-
+# Templates: https://prettydoc.statr.me/themes.html
+# https://pkgdown.r-lib.org/
 
 ################################ OUTLINE ################################
 
@@ -1491,9 +1492,10 @@ return(output)
 fun_round <- function(data, dec.nb = 2, after.lead.zero = TRUE){
 # AIM
 # round a vector of values, if decimal, with the desired number of decimal digits after the decimal leading zeros
-# BEWARE
+# WARNINGS
 # Work well with numbers as character strings, but not always with numerical numbers because of the floating point
 # Numeric values are really truncated from a part of their decimal digits, whatever options(digits) settings
+# See ?.Machine or https://stackoverflow.com/questions/5173692/how-to-return-number-of-decimal-places-in-r, with the interexting formula: abs(x - round(x)) > .Machine$double.eps^0.5
 # ARGUMENTS
 # data: a vector of numbers (numeric or character mode)
 # dec.nb: number of required decimal digits
@@ -3112,6 +3114,9 @@ par(ini.par)
 ######## fun_gg_palette() #### ggplot2 default color palette
 
 
+ 
+
+
 # Check OK: clear to go Apollo
 fun_gg_palette <- function(n){
 # AIM
@@ -3128,7 +3133,8 @@ fun_gg_palette <- function(n){
 # the vector of hexadecimal colors
 # EXAMPLES
 # fun_gg_palette(n = 2)
-# plot(1, pch = 16, cex = 5, col = fun_gg_palette(n = 2)[2]) # second color of the two color ggplot2 palette
+# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)) # the ggplot2 palette when 7 different colors
+# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette when 7 different colors
 # DEBUGGING
 # n = 0
 # function name
@@ -3161,6 +3167,9 @@ hcl(h = hues, l = 65, c = 100)[1:n]
 
 
 ######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle
+
+
+ 
 
 
 # Check OK: clear to go Apollo
@@ -3957,7 +3966,7 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # dot.bin.nb: positive integer indicating the number of bins (i.e., nb of separations) of the ylim range. Each dot will then be put in one of the bin, with the size the width of the bin. Not considered if dot.tidy is FALSE
 # dot.jitter: numeric value (from 0 to 1) of random dot horizontal dispersion, with 0 meaning no dispersion and 1 meaning a dispersion in the corresponding bar width interval. Not considered if dot.tidy is TRUE
 # dot.size: numeric value of dot size. Not considered if dot.tidy is TRUE
-# dot.border.size: numeric value of border dot size. Write zero for no stroke
+# dot.border.size: numeric value of border dot size. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border. Another one leave the border without size control (geom_doplot() feature)
 # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
 # ylim: 2 numeric values for y-axis range. If NULL, range of y in data1
 # ylog: logical. Log10 scale for the y-axis? Beware: if TRUE, ylim must not contain null or negative values. In addition, will be automatically set to FALSE if vertical argument is set to FALSE, to prevent a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
@@ -3998,9 +4007,9 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 # nice representation (1)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, dot.color = "same", error.disp = "SD", bar.width = 0.3, error.whisker.width = 0.8, dot.jitter = 0.5, ylim = c(10, 25), y.include.zero = TRUE, xlab = "GROUP", ylab = "MEAN", dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, stat.disp = "above", stat.size = 4, title = "GRAPH1", text.size = 20, return = TRUE, y.break.nb = NULL, classic = TRUE, grid = TRUE)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.3, error.disp = "SD.TOP", error.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", title = "GRAPH1", text.size = 20, text.angle = 0, classic = TRUE, grid = TRUE, return = TRUE)
 # nice representation (2)
-# set.seed(1) ; obs1 <- data.frame(a = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), group1 = rep(c("G", "H"), times = 48), group2 = rep(c("A", "B", "C", "D"), each = 24)) ; set.seed(NULL) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, dot.color = "same", bar.width = 0.8, dot.tidy = TRUE, dot.bin.nb = 60, ylim= c(-20, 25), vertical = FALSE, xlab = "GROUP", ylab = "MEAN", dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 1, stat.disp = "above", stat.size = 4, stat.dist = 1, title = "GRAPH1", text.size = 20, return = TRUE, y.break.nb = NULL, classic = FALSE)
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), Group1 = rep(c("CAT", "DOG"), times = 48), Group2 = rep(c("A", "B", "C", "D"), each = 24)) ; set.seed(NULL) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.8, dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 1, ylim= c(-20, 25), stat.disp = "above", stat.size = 4, stat.dist = 1, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, title = "GRAPH1", text.size = 20, text.angle = 45, classic = FALSE, return = TRUE)
 # separate bars, modification of bar color (1) (a single value)
 # obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = "white")
 # separate bars, modification of bar color (2) (one value par class of categ2)
@@ -4617,8 +4626,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), stroke = dot.border.size, size = dot.size, fill = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 21)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
 }
 }else if(dot.tidy == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), position = ggplot2::position_dodge(width = bar.width), binaxis = "y", stackdir = "center", stroke = dot.border.size, alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = rep("black", length(categ.color)))) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. Beware: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), position = ggplot2::position_dodge(width = bar.width), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = if(dot.border.size == 0){as.character(levels(dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"]))}else{rep("black", length(categ.color))})) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. Beware: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
 # coordinates of tidy dots
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
 if(length(which(sapply(tempo.coord, FUN = nrow) == nrow(data1))) > 1){
