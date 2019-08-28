@@ -1,6 +1,6 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 33 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 34 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
@@ -46,6 +46,7 @@ fun_empty_graph() #### text to display for empty graphs
 ## gg graphics
 
 fun_gg_palette() #### ggplot2 default color palette
+fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle
 fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)
 fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required
 fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required
@@ -124,6 +125,7 @@ fun_mat_fill()
 fun_consec_pos_perm()
 fun_empty_graph()
 fun_gg_palette()
+fun_gg_just()
 fun_gg_scatter()
 fun_gg_bar_mean()
 fun_gg_heatmap()
@@ -136,7 +138,9 @@ fun_python_pack_import()
 
 4) in fun_param_check(): (1) has now the class = "vector", (2) argument fun.name added
 
-5) writiing and debugging message errors improved in all the functions
+5) writting and debugging message errors improved in all the functions
+
+6) Functions checked for R version 3.5.3
 
 
 ## v5.1.0

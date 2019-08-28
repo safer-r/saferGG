@@ -198,6 +198,16 @@ plot(1, pch = 16, cex = 5, col = fun_gg_palette(n = 2)[2]) # second color of the
 
 
 
+######## fun_gg_just()
+
+fun_gg_just(angle = 45, axis = "x")
+fun_gg_just(angle = (360*2 + 45), axis = "y")
+output <- fun_gg_just(angle = 45, axis = "x") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust))
+output <- fun_gg_just(angle = -45, axis = "y") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.y = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)) + ggplot2::coord_flip()
+output1 <- fun_gg_just(angle = 90, axis = "x") ; output2 <- fun_gg_just(angle = -45, axis = "y") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust, vjust = output1$vjust), axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust, vjust = output2$vjust))
+
+
+
 ######## fun_gg_scatter()
 
 obs1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = names(obs1)[1]), y = list(L1 = names(obs1)[2]), categ = list(L1 = names(obs1)[3]), legend.name = NULL, color = NULL, geom = list(L1 = "geom_point"), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, pt.size = 1, li.size = 0.5, alpha = 0.5, title = "GRAPH1", text.size = 12, return = FALSE, classic = FALSE)

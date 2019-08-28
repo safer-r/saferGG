@@ -4,13 +4,15 @@
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
-##     Compatible with R v3.5.2                               ##
+##     Compatible with R v3.5.3                               ##
 ##                                                            ##
 ################################################################
 
 
 
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
+
+# update graphic examples with good comment, as in barplot
 
 
 ################################ OUTLINE ################################
@@ -21,13 +23,13 @@
 ######## fun_object_info() #### Recovering object information   8
 ######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
 ######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
-######## fun_2D_head() #### head of the left or right of big 2D objects 19
+######## fun_2D_head() #### head of the left or right of big 2D objects 20
 ######## fun_2D_tail() #### tail of the left or right of big 2D objects 21
 ######## fun_list_comp() #### comparison of two lists   22
 ################ Object modification    24
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
 ######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 28
+######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 29
 ######## fun_round() #### Rounding number if decimal present    31
 ######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    32
 ######## fun_num2color_mat() #### Conversion of a numeric matrix into hexadecimal color matrix  33
@@ -36,32 +38,33 @@
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  40
 ######## fun_consec_pos_perm() #### progressively breaks a vector order 43
 ################ Graphics management    47
-######## fun_window_width_resizing() #### window width depending on classes to plot 47
+######## fun_window_width_resizing() #### window width depending on classes to plot 48
 ######## fun_open_window() #### Open a GUI or pdf graphic window    49
 ######## fun_prior_plot() #### Graph param before plotting  52
-######## fun_post_plot() #### Graph param after plotting    56
+######## fun_post_plot() #### Graph param after plotting    57
 ######## fun_close_specif_window() #### Closing specific graphic windows    67
 ################ Standard graphics  69
 ######## fun_empty_graph() #### text to display for empty graphs    69
 ################ gg graphics    70
 ######## fun_gg_palette() #### ggplot2 default color palette    70
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   71
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    90
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    117
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  122
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   122
-######## fun_gg_violin() #### ggplot2 violins   122
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  122
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  122
-######## fun_gg_empty_graph() #### text to display for empty graphs 128
-################ Graphic extraction 129
-######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 129
-######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   137
-################ Import 153
-######## fun_pack_import() #### Check if R packages are present and import into the working environment 153
-######## fun_python_pack_import() #### Check if python packages are present 154
-################ Exporting results (text & tables)  156
-######## fun_export_data() #### Print string or data object into output file    156
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  71
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   73
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    94
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    122
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  127
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   127
+######## fun_gg_violin() #### ggplot2 violins   127
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  127
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  127
+######## fun_gg_empty_graph() #### text to display for empty graphs 133
+################ Graphic extraction 134
+######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 134
+######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   142
+################ Import 158
+######## fun_pack_import() #### Check if R packages are present and import into the working environment 158
+######## fun_python_pack_import() #### Check if python packages are present 159
+################ Exporting results (text & tables)  161
+######## fun_export_data() #### Print string or data object into output file    161
 
 
 ################################ FUNCTIONS ################################
@@ -335,7 +338,7 @@ fun_object_info <- function(data){
 # data: object to test
 # RETURN
 # a list containing the info
-# use names(fun_object_info()) and remove what can be to big for easy analysis
+# please, use names(fun_object_info()) and remove what can be too big for easy analysis
 # EXAMPLES
 # fun_object_info(data = 1:3)
 # fun_object_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B")))))
@@ -1205,9 +1208,9 @@ fun_name_change <- function(data1, data2, added.string = "_modif"){
 # added.string: string added at the end of the modified string in data1 if present in data2
 # RETURN
 # a list containing
-# data: the modified or unmodified data1 (in the same order as in the initial data1)
-# ini: the initial elements before modification. NULL if no modification
-# post: the modified elements in the same order as in ini. NULL if no modification
+# $data: the modified or unmodified data1 (in the same order as in the initial data1)
+# $ini: the initial elements before modification. NULL if no modification
+# $post: the modified elements in the same order as in ini. NULL if no modification
 # EXAMPLES
 # obs1 <- c("A", "B", "C", "D") ; obs2 <- c("A", "C") ; fun_name_change(obs1, obs2)
 # obs1 <- c("A", "B", "C", "C_modif1", "D") ; obs2 <- c("A", "A_modif1", "C") ; fun_name_change(obs1, obs2) # the function checks that the new names are neither in obs1 nor in obs2 (increment the number after the added string)
@@ -3157,6 +3160,116 @@ hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
 
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle
+
+
+# Check OK: clear to go Apollo
+fun_gg_just <- function(angle, axis){
+# AIM
+# provide correct justification for axis labeling, depending on the chosen angle
+# ARGUMENTS
+# angle: integer value of the text angle for the axis labels. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
+# axis: which axis for? Either "x" or "y"
+# REQUIRED PACKAGES
+# none
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_param_check()
+# RETURN
+# a list containing:
+# $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed)
+# $hjust: the horizontal justification
+# $vjust: the vertical justification
+# EXAMPLES
+# fun_gg_just(angle = 45, axis = "x")
+# fun_gg_just(angle = (360*2 + 45), axis = "y")
+# output <- fun_gg_just(angle = 45, axis = "x") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust))
+# output <- fun_gg_just(angle = -45, axis = "y") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.y = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)) + ggplot2::coord_flip()
+# output1 <- fun_gg_just(angle = 90, axis = "x") ; output2 <- fun_gg_just(angle = -45, axis = "y") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust, vjust = output1$vjust), axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust, vjust = output2$vjust))
+# DEBUGGING
+# angle = 45 ; axis = "y"
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_param_check(data = angle, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = axis, options = c("x", "y"), length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_param_check()
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking
+# main code
+# to get angle between -360 and 360
+while(angle > 360){
+angle <- angle - 360
+}
+while(angle < -360){
+angle <- angle + 360
+}
+# end to get angle between -360 and 360
+# justifications
+if(axis == "x"){
+if(angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360){
+hjust <- 0.5
+vjust <- 0.5
+}else if(angle == -270 | angle == 90){
+hjust <- 1
+vjust <- 0.5
+}else if(angle == -90 | angle == 270){
+hjust <- 0
+vjust <- 0.5
+}else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
+hjust <- 1
+vjust <- 1
+}else if((angle > -270 & angle < -180) | (angle > 90 & angle < 180)){
+hjust <- 1
+vjust <- 0
+}else if((angle > -180 & angle < -90) | (angle > 180 & angle < 270)){
+hjust <- 0
+vjust <- 0
+}else if((angle > -90 & angle < 0) | (angle > 270 & angle < 360)){
+hjust <- 0
+vjust <- 1
+}
+}else if(axis == "y"){
+if(angle == -270 | angle == -90 | angle == 90 | angle == 270){
+hjust <- 0.5
+vjust <- 0.5
+}else if(angle == -360 | angle == 0 | angle == 360){
+hjust <- 1
+vjust <- 0.5
+}else if(angle == -180 | angle == 180){
+hjust <- 0
+vjust <- 0.5
+}else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
+hjust <- 1
+vjust <- 0
+}else if((angle > -270 & angle < -180) | (angle > 90 & angle < 180)){
+hjust <- 0
+vjust <- 0
+}else if((angle > -180 & angle < -90) | (angle > 180 & angle < 270)){
+hjust <- 0
+vjust <- 1
+}else if((angle > -90 & angle < 0) | (angle > 270 & angle < 360)){
+hjust <- 1
+vjust <- 1
+}
+}
+# end justifications
+output <- list(angle = angle, hjust = hjust, vjust = vjust)
+return(output)
+}
+
+
 ######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)
 
 
@@ -3195,11 +3308,12 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # fun_param_check()
 # fun_pack_import()
 # fun_gg_palette()
+# fun_name_change()
 # RETURN
 # a scatter plot
 # a list of the graph info if return argument is TRUE:
-# data: the graphic info coordinates
-# warnings: the warning messages
+# $data: the graphic info coordinates
+# $warnings: the warning messages
 # EXAMPLES
 # simple scatter plot
 # obs1 <- data.frame(km = 1:6, time = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 =obs1, x = "km", y = "time", categ = "group")
@@ -3216,16 +3330,16 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # whole arguments
 # data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1]), y = list(L1 = NULL), categ = list(L1 = names(data1$L1)[3]), legend.name = list(L1 = "VALUE"), color = list(L1 = "red"), geom = list(L1 = "geom_hline"),  alpha = list(L1 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 1, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = TRUE, grid = TRUE, return = TRUE)
 # whole arguments
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(100, 10, 3), time = rnorm(100, 10, 3), group1 = rep(c("A1", "A2"), 50)) ; obs2 <-data.frame(km = rnorm(50, 15, 3), time = rnorm(50, 15, 3), group2 = rep(c("G1", "G2"), 50)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; obs1 ; obs2 ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 1:2, L2 = 6:7), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL,  title = "GRAPH1", text.size = 12, classic = TRUE, grid = FALSE, return = TRUE, path.lib = NULL)
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL,  title = "GRAPH1", text.size = 12, classic = TRUE, grid = FALSE, return = FALSE, path.lib = NULL)
 # DEBUGGING
-# data1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; x = names(data1)[1] ; y = names(data1)[2] ; categ = names(data1)[3] ; legend.name = NULL ; color = NULL ; geom = "geom_point" ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = NULL ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_path") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group1 = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group2 = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = list(L1 = 1:2, L2 = 3:4) ; geom = list(L1 = "geom_point", L2 = "geom_line") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 2 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; x = names(data1)[1] ; y = names(data1)[2] ; categ = names(data1)[3] ; legend.name = NULL ; color = NULL ; geom = "geom_point" ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = NULL ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_path") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group1 = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group2 = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = list(L1 = 1:2, L2 = 3:4) ; geom = list(L1 = "geom_point", L2 = "geom_line") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 2 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
 # data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = NULL ; legend.name = NULL ; color = list(L1 = 5) ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = "x test" ; ylab = "y test" ; dot.size = 2 ; line.size = 0.5 ; alpha = 1 ; title = "GRAPH1" ; text.size = 15 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]) ; legend.name = NULL ; color = list(L1 = "red", L2 = "blue", L3 = "green") ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 4 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]) ; legend.name = NULL ; color = list(L1 = "red", L2 = "blue", L3 = "green") ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 4 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3242,7 +3356,14 @@ if(length(find("fun_gg_palette", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
+if(length(find("fun_2D_comp", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
 # end required function checking
+# reserved words to avoid bugs (used in this function)
+reserved.words <- c("fake_y", "fake_categ")
+# end reserved words to avoid bugs (used in this function)
 # check list lengths (and names of data1 compartments if non name present)
 warning <- NULL
 if(all(class(data1) == "list")){
@@ -3381,6 +3502,12 @@ removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
 removed.rows <- vector("list", length = length(data1)) # to report NA removal
 for(i1 in 1:length(data1)){
 tempo <- fun_param_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+# reserved word checking
+if(any(names(data1[[i1]]) %in% reserved.words)){ # I do not use fun_name_change() because cannot control y before creating "fake_y". But ok because reserved are not that common
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COLUMN NAMES OF ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", paste(reserved.words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function.name, " FUNCTION\n\n================\n\n")
+stop(tempo.cat)
+}
+# end reserved word checking
 tempo <- fun_param_check(data = x[[i1]], data.name = ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 # check of geom now because required for y argument
 tempo <- fun_param_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_hline", "geom_vline"), length = 1, fun.name = function.name) ; eval(ee)
@@ -3804,7 +3931,7 @@ return(output)
 
 
 # Check OK: clear to go Apollo
-fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, title = "", text.size = 12, classic = FALSE, grid = FALSE, return = FALSE, path.lib = NULL){
+fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, title = "", text.size = 12, text.angle = 0, classic = FALSE, grid = FALSE, return = FALSE, path.lib = NULL){
 # AIM
 # ggplot2 vertical barplot representing mean values with the possibility to add error bars and to overlay dots
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
@@ -3846,6 +3973,7 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # vertical: logical. Vertical bars? BEWARE: cannot have horizontal bars with a log axis, i.e., ylog = TRUE & vertical = FALSE (see ylog above)
 # title: character string of the graph title
 # text.size: numeric value of the text size (in points)
+# text.angle: integer value of the text angle for the x-axis labels. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # classic: logical. Use the classic theme (article like)?
 # grid: logical. draw horizontal lines in the background to better read the bar values? Not considered if classic = FALSE
 # return: logical. Return the graph parameters?
@@ -3856,17 +3984,18 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # fun_param_check()
 # fun_pack_import()
 # fun_gg_palette()
+# fun_gg_just()
 # fun_round()
 # fun_2D_comp()
 # fun_name_change()
 # RETURN
 # a barplot
 # a list of the graph info if return argument is TRUE:
-# stat: the graphic statistics
-# removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
-# removed.rows: removed rows containing NA (NULL if no row removed)
-# data: the graphic info coordinates
-# warnings: the warning messages. Use cat() for proper display. NULL if no warning
+# $stat: the graphic statistics
+# $removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
+# $removed.rows: removed rows containing NA (NULL if no row removed)
+# $data: the graphic info coordinates
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 # nice representation (1)
 # obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, dot.color = "same", error.disp = "SD", bar.width = 0.3, error.whisker.width = 0.8, dot.jitter = 0.5, ylim = c(10, 25), y.include.zero = TRUE, xlab = "GROUP", ylab = "MEAN", dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, stat.disp = "above", stat.size = 4, title = "GRAPH1", text.size = 20, return = TRUE, y.break.nb = NULL, classic = TRUE, grid = TRUE)
@@ -3931,13 +4060,13 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # orientation example. Beware: log scale automatically set to FALSE for horizontal display, because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
 # obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 1, vertical = FALSE)
 # many arguments
-# obs1 <- data.frame(x = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", vertical = TRUE, title = "GRAPH1", text.size = 14, classic = TRUE, grid = TRUE, return = TRUE, path.lib = NULL)
+# obs1 <- data.frame(x = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("group1", "group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = NULL, ylog = FALSE, y.break.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", vertical = TRUE, title = "GRAPH1", text.size = 14, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, path.lib = NULL)
 # DEBUGGING
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# set.seed(1) ; data1 <- data.frame(a = c(rnorm(25, 0), rnorm(25, -10), rnorm(25, 10), rnorm(25, 20)), group1 = rep(c("G", "H"), times = 50), group2 = rep(c("A", "B", "C", "D"), each = 25)) ; set.seed(NULL) ; y = "a" ; categ = c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; title = "GRAPH1" ; text.size = 20 ; return = TRUE ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# set.seed(1) ; data1 <- data.frame(x = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "x" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = NULL ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = TRUE ; title = "GRAPH1" ; text.size = 20 ; return = TRUE ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
+# data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
+# set.seed(1) ; data1 <- data.frame(a = c(rnorm(25, 0), rnorm(25, -10), rnorm(25, 10), rnorm(25, 20)), group1 = rep(c("G", "H"), times = 50), group2 = rep(c("A", "B", "C", "D"), each = 25)) ; set.seed(NULL) ; y = "a" ; categ = c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; title = "GRAPH1" ; text.size = 20 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
+# set.seed(1) ; data1 <- data.frame(x = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "x" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = NULL ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.break.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = TRUE ; title = "GRAPH1" ; text.size = 20 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3985,19 +4114,6 @@ if(tempo$problem == FALSE & ! (y %in% names(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
 stop(tempo.cat)
 }else if(tempo$problem == FALSE){
-if(any(y %in% reserved.words)){
-if(any(duplicated(names(data1)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}
-tempo.output <- fun_name_change(y, reserved.words)
-y <- tempo.output$data
-for(i3 in 1:length(tempo.output$ini)){
-names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
-}
-tempo.warning <- paste0("IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", paste(tempo.output$ini, collapse = " "), "\nELEMENTS HAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "), "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THIS FUNCTION")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
 tempo <- fun_param_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 tempo <- fun_param_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
@@ -4007,19 +4123,31 @@ stop(tempo.cat)
 }else if(tempo$problem == FALSE & ! all(categ %in% names(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", paste(categ, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
-}else if(any(categ %in% reserved.words)){
+}
+# reserved word checking
+if(any(names(data1) %in% reserved.words)){
 if(any(duplicated(names(data1)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
-tempo.output <- fun_name_change(categ, reserved.words)
-categ <- tempo.output$data
-for(i3 in 1:length(tempo.output$ini)){
+tempo.output <- fun_name_change(names(data1), reserved.words)
+for(i3 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
 names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
-}
-tempo.warning <- paste0("IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", paste(tempo.output$ini, collapse = " "), "\nELEMENTS HAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "), "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THIS FUNCTION")
+if(any(y == tempo.output$ini[i3])){
+y[y == tempo.output$ini[i3]] <- tempo.output$post[i3]
+tempo.warning <- paste0("IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
+if(any(categ == tempo.output$ini[i3])){
+categ[categ == tempo.output$ini[i3]] <- tempo.output$post[i3]
+tempo.warning <- paste0("IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+}
+tempo.warning <- paste0("IN COLUMN NAMES OF data1 ARGUMENT,\n", paste(tempo.output$ini, collapse = " "), "\nNAMES HAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "), "\nBECAUSE RISK OF BUG AS THESE NAMES ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+# end reserved word checking
 # na detection and removal (done now to be sure of the correct length of categ)
 if(any(is.na(data1[, c(y, categ)]))){
 removed.row.nb <- unlist(lapply(lapply(c(data1[c(y, categ)]), FUN = is.na), FUN = which))
@@ -4197,7 +4325,7 @@ stop(tempo.cat)
 }
 }
 tempo <- fun_param_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
@@ -4235,6 +4363,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 tempo <- fun_param_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -4390,20 +4519,28 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggp
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xlab(if(is.null(xlab)){categ[1]}else{xlab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(ylab)){y}else{ylab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
+# text angle management
+tempo.just <- fun_gg_just(angle = text.angle, axis = ifelse(vertical == TRUE, "x", "y"))
+# end text angle management
 if(classic == TRUE){
+# BEWARE: not possible to add several times theme(). NO message but the last one overwrites the others
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
 if(grid == TRUE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
 line = ggplot2::element_line(size = 0.5), 
 axis.line.y.left = ggplot2::element_line(colour = "black"), # draw lines for the y axis
 axis.line.x.bottom = ggplot2::element_line(colour = "black"), # draw lines for the x axis
-panel.grid.major.y = ggplot2::element_line(colour = "grey75")
+panel.grid.major.y = ggplot2::element_line(colour = "grey75"),
+axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
+axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
 ))
 }else{
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
 line = ggplot2::element_line(size = 0.5), 
 axis.line.y.left = ggplot2::element_line(colour = "black"), 
-axis.line.x.bottom = ggplot2::element_line(colour = "black"), 
+axis.line.x.bottom = ggplot2::element_line(colour = "black"),
+axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
+axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
 ))
 }
 }else{
@@ -4417,7 +4554,9 @@ panel.grid.major.x = ggplot2::element_line(colour = "grey75"),
 panel.grid.major.y = ggplot2::element_line(colour = "grey75"), 
 panel.grid.minor.x = ggplot2::element_blank(), 
 panel.grid.minor.y = ggplot2::element_blank(), 
-strip.background = ggplot2::element_rect(fill = "white", colour = "black")
+strip.background = ggplot2::element_rect(fill = "white", colour = "black"),
+axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
+axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
 ))
 }
 # end constant part
@@ -4720,11 +4859,11 @@ fun_gg_boxplot <- function(data1, y, categ, class.order = NULL, legend.name = NU
 # RETURN
 # a boxplot
 # a list of the graph info if return argument is TRUE:
-# stat: the graphic statistics
-# removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
-# removed.rows: removed rows containing NA (NULL if no row removed)
-# data: the graphic info coordinates
-# warnings: the warning messages. Use cat() for proper display. NULL if no warning
+# $stat: the graphic statistics
+# $removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
+# $removed.rows: removed rows containing NA (NULL if no row removed)
+# $data: the graphic info coordinates
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 # obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = "white") # separate bars, modification of bar color 1 (a single value)
 # obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = c("red", "blue")) # separate bars, modification of bar color 2 (one value par class of categ2)
@@ -4754,11 +4893,11 @@ fun_gg_boxplot <- function(data1, y, categ, class.order = NULL, legend.name = NU
 # obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", pt.size = 3, alpha = 1,  jitter = 1) # width example. With jitter = 1, dispersion around the corresponding bar width
 # obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", pt.size = 3, alpha = 1,  jitter = 0) # width example. No dispersion
 # DEBUGGING
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; y = names(data1)[1] ; categ = names(data1)[2] ; class.order = list(L1 = NULL) ; legend.name = NULL ; categ.color = c("red", "blue") ; dot.color = "same" ; error.bar = "SEM.TOP" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = FALSE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 1 ; show.stat = NULL ; stat.size = 8 ; title = "GRAPH1" ; text.size = 12 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = c("red", "blue") ; dot.color = "same" ; error.bar = "SEM.TOP" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = FALSE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 1 ; show.stat = NULL ; stat.size = 8 ; title = "GRAPH1" ; text.size = 12 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = NULL ; dot.color = "same" ; error.bar = NULL ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = NULL ; stat.size = 8 ; title = "" ; text.size = 12 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = data1$bar.color ; dot.color = "same" ; error.bar = "SD" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = NULL ; stat.size = 8 ; title = "" ; text.size = 12 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; dot.color = "same" ; error.bar = "SD" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = "above" ; stat.size = 4 ; title = "" ; text.size = 12 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; y = names(data1)[1] ; categ = names(data1)[2] ; class.order = list(L1 = NULL) ; legend.name = NULL ; categ.color = c("red", "blue") ; dot.color = "same" ; error.bar = "SEM.TOP" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = FALSE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 1 ; show.stat = NULL ; stat.size = 8 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = c("red", "blue") ; dot.color = "same" ; error.bar = "SEM.TOP" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = FALSE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 1 ; show.stat = NULL ; stat.size = 8 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = NULL ; dot.color = "same" ; error.bar = NULL ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = NULL ; stat.size = 8 ; title = "" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = data1$bar.color ; dot.color = "same" ; error.bar = "SD" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = NULL ; stat.size = 8 ; title = "" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; dot.color = "same" ; error.bar = "SD" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = "above" ; stat.size = 4 ; title = "" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
 # function name
 }
 
@@ -4844,6 +4983,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUI
 stop(tempo.cat)
 }
 # end required function checking
+# no reserved words required for this function
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
@@ -5361,6 +5501,8 @@ return(output)
 ######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation
 
 
+#remove the pdf display, just display on what exist (user has to deal before the window kind)
+
 # Check OK: clear to go Apollo
 fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = NULL, x2, y2, xy.cross.kind = "&", graph.check = FALSE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL){
 # AIM
@@ -5396,15 +5538,16 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # RETURN
 # a pdf plot if graph.check is TRUE
 # a list containing:
-# hframe: x and y coordinates of the bottom and top frames for frame plotting (frame1 for the left step and frame2 for the right step)
-# vframe: x and y coordinates of the left and right frames for frame plotting (frame1 for the down step and frame2 for the top step)
-# data1.signif.dot: the significant dots of data1 (i.e., dots outside the frame)
-# data2.signif.dot: the significant dots of data2 if non NULL (i.e., dots outside the frame)
-# warnings: warning messages
+# $hframe: x and y coordinates of the bottom and top frames for frame plotting (frame1 for the left step and frame2 for the right step)
+# $vframe: x and y coordinates of the left and right frames for frame plotting (frame1 for the down step and frame2 for the top step)
+# $data1.signif.dot: the significant dots of data1 (i.e., dots outside the frame)
+# $data2.signif.dot: the significant dots of data2 if non NULL (i.e., dots outside the frame)
+# $warnings: warning messages
 # EXAMPLES
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "|", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = NULL, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "|", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "&", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
+#example with pdf output
 # DEBUGGING
 # set.seed(1) ; data1 = data.frame(x = rnorm(50), y = rnorm(50)) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 5 ; x.step.factor = 10 ; y.range.split = 5 ; y.step.factor = 10 ; error = 0 ; data2 = data.frame(x = rnorm(50, 0, 2), y = rnorm(50, 0, 2)) ; set.seed(NULL) ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; xy.cross.kind = "|" ; graph.check = TRUE ; graph.path = "C:/Users/Gael/Desktop/" ; path.lib = NULL
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = NULL ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; xy.cross.kind = "|" ; graph.check = TRUE ; graph.path = "C:/Users/Gael/Desktop/" ; path.lib = NULL
