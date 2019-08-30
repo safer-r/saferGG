@@ -3800,7 +3800,7 @@ tempo.data.frame[, x[[i1]]] <- xlim
 }else if(geom[[i1]] == "geom_vline"){
 tempo.data.frame[, y[[i1]]] <- ylim
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n"))
 stop(tempo.cat)
 }
 tempo.data.frame[, categ[[i1]]] <- paste0("Line_", i3)
@@ -4488,7 +4488,7 @@ stop(tempo.cat)
 }
 }
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n"))
 stop(tempo.cat)
 }
 data2 <- mean.dataframe
@@ -4502,7 +4502,7 @@ data2 <- data.frame(data2, SEM = sem.dataframe[, y], ERROR.INF = mean.dataframe[
 }else if(error.disp == "SEM.TOP"){
 data2 <- data.frame(data2, SEM = sem.dataframe[, y], ERROR.INF = mean.dataframe[, y], ERROR.SUP = mean.dataframe[, y] + sem.dataframe[, y])
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n"))
 stop(tempo.cat)
 }
 }
@@ -4539,7 +4539,7 @@ bar.width2 <- bar.width / length(unique(data1[, categ[length(categ)]])) # real w
 }else if(length(categ) == 1){
 bar.width2 <- bar.width
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n"))
 stop(tempo.cat)
 }
 error.whisker.width <- bar.width * error.whisker.width # real error bar width
@@ -4628,7 +4628,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n"))
 stop(tempo.cat)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
@@ -4682,7 +4682,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
 stop(tempo.cat)
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
@@ -4744,7 +4744,7 @@ names(tempo.data1)[names(tempo.data1) == "group"] <- "group.check"
 stat.coord4 <- cbind(stat[order(stat[, categ[1]], stat[, categ[2]]), ], tempo.data1[order(tempo.data1[, paste0(categ[1], ".check")], tempo.data1[,paste0(categ[2], ".check")]), ])
 }
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n"))
 stop(tempo.cat)
 }
 if( ! identical(bar.coord$group[order(bar.coord$group)], stat.coord4$group.check[order(stat.coord4$group.check)])){
@@ -4799,7 +4799,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 }
 # end stat display
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 8\n\n============\n\n"))
 stop(tempo.cat)
 }
 }
@@ -5538,13 +5538,14 @@ return(output)
 ######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation
 
 
-#remove the pdf display, just display on what exist (user has to deal before the window kind)
-
 # Check OK: clear to go Apollo
-fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = NULL, x2, y2, xy.cross.kind = "&", graph.check = FALSE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL){
+fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = NULL, x2, y2, data2.pb.dot = "unknown", xy.cross.kind = "&", graph.check = FALSE, graph.in.file = FALSE, path.lib = NULL){
 # AIM
-# If data1 is a data frame corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() delimits a frame around the dots cloud using a sliding window set by x.range.split and x.step.factor to frame the top and bottom part of the cloud, and set by y.range.split and y.step.factor to frame the left and right part of the cloud
-# If a second data frame is provided, corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() defines the dots of this data frame, outside of the frame of the first data frame
+# if data1 is a data frame corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() delimits a frame around the dots cloud using a sliding window set by x.range.split and x.step.factor to frame the top and bottom part of the cloud, and set by y.range.split and y.step.factor to frame the left and right part of the cloud
+# if a second data frame is provided, corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() defines the dots of this data frame, outside of the frame of the first data frame
+# WARNINGS
+# if dots from data2 look significant on the graph (outside the frame) but are not (not black on the last figure), this is probably because the frame is flat on the zero coordinate (no volume inside the frame at this position). Thus, no way to conclude that data2 dots here are significant. These dots are refered to as "unknown". The pb.dot argument deals with such dots
+# dots that are sometimes inside and outside the frame, depending on the sliding windows, are treated differently: they are removed. Such dots are neither classified as "signif", "non signif" or "unknown", but as "inconsistent"
 # ARGUMENTS
 # data1: a dataframe containing a column of x-axis values and a column of y-axis values
 # x1: character string of the data1 column name for x-axis (first column of data1 by default)
@@ -5557,9 +5558,10 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # data2: a dataframe containing a column of x-axis values and a column of y-axis values, for which outside dots of the data1 cloud has to be determined. Write NULL if not required
 # x2: character string of the data1 column name for x-axis (first column of data1 by default)
 # y2: character string of the data1 column name for y-axis (second column of data1 by default)
-# xy.cross.kind: if data2 is non null and if both x.range.split and y.range.split are non null, which dots are finally significants? Write "&" for intersection of outside dots on x and on y. Write "|" for union of outside dots on x and on y
-# graph.check: logical. Print a pdf graph that check the frame?
-# graph.path: absolute path of the directory to print the pdf graph.check. Ignored if graph.check is FALSE
+# data2.pb.dot: unknown dots are explain in the warning section above. If "signif", then the unknown dots are finally considered as significant (outside the frame). If "not.signif", then the unknown dots are finally considered as non significant (inside the frame). If "unknown", no conclusion are drawn from these dots. See the examples below
+# xy.cross.kind: if data2 is non null and if both x.range.split and y.range.split are non null, which dots are finally significants? Write "&" for intersection of outside dots on x and on y. Write "|" for union of outside dots on x and on y. See the examples below
+# graph.check: logical. Print graphs that check the frame?
+# graph.in.file: logical. Graphs sent into a graphic device already opened? If FALSE, GUI are opened for each graph. If TRUE, no GUI are opended. The graphs are displayed on the current active graphic device. Ignored if graph.check is FALSE
 # path.lib: absolute path of the required packages, if not in the default folders. Ignored if graph.check is FALSE
 # REQUIRED PACKAGES
 # ggplot2 if graph.check is TRUE
@@ -5573,7 +5575,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # fun_gg_empty_graph()
 # fun_close_specif_window()
 # RETURN
-# a pdf plot if graph.check is TRUE
+# several graphs if graph.check is TRUE
 # a list containing:
 # $data1.removed.row.nb: which rows have been removed due to NA; NaN, -Inf or Inf detection in x1 or y1 columns (NULL if no row removed)
 # $data1.removed.rows: removed rows (NULL if no row removed)
@@ -5581,18 +5583,24 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # $data2.removed.rows: removed rows (NULL if no row removed)
 # $hframe: x and y coordinates of the bottom and top frames for frame plotting (frame1 for the left step and frame2 for the right step)
 # $vframe: x and y coordinates of the left and right frames for frame plotting (frame1 for the down step and frame2 for the top step)
-# $data1.signif.dot: the significant dots of data1 (i.e., dots outside the frame)
+# $data1.signif.dot: the significant dots of data1 (i.e., dots outside the frame). A good segmentation should not have any data1.signif.dot
+# $data1.non.signif.dot: the non significant dots of data1 (i.e., dots inside the frame)
+# $data1.inconsistent.dot: see the warning section above
 # $data2.signif.dot: the significant dots of data2 if non NULL (i.e., dots outside the frame)
+# $data2.non.signif.dot: the non significant dots of data2 (i.e., dots inside the frame)
+# $data2.unknown.dot: the problematic dots of data2 (i.e., data2 dots outside of the range of data1, or data2 dots in a sliding window without data1 dots). Is systematically NULL except if argument data2.pb.dot = "unknown" and some data2 dots are in such situation. Modifying the segmentation x.range.split, x.step.factor, y.range.split, y.step.factor arguments can solve this problem
+# $data2.inconsistent.dot: see the warning section above
 # $warnings: warning messages
 # EXAMPLES
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data1[5:7, 2] <- NA ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; data2[11:13, 1] <- Inf ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "|", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = NULL, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "|", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], xy.cross.kind = "&", graph.check = TRUE, graph.path = "C:/Users/Gael/Desktop/", path.lib = NULL)
-#example with pdf output
+# example explaining the unknown and inconsistent dots, and the cross 
+
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data1[5:7, 2] <- NA ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; data2[11:13, 1] <- Inf ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "|", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = NULL, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "|", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "&", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
 # DEBUGGING
-# set.seed(1) ; data1 = data.frame(x = rnorm(50), y = rnorm(50)) ; data1[5:7, 2] <- NA ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 5 ; x.step.factor = 10 ; y.range.split = 5 ; y.step.factor = 10 ; error = 0 ; data2 = data.frame(x = rnorm(50, 0, 2), y = rnorm(50, 0, 2)) ; data2[11:13, 1] <- Inf ; set.seed(NULL) ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; xy.cross.kind = "|" ; graph.check = TRUE ; graph.path = "C:/Users/Gael/Desktop/" ; path.lib = NULL
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = NULL ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; xy.cross.kind = "|" ; graph.check = TRUE ; graph.path = "C:/Users/Gael/Desktop/" ; path.lib = NULL
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 20 ; x.step.factor = 10 ; y.range.split = NULL ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; xy.cross.kind = "&" ; graph.check = TRUE ; graph.path = "C:/Users/Gael/Desktop/" ; path.lib = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(50), y = rnorm(50)) ; data1[5:7, 2] <- NA ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 5 ; x.step.factor = 10 ; y.range.split = 5 ; y.step.factor = 10 ; error = 0 ; data2 = data.frame(x = rnorm(50, 0, 2), y = rnorm(50, 0, 2)) ; set.seed(NULL) ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; graph.check = TRUE ; graph.in.file = FALSE ; path.lib = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = NULL ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; graph.check = TRUE ; graph.in.file = FALSE  ; path.lib = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 20 ; x.step.factor = 10 ; y.range.split = NULL ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "&" ; graph.check = TRUE ; graph.in.file = FALSE  ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -5603,6 +5611,7 @@ stop(tempo.cat)
 }
 # end required function checking
 # argument checking
+warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
@@ -5683,15 +5692,21 @@ tempo <- fun_param_check(data = data2[, y2], data.name = "y2 COLUMN OF data2", c
 }
 }
 }
+if( ! is.null(data2)){
+tempo <- fun_param_check(data = data2.pb.dot, options = c("signif", "not.signif", "unknown"), length = 1, fun.name = function.name) ; eval(ee)
+}
 if( ! (is.null(x.range.split)) & ! (is.null(y.range.split))){
 tempo <- fun_param_check(data = xy.cross.kind, options = c("&", "|"), length = 1, fun.name = function.name) ; eval(ee)
 }
 tempo <- fun_param_check(data = graph.check, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & graph.check == TRUE){
-tempo <- fun_param_check(data = graph.path, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(graph.path))){
-cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE graph.path PARAMETER DOES NOT EXISTS: ", graph.path, "\n\n============\n\n"))
+tempo <- fun_param_check(data = graph.in.file, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & graph.in.file == TRUE & is.null(dev.list())){
+cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \ngraph.in.file PARAMETER SET TO TRUE BUT NO ACTIVE GRAPHIC DEVICE DETECTED\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
+}else if(tempo$problem == FALSE & ! is.null(dev.list())){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": GRAPHS PRINTED IN THE CURRENT DEVICE (TYPE ", toupper(names(dev.cur())), ")")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 if( ! is.null(path.lib)){
 tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
@@ -5740,7 +5755,6 @@ fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
 }
 # end package checking
 # main code
-warning <- NULL
 # na detection and removal (done now to be sure of the correct length of categ)
 data1.removed.row.nb <- NULL
 data1.removed.rows <- NULL
@@ -5757,7 +5771,7 @@ stop(tempo.cat)
 }
 data1 <- data1[-data1.removed.row.nb, ]
 if(nrow(data1) == 0){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n"))
 stop(tempo.cat)
 }
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $data1.removed.row.nb AND $data1.removed.rows)")
@@ -5778,7 +5792,7 @@ stop(tempo.cat)
 }
 data2 <- data2[-data2.removed.row.nb, ]
 if(nrow(data2) == 0){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n"))
 stop(tempo.cat)
 }
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2 AND CORRESPONDING ROWS REMOVED (SEE $data2.removed.row.nb AND $data2.removed.rows)")
@@ -5789,14 +5803,20 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 }
 # end na detection and removal (done now to be sure of the correct length of categ)
+# removal of the duplicated rows and row annotation (dot number)
 data1 <- data1[ ! duplicated(data1[, c(x1, y1)]), ] # remove the dots that have same x and y values
 data1 <- cbind(data1, DOT_NB = 1:nrow(data1))
 if( ! is.null(data2)){
 data2 <- data2[ ! duplicated(data2[, c(x2, y2)]), ] # remove the dots that have same x and y values
 data2 <- cbind(data2, DOT_NB = 1:nrow(data2))
 }
-# may be create vector of each column to increase speed
+# end removal of the duplicated rows and row annotation (dot number)
+
+
+
+
 # Method using x unit interval 
+# may be create vector of each column to increase speed
 x.data1.l <- NULL # x coord of the y upper and lower limits defined on the data1 cloud for left step line
 x.data1.r <- NULL # x coord of the y upper and lower limits defined on the data1 cloud for right step line
 y.data1.down.limit.l <- NULL # lower limit of the data1 cloud for left step line
@@ -5828,12 +5848,15 @@ y.data1.median <- median(data1[, y1], na.rm = TRUE) # will be used for sliding w
 if( ! is.null(data2)){
 y.outside.data2.dot.nb <- integer() # vector that will contain the selected 1D coordinates (i.e., dots) of data2 that are upper or lower than the data1 frame
 y.inside.data2.dot.nb <- integer() # vector that will contain the 1D coordinates (i.e., dots) of data2 that are not upper or lower than the data1 frame
+y.unknown.data2.dot.nb <- integer() # vector that will contain the 1D coordinates (i.e., dots) of data2 that are problematic: data2 dots outside of the range of data1, or data2 dots in a sliding window without data1 dots
 # recover data2 dots outside the range of data1
 if(any(data2[, x2] < x.range[1])){
-y.outside.data2.dot.nb <- c(y.outside.data2.dot.nb, data2$DOT_NB[data2[, x2] < x.range[1]])
+y.unknown.data2.dot.nb <- c(y.unknown.data2.dot.nb, data2$DOT_NB[data2[, x2] < x.range[1]])
+#tempo.warning & indicate the interval
 }
 if(any(data2[, x2] > x.range[2])){
-y.outside.data2.dot.nb <- c(y.outside.data2.dot.nb, data2$DOT_NB[data2[, x2] > x.range[2]])
+y.unknown.data2.dot.nb <- c(y.unknown.data2.dot.nb, data2$DOT_NB[data2[, x2] > x.range[2]])
+#tempo.warning & indicate the interval
 }
 # end recover data2 dots outside the range of data1
 }
@@ -5855,7 +5878,7 @@ y.data1.top.limit.l <- c(y.data1.top.limit.l, tempo.y.data1.top.limit, tempo.y.d
 y.data1.down.limit.l <- c(y.data1.down.limit.l, tempo.y.data1.down.limit, tempo.y.data1.down.limit)
 y.data1.top.limit.r <- c(y.data1.top.limit.r, tempo.y.data1.top.limit, tempo.y.data1.top.limit)
 y.data1.down.limit.r <- c(y.data1.down.limit.r, tempo.y.data1.down.limit, tempo.y.data1.down.limit)
-y.data1.dot.signif <- ! (data1[, y1] <= tempo.y.data1.top.limit & data1[, y1] >= tempo.y.data1.down.limit) & x.data1.dot.here # is there data1 dot present in the sliding window, above or below the data1 limits, considering the y axis?
+y.data1.dot.signif <- ( ! ((data1[, y1] <= tempo.y.data1.top.limit) & (data1[, y1] >= tempo.y.data1.down.limit))) & x.data1.dot.here # is there data1 dot present in the sliding window, above or below the data1 limits, considering the y axis?
 y.data1.dot.not.signif <- x.data1.dot.here & ! y.data1.dot.signif
 y.outside.data1.dot.nb <- c(y.outside.data1.dot.nb, data1$DOT_NB[y.data1.dot.signif]) # recover the row number of data1
 y.outside.data1.dot.nb <- unique(y.outside.data1.dot.nb)
@@ -5871,14 +5894,21 @@ y.data1.down.limit.r <- c(y.data1.down.limit.r, y.data1.median, y.data1.median)
 # recover the data2 dots outside the frame
 if( ! is.null(data2)){
 if(any(x.data1.dot.here == TRUE) & any(x.data2.dot.here == TRUE)){ 
-y.data2.dot.signif <- ! (data2[, y2] <= tempo.y.data1.top.limit & data2[, y2] >= tempo.y.data1.down.limit) & x.data2.dot.here # is there data2 dot present in the sliding window, above or below the data1 limits, considering the y axis?
+y.data2.dot.signif <- ( ! ((data2[, y2] <= tempo.y.data1.top.limit) & (data2[, y2] >= tempo.y.data1.down.limit))) & x.data2.dot.here # is there data2 dot present in the sliding window, above or below the data1 limits, considering the y axis?
 y.data2.dot.not.signif <- x.data2.dot.here & ! y.data2.dot.signif
 y.outside.data2.dot.nb <- c(y.outside.data2.dot.nb, data2$DOT_NB[y.data2.dot.signif])
 y.outside.data2.dot.nb <- unique(y.outside.data2.dot.nb)
 y.inside.data2.dot.nb <- c(y.inside.data2.dot.nb, data2$DOT_NB[y.data2.dot.not.signif])
 y.inside.data2.dot.nb <- unique(y.inside.data2.dot.nb)
 }else if(any(x.data1.dot.here == FALSE) & any(x.data2.dot.here == TRUE)){ # problem: data2 dots in the the windows but no data1 dots to generates the quantiles
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE [", round(min.pos, 3), " ; ", round(max.pos, 3), "] INTERVAL DOES NOT CONTAIN data1 X VALUES BUT CONTAINS data2 X VALUES WHICH CANNOT BE EVALUATED.\nTHE CONCERNED data2 ROW NUMBERS ARE:\n", paste(which(x.data1.dot.here == FALSE & x.data2.dot.here == TRUE), collapse = "\n"))
+y.unknown.data2.dot.nb <- c(y.unknown.data2.dot.nb, data2$DOT_NB[x.data2.dot.here])
+y.unknown.data2.dot.nb <- unique(y.unknown.data2.dot.nb)
+#tempo.warning & indicate the interval
+
+
+
+
+# tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE [", round(min.pos, 3), " ; ", round(max.pos, 3), "] INTERVAL DOES NOT CONTAIN data1 X VALUES BUT CONTAINS data2 X VALUES WHICH CANNOT BE EVALUATED.\nTHE CONCERNED data2 ROW NUMBERS ARE:\n", paste(which(x.data1.dot.here == FALSE & x.data2.dot.here == TRUE), collapse = "\n"))
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 }
@@ -5892,11 +5922,27 @@ if(max.pos < x.range[2]){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE SLIDING WINDOW HAS NOT REACHED THE MAX VALUE OF data1 ON THE X-AXIS: ", max.pos, " VERSUS ", x.range[2], "\n\n================\n\n")
 stop(tempo.cat)
 }
-y.outside.data1.dot.nb.final <- y.outside.data1.dot.nb[ ! (y.outside.data1.dot.nb %in% y.inside.data1.dot.nb)] # if a row number of y.inside.data2.dot.nb is present in y.outside.data2.dot.nb, it means that during the sliding, a dot has been sometime inside, sometime outside -> removed
-y.outside.data2.dot.nb.final <- y.outside.data2.dot.nb[ ! (y.outside.data2.dot.nb %in% y.inside.data2.dot.nb)] # if a row number of y.inside.data2.dot.nb is present in y.outside.data2.dot.nb, it means that during the sliding, a dot has been sometime inside, sometime outside -> removed
+y.incon.data1.dot.nb.final <- unique(c(y.outside.data1.dot.nb[y.outside.data1.dot.nb %in% y.inside.data1.dot.nb], y.inside.data1.dot.nb[y.inside.data1.dot.nb %in% y.outside.data1.dot.nb])) # inconsistent dots: if a row number of y.inside.data1.dot.nb is present in y.outside.data1.dot.nb (and vice versa), it means that during the sliding, a dot has been sometime inside, sometime outside -> removed from the outside list
+y.outside.data1.dot.nb.final <- y.outside.data1.dot.nb[ ! (y.outside.data1.dot.nb %in% y.incon.data1.dot.nb.final)] # inconsistent dots removed from the outside list
+y.inside.data1.dot.nb.final <- y.inside.data1.dot.nb[ ! (y.inside.data1.dot.nb %in% y.incon.data1.dot.nb.final)] # inconsistent dots removed from the inside list
+if( ! is.null(data2)){
+# if some unknown dots are also inside, and/or outside, they are put in the inside and/or outside. Ok, because then the intersection between inside and outside is treated -> inconsistent dots
+tempo.unknown.out <- y.unknown.data2.dot.nb[y.unknown.data2.dot.nb %in% y.outside.data2.dot.nb]
+y.outside.data2.dot.nb <- unique(c(y.outside.data2.dot.nb, tempo.unknown.out)) # if a row number of y.unknown.data2.dot.nb is present in y.outside.data2.dot.nb, it is put into outside
+tempo.unknown.in <- y.unknown.data2.dot.nb[y.unknown.data2.dot.nb %in% y.inside.data2.dot.nb]
+y.inside.data2.dot.nb <- unique(c(y.inside.data2.dot.nb, tempo.unknown.in)) # if a row number of y.unknown.data2.dot.nb is present in y.inside.data2.dot.nb, it is put into inside
+y.unknown.data2.dot.nb.final <- y.unknown.data2.dot.nb[ ! (y.unknown.data2.dot.nb %in% c(y.outside.data2.dot.nb, y.inside.data2.dot.nb))] # then dots also in inside and outside are remove from unknown
+y.incon.data2.dot.nb.final <- unique(c(y.outside.data2.dot.nb[y.outside.data2.dot.nb %in% y.inside.data2.dot.nb], y.inside.data2.dot.nb[y.inside.data2.dot.nb %in% y.outside.data2.dot.nb])) # inconsistent dots: if a row number of y.inside.data2.dot.nb is present in y.outside.data2.dot.nb (and vice versa), it means that during the sliding, a dot has been sometime inside, sometime outside -> removed from the outside list
+y.outside.data2.dot.nb.final <- y.outside.data2.dot.nb[ ! (y.outside.data2.dot.nb %in% y.incon.data2.dot.nb.final)] # inconsistent dots removed from the outside list
+y.inside.data2.dot.nb.final <- y.inside.data2.dot.nb[ ! (y.inside.data2.dot.nb %in% y.incon.data2.dot.nb.final)] # inconsistent dots removed from the inside list
+}
 # end x-axis sliding and y-axis limits of the data1 cloud -> y significant data2
 }
 # end Method using x unit interval 
+
+
+
+
 # Method using y unit interval 
 y.data1.d <- NULL # y coord of the x upper and lower limits defined on the data1 cloud for down step line
 y.data1.t <- NULL # y coord of the x upper and lower limits defined on the data1 cloud for top step line
@@ -5921,12 +5967,13 @@ x.data1.median <- median(data1[, x1], na.rm = TRUE) # will be used for sliding w
 if( ! is.null(data2)){
 x.outside.data2.dot.nb <- integer() # vector that will contain the selected 1D coordinates (i.e., dots) of data2 that are upper or lower than the data1 frame
 x.inside.data2.dot.nb <- integer() # vector that will contain the 1D coordinates (i.e., dots) of data2 that are not upper or lower than the data1 frame
+x.unknown.data2.dot.nb <- integer() # vector that will contain the 1D coordinates (i.e., dots) of data2 that are problematic: data2 dots outside of the range of data1, or data2 dots in a sliding window without data1 dots
 # recover data2 dots outside the range of data1
 if(any(data2[, y2] < y.range[1])){
-x.outside.data2.dot.nb <- c(x.outside.data2.dot.nb, data2$DOT_NB[data2[, y2] < y.range[1]])
+x.unknown.data2.dot.nb <- c(x.unknown.data2.dot.nb, data2$DOT_NB[data2[, y2] < y.range[1]])
 }
 if(any(data2[, y2] > y.range[2])){
-x.outside.data2.dot.nb <- c(x.outside.data2.dot.nb, data2$DOT_NB[data2[, y2] > y.range[2]])
+x.unknown.data2.dot.nb <- c(x.unknown.data2.dot.nb, data2$DOT_NB[data2[, y2] > y.range[2]])
 }
 # end recover data2 dots outside the range of data1
 }
@@ -5948,7 +5995,7 @@ x.data1.right.limit.d <- c(x.data1.right.limit.d, tempo.x.data1.right.limit, tem
 x.data1.left.limit.d <- c(x.data1.left.limit.d, tempo.x.data1.left.limit, tempo.x.data1.left.limit)
 x.data1.right.limit.t <- c(x.data1.right.limit.t, tempo.x.data1.right.limit, tempo.x.data1.right.limit)
 x.data1.left.limit.t <- c(x.data1.left.limit.t, tempo.x.data1.left.limit, tempo.x.data1.left.limit)
-x.data1.dot.signif <- ! (data1[, x1] <= tempo.x.data1.right.limit & data1[, x1] >= tempo.x.data1.left.limit) & y.data1.dot.here # is there data2 dot present in the sliding window, above or below the data1 limits, considering the x axis?
+x.data1.dot.signif <- ( ! ((data1[, x1] <= tempo.x.data1.right.limit) & (data1[, x1] >= tempo.x.data1.left.limit))) & y.data1.dot.here # is there data2 dot present in the sliding window, above or below the data1 limits, considering the x axis?
 x.data1.dot.not.signif <- y.data1.dot.here & ! x.data1.dot.signif
 x.outside.data1.dot.nb <- c(x.outside.data1.dot.nb, data1$DOT_NB[x.data1.dot.signif]) # recover the row number of data1
 x.outside.data1.dot.nb <- unique(x.outside.data1.dot.nb)
@@ -5964,14 +6011,19 @@ x.data1.left.limit.t <- c(x.data1.left.limit.t, x.data1.median, x.data1.median)
 # recover the data2 dots outside the frame
 if( ! is.null(data2)){
 if(any(y.data1.dot.here == TRUE) & any(y.data2.dot.here == TRUE)){ 
-x.data2.dot.signif <- ! (data2[, x2] <= tempo.x.data1.right.limit & data2[, x2] >= tempo.x.data1.left.limit) & y.data2.dot.here # is there data2 dot present in the sliding window, above or below the data1 limits, considering the x axis?
+x.data2.dot.signif <- ( ! ((data2[, x2] <= tempo.x.data1.right.limit) & (data2[, x2] >= tempo.x.data1.left.limit))) & y.data2.dot.here # is there data2 dot present in the sliding window, above or below the data1 limits, considering the x axis?
 x.data2.dot.not.signif <- y.data2.dot.here & ! x.data2.dot.signif
 x.outside.data2.dot.nb <- c(x.outside.data2.dot.nb, data2$DOT_NB[x.data2.dot.signif])
 x.outside.data2.dot.nb <- unique(x.outside.data2.dot.nb)
 x.inside.data2.dot.nb <- c(x.inside.data2.dot.nb, data2$DOT_NB[x.data2.dot.not.signif])
 x.inside.data2.dot.nb <- unique(x.inside.data2.dot.nb)
 }else if(any(y.data1.dot.here == FALSE) & any(y.data2.dot.here == TRUE)){ # recover the data2 dots outside the range of the data1 cloud
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE [", round(min.pos, 3), " ; ", round(max.pos, 3), "] INTERVAL DOES NOT CONTAIN data1 Y VALUES BUT CONTAINS data2 Y VALUES WHICH CANNOT BE EVALUATED.\nTHE CONCERNED data2 ROW NUMBERS ARE:\n", paste(which(y.data1.dot.here == FALSE & y.data2.dot.here == TRUE), collapse = "\n"))
+x.unknown.data2.dot.nb <- c(x.unknown.data2.dot.nb, data2$DOT_NB[y.data2.dot.here])
+x.unknown.data2.dot.nb <- unique(x.unknown.data2.dot.nb)
+
+
+
+# tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE [", round(min.pos, 3), " ; ", round(max.pos, 3), "] INTERVAL DOES NOT CONTAIN data1 Y VALUES BUT CONTAINS data2 Y VALUES WHICH CANNOT BE EVALUATED.\nTHE CONCERNED data2 ROW NUMBERS ARE:\n", paste(which(y.data1.dot.here == FALSE & y.data2.dot.here == TRUE), collapse = "\n"))
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 }
@@ -5985,11 +6037,27 @@ if(max.pos < y.range[2]){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE SLIDING WINDOW HAS NOT REACHED THE MAX VALUE OF data1 ON THE Y-AXIS: ", max.pos, " VERSUS ", y.range[2], "\n\n================\n\n")
 stop(tempo.cat)
 }
-x.outside.data1.dot.nb.final <- x.outside.data1.dot.nb[ ! (x.outside.data1.dot.nb %in% x.inside.data1.dot.nb)] # if a row number of x.inside.data2.dot.nb is present in x.outside.data2.dot.nb, it means that during the sliding, a dot has between sometime inside, sometime outside -> removed
-x.outside.data2.dot.nb.final <- x.outside.data2.dot.nb[ ! (x.outside.data2.dot.nb %in% x.inside.data2.dot.nb)] # if a row number of x.inside.data2.dot.nb is present in x.outside.data2.dot.nb, it means that during the sliding, a dot has between sometime inside, sometime outside -> removed
+x.incon.data1.dot.nb.final <- unique(c(x.outside.data1.dot.nb[x.outside.data1.dot.nb %in% x.inside.data1.dot.nb], x.inside.data1.dot.nb[x.inside.data1.dot.nb %in% x.outside.data1.dot.nb])) # inconsistent dots: if a row number of x.inside.data1.dot.nb is present in x.outside.data1.dot.nb (and vice versa), it means that during the sliding, a dot has been sometime inside, sometime outside -> removed from the outside list
+x.outside.data1.dot.nb.final <- x.outside.data1.dot.nb[ ! (x.outside.data1.dot.nb %in% x.incon.data1.dot.nb.final)] # inconsistent dots removed from the outside list
+x.inside.data1.dot.nb.final <- x.inside.data1.dot.nb[ ! (x.inside.data1.dot.nb %in% x.incon.data1.dot.nb.final)] # inconsistent dots removed from the inside list
+if( ! is.null(data2)){
+# if some unknown dots are also inside, and/or outside, they are put in the inside and/or outside. Ok, because then the intersection between inside and outside is treated -> inconsistent dots
+tempo.unknown.out <- x.unknown.data2.dot.nb[x.unknown.data2.dot.nb %in% x.outside.data2.dot.nb]
+x.outside.data2.dot.nb <- unique(c(x.outside.data2.dot.nb, tempo.unknown.out)) # if a row number of x.unknown.data2.dot.nb is present in x.outside.data2.dot.nb, it is put into outside
+tempo.unknown.in <- x.unknown.data2.dot.nb[x.unknown.data2.dot.nb %in% x.inside.data2.dot.nb]
+x.inside.data2.dot.nb <- unique(c(x.inside.data2.dot.nb, tempo.unknown.in)) # if a row number of x.unknown.data2.dot.nb is present in x.inside.data2.dot.nb, it is put into inside
+x.unknown.data2.dot.nb.final <- x.unknown.data2.dot.nb[ ! (x.unknown.data2.dot.nb %in% c(x.outside.data2.dot.nb, x.inside.data2.dot.nb))] # then dots also in inside and outside are remove from unknown
+x.incon.data2.dot.nb.final <- unique(c(x.outside.data2.dot.nb[x.outside.data2.dot.nb %in% x.inside.data2.dot.nb], x.inside.data2.dot.nb[x.inside.data2.dot.nb %in% x.outside.data2.dot.nb])) # inconsistent dots: if a row number of x.inside.data2.dot.nb is present in x.outside.data2.dot.nb (and vice versa), it means that during the sliding, a dot has been sometime inside, sometime outside -> removed from the outside list
+x.outside.data2.dot.nb.final <- x.outside.data2.dot.nb[ ! (x.outside.data2.dot.nb %in% x.incon.data2.dot.nb.final)] # inconsistent dots removed from the outside list
+x.inside.data2.dot.nb.final <- x.inside.data2.dot.nb[ ! (x.inside.data2.dot.nb %in% x.incon.data2.dot.nb.final)] # inconsistent dots removed from the inside list
+}
 # end y-axis sliding and x-axis limits of the data1 cloud -> x significant data2
 }
 # end Method using y unit interval 
+
+
+
+# recovering the frame coordinates
 hframe = rbind(
 data.frame(
 x = if(is.null(x.data1.l)){NULL}else{x.data1.l}, 
@@ -6034,141 +6102,556 @@ y = if(is.null(y.data1.t)){NULL}else{y.data1.t},
 kind = if(is.null(y.data1.t)){NULL}else{"right.frame2"}
 )
 )
+# end recovering the frame coordinates
+# recovering the dot coordinates
 data1.signif.dot <- NULL
+data1.non.signif.dot <- NULL
+data1.incon.dot <- NULL
 data2.signif.dot <- NULL
+data2.non.signif.dot <- NULL
+data2.unknown.dot <- NULL
+data2.incon.dot <- NULL
 if(( ! is.null(x.range.split)) & ( ! is.null(y.range.split))){
-if(xy.cross.kind == "|"){
-if(length(unique(c(x.outside.data1.dot.nb.final, y.outside.data1.dot.nb.final))) > 0){
-data1.signif.dot <- data1[data1$DOT_NB %in% unique(c(x.outside.data1.dot.nb.final, y.outside.data1.dot.nb.final)), ]
+# inconsistent dots recovery 
+if(length(unique(c(x.incon.data1.dot.nb.final, y.incon.data1.dot.nb.final))) > 0){
+data1.incon.dot <- data1[data1$DOT_NB %in% unique(c(x.incon.data1.dot.nb.final, y.incon.data1.dot.nb.final)), ] # if a dot in inconsistent in x or y -> classified as inconsistent (so unique() used)
+# removal of the inconsistent dot in the other classifications
+x.inside.data1.dot.nb.final <- x.inside.data1.dot.nb.final[ ! x.inside.data1.dot.nb.final %in% data1.incon.dot$DOT_NB]
+y.inside.data1.dot.nb.final <- y.inside.data1.dot.nb.final[ ! y.inside.data1.dot.nb.final %in% data1.incon.dot$DOT_NB]
+x.outside.data1.dot.nb.final <- x.outside.data1.dot.nb.final[ ! x.outside.data1.dot.nb.final %in% data1.incon.dot$DOT_NB]
+y.outside.data1.dot.nb.final <- y.outside.data1.dot.nb.final[ ! y.outside.data1.dot.nb.final %in% data1.incon.dot$DOT_NB]
+x.unknown.data1.dot.nb.final <- x.unknown.data1.dot.nb.final[ ! x.unknown.data1.dot.nb.final %in% data1.incon.dot$DOT_NB]
+y.unknown.data1.dot.nb.final <- y.unknown.data1.dot.nb.final[ ! y.unknown.data1.dot.nb.final %in% data1.incon.dot$DOT_NB]
+# end removal of the inconsistent dot in the other classifications
 }
-}else if(xy.cross.kind == "&"){
-if(sum(x.outside.data1.dot.nb.final %in% y.outside.data1.dot.nb.final) > 0){
-data1.signif.dot <- data1[data1$DOT_NB %in% x.outside.data1.dot.nb.final[x.outside.data1.dot.nb.final %in% y.outside.data1.dot.nb.final], ]
+if( ! is.null(data2)){
+if(length(unique(c(x.incon.data2.dot.nb.final, y.incon.data2.dot.nb.final))) > 0){
+data2.incon.dot <- data2[data2$DOT_NB %in% unique(c(x.incon.data2.dot.nb.final, y.incon.data2.dot.nb.final)), ]
+# removal of the inconsistent dot in the other classifications
+x.inside.data2.dot.nb.final <- x.inside.data2.dot.nb.final[ ! x.inside.data2.dot.nb.final %in% data2.incon.dot$DOT_NB]
+y.inside.data2.dot.nb.final <- y.inside.data2.dot.nb.final[ ! y.inside.data2.dot.nb.final %in% data2.incon.dot$DOT_NB]
+x.outside.data2.dot.nb.final <- x.outside.data2.dot.nb.final[ ! x.outside.data2.dot.nb.final %in% data2.incon.dot$DOT_NB]
+y.outside.data2.dot.nb.final <- y.outside.data2.dot.nb.final[ ! y.outside.data2.dot.nb.final %in% data2.incon.dot$DOT_NB]
+x.unknown.data2.dot.nb.final <- x.unknown.data2.dot.nb.final[ ! x.unknown.data2.dot.nb.final %in% data2.incon.dot$DOT_NB]
+y.unknown.data2.dot.nb.final <- y.unknown.data2.dot.nb.final[ ! y.unknown.data2.dot.nb.final %in% data2.incon.dot$DOT_NB]
+# end removal of the inconsistent dot in the other classifications
+}
+}
+# end inconsistent dots recovery 
+# unknown dots recovery 
+if( ! is.null(data2)){
+if(data2.pb.dot == "signif"){
+x.outside.data2.dot.nb.final <- unique(c(x.outside.data2.dot.nb.final, x.unknown.data2.dot.nb.final))
+x.inside.data2.dot.nb.final <- x.inside.data2.dot.nb.final[ ! x.inside.data2.dot.nb.final %in% x.unknown.data2.dot.nb.final] # remove x.unknown.data2.dot.nb.final from x.inside.data2.dot.nb.final
+y.outside.data2.dot.nb.final <- unique(c(y.outside.data2.dot.nb.final, y.unknown.data2.dot.nb.final))
+y.inside.data2.dot.nb.final <- y.inside.data2.dot.nb.final[ ! y.inside.data2.dot.nb.final %in% y.unknown.data2.dot.nb.final] # remove y.unknown.data2.dot.nb.final from y.inside.data2.dot.nb.final
+x.unknown.data2.dot.nb.final <- NULL
+y.unknown.data2.dot.nb.final <- NULL
+data2.unknown.dot <- NULL
+}else if(data2.pb.dot == "not.signif"){
+x.inside.data2.dot.nb.final <- unique(c(x.inside.data2.dot.nb.final, x.unknown.data2.dot.nb.final))
+x.outside.data2.dot.nb.final <- x.outside.data2.dot.nb.final[ ! x.outside.data2.dot.nb.final %in% x.unknown.data2.dot.nb.final] # remove x.unknown.data2.dot.nb.final from x.outside.data2.dot.nb.final
+y.inside.data2.dot.nb.final <- unique(c(y.inside.data2.dot.nb.final, y.unknown.data2.dot.nb.final))
+y.outside.data2.dot.nb.final <- y.outside.data2.dot.nb.final[ ! y.outside.data2.dot.nb.final %in% y.unknown.data2.dot.nb.final] # remove y.unknown.data2.dot.nb.final from y.outside.data2.dot.nb.final
+x.unknown.data2.dot.nb.final <- NULL
+y.unknown.data2.dot.nb.final <- NULL
+data2.unknown.dot <- NULL
+}else if(data2.pb.dot == "unknown"){
+if(length(unique(c(x.unknown.data2.dot.nb.final, y.unknown.data2.dot.nb.final))) > 0){
+data2.unknown.dot <- data2[data2$DOT_NB %in% unique(c(x.unknown.data2.dot.nb.final, y.unknown.data2.dot.nb.final)), ] # if a dot in unknown in x or y -> classified as unknown (so unique() used)
+x.outside.data2.dot.nb.final <- x.outside.data2.dot.nb.final[ ! x.outside.data2.dot.nb.final %in% data2.unknown.dot$DOT_NB] # remove x.unknown.data2.dot.nb.final from x.outside.data2.dot.nb.final
+x.inside.data2.dot.nb.final <- x.inside.data2.dot.nb.final[ ! x.inside.data2.dot.nb.final %in% data2.unknown.dot$DOT_NB] # remove x.unknown.data2.dot.nb.final from x.inside.data2.dot.nb.final
+y.outside.data2.dot.nb.final <- y.outside.data2.dot.nb.final[ ! y.outside.data2.dot.nb.final %in% data2.unknown.dot$DOT_NB] # remove y.unknown.data2.dot.nb.final from y.outside.data2.dot.nb.final
+y.inside.data2.dot.nb.final <- y.inside.data2.dot.nb.final[ ! y.inside.data2.dot.nb.final %in% data2.unknown.dot$DOT_NB] # remove y.unknown.data2.dot.nb.final from y.inside.data2.dot.nb.final
 }
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n"))
+stop(tempo.cat)
+}
+}
+# end unknown dots recovery 
+# sign and non sign dot recovery
+if(xy.cross.kind == "|"){ # here the problem is to deal with significant dots depending on x and y. Thus I start with that, recover dots finally non significant in outside and put them in inside (when &), and remove from inside the dots in outside
+if(length(unique(c(x.outside.data1.dot.nb.final, y.outside.data1.dot.nb.final))) > 0){
+tempo.outside <- unique(c(x.outside.data1.dot.nb.final, y.outside.data1.dot.nb.final)) # union so unique() used
+tempo.inside <- unique(c(x.inside.data1.dot.nb.final, y.inside.data1.dot.nb.final))
+tempo.inside <- tempo.inside[ ! tempo.inside %in% tempo.outside]
+data1.signif.dot <- data1[data1$DOT_NB %in% tempo.outside, ]
+data1.non.signif.dot <- data1[data1$DOT_NB %in% tempo.inside, ]
+}else{
+data1.non.signif.dot <- data1[unique(c(x.inside.data1.dot.nb.final, y.inside.data1.dot.nb.final)), ] # if no outside dots, I recover all the inside dots and that's it
+}
+}else if(xy.cross.kind == "&"){
+if(sum(x.outside.data1.dot.nb.final %in% y.outside.data1.dot.nb.final) > 0){ # that is intersection
+tempo.outside <- unique(x.outside.data1.dot.nb.final[x.outside.data1.dot.nb.final %in% y.outside.data1.dot.nb.final]) # intersection
+tempo.outside.removed <- unique(c(x.outside.data1.dot.nb.final, y.outside.data1.dot.nb.final))[ ! unique(c(x.outside.data1.dot.nb.final, y.outside.data1.dot.nb.final)) %in% tempo.outside]
+tempo.inside <- unique(c(x.inside.data1.dot.nb.final, y.inside.data1.dot.nb.final))
+data1.signif.dot <- data1[data1$DOT_NB %in% tempo.outside, ]
+data1.non.signif.dot <- data1[data1$DOT_NB %in% tempo.inside, ]
+}else{
+data1.non.signif.dot <- data1[unique(c(x.inside.data1.dot.nb.final, y.inside.data1.dot.nb.final)), ] # if no outside dots, I recover all the inside dots and that's it
+}
+}else{
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n"))
 stop(tempo.cat)
 }
 if( ! is.null(data2)){
-if(xy.cross.kind == "|"){
+if(xy.cross.kind == "|"){ # here the problem is to deal with significant dots depending on x and y. Thus I start with that, recover dots finally non significant in outside and put them in inside (when &), and remove from inside the dots in outside
 if(length(unique(c(x.outside.data2.dot.nb.final, y.outside.data2.dot.nb.final))) > 0){
-data2.signif.dot <- data2[data2$DOT_NB %in% unique(c(x.outside.data2.dot.nb.final, y.outside.data2.dot.nb.final)), ]
+tempo.outside <- unique(c(x.outside.data2.dot.nb.final, y.outside.data2.dot.nb.final)) # union so unique() used
+tempo.inside <- unique(c(x.inside.data2.dot.nb.final, y.inside.data2.dot.nb.final))
+tempo.inside <- tempo.inside[ ! tempo.inside %in% tempo.outside]
+data2.signif.dot <- data2[data2$DOT_NB %in% tempo.outside, ]
+data2.non.signif.dot <- data2[data2$DOT_NB %in% tempo.inside, ]
+}else{
+data2.non.signif.dot <- data2[unique(c(x.inside.data2.dot.nb.final, y.inside.data2.dot.nb.final)), ] # if no outside dots, I recover all the inside dots and that's it
 }
 }else if(xy.cross.kind == "&"){
-if(sum(x.outside.data2.dot.nb.final %in% y.outside.data2.dot.nb.final) > 0){
-data2.signif.dot <- data2[data2$DOT_NB %in% x.outside.data2.dot.nb.final[x.outside.data2.dot.nb.final %in% y.outside.data2.dot.nb.final], ]
+if(sum(x.outside.data2.dot.nb.final %in% y.outside.data2.dot.nb.final) > 0){ # that is intersection
+tempo.outside <- unique(x.outside.data2.dot.nb.final[x.outside.data2.dot.nb.final %in% y.outside.data2.dot.nb.final]) # intersection
+tempo.outside.removed <- unique(c(x.outside.data2.dot.nb.final, y.outside.data2.dot.nb.final))[ ! unique(c(x.outside.data2.dot.nb.final, y.outside.data2.dot.nb.final)) %in% tempo.outside]
+tempo.inside <- unique(c(x.inside.data2.dot.nb.final, y.inside.data2.dot.nb.final))
+data2.signif.dot <- data2[data2$DOT_NB %in% tempo.outside, ]
+data2.non.signif.dot <- data2[data2$DOT_NB %in% tempo.inside, ]
+}else{
+data2.non.signif.dot <- data2[unique(c(x.inside.data2.dot.nb.final, y.inside.data2.dot.nb.final)), ] # if no outside dots, I recover all the inside dots and that's it
 }
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n"))
 stop(tempo.cat)
 }
 }
+# end sign and non sign dot recovery
 }else if(( ! is.null(x.range.split)) & is.null(y.range.split)){
+# inconsistent dots recovery 
+if(length(y.incon.data1.dot.nb.final) > 0){
+data1.incon.dot <- data1[data1$DOT_NB %in% y.incon.data1.dot.nb.final, ]
+}
+if( ! is.null(data2)){
+if(length(y.incon.data2.dot.nb.final) > 0){
+data2.incon.dot <- data2[data2$DOT_NB %in% y.incon.data2.dot.nb.final, ]
+}
+}# end inconsistent dots recovery 
+# unknown dots recovery 
+if( ! is.null(data2)){
+if(data2.pb.dot == "signif"){
+y.outside.data2.dot.nb.final <- unique(c(y.outside.data2.dot.nb.final, y.unknown.data2.dot.nb.final))
+}else if(data2.pb.dot == "not.signif"){
+y.inside.data2.dot.nb.final <- unique(c(y.inside.data2.dot.nb.final, y.unknown.data2.dot.nb.final))
+}else if(data2.pb.dot == "unknown"){
+if(length(y.unknown.data2.dot.nb.final) > 0){
+data2.unknown.dot <- data2[data2$DOT_NB %in% y.unknown.data2.dot.nb.final, ]
+}
+}else{
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
+stop(tempo.cat)
+}
+}
+# end unknown dots recovery 
+# sign and non sign dot recovery
 if(length(y.outside.data1.dot.nb.final) > 0){
 data1.signif.dot <- data1[data1$DOT_NB %in% y.outside.data1.dot.nb.final, ]
+}
+if(length(y.inside.data1.dot.nb.final) > 0){
+data1.non.signif.dot <- data1[data1$DOT_NB %in% y.inside.data1.dot.nb.final, ]
 }
 if( ! is.null(data2)){
 if(length(y.outside.data2.dot.nb.final) > 0){
 data2.signif.dot <- data2[data2$DOT_NB %in% y.outside.data2.dot.nb.final, ]
 }
+if(length(y.inside.data2.dot.nb.final) > 0){
+data2.non.signif.dot <- data2[data2$DOT_NB %in% y.inside.data2.dot.nb.final, ]
 }
+}
+# end sign and non sign dot recovery
 }else if(is.null(x.range.split) & ( ! is.null(y.range.split))){
+# inconsistent dots recovery 
+if(length(x.incon.data1.dot.nb.final) > 0){
+data1.incon.dot <- data1[data1$DOT_NB %in% x.incon.data1.dot.nb.final, ]
+}
+if( ! is.null(data2)){
+if(length(x.incon.data2.dot.nb.final) > 0){
+data2.incon.dot <- data2[data2$DOT_NB %in% x.incon.data2.dot.nb.final, ]
+}
+}# end inconsistent dots recovery 
+# unknown dots recovery 
+if( ! is.null(data2)){
+if(data2.pb.dot == "signif"){
+x.outside.data2.dot.nb.final <- unique(c(x.outside.data2.dot.nb.final, x.unknown.data2.dot.nb.final))
+}else if(data2.pb.dot == "not.signif"){
+x.inside.data2.dot.nb.final <- unique(c(x.inside.data2.dot.nb.final, x.unknown.data2.dot.nb.final))
+}else if(data2.pb.dot == "unknown"){
+if(length(x.unknown.data2.dot.nb.final) > 0){
+data2.unknown.dot <- data2[data2$DOT_NB %in% x.unknown.data2.dot.nb.final, ]
+}
+}else{
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n"))
+stop(tempo.cat)
+}
+}
+# end unknown dots recovery 
+# sign and non sign dot recovery
 if(length(x.outside.data1.dot.nb.final) > 0){
 data1.signif.dot <- data1[data1$DOT_NB %in% x.outside.data1.dot.nb.final, ]
+}
+if(length(x.inside.data1.dot.nb.final) > 0){
+data1.non.signif.dot <- data1[data1$DOT_NB %in% x.inside.data1.dot.nb.final, ]
 }
 if( ! is.null(data2)){
 if(length(x.outside.data2.dot.nb.final) > 0){
 data2.signif.dot <- data2[data2$DOT_NB %in% x.outside.data2.dot.nb.final, ]
 }
+if(length(x.inside.data2.dot.nb.final) > 0){
+data2.non.signif.dot <- data2[data2$DOT_NB %in% x.inside.data2.dot.nb.final, ]
 }
 }
+# end sign and non sign dot recovery
+}
+# end recovering the dot coordinates
+# verif
+if(any(data1.signif.dot$DOT_NB %in% data1.non.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY 8\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data1.non.signif.dot$DOT_NB %in% data1.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY 9\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data1.signif.dot$DOT_NB %in% data1.incon.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data1.incon.dot$DOT_NB %in% data1.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 11\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data1.non.signif.dot$DOT_NB %in% data1.incon.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 12\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data1.incon.dot$DOT_NB %in% data1.non.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 13\n\n============\n\n"))
+stop(tempo.cat)
+}
+if( ! is.null(data2)){
+if(any(data2.signif.dot$DOT_NB %in% data2.non.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 14\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.non.signif.dot$DOT_NB %in% data2.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 15\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.signif.dot$DOT_NB %in% data2.unknown.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 16\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.unknown.dot$DOT_NB %in% data2.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 17\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.signif.dot$DOT_NB %in% data2.incon.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 18\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.incon.dot$DOT_NB %in% data2.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 19\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.non.signif.dot$DOT_NB %in% data2.unknown.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 20\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.unknown.dot$DOT_NB %in% data2.non.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 21\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.non.signif.dot$DOT_NB %in% data2.incon.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 22\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.incon.dot$DOT_NB %in% data2.non.signif.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 23\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.unknown.dot$DOT_NB %in% data2.incon.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 24\n\n============\n\n"))
+stop(tempo.cat)
+}
+if(any(data2.incon.dot$DOT_NB %in% data2.unknown.dot$DOT_NB)){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 25\n\n============\n\n"))
+stop(tempo.cat)
+}
+}
+# end verif
+# plot
 if(graph.check == TRUE){
-fun_open_window(pdf.disp = TRUE, path.fun = graph.path, pdf.name.file = "segmentation_graph")
 if(( ! is.null(x.range.split)) & ( ! is.null(y.range.split))){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe), x = list(x1, "x", "x"), y = list(y1, "y", "y"), categ = list(NULL, "kind", "kind"), legend.name = list("data1", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 if( ! is.null(data1.signif.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.signif.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list(NULL, "kind", "kind", NULL), legend.name = list("data1", "hframe" , "vframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 }else{
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE LIMITS", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+}
+if( ! is.null(data1.incon.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.incon.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list(NULL, "kind", "kind", NULL), legend.name = list("data1", "hframe" , "vframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe , vframe), x = list(x1, x2, "x", "x"), y = list(y1, y2, "y", "y"), categ = list(NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 if( ! is.null(data2.signif.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 }else{
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE LIMITS", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+}
+if( ! is.null(data2.incon.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
+}
+if( ! is.null(data2.unknown.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot)
+
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(( ! is.null(x.range.split)) & is.null(y.range.split)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe), x = list(x1, "x"), y = list(y1, "y"), categ = list(NULL, "kind"), legend.name = list("data1", "hframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 if( ! is.null(data1.signif.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "hframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 }else{
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE LIMITS", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+}
+if( ! is.null(data1.incon.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "hframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list(NULL, NULL, "kind"), legend.name = list("data1", "data2", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 if( ! is.null(data2.signif.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 }else{
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE LIMITS", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+}
+if( ! is.null(data2.incon.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
+}
+if( ! is.null(data2.unknown.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(is.null(x.range.split) & ( ! is.null(y.range.split))){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe), x = list(x1, "x"), y = list(y1, "y"), categ = list(NULL, "kind"), legend.name = list("data1", "vframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 if( ! is.null(data1.signif.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "vframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 }else{
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE LIMITS", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+}
+if( ! is.null(data1.incon.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "vframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, vframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list(NULL, NULL, "kind"), legend.name = list("data1", "data2", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 if( ! is.null(data2.signif.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
 }else{
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE LIMITS", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+}
+if( ! is.null(data2.incon.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
+}
+if( ! is.null(data2.unknown.dot)){
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot)
+if( ! is.null(tempo.graph$warnings)){
+warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
+}
+}else{
+if(graph.in.file == FALSE){
+fun_open_window(pdf.disp = FALSE)
+}
+fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }
-fun_close_specif_window()
 }
-tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data2.signif.dot = data2.signif.dot, warnings = warning)
+# end plot
+tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, warnings = warning)
 return(tempo.list)
 }
 
