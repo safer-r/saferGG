@@ -42,30 +42,31 @@
 ######## fun_window_width_resizing() #### window width depending on classes to plot 48
 ######## fun_open_window() #### Open a GUI or pdf graphic window    49
 ######## fun_prior_plot() #### Graph param before plotting  53
-######## fun_post_plot() #### Graph param after plotting    57
-######## fun_close_specif_window() #### Closing specific graphic windows    68
-################ Standard graphics  69
-######## fun_empty_graph() #### text to display for empty graphs    69
-################ gg graphics    70
-######## fun_gg_palette() #### ggplot2 default color palette    70
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  72
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   74
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    95
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    123
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  128
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   128
-######## fun_gg_violin() #### ggplot2 violins   128
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  128
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  129
-######## fun_gg_empty_graph() #### text to display for empty graphs 134
-################ Graphic extraction 135
-######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 135
-######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   144
-################ Import 160
-######## fun_pack_import() #### Check if R packages are present and import into the working environment 160
-######## fun_python_pack_import() #### Check if python packages are present 161
-################ Exporting results (text & tables)  163
-######## fun_export_data() #### Print string or data object into output file    163
+######## fun_scale() #### Rescale axes  57
+######## fun_post_plot() #### Graph param after plotting    58
+######## fun_close_specif_window() #### Closing specific graphic windows    69
+################ Standard graphics  71
+######## fun_empty_graph() #### text to display for empty graphs    71
+################ gg graphics    72
+######## fun_gg_palette() #### ggplot2 default color palette    72
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  73
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   76
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    97
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    125
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  130
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   131
+######## fun_gg_violin() #### ggplot2 violins   131
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  131
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  131
+######## fun_gg_empty_graph() #### text to display for empty graphs 136
+################ Graphic extraction 137
+######## fun_var_trim_display() #### Display values from a quantitative variable and trim according to defined cut-offs 137
+######## fun_segmentation() #### Segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   146
+################ Import 176
+######## fun_pack_import() #### Check if R packages are present and import into the working environment 176
+######## fun_python_pack_import() #### Check if python packages are present 177
+################ Exporting results (text & tables)  179
+######## fun_export_data() #### Print string or data object into output file    179
 
 
 ################################ FUNCTIONS ################################
@@ -2623,6 +2624,90 @@ if(return.par == TRUE){
 tempo.par <- par()
 return(tempo.par)
 }
+}
+
+
+######## fun_scale() #### select nice numbers when setting breaks on an axis
+
+
+# Check OK: clear to go Apollo
+fun_scale <- function(lim, n){
+# AIM
+# select nice numbers when setting  n breaks on a lim axis range
+# ARGUMENTS
+# lim: vector of 2 numbers indicating the limit range of the axis
+# n: desired number of breaks on the axis
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_param_check()
+# RETURN
+# a vector of numbers
+# EXAMPLES
+# scale <- fun_scale(lim = c(8, 20), n = 4) ; scale ; par(yaxt = "n", yaxs = "i") ; plot(8:20, 8:20) ; axis(side = 2, at = scale)
+# DEBUGGING
+# lim = c(20, 9) ; n = 4 # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_param_check(data = lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_param_check()
+}
+# end argument checking with fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking
+# main code
+tempo.range <- diff(sort(lim))
+tempo.max <- max(lim)
+tempo.min <- min(lim)
+tempo.inter <- tempo.range / (n + 1) # current interval between two ticks, between 0 and Inf
+# if tempo.inter = zero -> error
+log10.abs.lim <- 200
+log10.range <- (-log10.abs.lim):log10.abs.lim
+log10.vec <- 10^log10.range
+round.vec <- c(5, 2.5, 2, 1.25, 1)
+dec.table <- outer(log10.vec, round.vec) # table containing the scale units (row: power of ten from -201 to +199, column: the 5, 2.5, 2, 1.25, 1 notches
+
+ 
+
+# recover the number of leading zeros in tempo.inter
+ini.scipen <- options()$scipen
+options(scipen = -1000) # force scientific format
+if(any(grepl(pattern = "\\+", x = tempo.inter))){ # tempo.inter > 1
+power10.exp <- as.integer(substring(text = tempo.inter, first = (regexpr(pattern = "\\+", text = tempo.inter) + 1))) # recover the power of 10. Example recover 08 from 1e+08
+mantisse <- as.numeric(substr(x = tempo.inter, start = 1, stop = (regexpr(pattern = "\\+", text = tempo.inter) - 2))) # recover the mantisse. Example recover 1.22 from 1.22e+08
+
+}else if(any(grepl(pattern = "\\-", x = tempo.inter))){ # tempo.inter < 1
+power10.exp <- as.integer(substring(text = tempo.inter, first = (regexpr(pattern = "\\-", text = tempo.inter) + 1))) # recover the power of 10. Example recover 08 from 1e+08
+mantisse <- as.numeric(substr(x = tempo.inter, start = 1, stop = (regexpr(pattern = "\\-", text = tempo.inter) - 2))) # recover the mantisse. Example recover 1.22 from 1.22e+08
+}else{
+ # code incons
+}
+tempo.scale <- dec.table[log10.range == power10.exp, ]
+select <- NULL
+for(i1 in 1:length(tempo.scale)){
+tempo.first.tick <- ceiling(tempo.min) + round.vec[i1] * 10^power10.exp
+if((tempo.first.tick >= tempo.min) & tempo.first.tick + (trunc(tempo.inter) + (round.vec[i1] * 10^power10.exp)) * (n - 1) <= tempo.max){
+select <- round.vec[i1]
+break()
+}
+}
+if(is.null(select)){
+ # code incons
+}
+options(scipen = ini.scipen)
+output <- ceiling(tempo.min) + (trunc(tempo.inter) + (round.vec[i1] * 10^power10.exp)) * (0:(n - 1))
+return(output)
 }
 
 
@@ -5546,6 +5631,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # WARNINGS
 # if dots from data2 look significant on the graph (outside the frame) but are not (not black on the last figure), this is probably because the frame is flat on the zero coordinate (no volume inside the frame at this position). Thus, no way to conclude that data2 dots here are significant. These dots are refered to as "unknown". The pb.dot argument deals with such dots
 # dots that are sometimes inside and outside the frame, depending on the sliding windows, are treated differently: they are removed. Such dots are neither classified as "signif", "non signif" or "unknown", but as "inconsistent"
+# unknown dots are treated as finally significant, not significant, or unknown (data2.pb.dot argument) for each x-axis and y-axis separately. Then, the union or intersection of significant dots is performed (argument xy.cross.kind). See the example section
 # ARGUMENTS
 # data1: a dataframe containing a column of x-axis values and a column of y-axis values
 # x1: character string of the data1 column name for x-axis (first column of data1 by default)
@@ -5594,7 +5680,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # EXAMPLES
 # example explaining the unknown and inconsistent dots, and the cross 
 
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data1[5:7, 2] <- NA ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; data2[11:13, 1] <- Inf ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "|", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data1[5:7, 2] <- NA ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; data2[11:13, 1] <- Inf ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "not.signif", xy.cross.kind = "|", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = NULL, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "|", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "&", graph.check = TRUE, graph.in.file = FALSE, path.lib = NULL)
 # DEBUGGING
