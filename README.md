@@ -1,13 +1,13 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 34 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 40 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
 ## Object analysis
 
-fun_param_check() #### checking class, type, length, etc. of objects
-fun_object_info() #### recovering object information
+fun_param_check() #### check class, type, length, etc., of objects
+fun_object_info() #### recover object information
 fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)
 fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
 fun_2D_head() #### head of the left or right of big 2D objects
@@ -18,12 +18,12 @@ fun_list_comp() #### comparison of two lists
 ## Object modification
 
 fun_name_change() #### check a vector of character strings and modify any string if present in another vector
-fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative column and vice-versa
+fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative values and vice-versa
 fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames
-fun_round() #### Rounding number if decimal present
+fun_round() #### rounding number if decimal present
 fun_90clock_matrix_rot() #### 90° clockwise matrix rotation
-fun_num2color_mat() #### Conversion of a numeric matrix into hexadecimal color matrix
-fun_by_case_matrix_op() #### assembling of several matrices with operation
+fun_num2color_mat() #### convert a numeric matrix into hexadecimal color matrix
+fun_by_case_matrix_op() #### assemble several matrices with operation
 fun_mat_inv() #### return the inverse of a square matrix
 fun_mat_fill() #### fill the empty half part of a symmetric square matrix
 fun_consec_pos_perm() #### progressively breaks a vector order
@@ -33,9 +33,10 @@ fun_consec_pos_perm() #### progressively breaks a vector order
 
 fun_window_width_resizing() #### window width depending on classes to plot
 fun_open_window() #### open a GUI or pdf graphic window
-fun_prior_plot() #### graph param before plotting
-fun_post_plot() #### graph param after plotting
-fun_close_specif_window() #### closing specific graphic windows
+fun_prior_plot() #### set graph param before plotting
+fun_scale() #### select nice numbers when setting breaks on an axis
+fun_post_plot() #### set graph param after plotting
+fun_close_specif_window() #### close specific graphic windows
 
 
 ## Standard graphics
@@ -49,6 +50,11 @@ fun_gg_palette() #### ggplot2 default color palette
 fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle
 fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)
 fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required
+fun_gg_boxplot() #### ggplot2 boxplot + background dots if required
+fun_gg_bar_prop() #### ggplot2 proportion barplot
+fun_gg_strip() #### ggplot2 stripchart + mean/median
+fun_gg_violin() #### ggplot2 violins
+fun_gg_line() #### ggplot2 lines + background dots and error bars
 fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required
 fun_gg_empty_graph() #### text to display for empty graphs
 
@@ -71,6 +77,7 @@ fun_export_data() #### print string or data object into output file
 
 
 
+
 #### LICENCE
 
 This package of scripts can be redistributed and/or modified under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -78,9 +85,13 @@ Distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; withou
 See the GNU General Public License for more details at https://www.gnu.org/licenses.
 
 
+
+
 #### CREDITS
 
 Gael A. Millot, Hub-C3BI, Institut Pasteur, USR 3756 IP CNRS, Paris, France
+
+
 
 
 #### HOW TO USE IT
@@ -96,6 +107,8 @@ Description of the functions is at the beginning of the function body. To obtain
 	Or in the R/RStudio console, type the name of the function without brackets. Example : fun_object_info.
 
 
+
+
 #### FILE DESCRIPTIONS
 
 cute_little_R_functions.R	file that has to be sourced
@@ -103,9 +116,13 @@ cute_little_R_functions.docx	just for easier code reading
 examples_alone.txt	compile all the examples of the functions into a single file
 
 
+
+
 #### WEB LOCATION
 
 Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions/tags
+
+
 
 
 #### WHAT'S NEW IN
