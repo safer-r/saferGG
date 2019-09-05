@@ -15,6 +15,7 @@
 # update graphic examples with good comment, as in barplot
 # Templates: https://prettydoc.statr.me/themes.html
 # https://pkgdown.r-lib.org/
+# https://rdrr.io/github/gastonstat/cointoss/
 
 ################################ OUTLINE ################################
 
@@ -43,30 +44,31 @@
 ######## fun_open_window() #### open a GUI or pdf graphic window    49
 ######## fun_prior_plot() #### set graph param before plotting  53
 ######## fun_scale() #### select nice numbers when setting breaks on an axis    57
-######## fun_post_plot() #### set graph param after plotting    59
+######## fun_post_plot() #### set graph param after plotting    60
 ######## fun_close_specif_window() #### close specific graphic windows  70
-################ Standard graphics  71
-######## fun_empty_graph() #### text to display for empty graphs    71
-################ gg graphics    72
-######## fun_gg_palette() #### ggplot2 default color palette    72
+################ Standard graphics  72
+######## fun_empty_graph() #### text to display for empty graphs    72
+################ gg graphics    73
+######## fun_gg_palette() #### ggplot2 default color palette    73
 ######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  74
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   76
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    97
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    126
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  131
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   131
-######## fun_gg_violin() #### ggplot2 violins   131
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  131
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  159
-######## fun_gg_empty_graph() #### text to display for empty graphs 164
-################ Graphic extraction 166
-######## fun_var_trim_display() #### display values from a quantitative variable and trim according to defined cut-offs 166
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   174
-################ Import 204
-######## fun_pack_import() #### check if R packages are present and import into the working environment 204
-######## fun_python_pack_import() #### check if python packages are present 206
-################ Exporting results (text & tables)  207
-######## fun_export_data() #### print string or data object into output file    207
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  77
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   80
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    100
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    129
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  134
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   134
+######## fun_gg_violin() #### ggplot2 violins   134
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  135
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  163
+######## fun_gg_empty_graph() #### text to display for empty graphs 168
+################ Graphic extraction 169
+######## fun_var_trim_display() #### display values from a quantitative variable and trim according to defined cut-offs 169
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   178
+################ Import 208
+######## fun_pack_import() #### check if R packages are present and import into the working environment 208
+######## fun_python_pack_import() #### check if python packages are present 209
+################ Exporting results (text & tables)  211
+######## fun_export_data() #### print string or data object into output file    211
 
 
 ################################ FUNCTIONS ################################
@@ -140,7 +142,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE neg
 stop(tempo.cat)
 }
 if( ! is.null(class)){
-if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function") & any(is.na(class)) != TRUE)){ # not length == 1 here because ordered factors are class "factor" "ordered" (length == 2)
+if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval") & any(is.na(class)) != TRUE)){ # not length == 1 here because ordered factors are class "factor" "ordered" (length == 2)
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\" \n\n================\n\n")
 stop(tempo.cat)
 }
@@ -201,24 +203,24 @@ stop(tempo.cat)
 }
 }
 if( ! (all(class(double.as.integer.allowed) == "logical") & length(double.as.integer.allowed) == 1 & any(is.na(double.as.integer.allowed)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (is.logical(all.options.in.data) & length(all.options.in.data) == 1 & any(is.na(all.options.in.data)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY)\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (all(class(na.contain) == "logical") & length(na.contain) == 1 & any(is.na(na.contain)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (all(class(print) == "logical") & length(print) == 1 & any(is.na(print)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! is.null(fun.name)){
 if( ! (class(fun.name) == "character" & length(fun.name) == 1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 }
@@ -2629,6 +2631,7 @@ return(tempo.par)
 
 ######## fun_scale() #### select nice numbers when setting breaks on an axis
 
+# still a bug
 
 # Check OK: clear to go Apollo
 fun_scale <- function(lim, n){
@@ -3426,11 +3429,146 @@ return(output)
 }
 
 
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer
+
+
+# Check OK: clear to go Apollo
+fun_gg_point_rast <- function(data = NULL, mapping = NULL, stat = "identity", position = "identity", ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, raster.width = NULL, raster.height = NULL, raster.dpi = 300, inactivate = TRUE, path.lib = NULL){
+# AIM
+# equivalent to ggplot2::geom_point() but in raster mode
+# use it like ggplot2::geom_point() with the main raster.dpi additional argument
+# WARNINGS
+# can be long to generate the plot
+# Use square plot region. Otherwise, the dots will have ellipse shape
+# this function derives from the geom_point_rast() function, created by VPetukhov, and present in the ggrastr package (https://rdrr.io/github/VPetukhov/ggrastr/src/R/geom-point-rast.R). Has been placed here to minimize package dependencies
+# ARGUMENTS
+# classical arguments of geom_point(), shown here https://rdrr.io/github/VPetukhov/ggrastr/man/geom_point_rast.html
+# raster.width : width of the result image (in inches). Default: deterined by the current device parameters
+# raster.height: height of the result image (in inches). Default: deterined by the current device parameters
+# raster.dpi: resolution of the result image
+# inactivate: logical. Inactivate the fun.name argument of the fun_param_check() function? If TRUE, the name of the fun_param_check() function in error messages coming from this function. Use TRUE if fun_gg_point_rast() is used like this: eval(parse(text = "fun_gg_point_rast"))
+# path.lib: absolute path of the required packages, if not in the default folders
+# REQUIRED PACKAGES
+# ggplot2
+# grid
+# Cairo
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_param_check()
+# fun_pack_import()
+# RETURN
+# a raster scatter plot
+# EXAMPLES
+# Two pdf in the current directory
+# set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(10000)) ; fun_open_window(pdf.name.file = "Raster") ; ggplot2::ggplot() + fun_gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; fun_open_window(pdf.name.file = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off() ; dev.off()
+# DEBUGGING
+# 
+# function name
+if(all(inactivate == FALSE)){ # inactivate has to be used here but will be fully checked below
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+}else if(all(inactivate == TRUE)){
+function.name <- NULL
+}else{
+tempo.cat <- (paste0("\n\n============\n\nERROR IN fun_gg_point_rast(): CODE INCONSISTENCY 1\n\n============\n\n"))
+stop(tempo.cat)
+}
+# end function name
+# required function checking
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+if(length(find("fun_pack_import", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+if( ! is.null(data)){
+tempo <- fun_param_check(data = data, class = "data.frame", fun.name = function.name) ; eval(ee)
+}
+if( ! is.null(mapping)){
+tempo <- fun_param_check(data = mapping, class = "uneval", typeof = "list", fun.name = function.name) ; eval(ee) # aes() is tested
+}
+# stat and position not tested because too complicate
+tempo <- fun_param_check(data = na.rm, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = show.legend, class = "vector", mode = "logical", length = 1, na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = inherit.aes, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(raster.width)){
+tempo <- fun_param_check(data = raster.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+}
+if( ! is.null(raster.height)){
+tempo <- fun_param_check(data = raster.height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+}
+tempo <- fun_param_check(data = raster.dpi, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = inactivate, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(path.lib)){
+tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
+cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
+arg.check <- c(arg.check, TRUE)
+}
+}
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_param_check()
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking
+# package checking
+fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack_import(req.package = c("grid"), path.lib = path.lib)
+fun_pack_import(req.package = c("Cairo"), path.lib = path.lib)
+# end package checking
+# additional functions
+DrawGeomPointRast <- function(data, panel_params, coord, na.rm = FALSE, raster.width = NULL, raster.height= NULL, raster.dpi = 300){
+if (is.null(raster.width)){
+raster.width <- par('fin')[1]
+}
+if (is.null(raster.height)){
+ raster.height <- par('fin')[2]
+}
+prev_dev_id <- dev.cur()
+p <- ggplot2::GeomPoint$draw_panel(data, panel_params, coord)
+dev_id <- Cairo::Cairo(type='raster', width = raster.width*raster.dpi, height = raster.height*raster.dpi, dpi = raster.dpi, units = 'px', bg = "transparent")[1]
+grid::pushViewport(grid::viewport(width = 1, height = 1))
+grid::grid.points(x = p$x, y = p$y, pch = p$pch, size = p$size,
+name = p$name, gp = p$gp, vp = p$vp, draw = T)
+grid::popViewport()
+cap <- grid::grid.cap()
+dev.off(dev_id)
+dev.set(prev_dev_id)
+grid::rasterGrob(cap, x = 0, y = 0, width = 1, height = 1, default.units = "native", just = c("left","bottom"))
+}
+# end additional functions
+# main code
+GeomPointRast <- ggplot2::ggproto("GeomPointRast", ggplot2::GeomPoint, draw_panel = DrawGeomPointRast)
+ggplot2::layer(
+data = data, 
+mapping = mapping, 
+stat = stat, 
+geom = GeomPointRast, 
+position = position, 
+show.legend = show.legend, 
+inherit.aes = inherit.aes, 
+params = list(
+na.rm = na.rm, 
+raster.width = raster.width, 
+raster.height = raster.height, 
+raster.dpi = raster.dpi, 
+...
+)
+)
+# end main code
+}
+
+
 ######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)
 
 
 # Check OK: clear to go Apollo
-fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color = NULL, geom = "geom_point", alpha = 0.5, dot.size = 2, line.size = 0.5, xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, title = "", text.size = 12, classic = FALSE, grid = FALSE, return = FALSE, path.lib = NULL){
+fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color = NULL, geom = "geom_point", alpha = 0.5, dot.size = 2, line.size = 0.5, xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, title = "", text.size = 12, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, path.lib = NULL){
 # AIM
 # ggplot2 scatterplot with the possibility to overlay dots from up to 3 different data frames and lines from up to 3 different data frames (up to 6 overlays totally)
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
@@ -3455,21 +3593,27 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # title: character string of the graph title
 # text.size: numeric value of the text size (in points)
 # classic: logical. Use the classic theme (article like)?
-# grid: logical. draw horizontal and vertical lines in the background to better read the values? Not considered if classic = FALSE
+# grid: logical. Draw horizontal and vertical lines in the background to better read the values? Not considered if classic = FALSE
+# raster: logical. Dots in raster mode? If FALSE, dots from each geom_point from geom argument are in vectorial mode (bigger pdf and long to display if millions of dots). If TRUE, dots from each geom_point from geom argument are in matricial mode (smaller pdf and easy display if millions of dots, but long to generate the layer). If TRUE, the region plot will be square to avoid a bug in fun_gg_point_rast(). Overriden by vectorial.limit if non NULL
+# vectorial.limit: positive integer value indicating the limit of the dot number above which geom_point from geom argument switch from vectorial mode to raster mode (see the raster argument). If any layer is raster, then the region plot will be square to avoid a bug in fun_gg_point_rast(). Inactive the raster argument if non NULL
 # return: logical. Return the graph parameters?
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
+# if raster plots are drawn (see the raster and vectorial.limit arguments):
+# Cairo
+# grid
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
 # fun_gg_palette()
-# fun_name_change()
+# fun_gg_point_rast()
+# fun_pack_import()
+# fun_param_check()
 # RETURN
 # a scatter plot
 # a list of the graph info if return argument is TRUE:
 # $data: the graphic info coordinates
-# add what
+# $removed.row.nb: a list of the removed rows numbers in data frames (because of NA). NULL if no row removed
+# $removed.rows: a list of the removed rows in data frames (because of NA). NULL if no row removed
 # $warnings: the warning messages
 # EXAMPLES
 # simple scatter plot
@@ -3487,34 +3631,34 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # whole arguments
 # data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1]), y = list(L1 = NULL), categ = list(L1 = names(data1$L1)[3]), legend.name = list(L1 = "VALUE"), color = list(L1 = "red"), geom = list(L1 = "geom_hline"),  alpha = list(L1 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 1, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = TRUE, grid = TRUE, return = TRUE)
 # whole arguments
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL,  title = "GRAPH1", text.size = 12, classic = TRUE, grid = FALSE, return = FALSE, path.lib = NULL)
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL,  title = "GRAPH1", text.size = 12, classic = TRUE, grid = FALSE, raster = TRUE, vectorial.limit = NULL, return = FALSE, path.lib = NULL)
 # DEBUGGING
-# data1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; x = names(data1)[1] ; y = names(data1)[2] ; categ = names(data1)[3] ; legend.name = NULL ; color = NULL ; geom = "geom_point" ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = NULL ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_path") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group1 = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group2 = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = list(L1 = 1:2, L2 = 3:4) ; geom = list(L1 = "geom_point", L2 = "geom_line") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 2 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = NULL ; legend.name = NULL ; color = list(L1 = 5) ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = "x test" ; ylab = "y test" ; dot.size = 2 ; line.size = 0.5 ; alpha = 1 ; title = "GRAPH1" ; text.size = 15 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]) ; legend.name = NULL ; color = list(L1 = "red", L2 = "blue", L3 = "green") ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 4 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; return = TRUE ; path.lib = NULL
+# data1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; x = names(data1)[1] ; y = names(data1)[2] ; categ = names(data1)[3] ; legend.name = NULL ; color = NULL ; geom = "geom_point" ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = NULL ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_path") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group1 = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group2 = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]) ; legend.name = list(L1 = "GROUP1", L2 = "GROUP2") ; color = list(L1 = 1:2, L2 = 3:4) ; geom = list(L1 = "geom_point", L2 = "geom_line") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 2 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = names(data1$L1)[2]) ; categ = NULL ; legend.name = NULL ; color = list(L1 = 5) ; geom = list(L1 = "geom_point") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = "x test" ; ylab = "y test" ; dot.size = 2 ; line.size = 0.5 ; alpha = 1 ; title = "GRAPH1" ; text.size = 15 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; legend.name = list(L1 = "VALUE") ; color = list(L1 = "red") ; geom = list(L1 = "geom_hline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 1 ; line.size = 0.5 ; alpha = 0.5 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]) ; legend.name = NULL ; color = list(L1 = "red", L2 = "blue", L3 = "green") ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline") ; xlim = NULL ; ylim = NULL ; extra.margin = 0.05 ; xlab = NULL ; ylab = NULL ; dot.size = 4 ; line.size = 0.5 ; alpha = list(L1 = 0.5, L2 =  0.5, L3 =  0.5) ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; raster = TRUE ; vectorial.limit = 5 ; return = FALSE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_gg_palette", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+if(length(find("fun_gg_point_rast", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_point_rast() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(length(find("fun_pack_import", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_palette", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(find("fun_2D_comp", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_param_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3845,6 +3989,10 @@ tempo <- fun_param_check(data = title, class = "vector", mode = "character", len
 tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = raster, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(vectorial.limit)){
+tempo <- fun_param_check(data = vectorial.limit, class = "vector", typeof = "integer", neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+}
 tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
 tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
@@ -3860,6 +4008,7 @@ stop() # nothing else because print = TRUE by default in fun_param_check()
 # end argument checking
 # package checking
 fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
+# packages Cairo and grid tested by fun_gg_point_rast()
 # end package checking
 # main code
 # used for conversion of geom_hline and geom_vline
@@ -3960,7 +4109,37 @@ stop(tempo.cat)
 }
 }
 # end conversion of geom_hline and geom_vline
-
+# kind of geom_point (vectorial or raster)
+scatter.kind <- vector("list", length = length(data1)) # list of same length as data1, that will be used to use either ggplot2::geom_point() (vectorial dot layer) or fun_gg_point_rast() (raster dot layer)
+fix.ratio <- FALSE
+if(is.null(vectorial.limit)){
+if(raster == TRUE){
+scatter.kind[] <- "fun_gg_point_rast" # not important to fill everything: will be only used when geom == "geom_point"
+fix.ratio <- TRUE
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": RASTER PLOT GENERATED -> ASPECT RATIO OF THE PLOT REGION SET TO 1/1 TO AVOID A BUG OF ELLIPSOID DOT DRAWING")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}else{
+scatter.kind[] <- "ggplot2::geom_point"
+}
+}else{
+for(i2 in 1:length(data1)){
+if(geom[[i2]] == "geom_point"){
+if(nrow(data1[[i2]]) <= vectorial.limit){
+scatter.kind[[i2]] <- "ggplot2::geom_point"
+}else{
+scatter.kind[[i2]] <- "fun_gg_point_rast"
+fix.ratio <- TRUE
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i3)), " LAYER AS RASTER (NOT VECTORIAL)")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+}
+}
+if(any(unlist(scatter.kind) == "fun_gg_point_rast")){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": RASTER PLOT GENERATED -> ASPECT RATIO OF THE PLOT REGION SET TO 1/1 TO AVOID A BUG OF ELLIPSOID DOT DRAWING")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+}
+# end kind of geom_point (vectorial or raster)
 tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0
 # no need loop part
@@ -3978,13 +4157,15 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggpl
 line = ggplot2::element_line(size = 0.5), 
 axis.line.y.left = ggplot2::element_line(colour = "black"), # draw lines for the y axis
 axis.line.x.bottom = ggplot2::element_line(colour = "black"), # draw lines for the x axis
-panel.grid.major.y = ggplot2::element_line(colour = "grey75")
+panel.grid.major.y = ggplot2::element_line(colour = "grey75"),
+aspect.ratio = if(fix.ratio == TRUE){1}else{NULL}
 ))
 }else{
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
 line = ggplot2::element_line(size = 0.5), 
 axis.line.y.left = ggplot2::element_line(colour = "black"), 
 axis.line.x.bottom = ggplot2::element_line(colour = "black"), 
+aspect.ratio = if(fix.ratio == TRUE){1}else{NULL}
 ))
 }
 }else{
@@ -3998,7 +4179,8 @@ panel.grid.major.x = ggplot2::element_line(colour = "grey75"),
 panel.grid.major.y = ggplot2::element_line(colour = "grey75"), 
 panel.grid.minor.x = ggplot2::element_blank(), 
 panel.grid.minor.y = ggplot2::element_blank(), 
-strip.background = ggplot2::element_rect(fill = "white", colour = "black")
+strip.background = ggplot2::element_rect(fill = "white", colour = "black"), 
+aspect.ratio = if(fix.ratio == TRUE){1}else{NULL}
 ))
 }
 # end no need loop part
@@ -4011,7 +4193,7 @@ if(point.count == 1){
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = TRUE)) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = TRUE)) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = color[[i1]], guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of fill
 }
@@ -4019,7 +4201,7 @@ if(point.count == 2){
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = TRUE)) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = TRUE)) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(19, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of shape
 }
@@ -4027,7 +4209,7 @@ if(point.count == 3){
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = TRUE)) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = TRUE)) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(0.5, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of stroke
 }
