@@ -6294,12 +6294,12 @@ fun_gg_heatmap <- function(data1, legend.name = "", low.color = "blue", high.col
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), title = "GRAPH 1")
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), return = TRUE)
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), legend.name = "VALUE", title = "GRAPH 1", text.size = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
-# fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5))
+# fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4))
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 # fun_gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 # DEBUGGING
 # data1 = matrix(1:16, ncol = 4) ; legend.name = "" ; low.color = "blue" ; high.color = "red" ; mid.color = "white" ; limit = range(data1, na.rm = TRUE) ; midpoint = mean(data1, na.rm = TRUE) ; title = "GRAPH 1" ; text.size = 12 ; show.scale = TRUE ; data2 = NULL ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; return = FALSE ; path.lib = NULL
-# data1 = matrix(1:16, ncol = 4) ; legend.name = "" ; low.color = "blue" ; high.color = "red" ; mid.color = "white" ; limit = range(data1, na.rm = TRUE) ; midpoint = mean(data1, na.rm = TRUE) ; title = "GRAPH 1" ; text.size = 12 ; show.scale = TRUE ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; return = TRUE ; path.lib = NULL
+# data1 = matrix(1:16, ncol = 4) ; legend.name = "" ; low.color = "blue" ; high.color = "red" ; mid.color = "white" ; limit = range(data1, na.rm = TRUE) ; midpoint = mean(data1, na.rm = TRUE) ; title = "GRAPH 1" ; text.size = 12 ; show.scale = TRUE ; data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; return = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -6330,28 +6330,33 @@ tempo <- fun_param_check(data = data1[, 3], mode = "numeric", fun.name = functio
 }
 }else{
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_param_check(data = legend.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = low.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(low.color %in% colors() | grepl(pattern = "^#", low.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": low.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_param_check(data = high.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(high.color %in% colors() | grepl(pattern = "^#", high.color)))){ # check that all strings of high.color start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": high.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_param_check(data = mid.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(mid.color %in% colors() | grepl(pattern = "^#", mid.color)))){ # check that all strings of mid.color start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mid.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(limit)){
 tempo <- fun_param_check(data = limit, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(limit %in% c(Inf, -Inf))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": limit ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
@@ -6366,12 +6371,15 @@ if(all(is.matrix(data2))){
 tempo <- fun_param_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(unique(data2) %in% c(0,1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.matrix(data1)) & ! identical(dim(data1), dim(data2))){ # matrix and matrix
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX DIMENSION IN data2 MUST BE IDENTICAL AS MATRIX DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", paste(dim(data2), collapse = " "), "\n", paste(dim(data1), collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.data.frame(data1)) & nrow(data1) != prod(dim(data2))){ # reshape2 and matrix
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSIONS OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", paste(nrow(data1), collapse = " "), "\n", paste(prod(dim(data2)), collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }else if(all(is.data.frame(data2))){
@@ -6384,22 +6392,27 @@ tempo <- fun_param_check(data = data2[, 3], mode = "numeric", fun.name = functio
 }
 if(tempo$problem == FALSE & ! all(unique(data2[, 3]) %in% c(0,1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.data.frame(data1)) & ! identical(dim(data1), dim(data2))){ # data frame and data frame
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL AS DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", paste(dim(data2), collapse = " "), "\n", paste(dim(data1), collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.matrix(data1)) & nrow(data2) != prod(dim(data1))){ # reshape2 and matrix
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSION OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", paste(nrow(data2), collapse = " "), "\n", paste(prod(dim(data1)), collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }else{
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_param_check(data = color2, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of mid.color start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_param_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
@@ -6408,7 +6421,8 @@ tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name 
 if( ! is.null(path.lib)){
 tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
-cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
