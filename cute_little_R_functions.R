@@ -2631,7 +2631,8 @@ return(tempo.par)
 
 ######## fun_scale() #### select nice numbers when setting breaks on an axis
 
-# still a bug see the example below
+# nice breaks: clean and not clean option? Approx or strict?. approx ("ap"), strict ("st"), strict.clean ("st.cl")
+# Show an exmaple to explain the problem
 
 # Check OK: clear to go Apollo
 fun_scale <- function(lim, n){
@@ -2665,6 +2666,10 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_param_check(data = lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(lim %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": lim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+arg.check <- c(arg.check, TRUE)
+}
 tempo <- fun_param_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & n == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON NULL AND POSITIVE INTEGER\n\n================\n\n")
@@ -3586,8 +3591,8 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # alpha: numeric value (from 0 to 1) of the transparency or list of numeric values (one compartment for each list compartment of data1)
 # dot.size: numeric value of point size
 # line.size: numeric value of line size
-# xlim: 2 numeric values for x-axis range. If NULL, range of x of all the data frames in data1
-# ylim: 2 numeric values for y-axis range. If NULL, range of y of all the data frames in data1
+# xlim: 2 numeric values for x-axis range. If NULL, range of x of all the data frames in data1 (excluding Inf, NA and NaN)
+# ylim: 2 numeric values for y-axis range. If NULL, range of y of all the data frames in data1 (excluding Inf, NA and NaN)
 # extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to xlim and ylim. If different from 0, add the range of the axis * extra.margin (e.g., abs(xlim[2] - xlim[1]) * extra.margin) on each side of the axis
 # xlab: a character string for x-axis legend. If NULL, x of the first data frame in data1. Warning message if the x are different between data frames in data1
 # ylab: a character string y-axis legend. If NULL, y of the first data frame in data1. Warning message if the y are different between data frames in data1
@@ -3975,9 +3980,17 @@ tempo <- fun_param_check(data = dot.size, class = "vector", mode = "numeric", le
 tempo <- fun_param_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if( ! is.null(xlim)){
 tempo <- fun_param_check(data = xlim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(xlim %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": xlim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+arg.check <- c(arg.check, TRUE)
+}
 }
 if( ! is.null(ylim)){
 tempo <- fun_param_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+arg.check <- c(arg.check, TRUE)
+}
 }
 tempo <- fun_param_check(data = extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(xlab)){
@@ -4020,10 +4033,18 @@ data1[[i1]][, y[[i1]]] <- data1[[i1]][, x[[i1]]]
 }
 }
 # end used for conversion of geom_hline and geom_vline
-tempo.x.range <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)), na.rm = TRUE))
-tempo.y.range <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)), na.rm = TRUE))
+if(any(unlist(mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE x COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+tempo.x.range <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+if(any(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE y COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+tempo.y.range <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if(suppressWarnings(all(tempo.x.range %in% c(Inf, -Inf))) | suppressWarnings(all(tempo.y.range %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " geom_hline AND geom_vline CONVERSION: ", ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), " AND ", ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1)), " ARGUMENTS ARE NA ONLY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " geom_hline AND geom_vline CONVERSION: ", ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), " AND ", ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1)), " ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
 stop(tempo.cat)
 }
 if(is.null(xlim)){
@@ -4266,7 +4287,7 @@ return(output)
 
 ######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required
 
-# nice breaks
+# nice breaks: choice between strict or not strict
 
 
   
@@ -4702,6 +4723,10 @@ tempo <- fun_param_check(data = dot.border.size, class = "vector", mode = "numer
 tempo <- fun_param_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(ylim)){
 tempo <- fun_param_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+arg.check <- c(arg.check, TRUE)
+}
 }
 tempo <- fun_param_check(data = ylog, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.break.nb)){
@@ -4850,20 +4875,36 @@ names(stat)[names(stat) == y] <- "MEAN"
 if(is.null(ylim)){
 if(is.null(dot.color)){ # no dots plotted
 if( ! is.null(error.disp)){
-ylim <- range(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]), na.rm = TRUE)
+if(any(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]) %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ERROR.INF OR ERROR.SUP COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+ylim <- range(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }else{
-ylim <- range(data2[, y], na.rm = TRUE)
+if(any(data2[, y] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+ylim <- range(data2[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 }else{
-ylim <- range(data1[, y], na.rm = TRUE)
+if(any(data2[, y] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
+ylim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+}
+}
+if(suppressWarnings(all(ylim %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED YLIM CONTAINS Inf VALUES, BECAUSE VALUES FROM data2 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
 }
 # end range depending on means and error bars
 ylim <- sort(ylim)
 ylim[1] <- ylim[1] - abs(ylim[2] - ylim[1]) * y.bottom.extra.margin
 ylim[2] <- ylim[2] + abs(ylim[2] - ylim[1]) * y.top.extra.margin
 if(y.include.zero == TRUE){ # no need to check ylog == TRUE because done before
-ylim <- range(c(ylim, 0), na.rm = TRUE)
+ylim <- range(c(ylim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 if(ylog == TRUE & any(ylim < 0)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL ylim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(ylim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH ylog PARAMETER SET TO TRUE\n\n================\n\n")
@@ -5710,6 +5751,10 @@ tempo <- fun_param_check(data = dot.border.size, class = "vector", mode = "numer
 tempo <- fun_param_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(ylim)){
 tempo <- fun_param_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+arg.check <- c(arg.check, TRUE)
+}
 }
 tempo <- fun_param_check(data = ylog, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.break.nb)){
@@ -5873,20 +5918,36 @@ names(stat)[names(stat) == y] <- "MEAN"
 if(is.null(ylim)){
 if(is.null(dot.color)){ # no dots plotted
 if( ! is.null(error.disp)){
-ylim <- range(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]), na.rm = TRUE)
+if(any(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]) %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ERROR.INF OR ERROR.SUP COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+ylim <- range(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }else{
-ylim <- range(data2[, y], na.rm = TRUE)
+if(any(data2[, y] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+ylim <- range(data2[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 }else{
-ylim <- range(data1[, y], na.rm = TRUE)
+if(any(data2[, y] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
+ylim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+}
+}
+if(suppressWarnings(all(ylim %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED YLIM CONTAINS Inf VALUES, BECAUSE VALUES FROM data2 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
 }
 # end range depending on means and error bars
 ylim <- sort(ylim)
 ylim[1] <- ylim[1] - abs(ylim[2] - ylim[1]) * y.bottom.extra.margin
 ylim[2] <- ylim[2] + abs(ylim[2] - ylim[1]) * y.top.extra.margin
 if(y.include.zero == TRUE){ # no need to check ylog == TRUE because done before
-ylim <- range(c(ylim, 0), na.rm = TRUE)
+ylim <- range(c(ylim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 if(ylog == TRUE & any(ylim < 0)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL ylim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(ylim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH ylog PARAMETER SET TO TRUE\n\n================\n\n")
@@ -6289,6 +6350,10 @@ arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(limit)){
 tempo <- fun_param_check(data = limit, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(limit %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": limit ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+arg.check <- c(arg.check, TRUE)
+}
 }
 if( ! is.null(midpoint)){
 tempo <- fun_param_check(data = midpoint, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
@@ -6360,7 +6425,15 @@ if(all(is.matrix(data1))){
 data1 <- reshape2::melt(data1) # transform a matrix into a dataframe with 2 coordinates columns and the third intensity column
 }
 if(is.null(limit)){
-limit <- range(data1[, 3], na.rm = TRUE)
+if(any(data1[, 3] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+limit <- range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+if(suppressWarnings(any(limit %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
+}
 }
 if(is.null(midpoint)){
 midpoint <- mean(data1[, 3], na.rm = TRUE)
@@ -7066,13 +7139,45 @@ y.data1.down.limit.l <- NULL # lower limit of the data1 cloud for left step line
 y.data1.top.limit.l <- NULL # upper limit of the data1 cloud for left step line
 y.data1.down.limit.r <- NULL # lower limit of the data1 cloud for right step line
 y.data1.top.limit.r <- NULL # upper limit of the data1 cloud for left step line
-x.range <- range(data1[, x1], na.rm = TRUE)
-y.range <- range(data1[, y1], na.rm = TRUE)
-x.range.plot <- range(data1[, x1], na.rm = TRUE)
-y.range.plot <- range(data1[, y1], na.rm = TRUE)
+if(any(data1[, x1] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+x.range <- range(data1[, x1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+if(suppressWarnings(any(x.range %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED x.range CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
+}
+if(any(data1[, y1] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+y.range <- range(data1[, y1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+if(suppressWarnings(any(x.range %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED y.range CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
+}
+x.range.plot <- range(data1[, x1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+y.range.plot <- range(data1[, y1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if( ! is.null(data2)){
-x.range.plot <- range(data1[, x1], data2[, x2], na.rm = TRUE)
-y.range.plot <- range(data1[, y1], data2[, y2], na.rm = TRUE)
+if(any(data2[, x2] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+x.range.plot <- range(data1[, x1], data2[, x2], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+if(any(data2[, y2] %in% c(Inf, -Inf))){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+y.range.plot <- range(data1[, y1], data2[, y2], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+}
+if(suppressWarnings(any(x.range.plot %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED x.range.plot CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 (AND data2?) ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
+}
+if(suppressWarnings(any(y.range.plot %in% c(Inf, -Inf)))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED y.range.plot CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 (AND data2?) ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
+stop(tempo.cat)
 }
 if( ! is.null(x.range.split)){
 # data.frame ordering to slide the window from small to big values + sliding window definition
