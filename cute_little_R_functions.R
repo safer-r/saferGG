@@ -3638,7 +3638,7 @@ raster.dpi = raster.dpi,
 
 
 # Check OK: clear to go Apollo
-fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color = NULL, geom = "geom_point", alpha = 0.5, dot.size = 2, line.size = 0.5, xlim = NULL, xlab = NULL, xlog = "no", x.tick.nb = NULL, x.inter.tick.nb = NULL, x.left.extra.margin = 0.05, x.right.extra.margin = 0.05, ylim = NULL, ylab = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0.05, xy.include.zero = FALSE, title = "", text.size = 12, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, path.lib = NULL){
+fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color = NULL, geom = "geom_point", alpha = 0.5, dot.size = 2, line.size = 0.5, xlim = NULL, xlab = NULL, xlog = "no", x.tick.nb = NULL, x.inter.tick.nb = NULL, x.left.extra.margin = 0.05, x.right.extra.margin = 0.05, ylim = NULL, ylab = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0.05, xy.include.zero = FALSE, title = "", text.size = 12, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, path.lib = NULL){
 # AIM
 # ggplot2 scatterplot with the possibility to overlay dots from up to 3 different data frames and lines from up to 3 different data frames (up to 6 overlays totally)
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
@@ -3673,6 +3673,7 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # xy.include.zero: logical. Does xlim and ylim range include 0? Beware: if xlog = TRUE or ylog = TRUE, will be automately set to FALSE with a warning message
 # title: character string of the graph title
 # text.size: numeric value of the text size (in points)
+# show.legend: logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend
 # classic: logical. Use the classic theme (article like)?
 # grid: logical. Draw horizontal and vertical lines in the background to better read the values? Not considered if classic = FALSE
 # raster: logical. Dots in raster mode? If FALSE, dots from each geom_point from geom argument are in vectorial mode (bigger pdf and long to display if millions of dots). If TRUE, dots from each geom_point from geom argument are in matricial mode (smaller pdf and easy display if millions of dots, but long to generate the layer). If TRUE, the region plot will be square to avoid a bug in fun_gg_point_rast(). If TRUE, solve the transparency problem with some GUI. Overriden by vectorial.limit if non NULL
@@ -3707,40 +3708,10 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# obs1 <- data.frame(km = 1:6, time = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 =obs1, x = "km", y = "time", categ = "group")
-# the same but using the list writting (geom and alpha have to be included because the default value are not lists)
-# obs1 <- data.frame(km = 1:6, time = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = "km"), y = list(L1 = "time"), categ = list(L1 = "group"), geom = list(L1 = "geom_point"), alpha = list(L1 = 1))
-# obs1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = names(obs1)[1]), y = list(L1 = names(obs1)[2]), categ = NULL, legend.name = NULL, geom = list(L1 = "geom_point"), alpha = list(L1 = 1), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = "test_x", ylab = "test_y", color = list(L1 = 5), dot.size = 2, line.size = 0.5, title = "GRAPH1", text.size = 15, classic = FALSE, return = TRUE)
-# obs1 <- data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = names(obs1)[1]), y = list(L1 = names(obs1)[2]), categ = NULL, legend.name = NULL, geom = list(L1 = "geom_path"), alpha = list(L1 = 1), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = "test_x", ylab = "test_y", color = list(L1 = 5), dot.size = 2, line.size = 0.5, title = "GRAPH1", text.size = 15, classic = FALSE, return = TRUE)
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2]), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3]), legend.name = list(L1 = "GROUP1", L2 = "GROUP2"), color = list(L1 = fun_gg_palette(4)[1:2], L2 = fun_gg_palette(4)[3:4]), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 2, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = FALSE, return = TRUE)
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A2", "A2", "A3", "A3", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = names(data1$L3)[2]), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]), legend.name = NULL, color = list(L1 = fun_gg_palette(7)[1:2], L2 = fun_gg_palette(7)[3:4], L3 = fun_gg_palette(7)[5:7]), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_path"), alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 4, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = FALSE, return = TRUE)
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A2", "A2", "A3", "A3", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = names(data1$L3)[2]), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], NULL), legend.name = NULL, color = list(L1 = fun_gg_palette(7)[1:2], L2 = fun_gg_palette(7)[3:4], L3 = NULL), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_path"), alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 4, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = FALSE, return = TRUE)
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]), legend.name = NULL, color = list(L1 = "red", L2 = "blue", L3 = "green"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline"),  alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 4, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = FALSE, return = TRUE)
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL), categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]), legend.name = NULL, color = list(L1 = "red", L2 = "blue", L3 = "green"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline"),  alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 4, line.size = 0.5, title = "GRAPH1", text.size = 12, classic = FALSE, return = TRUE)
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A2", "A2", "A3", "A3", "B1", "B1"))) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]), y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = names(data1$L3)[2]), categ = NULL, legend.name = list(L1 = "A", L2 = "B", L3 = "C"), color = list(L1 = "black", L2 = 2, L3 = "purple"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_point"),  alpha = list(L1 = 1, L2 = 1, L3 = 1), xlim = NULL, ylim = NULL, extra.margin = 0.05, xlab = NULL, ylab = NULL, dot.size = 1, line.size = 0.5, title = "GRAPH1", text.size = 20, classic = TRUE, return = TRUE)
-# whole arguments
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A1", "A2", "A3", "B1", "B2", "B3"))) ; data1$L1$a[2:3] <- NA ; x = list(L1 = names(data1$L1)[1]) ; y = list(L1 = NULL) ; categ = list(L1 = names(data1$L1)[3]) ; data1 ; fun_gg_scatter(data1 = data1, x = list(L1 = names(data1$L1)[1]), y = list(L1 = NULL), categ = list(L1 = names(data1$L1)[3]), legend.name = list(L1 = "VALUE"), color = list(L1 = "red"), geom = list(L1 = "geom_hline"),  alpha = list(L1 = 0.5), xlim = NULL, xlab = NULL, xlog = "log10", x.tick.nb = NULL, x.inter.tick.nb = NULL, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = NULL, ylab = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = FALSE, title = "", text.size = 12, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, path.lib = NULL)
-# whole arguments
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = NULL, xlab = NULL, xlog = "log10", x.tick.nb = NULL, x.inter.tick.nb = NULL, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = NULL, ylab = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = FALSE, title = "", text.size = 12, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, path.lib = NULL)
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; xlim = c(25, 0) ; xlab = "KM/H" ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(1, 25) ; ylab = "TIME (s)" ; ylog = "log2" ; y.tick.nb = 5 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = TRUE ; title = "" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = names(data1$L3)[1]) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = NULL) ; categ = list(L1 = names(data1$L1)[3], L2 = names(data1$L2)[3], L3 = names(data1$L3)[3]) ; legend.name = NULL ; color = list(L1 = "red", L2 = "blue", L3 = "green") ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_vline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; xlim = c(14, 4) ; xlab = NULL ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(60, 5) ; ylab = NULL ; ylog = "no" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; path.lib = NULL
-# data1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; data1 ; x = NULL; y = "km"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_hline"; alpha = 0.5 ; dot.size = 1 ; line.size = 0.5 ; xlim = c(1,10) ; xlab = NULL ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = NULL ; ylab = NULL ; ylog = "no" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; title = "GRAPH1" ; text.size = 12 ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; path.lib = NULL
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; xlim = c(25, 0) ; xlab = "KM/H" ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(1, 25) ; ylab = "TIME (s)" ; ylog = "log2" ; y.tick.nb = 5 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = TRUE ; title = "" ; text.size = 12 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; xlim = c(14, 4) ; xlab = NULL ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(60, 5) ; ylab = NULL ; ylog = "no" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; title = "GRAPH1" ; text.size = 12 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; path.lib = NULL
+# data1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; data1 ; x = NULL; y = "km"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_hline"; alpha = 0.5 ; dot.size = 1 ; line.size = 0.5 ; xlim = c(1,10) ; xlab = NULL ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = NULL ; ylab = NULL ; ylog = "no" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; title = "GRAPH1" ; text.size = 12 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3882,12 +3853,18 @@ legend.name <- vector("list", length(data1)) # null list
 }
 # end legend name filling
 # ini categ for legend display
-legeng.disp <- vector("list", length(data1))
-for(i1 in 1:length(data1)){
-if(is.null(categ[[i1]])){
-legeng.disp[[i1]] <- FALSE
+fin.lg.disp <- vector("list", 6) # will be used at the end to display or not legends
+fin.lg.disp[] <- FALSE
+legend.disp <- vector("list", length(data1))
+if(is.null(categ) | show.legend == FALSE){
+legend.disp[] <- FALSE
 }else{
-legeng.disp[[i1]] <- TRUE
+for(i2 in 1:length(data1)){
+if(is.null(categ[[i2]])){
+legend.disp[[i2]] <- FALSE
+}else{
+legend.disp[[i2]] <- TRUE
+}
 }
 }
 # end ini categ for legend display
@@ -4033,10 +4010,20 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-}else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # if categ[[i1]] = NULL, fake_categ will be created 
+}else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # if categ[[i1]] = NULL, fake_categ will be created. BEWARE: is.null(categ[[i1]]) means no legend display (see above), because categ has not been precised. This also means a single color for data1[[i1]]
+if(length(color[[i1]]) > 1){ # 0 means is.null(color[[i1]]) and 1 is ok -> single color for data1[[i1]]
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+color[[i1]] <- NULL # will provide a single color below
+}
 categ[[i1]] <- "fake_categ"
 data1[[i1]] <- cbind(data1[[i1]], fake_categ = "")
-data1[[i1]][, "fake_categ"] <- as.numeric(data1[[i1]][, "fake_categ"])
+# inactivated because give a different color to different "Line_" categ while a single color for all the data1[[i1]] required. Thus, put back after the color management
+# if(geom[[i1]] == "geom_hline" | geom[[i1]] == "geom_vline"){
+# data1[[i1]][, "fake_categ"] <- paste0("Line_", 1:nrow(data1[[i1]]))
+# }else{
+data1[[i1]][, "fake_categ"] <- data1[[i1]][, "fake_categ"] # as.numeric("") create a vector of NA but class numeric
+# }
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_categ\" FOR FINAL DRAWING")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
@@ -4074,7 +4061,11 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if( ! is.null(categ)){
 # No problem of NA management by ggplot2 because already removed
-if(length(color[[i1]]) == length(unique(data1[[i1]][, categ[[i1]]]))){ # here length(color) is equal to the different number of categ
+if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST BE A SINGLE COLOR IF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IS NULL\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}else if(length(color[[i1]]) == length(unique(data1[[i1]][, categ[[i1]]]))){ # here length(color) is equal to the different number of categ
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE FOLLOWING COLORS:\n", paste(color[[i1]], collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "))
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -4101,6 +4092,11 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", if
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}
+}
+if((geom[[i1]] == "geom_hline" | geom[[i1]] == "geom_vline") & ! is.null(categ[[i1]])){ # add here after the color management, to deal with the different lines to plot inside any data[[i1]]
+if(categ[[i1]] == "fake_categ"){
+data1[[i1]][, "fake_categ"] <- paste0("Line_", 1:nrow(data1[[i1]]))
 }
 }
 tempo <- fun_param_check(data = alpha[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -4217,6 +4213,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 tempo <- fun_param_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = show.legend, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = raster, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -4306,6 +4303,9 @@ categ <- vector("list", length(data1))
 categ[] <- "fake_categ"
 for(i2 in 1:length(data1)){
 data1[[i2]] <- cbind(data1[[i2]], fake_categ = "")
+if(geom[[i2]] == "geom_hline" | geom[[i2]] == "geom_vline"){
+data1[[i2]][, "fake_categ"] <- paste0("Line_", 1:nrow(data1[[i2]]))
+}
 }
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL categ ARGUMENT -> FAKE COLUMN ADDED TO EACH DATA FRAME IN data1, NAMED \"fake_categ\" AND FILLED WITH \"\"")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -4315,6 +4315,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 if(is.null(color)){
 color <- vector("list", length(data1))
 length.categ.list <- lapply(lapply(mapply(FUN = "[[", data1, categ, SIMPLIFY = FALSE), FUN = unique), FUN = function(x){length(x[ ! is.na(x)])})
+length.categ.list[sapply(categ, FUN = "==", "fake_categ")] <- 1 # when is.null(color), a single color for all the dots or lines of data[[i1]] that contain "fake_categ" category
 total.categ.length <- sum(unlist(length.categ.list), na.rm = TRUE)
 tempo.color <- fun_gg_palette(total.categ.length)
 tempo.count <- 0
@@ -4328,8 +4329,11 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 # end vector of color with length as in data1
 # last check
 for(i1 in 1:length(data1)){
-if(length(color[[i1]]) != length(unique(data1[[i1]][, categ[[i1]]]))){
+if(categ[[i1]] != "fake_categ" & length(color[[i1]]) != length(unique(data1[[i1]][, categ[[i1]]]))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
+stop(tempo.cat)
+}else if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST HAVE LENGTH 1 WHEN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IS NULL\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), "\n\n================\n\n")
 stop(tempo.cat)
 }
 }
@@ -4348,9 +4352,9 @@ tempo.data.frame[, y[[i1]]] <- ylim
 tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n"))
 stop(tempo.cat)
 }
-if(is.null(categ[[i1]])){
-tempo.data.frame[, categ[[i1]]] <- paste0("Line_", i3)
-}
+# if(is.null(categ[[i1]])){
+# data1[, "fake_categ"] <- paste0("Line_", i3)
+# } #I put that up
 final.data.frame <- rbind(final.data.frame, tempo.data.frame)
 }
 data1[[i1]] <- final.data.frame
@@ -4434,69 +4438,101 @@ panel.grid.minor.x = ggplot2::element_blank(),
 panel.grid.minor.y = ggplot2::element_blank(), 
 strip.background = ggplot2::element_rect(fill = "white", colour = "black"), 
 aspect.ratio = if(fix.ratio == TRUE){1}else{NULL}
-# legend.position = "none" # to remove the legend completely
+# do not work -> legend.position = "none" # to remove the legend completely: https://www.datanovia.com/en/blog/how-to-remove-legend-from-a-ggplot/
 ))
 }
 # end no need loop part
 # loop part
 point.count <- 0
 line.count <- 0
+lg.order <- vector(mode = "list", length = 6) # order of the legend
+lg.order <- lapply(lg.order, as.numeric) # order of the legend
+lg.color <- vector(mode = "list", length = 6) # color of the legend
+lg.alpha <- vector(mode = "list", length = 6) # order of the legend
+lg.alpha <- lapply(lg.alpha, as.numeric) # alpha of the legend
 for(i1 in 1:length(data1)){
 if(geom[[i1]] == "geom_point"){
 point.count <- point.count + 1
 if(point.count == 1){
+fin.lg.disp[[1]] <- legend.disp[[point.count + line.count]]
+lg.order[[1]] <- point.count + line.count
+lg.color[[1]] <- color[[i1]]
+lg.alpha[[1]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = legeng.disp[[i1]])) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = color[[i1]], guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of fill
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = color[[i1]], guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of fill. order determines the order in the legend
 }
 if(point.count == 2){
+fin.lg.disp[[2]] <- legend.disp[[point.count + line.count]]
+lg.order[[2]] <- point.count + line.count
+lg.color[[2]] <- color[[i1]]
+lg.alpha[[2]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = legeng.disp[[i1]])) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(19, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of shape
 }
 if(point.count == 3){
+fin.lg.disp[[3]] <- legend.disp[[point.count + line.count]]
+lg.order[[3]] <- point.count + line.count
+lg.color[[3]] <- color[[i1]]
+lg.alpha[[3]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]], show.legend = legeng.disp[[i1]])) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(0.5, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of stroke
 }
 }else{
 line.count <- line.count + 1
 if(line.count == 1){
+fin.lg.disp[[4]] <- legend.disp[[point.count + line.count]]
+lg.order[[4]] <- point.count + line.count
+lg.color[[4]] <- color[[i1]]
+lg.alpha[[4]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], linetype = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round", alpha = alpha[[i1]], show.legend = legeng.disp[[i1]])) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], linetype = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round", alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(1, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(1, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values 
 }
 if(line.count == 2){
+fin.lg.disp[[5]] <- legend.disp[[point.count + line.count]]
+lg.order[[5]] <- point.count + line.count
+lg.color[[5]] <- color[[i1]]
+lg.alpha[[5]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], alpha = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round", show.legend = legeng.disp[[i1]])) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], alpha = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round")) # beware: a single color allowed for color argument outside aesthetic, hence the loop # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values 
 }
 if(line.count == 3){
+fin.lg.disp[[6]] <- legend.disp[[point.count + line.count]]
+lg.order[[6]] <- point.count + line.count
+lg.color[[6]] <- color[[i1]]
+lg.alpha[[6]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], size = categ[[i1]]), color = color[[i1]][i5], alpha = alpha[[i1]], lineend = "round", show.legend = legeng.disp[[i1]])) # beware: a single color allowed for color argumant outside aesthetic, hence the loop
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], size = categ[[i1]]), color = color[[i1]][i5], alpha = alpha[[i1]], lineend = "round")) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values 
 }
 }
 }
 # end loop part
+# legend display
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = if(fin.lg.disp[[1]] == TRUE){ggplot2::guide_legend(order = lg.order[[1]], override.aes = list(alpha = lg.alpha[[1]], color = lg.color[[1]]))}else{FALSE}, shape = if(fin.lg.disp[[2]] == TRUE){ggplot2::guide_legend(order = lg.order[[2]], override.aes = list(alpha = lg.alpha[[2]], color = lg.color[[2]]))}else{FALSE}, stroke = if(fin.lg.disp[[3]] == TRUE){ggplot2::guide_legend(order = lg.order[[3]], override.aes = list(alpha = lg.alpha[[2]], color = lg.color[[3]]))}else{FALSE}, linetype = if(fin.lg.disp[[4]] == TRUE){ggplot2::guide_legend(order = lg.order[[4]], override.aes = list(alpha = lg.alpha[[4]], color = lg.color[[4]]))}else{FALSE}, alpha = if(fin.lg.disp[[5]] == TRUE){ggplot2::guide_legend(order = lg.order[[5]], override.aes = list(alpha = lg.alpha[[5]], color = lg.color[[5]]))}else{FALSE}, size = if(fin.lg.disp[[6]] == TRUE){ggplot2::guide_legend(order = lg.order[[6]], override.aes = list(alpha = lg.alpha[[6]], color = lg.color[[6]]))}else{FALSE})) # clip = "off" to have secondary ticks outside plot region does not work
+# end legend display
 # scale management
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)) # clip = "off" to have secondary ticks outside plot region does not work
 # x-axis ticks and inv
@@ -4595,7 +4631,9 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 # end y-axis secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
 # end scale management
 if(plot == TRUE){
-suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
+# suppressWarnings(
+print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+# )
 }else{
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -5434,7 +5472,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), stroke = dot.border.size, size = dot.size, fill = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 21)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
 }
 }else if(dot.tidy == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), position = ggplot2::position_dodge(width = bar.width), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), position = ggplot2::position_dodge(width = bar.width), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = if(dot.border.size == 0){as.character(levels(dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"]))}else{rep("black", length(categ.color))})) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. BEWARE: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
 # coordinates of tidy dots
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
@@ -6552,7 +6590,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), stroke = dot.border.size, size = dot.size, fill = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 21)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
 }
 }else if(dot.tidy == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = if(dot.border.size == 0){as.character(levels(dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"]))}else{rep("black", length(categ.color))})) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. BEWARE: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
 # coordinates of tidy dots
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
@@ -6963,10 +7001,10 @@ data2[data2[, 3] == 1, 3] <- NA
 tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0 # to facilitate debugging
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(data = data1, mapping = ggplot2::aes_string(x = names(data1)[2], y = names(data1)[1], fill = names(data1)[3])))
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(show.legend = show.scale))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color, high = high.color, mid = mid.color, midpoint = midpoint, limit = limit, breaks = c(limit, midpoint), name = legend.name))
 if( ! is.null(data2)){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[2], y = names(data2)[1], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[2], y = names(data2)[1], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_fixed()) # x = y
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_reverse())
