@@ -22,7 +22,7 @@
 
 ################ Object analysis    2
 ######## fun_param_check() #### check class, type, length, etc., of objects 2
-######## fun_object_info() #### recover object information  8
+######## fun_info() #### recover object information 8
 ######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
 ######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
 ######## fun_2D_head() #### head of the left or right of big 2D objects 20
@@ -333,24 +333,24 @@ return(output)
 }
 
 
-######## fun_object_info() #### recover object information
+######## fun_info() #### recover object information
 
 
 # Check OK: clear to go Apollo
-fun_object_info <- function(data){
+fun_info <- function(data){
 # AIM
-# provide a full description of the object
+# provide a full description of an object
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # none
 # ARGUMENTS
 # data: object to test
 # RETURN
 # a list containing the info
-# please, use names(fun_object_info()) and remove what can be too big for easy analysis
+# please, use names(fun_info()) and remove what can be too big for easy analysis
 # EXAMPLES
-# fun_object_info(data = 1:3)
-# fun_object_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B")))))
-# fun_object_info(list(a = 1:3, b = ordered(factor(c("A", "B")))))
+# fun_info(data = 1:3)
+# fun_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B")))))
+# fun_info(list(a = 1:3, b = ordered(factor(c("A", "B")))))
 # DEBUGGING
 # data = NULL # for function debugging
 # data = 1:3 # for function debugging
@@ -7252,7 +7252,7 @@ tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0
 # no need loop part
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(data = data.frame(x = 1, y = 1), aes(x = x, y = y, label = text)))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(data = data.frame(x = 1, y = 1), ggplot2::aes(x = x, y = y, label = text)))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
 suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))

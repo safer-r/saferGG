@@ -131,6 +131,7 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 ## v6.0.0
 
 1) name of functions changed:
+fun_object_info()	fun_info()
 fun_rounding()	fun_round()
 fun_hexa_hsv_color_matrix()	fun_num2color_mat()
 fun_graph_param_prior_plot()	fun_prior_plot()
