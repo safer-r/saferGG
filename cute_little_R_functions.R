@@ -3560,7 +3560,7 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 if( ! is.null(data)){
-tempo <- fun_param_check(data = data, class = "data.frame", fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = data, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(mapping)){
 tempo <- fun_param_check(data = mapping, class = "uneval", typeof = "list", fun.name = function.name) ; eval(ee) # aes() is tested
@@ -3683,7 +3683,7 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # raster: logical. Dots in raster mode? If FALSE, dots from each geom_point from geom argument are in vectorial mode (bigger pdf and long to display if millions of dots). If TRUE, dots from each geom_point from geom argument are in matricial mode (smaller pdf and easy display if millions of dots, but long to generate the layer). If TRUE, the region plot will be square to avoid a bug in fun_gg_point_rast(). If TRUE, solve the transparency problem with some GUI. Overriden by vectorial.limit if non NULL
 # vectorial.limit: positive integer value indicating the limit of the dot number above which geom_point from geom argument switch from vectorial mode to raster mode (see the raster argument). If any layer is raster, then the region plot will be square to avoid a bug in fun_gg_point_rast(). Inactive the raster argument if non NULL
 # return: logical. Return the graph info?
-# plot: logical. Plot the graphic? If FALSE and return argument is TRUE, only display the graphical parameters and associated warnings
+# plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). Must start with "+" and each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
@@ -4531,7 +4531,15 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggp
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xlab(if(is.null(xlab)){x[[1]]}else{xlab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(ylab)){y[[1]]}else{ylab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
-if(is.null(add) & classic == TRUE){
+add.check <- TRUE
+if( ! is.null(add)){ # if add is NULL, then = 0
+if(grepl(pattern = "ggplot2::theme", add) == TRUE){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+add.check <- FALSE
+}
+}
+if(add.check == TRUE & classic == TRUE){
 # BEWARE: not possible to add several times theme(). NO message but the last one overwrites the others
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
 if(grid == TRUE){
@@ -4555,7 +4563,7 @@ axis.line.x.bottom = ggplot2::element_line(colour = "black"),
 aspect.ratio = if(fix.ratio == TRUE){1}else{NULL}
 ))
 }
-}else if(is.null(add) & classic == FALSE){
+}else if(add.check == TRUE & classic == FALSE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
 text = ggplot2::element_text(size = text.size), 
 plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
@@ -4571,9 +4579,6 @@ strip.background = ggplot2::element_rect(fill = "white", colour = "black"),
 aspect.ratio = if(fix.ratio == TRUE){1}else{NULL}
 # do not work -> legend.position = "none" # to remove the legend completely: https://www.datanovia.com/en/blog/how-to-remove-legend-from-a-ggplot/
 ))
-}else if(grepl(pattern = "ggplot2::theme", add) == TRUE){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # end no need loop part
 # loop part
@@ -4844,7 +4849,7 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # classic: logical. Use the classic theme (article like)?
 # grid: logical. draw horizontal lines in the background to better read the bar values? Not considered if classic = FALSE
 # return: logical. Return the graph parameters?
-# plot: logical. Plot the graphic? If FALSE and return argument is TRUE, only display the graphical parameters and associated warnings
+# plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). Must start with "+" and each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
@@ -5536,7 +5541,15 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggt
 # text angle management
 tempo.just <- fun_gg_just(angle = text.angle, axis = ifelse(vertical == TRUE, "x", "y"))
 # end text angle management
-if(is.null(add) & classic == TRUE){
+add.check <- TRUE
+if( ! is.null(add)){ # if add is NULL, then = 0
+if(grepl(pattern = "ggplot2::theme", add) == TRUE){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+add.check <- FALSE
+}
+}
+if(add.check == TRUE & classic == TRUE){
 # BEWARE: not possible to add several times theme(). NO message but the last one overwrites the others
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
 if(grid == TRUE){
@@ -5562,7 +5575,7 @@ axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angl
 axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
 ))
 }
-}else if(is.null(add) & classic == FALSE){
+}else if(add.check == TRUE & classic == FALSE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
 text = ggplot2::element_text(size = text.size), 
 plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
@@ -5578,9 +5591,6 @@ strip.background = ggplot2::element_rect(fill = "white", colour = "black"),
 axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
 axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
 ))
-}else if(grepl(pattern = "ggplot2::theme", add) == TRUE){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # end constant part
 # barplot and error bars
@@ -5858,7 +5868,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 # end secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
 # end y scale  management (cannot be before dot plot management)
 if(plot == TRUE){
-suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "),if(is.null(add)){NULL}else{add})))))
+suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add})))))
 }else{
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -6950,10 +6960,9 @@ return(output)
 
 
 #test plot.margin = margin(up.space.mds, right.space.mds, down.space.mds, left.space.mds, "inches") to set the dim of the region plot ?
-# add invert argument, using V1 or V2 in the reshaped data frame
 
 # Check OK: clear to go Apollo
-fun_gg_heatmap <- function(data1, legend.name = "", low.color = "blue", high.color = "red", mid.color = "white", limit = NULL, midpoint = NULL, title = "", text.size = 12, show.scale = TRUE, data2 = NULL, color2 = "black", alpha2 = 0.5, invert2 = FALSE, return = FALSE, plot = TRUE, path.lib = NULL){
+fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.color1 = "white", high.color1 = "red", limit1 = NULL, midpoint1 = NULL, data2 = NULL, color2 = "black", alpha2 = 0.5, invert2 = FALSE, text.size = 12, title = "", title.text.size = 12, show.scale = TRUE, rotate = FALSE, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL){
 # AIM
 # ggplot2 heatmap with the possibility to overlay a mask
 # see also:
@@ -6962,21 +6971,24 @@ fun_gg_heatmap <- function(data1, legend.name = "", low.color = "blue", high.col
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 # ARGUMENTS
 # data1: numeric matrix or data frame resulting from the conversion of the numeric matrix by reshape2::melt()
-# legend.name: character string of the heatmap scale legend
-# low.color: character string of the color (i.e., "blue" or "#0000FF") of the lowest scale value
-# high.color: same as low.color but for the highest scale value
-# mid.color: same as low.color but for the middle scale value
-# limit: 2 numeric values defining the lowest and higest color scale values. If NULL, take the range of data1 values
-# midpoint: single numeric value defining the middle color scale values. If NULL, take the mean of data1 values
-# title: character string of the graph title
-# text.size: numeric value of the text size (in points)
-# show.scale: logical. Show color scale?
+# legend.name1: character string of the data1 heatmap scale legend
+# low.color1: character string of the color (i.e., "blue" or "#0000FF") of the lowest scale value
+# mid.color1: same as low.color1 but for the middle scale value. If NULL, the middle color is the default color between low.color1 and high.color1. BEWARE: argument midpoint1 is not ignored, even if mid.color1 is NULL, meaning that the default mid color can still be controled
+# high.color1: same as low.color1 but for the highest scale value
+# limit1: 2 numeric values defining the lowest and higest color scale values. If NULL, take the range of data1 values
+# midpoint1: single numeric value defining the value corresponding to the mid.color1 argument. A warning message is returned if midpoint1 does not correspond to the mean of limit1 values, because the color scale is not linear anymore. If NULL, takes the mean of limit1 values. Mean of data1, instead of mean of limit1, can be used here if required
 # data2: binary mask matrix (made of 0 and 1) of same dimension as data1 or a data frame resulting from the conversion of the binary mask matrix by reshape2::melt(). Value 1 of data2 will correspond to color2 argument (value 0 will be NA color), and the opposite if invert2 argument is TRUE (inverted mask)
 # color2: color of the 1 values of the binary mask matrix. The 0 values will be color NA
 # alpha2: numeric value (from 0 to 1) of the mask transparency
 # invert2: logical. Invert the mask (1 -> 0 and 0 -> 1)?
+# text.size: numeric value of the size of the texts in scale
+# title: character string of the graph title
+# title.text.size: numeric value of the title size (in points)
+# show.scale: logical. Show color scale?
+# rotate: logical. Rotate the heatmap 90° clockwise?
 # return: logical. Return the graph parameters?
-# plot: logical. Plot the graphic? If FALSE and return argument is TRUE, only display the graphical parameters and associated warnings
+# plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
+# add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). Must start with "+" and each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
@@ -6985,12 +6997,16 @@ fun_gg_heatmap <- function(data1, legend.name = "", low.color = "blue", high.col
 # fun_param_check()
 # fun_pack_import()
 # RETURN
-# a heatmap
-# the graph info if return argument is TRUE
+# a heatmap if plot argument is TRUE
+# a list of the graph info if return argument is TRUE:
+# $data: a list of the graphic info
+# $axes: a list of the axes info
+# $scale: the scale info (lowest, mid and highest values)
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), title = "GRAPH 1")
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), return = TRUE)
-# fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), legend.name = "VALUE", title = "GRAPH 1", text.size = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
+# fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), legend.name1 = "VALUE", title = "GRAPH 1", text.size = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
 # diagonal matrix
 # fun_gg_heatmap(data1 = matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4))
 # fun_gg_heatmap(data1 = reshape2::melt(matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4)))
@@ -6999,8 +7015,7 @@ fun_gg_heatmap <- function(data1, legend.name = "", low.color = "blue", high.col
 # fun_gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 # fun_gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 # DEBUGGING
-# data1 = matrix(1:16, ncol = 4) ; legend.name = "" ; low.color = "blue" ; high.color = "red" ; mid.color = "white" ; limit = range(data1, na.rm = TRUE) ; midpoint = mean(data1, na.rm = TRUE) ; title = "GRAPH 1" ; text.size = 12 ; show.scale = TRUE ; data2 = NULL ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; return = FALSE ; plot = TRUE ; path.lib = NULL
-# data1 = matrix(1:16, ncol = 4) ; legend.name = "" ; low.color = "blue" ; high.color = "red" ; mid.color = "white" ; limit = range(data1, na.rm = TRUE) ; midpoint = mean(data1, na.rm = TRUE) ; title = "GRAPH 1" ; text.size = 12 ; show.scale = TRUE ; data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; return = TRUE ; plot = TRUE ; path.lib = NULL
+# data1 = matrix(1:16, ncol = 4) ; legend.name1 = "" ; low.color1 = "blue" ; mid.color1 = "white" ; high.color1 = "red" ; limit1 = NULL ; midpoint1 = NULL ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; text.size = 12 ; title = "" ; title.text.size = 12 ; show.scale = TRUE ; rotate = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -7016,6 +7031,7 @@ stop(tempo.cat)
 # end required function checking
 # no reserved words required for this function
 # argument checking
+warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
@@ -7034,39 +7050,38 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE d
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = legend.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = low.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! (all(low.color %in% colors() | grepl(pattern = "^#", low.color)))){ # check that all strings of low.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": low.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+tempo <- fun_param_check(data = legend.name1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = low.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! (all(low.color1 %in% colors() | grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = high.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! (all(high.color %in% colors() | grepl(pattern = "^#", high.color)))){ # check that all strings of high.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": high.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-tempo <- fun_param_check(data = mid.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! (all(mid.color %in% colors() | grepl(pattern = "^#", mid.color)))){ # check that all strings of mid.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mid.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-if( ! is.null(limit)){
-tempo <- fun_param_check(data = limit, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & any(limit %in% c(Inf, -Inf))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": limit ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+if( ! is.null(mid.color1)){
+tempo <- fun_param_check(data = mid.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! (all(mid.color1 %in% colors() | grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-if( ! is.null(midpoint)){
-tempo <- fun_param_check(data = midpoint, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = high.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! (all(high.color1 %in% colors() | grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = title, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = show.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(limit1)){
+tempo <- fun_param_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & any(limit1 %in% c(Inf, -Inf))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
+if( ! is.null(midpoint1)){
+tempo <- fun_param_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+}
 if( ! is.null(data2)){
 if(all(is.matrix(data2))){
 tempo <- fun_param_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
@@ -7111,20 +7126,39 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_param_check(data = color2, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of mid.color start by #
+if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_param_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = invert2, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = title, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_param_check(data = show.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_param_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n")
+if( ! is.null(add)){
+tempo <- fun_param_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}else if(tempo$problem == FALSE & ! grepl(pattern = "ggplot2::", add)){ #
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}else if(tempo$problem == FALSE & ! grepl(pattern = ")$", add)){ # check that the add string  finished by )
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
+if( ! is.null(path.lib)){
+tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
+cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
@@ -7140,23 +7174,36 @@ fun_pack_import(req.package = c("reshape2", "ggplot2"), path.lib = path.lib)
 if(all(is.matrix(data1))){
 data1 <- reshape2::melt(data1) # transform a matrix into a dataframe with 2 coordinates columns and the third intensity column
 }
-if(is.null(limit)){
+if(rotate == TRUE){
+data1[, 1] <- rev(data1[, 1])
+}
+if(is.null(limit1)){
 if(any(data1[, 3] %in% c(Inf, -Inf))){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-limit <- range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-if(suppressWarnings(any(limit %in% c(Inf, -Inf)))){
+limit1 <- range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(limit1), collapse = " "))
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+if(suppressWarnings(any(limit1 %in% c(Inf, -Inf)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
 stop(tempo.cat)
 }
 }
-if(is.null(midpoint)){
-midpoint <- mean(data1[, 3], na.rm = TRUE)
+if(is.null(midpoint1)){
+midpoint1 <- mean(limit1, na.rm = TRUE)
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(midpoint1), collapse = " "))
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}else if(fun_round(midpoint1, 9) != fun_round(mean(limit1), 9)){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT (", fun_round(mean(midpoint1), 9), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", fun_round(mean(limit1), 9), "). COLOR SCALE IS NOT LINEAR")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 if( ! is.null(data2)){
 if(all(is.matrix(data2))){
 data2 <- reshape2::melt(data2) # transform a matrix into a dataframe with 2 coordinates columns and the third intensity column
+}
+if(rotate == TRUE){
+data2[, 1] <- rev(data2[, 1])
 }
 if(invert2 == FALSE){
 data2[data2[, 3] == 1, 3] <- color2
@@ -7168,26 +7215,38 @@ data2[data2[, 3] == 1, 3] <- NA
 }
 tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0 # to facilitate debugging
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(data = data1, mapping = ggplot2::aes_string(x = names(data1)[2], y = names(data1)[1], fill = names(data1)[3])))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(data = data1, mapping = ggplot2::aes_string(x = names(data1)[ifelse(rotate == FALSE, 2, 1)], y = names(data1)[ifelse(rotate == FALSE, 1, 2)], fill = names(data1)[3])))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color, high = high.color, mid = mid.color, midpoint = midpoint, limit = limit, breaks = c(limit, midpoint), name = legend.name))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color1, high = high.color1, mid = mid.color1, midpoint = midpoint1, limit = limit1, breaks = c(limit1, midpoint1), name = legend.name1))
 if( ! is.null(data2)){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[2], y = names(data2)[1], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_fixed()) # x = y
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_reverse())
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
+add.check <- TRUE
+if( ! is.null(add)){ # if add is NULL, then = 0
+if(grepl(pattern = "ggplot2::theme", add) == TRUE){
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+add.check <- FALSE
+}
+}
+if(add.check == TRUE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
+text = ggplot2::element_text(size = text.size), 
+plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
 line = ggplot2::element_blank(),
 axis.title = ggplot2::element_blank(),
 axis.text = ggplot2::element_blank(),
 axis.ticks = ggplot2::element_blank(),
 panel.background = ggplot2::element_blank(),
 ))
+}
 if(plot == TRUE){
 # suppressWarnings(
-print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}))))
 # )
 }else{
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
@@ -7200,7 +7259,7 @@ names(output)[1] <- "heatmap"
 if( ! is.null(data2)){
 names(output)[2] <- "mask"
 }
-return(output)
+return(list(data = output, axes = output$layout$panel_params[[1]], scale = c(limit1[1],  midpoint1, limit1[2]), warnings = warning))
 }
 }
 
