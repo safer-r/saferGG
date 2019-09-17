@@ -7112,7 +7112,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THIRD
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.data.frame(data1)) & ! identical(dim(data1), dim(data2))){ # data frame and data frame
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL AS DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", paste(dim(data2), collapse = " "), "\n", paste(dim(data1), collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL TO DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", paste(dim(data2), collapse = " "), "\n", paste(dim(data1), collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.matrix(data1)) & nrow(data2) != prod(dim(data1))){ # reshape2 and matrix
@@ -7206,21 +7206,17 @@ data2 <- reshape2::melt(data2) # transform a matrix into a dataframe with 2 coor
 if(rotate == TRUE){
 data2[, 1] <- rev(data2[, 1])
 }
-if(invert2 == FALSE){
-data2[data2[, 3] == 1, 3] <- color2
-data2[data2[, 3] == 0, 3] <- NA
-}else{
-data2[data2[, 3] == 0, 3] <- color2
-data2[data2[, 3] == 1, 3] <- NA
-}
+data2[, 3] <- factor(data2[, 3]) # to converte continuous scale into discrete scale
 }
 tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0 # to facilitate debugging
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(data = data1, mapping = ggplot2::aes_string(x = names(data1)[ifelse(rotate == FALSE, 2, 1)], y = names(data1)[ifelse(rotate == FALSE, 1, 2)], fill = names(data1)[3])))
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data1, mapping = ggplot2::aes_string(x = names(data1)[ifelse(rotate == FALSE, 2, 1)], y = names(data1)[ifelse(rotate == FALSE, 1, 2)], fill = names(data1)[3]), show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color1, high = high.color1, mid = mid.color1, midpoint = midpoint1, limit = limit1, breaks = c(limit1, midpoint1), name = legend.name1))
 if( ! is.null(data2)){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], alpha = names(data2)[3]), fill = color2, show.legend = FALSE))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", values = if(invert2 == FALSE){c(0, alpha2)}else{c(alpha2, 0)}, guide = FALSE))
+# assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # BEWARE: this does not work if NA present, because geom_raster() has a tendency to complete empty spaces, and thus, behave differently than geom_tile(). See https://github.com/tidyverse/ggplot2/issues/3025
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_fixed()) # x = y
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_reverse())
