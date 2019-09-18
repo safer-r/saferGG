@@ -148,7 +148,7 @@ fun_window_width_resizing()	fun_width()
 fun_open_window()	fun_open()
 fun_close_specif_window()	fun_close()
 fun_var_trim_display()	fun_trim()
-fun_data_export()	fun_report()
+fun_export_data()	fun_report()
 
 2) new functions added:
 fun_name_change()
