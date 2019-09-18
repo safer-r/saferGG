@@ -21,31 +21,31 @@
 
 
 ################ Object analysis    2
-######## fun_param_check() #### check class, type, length, etc., of objects 2
+######## fun_check() #### check class, type, length, etc., of objects   2
 ######## fun_info() #### recover object information 8
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
-######## fun_2D_head() #### head of the left or right of big 2D objects 20
-######## fun_2D_tail() #### tail of the left or right of big 2D objects 21
+######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
+######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
+######## fun_2d_head() #### head of the left or right of big 2D objects 20
+######## fun_2d_tail() #### tail of the left or right of big 2D objects 21
 ######## fun_list_comp() #### comparison of two lists   22
 ################ Object modification    24
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames 29
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
+######## fun_refact() #### remove classes that are not anymore present in factors or factor columns in data frames  29
 ######## fun_round() #### rounding number if decimal present    31
 ######## fun_90clock_matrix_rot() #### 90° clockwise matrix rotation    33
 ######## fun_num2color_mat() #### convert a numeric matrix into hexadecimal color matrix    33
-######## fun_by_case_matrix_op() #### assemble several matrices with operation  36
+######## fun_mat_op() #### assemble several matrices with operation 36
 ######## fun_mat_inv() #### return the inverse of a square matrix   39
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  40
 ######## fun_consec_pos_perm() #### progressively breaks a vector order 43
 ################ Graphics management    48
-######## fun_window_width_resizing() #### window width depending on classes to plot 48
-######## fun_open_window() #### open a GUI or pdf graphic window    49
+######## fun_width() #### window width depending on classes to plot 48
+######## fun_open() #### open a GUI or pdf graphic window   49
 ######## fun_prior_plot() #### set graph param before plotting  53
 ######## fun_scale() #### select nice numbers when setting breaks on an axis    57
 ######## fun_post_plot() #### set graph param after plotting    61
-######## fun_close_specif_window() #### close specific graphic windows  72
+######## fun_close() #### close specific graphic windows    72
 ################ Standard graphics  73
 ######## fun_empty_graph() #### text to display for empty graphs    74
 ################ gg graphics    75
@@ -62,11 +62,11 @@
 ######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  169
 ######## fun_gg_empty_graph() #### text to display for empty graphs 175
 ################ Graphic extraction 176
-######## fun_var_trim_display() #### display values from a quantitative variable and trim according to defined cut-offs 176
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 176
 ######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   184
 ################ Import 216
-######## fun_pack_import() #### check if R packages are present and import into the working environment 216
-######## fun_python_pack_import() #### check if python packages are present 217
+######## fun_pack() #### check if R packages are present and import into the working environment    216
+######## fun_python_pack() #### check if python packages are present    217
 ################ Exporting results (text & tables)  219
 ######## fun_report() #### print string or data object into output file 219
 
@@ -77,11 +77,11 @@
 ################ Object analysis
 
 
-######## fun_param_check() #### check class, type, length, etc., of objects
+######## fun_check() #### check class, type, length, etc., of objects
 
 
 # Check OK: clear to go Apollo
-fun_param_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode = NULL, length = NULL, prop = NULL, double.as.integer.allowed = FALSE, options = NULL, all.options.in.data = FALSE, na.contain = FALSE, neg.values = TRUE, print = TRUE, fun.name = NULL){
+fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode = NULL, length = NULL, prop = NULL, double.as.integer.allowed = FALSE, options = NULL, all.options.in.data = FALSE, na.contain = FALSE, neg.values = TRUE, print = TRUE, fun.name = NULL){
 # AIM
 # check the class, type, mode and length of the data argument
 # mainly used to check the arguments of other functions
@@ -104,123 +104,123 @@ fun_param_check <- function(data, data.name = NULL, class = NULL, typeof = NULL,
 # na.contain: can data contains NA?
 # neg.values: are negative numeric values authorized? BEWARE: only considered if set to FALSE, to check for non negative values when class is set to "numeric", "matrix", "array", "data.frame", "table", or typeof is set to "double", "integer", or mode is set to "numeric"
 # print: print the error message if $problem is TRUE?
-# fun.name: name of the function when fun_param_check() is used to check its argument. If non NULL, name will be added into the error message returned by fun_param_check()
+# fun.name: name of the function when fun_check() is used to check its argument. If non NULL, name will be added into the error message returned by fun_check()
 # RETURN
 # a list containing:
 # $problem: logical. Is there any problem detected ?
 # $text: the problem detected
 # $param.name: name of the checked parameter
 # EXAMPLES
-# test <- 1:3 ; fun_param_check(data = test, data.name = NULL, print = TRUE, options = NULL, all.options.in.data = FALSE, class = NULL, typeof = NULL, mode = NULL, prop = TRUE, double.as.integer.allowed = FALSE, length = NULL)
-# test <- 1:3 ; fun_param_check(data = test, print = TRUE, class = "numeric", typeof = NULL, double.as.integer.allowed = FALSE)
-# test <- 1:3 ; fun_param_check(data = test, print = TRUE, class = "vector", mode = "numeric")
-# test <- matrix(1:3) ; fun_param_check(data = test, print = TRUE, class = "vector", mode = "numeric")
+# test <- 1:3 ; fun_check(data = test, data.name = NULL, print = TRUE, options = NULL, all.options.in.data = FALSE, class = NULL, typeof = NULL, mode = NULL, prop = TRUE, double.as.integer.allowed = FALSE, length = NULL)
+# test <- 1:3 ; fun_check(data = test, print = TRUE, class = "numeric", typeof = NULL, double.as.integer.allowed = FALSE)
+# test <- 1:3 ; fun_check(data = test, print = TRUE, class = "vector", mode = "numeric")
+# test <- matrix(1:3) ; fun_check(data = test, print = TRUE, class = "vector", mode = "numeric")
 # DEBUGGING
 # data = expression(TEST) ; data.name = NULL ; class = "vector" ; typeof = NULL ; mode = NULL ; length = 1 ; prop = NULL ; double.as.integer.allowed = FALSE ; options = NULL ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; fun.name = NULL
 # function name: no used in this function for the error message, to avoid env colliding
 # argument checking
 if( ! is.null(data.name)){
 if( ! (length(data.name) == 1 & class(data.name) == "character")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if(is.null(options) & is.null(class) & is.null(typeof) & is.null(mode) & is.null(prop) & is.null(length)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): AT LEAST ONE OF THE options, class, typeof, mode, prop, OR length ARGUMENT MUST BE SPECIFIED\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): AT LEAST ONE OF THE options, class, typeof, mode, prop, OR length ARGUMENT MUST BE SPECIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! is.null(options) & ( ! is.null(class) | ! is.null(typeof) | ! is.null(mode) | ! is.null(prop))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE class, typeof, mode AND prop ARGUMENTS MUST BE NULL IF THE option ARGUMENT IS SPECIFIED\nTHE option ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE class, typeof, mode AND prop ARGUMENTS MUST BE NULL IF THE option ARGUMENT IS SPECIFIED\nTHE option ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (all(class(neg.values) == "logical") & length(neg.values) == 1 & any(is.na(neg.values)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
 stop(tempo.cat)
 }
 if(neg.values == FALSE & is.null(class) & is.null(typeof) & is.null(mode)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE neg.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE neg.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! is.null(class)){
 if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval") & any(is.na(class)) != TRUE)){ # not length == 1 here because ordered factors are class "factor" "ordered" (length == 2)
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\" \n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\" \n\n================\n\n")
 stop(tempo.cat)
 }
 if(neg.values == FALSE & ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if( ! is.null(typeof)){
 if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\" \n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\" \n\n================\n\n")
 stop(tempo.cat)
 }
 if(neg.values == FALSE & ! typeof %in% c("double", "integer")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): typeof ARGUMENT CANNOT BE OTHER THAN \"double\" OR \"integer\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT CANNOT BE OTHER THAN \"double\" OR \"integer\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if( ! is.null(mode)){
 if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\"\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\"\n\n================\n\n")
 stop(tempo.cat)
 }
 if(neg.values == FALSE & mode != "numeric"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if( ! is.null(length)){
 if( ! (is.numeric(length) & length(length) == 1 & ! grepl(length, pattern = "\\.") & any(is.na(length)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): length ARGUMENT MUST BE A SINGLE INTEGER VALUE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): length ARGUMENT MUST BE A SINGLE INTEGER VALUE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if( ! is.null(prop)){
 if( ! (is.logical(prop) | length(prop) == 1 & any(is.na(prop)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): prop ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): prop ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
 stop(tempo.cat)
 }else if(prop == TRUE){
 if( ! is.null(class)){
 if( ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if( ! is.null(mode)){
 if(mode != "numeric"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 if( ! is.null(typeof)){
 if(typeof != "double"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): typeof ARGUMENT CANNOT BE OTHER THAN \"double\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT CANNOT BE OTHER THAN \"double\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 }
 }
 if( ! (all(class(double.as.integer.allowed) == "logical") & length(double.as.integer.allowed) == 1 & any(is.na(double.as.integer.allowed)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (is.logical(all.options.in.data) & length(all.options.in.data) == 1 & any(is.na(all.options.in.data)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (all(class(na.contain) == "logical") & length(na.contain) == 1 & any(is.na(na.contain)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! (all(class(print) == "logical") & length(print) == 1 & any(is.na(print)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! is.null(fun.name)){
 if( ! (class(fun.name) == "character" & length(fun.name) == 1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_param_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }
 }
@@ -422,11 +422,11 @@ return(output)
 }
 
 
-######## fun_1D_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)
+######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)
 
 
 # Check OK: clear to go Apollo
-fun_1D_comp <- function(data1, data2){
+fun_1d_comp <- function(data1, data2){
 # AIM
 # compare two 1D datasets (vector of factor or 1D table) of the same class or not. Check and report in a list if the 2 datasets have:
 # same class
@@ -463,16 +463,16 @@ fun_1D_comp <- function(data1, data2){
 # $identical.object: logical. Are objects identical (kind of object, element names and content)?
 # $identical.content: logical. Are content objects identical (identical elements excluding kind of object and element names)?
 # EXAMPLES
-# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:5] ; fun_1D_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; fun_1D_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = 3:6 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:4] ; fun_1D_comp(obs1, obs2)
-# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[1:5]) ; fun_1D_comp(obs1, obs2)
-# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[10:11]) ; fun_1D_comp(obs1, obs2)
-# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[4:7]) ; fun_1D_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = factor(LETTERS[1:5]) ; fun_1D_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = 1.1:6.1 ; fun_1D_comp(obs1, obs2)
-# obs1 = as.table(1:5); obs2 = as.table(1:5) ; fun_1D_comp(obs1, obs2)
-# obs1 = as.table(1:5); obs2 = 1:5 ; fun_1D_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:5] ; fun_1d_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; fun_1d_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 3:6 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:4] ; fun_1d_comp(obs1, obs2)
+# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[1:5]) ; fun_1d_comp(obs1, obs2)
+# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[10:11]) ; fun_1d_comp(obs1, obs2)
+# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[4:7]) ; fun_1d_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = factor(LETTERS[1:5]) ; fun_1d_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 1.1:6.1 ; fun_1d_comp(obs1, obs2)
+# obs1 = as.table(1:5); obs2 = as.table(1:5) ; fun_1d_comp(obs1, obs2)
+# obs1 = as.table(1:5); obs2 = 1:5 ; fun_1d_comp(obs1, obs2)
 # DEBUGGING
 # data1 = 1:5 ; data2 = 1:5 ; names(data1) <- LETTERS[1:5] ; names(data2) <- LETTERS[1:5] # for function debugging
 # function name
@@ -638,11 +638,11 @@ return(output)
 }
 
 
-######## fun_2D_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
+######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
 
 
 # Check OK: clear to go Apollo
-fun_2D_comp <- function(data1, data2){
+fun_2d_comp <- function(data1, data2){
 # AIM
 # compare two 2D datasets of the same class or not. Check and report in a list if the 2 datasets have:
 # same class
@@ -688,10 +688,10 @@ fun_2D_comp <- function(data1, data2){
 # $identical.object: logical. Are objects identical (including row & column names)?
 # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
 # EXAMPLES
-# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
-# obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
-# obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
-# obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_2D_comp(obs1, obs2)
+# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
+# obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
+# obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
+# obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
 # DEBUGGING
 # data1 = matrix(1:10, ncol = 5) ; data2 = matrix(1:10, ncol = 5) # for function debugging
 # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -945,15 +945,15 @@ return(output)
 }
 
 
-######## fun_2D_head() #### head of the left or right of big 2D objects
+######## fun_2d_head() #### head of the left or right of big 2D objects
 
 
 # Check OK: clear to go Apollo
-fun_2D_head <- function(data1, n = 10, side = "l"){
+fun_2d_head <- function(data1, n = 10, side = "l"){
 # AIM
 # display the head of the left or right of big 2D objects
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data1: matrix, data frame or table
 # n: number of dimension to print (10 means 10 rows and columns)
@@ -961,8 +961,8 @@ fun_2D_head <- function(data1, n = 10, side = "l"){
 # RETURN
 # the head
 # EXAMPLES
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3)
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_head(obs1, 3, "right")
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_head(obs1, 3)
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_head(obs1, 3, "right")
 # DEBUGGING
 # data1 = matrix(1:30, ncol = 5) # for function debugging
 # data1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -970,29 +970,29 @@ fun_2D_head <- function(data1, n = 10, side = "l"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 obs.dim <- dim(data1)
@@ -1007,15 +1007,15 @@ return(data1[row, col])
 }
 
 
-######## fun_2D_tail() #### tail of the left or right of big 2D objects
+######## fun_2d_tail() #### tail of the left or right of big 2D objects
 
 
 # Check OK: clear to go Apollo
-fun_2D_tail <- function(data1, n = 10, side = "l"){
+fun_2d_tail <- function(data1, n = 10, side = "l"){
 # AIM
 # display the tail of the left or right of big 2D objects
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data1: matrix, data frame or table
 # n: number of dimension to print (10 means 10 rows and columns)
@@ -1023,8 +1023,8 @@ fun_2D_tail <- function(data1, n = 10, side = "l"){
 # RETURN
 # the tail
 # EXAMPLES
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3)
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2D_tail(obs1, 3, "r")
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_tail(obs1, 3)
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_tail(obs1, 3, "r")
 # DEBUGGING
 # data1 = matrix(1:10, ncol = 5) # for function debugging
 # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -1032,29 +1032,29 @@ fun_2D_tail <- function(data1, n = 10, side = "l"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 obs.dim <- dim(data1)
@@ -1210,7 +1210,7 @@ fun_name_change <- function(data1, data2, added.string = "_modif"){
 # AIM
 # this function allow to check if a vector of character strings, like column names of a data frame, has elements present in another vector (vector of reserved words or column names of another data frame before merging)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data1: vector of character strings to check and modify
 # data2: reference vector of character strings
@@ -1229,8 +1229,8 @@ fun_name_change <- function(data1, data2, added.string = "_modif"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -1238,13 +1238,13 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data1, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = data2, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = added.string, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = added.string, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 ini <- NULL
@@ -1275,11 +1275,11 @@ return(output)
 }
 
 
-######## fun_dataframe_remodeling() #### remodeling a data frame to have column name as a qualitative values and vice-versa
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa
 
 
 # Check OK: clear to go Apollo
-fun_dataframe_remodeling <- function(data, quanti.col.name = "quanti", quali.col.name = "quali"){
+fun_df_remod <- function(data, quanti.col.name = "quanti", quali.col.name = "quali"){
 # AIM
 # if the data frame is made of numeric columns, a new data frame is created, with the 1st column gathering all the numeric values, and the 2nd column being the name of the columns of the initial data frame. If row names were present in the initial data frame, then a new ini_rowname column is added with the names of the rows
 
@@ -1289,7 +1289,7 @@ fun_dataframe_remodeling <- function(data, quanti.col.name = "quanti", quali.col
  
 
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data: data frame to convert
 # quanti.col.name: optional name for the quanti column of the new data frame
@@ -1297,9 +1297,9 @@ fun_dataframe_remodeling <- function(data, quanti.col.name = "quanti", quali.col
 # RETURN
 # the modified data frame
 # EXAMPLES
-# obs <- data.frame(col1 = (1:4)*10, col2 = c("A", "B", "A", "A")) ; obs ; fun_dataframe_remodeling(obs)
-# obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; obs ; fun_dataframe_remodeling(obs, quanti.col.name = "quanti", quali.col.name = "quali")
-# obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; rownames(obs) <- paste0("row", 1:4) ; obs ; fun_dataframe_remodeling(obs, quanti.col.name = "quanti", quali.col.name = "quali")
+# obs <- data.frame(col1 = (1:4)*10, col2 = c("A", "B", "A", "A")) ; obs ; fun_df_remod(obs)
+# obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; obs ; fun_df_remod(obs, quanti.col.name = "quanti", quali.col.name = "quali")
+# obs <- data.frame(col1 = (1:4)*10, col2 = 5:8) ; rownames(obs) <- paste0("row", 1:4) ; obs ; fun_df_remod(obs, quanti.col.name = "quanti", quali.col.name = "quali")
 # DEBUGGING
 # data = data.frame(a = 1:3, b = 4:6) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
 # data = data.frame(a = 1:3, b = 4:6, c = 11:13) ; quanti.col.name = "quanti" ; quali.col.name = "quali" # for function debugging
@@ -1311,29 +1311,29 @@ fun_dataframe_remodeling <- function(data, quanti.col.name = "quanti", quali.col
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if( ! any(class(data) %in% "data.frame")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data ARGUMENT MUST BE A DATA FRAME\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = quanti.col.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = quali.col.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = quanti.col.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = quali.col.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 tempo.factor <- unlist(lapply(data, class))
@@ -1393,16 +1393,16 @@ return(output.data)
 }
 
 
-######## fun_refactorization() #### remove classes that are not anymore present in factors or factor columns in data frames
+######## fun_refact() #### remove classes that are not anymore present in factors or factor columns in data frames
 
 
 # Check OK: clear to go Apollo
-fun_refactorization <- function(data, also.ordered = TRUE){
+fun_refact <- function(data, also.ordered = TRUE){
 # AIM
 # refactorize a factor or the factor columns of a data frame, such as only the class present are in the levels (no empty levels). The class order in levels is kept. Do not work on character vector or column of data frame
 # useful to remove the empty classes after row removing for instance
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data: factor (ordered or not) or data frame
 # also.ordered: refactorize also ordered factors? This to deal with ordered factors that have class "ordered" "factor"
@@ -1411,11 +1411,11 @@ fun_refactorization <- function(data, also.ordered = TRUE){
 # $data: the modified object
 # $removed: the removed classes for a factor and a list of the removed classes for each factor class of the data frame
 # EXAMPLES
-# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, FALSE)
-# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refactorization(obs, TRUE)
-# obs <- factor(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refactorization(obs, TRUE)
-# obs <- ordered(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refactorization(obs, TRUE)
-# obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; obs ; fun_refactorization(obs, FALSE)
+# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refact(obs, FALSE)
+# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refact(obs, TRUE)
+# obs <- factor(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refact(obs, TRUE)
+# obs <- ordered(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refact(obs, TRUE)
+# obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; obs ; fun_refact(obs, FALSE)
 # DEBUGGING
 # data <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A") ; data <- data[-c(1:2),] ; also.ordered <- TRUE # for function debugging
 # data <- factor(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
@@ -1424,22 +1424,22 @@ fun_refactorization <- function(data, also.ordered = TRUE){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking with fun_param_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = also.ordered, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = also.ordered, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# argument checking without fun_param_check()
+# end argument checking with fun_check()
+# argument checking without fun_check()
 if(also.ordered == FALSE){
 if( ! (all(class(data) == "data.frame") | all(class(data) == "factor"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A FACTOR (NON ORDERED BECAUSE THE also.ordered ARGUMENT IS SET TO FALSE) OR A DATA FRAME\n\n================\n\n")
@@ -1452,8 +1452,8 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data 
 stop(tempo.cat)
 }
 }
-# end argument checking without fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking without fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- NULL
@@ -1509,7 +1509,7 @@ fun_round <- function(data, dec.nb = 2, after.lead.zero = TRUE){
 # dec.nb: number of required decimal digits
 # after.lead.zero: logical. If FALSE, rounding is performed for all the decimal numbers, whatever the leading zeros (e.g., 0.123 -> 0.12 and 0.00128 -> 0.00). If TRUE, dec.nb are taken after the leading zeros (e.g., 0.123 -> 0.12 and 0.00128 -> 0.0013)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # RETURN
 # the modified vector
 # EXAMPLES
@@ -1523,30 +1523,30 @@ fun_round <- function(data, dec.nb = 2, after.lead.zero = TRUE){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if( ! (all(typeof(data) == "character") | all(typeof(data) == "double") | all(typeof(data) == "integer"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A VECTOR OF NUMBERS (IN NUMERIC OR CHARACTER MODE)\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data, class = "vector", fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dec.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = after.lead.zero, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data, class = "vector", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dec.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = after.lead.zero, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
@@ -1585,7 +1585,7 @@ fun_90clock_matrix_rot <- function(data){
 # 90° clockwise matrix rotation
 # applied twice, the function provide the mirror matrix, according to vertical and horizontal symmetry
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data: matrix (matrix class)
 # RETURN
@@ -1599,8 +1599,8 @@ fun_90clock_matrix_rot <- function(data){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -1608,11 +1608,11 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data, class = "matrix", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data, class = "matrix", fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 for (i in 1:ncol(data)){data[,i] <- rev(data[,i])}
@@ -1629,7 +1629,7 @@ fun_num2color_mat <- function(mat1, mat.hsv.h = TRUE, notch = 1, s = 1, v = 1, f
 # AIM
 # convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS:
 # mat1: matrix 1 of non negative numerical values that has to be colored (matrix class). NA allowed
 # mat.hsv.h: logical. Is mat1 the h of hsv colors ? (if TRUE, mat1 must be between zero and 1)
@@ -1651,32 +1651,32 @@ fun_num2color_mat <- function(mat1, mat.hsv.h = TRUE, notch = 1, s = 1, v = 1, f
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking with fun_param_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = mat1, mode = "numeric", class = "matrix", na.contain = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = mat.hsv.h, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = notch, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = s, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = v, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = mat1, mode = "numeric", class = "matrix", na.contain = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = mat.hsv.h, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = notch, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = s, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = v, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# argument checking without fun_param_check()
-if(mat.hsv.h == TRUE & fun_param_check(data = mat1, mode = "numeric", prop = TRUE, print = FALSE)$problem == TRUE){
+# end argument checking with fun_check()
+# argument checking without fun_check()
+if(mat.hsv.h == TRUE & fun_check(data = mat1, mode = "numeric", prop = TRUE, print = FALSE)$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat1 ARGUMENT MUST BE A MATRIX OF PROPORTIONS SINCE THE mat.hsv.h ARGUMENT IS SET TO TRUE\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! is.null(forced.color)){
-tempo <- fun_param_check(data = forced.color, class = "character")
+tempo <- fun_check(data = forced.color, class = "character")
 if(tempo$problem == TRUE){
 stop()
 }
@@ -1685,8 +1685,8 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": force
 stop(tempo.cat)
 }
 }
-# end argument checking without fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking without fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 problem <- NULL
@@ -1748,11 +1748,11 @@ return(output)
 }
 
 
-######## fun_by_case_matrix_op() #### assemble several matrices with operation
+######## fun_mat_op() #### assemble several matrices with operation
 
 
 # Check OK: clear to go Apollo
-fun_by_case_matrix_op <- function(mat.list, kind.of.operation = "+"){
+fun_mat_op <- function(mat.list, kind.of.operation = "+"){
 # AIM
 # assemble several matrices of same dimensions by performing by case operation. For instance add the value of all the case 1 (row1 & column1) of the matrices and put it in the case 1 of a new matrix M, add the value of all the case 2 (row2 & column1) of the matrices and put it in the case 2 of a new matrix M, etc.
  
@@ -1762,18 +1762,18 @@ fun_by_case_matrix_op <- function(mat.list, kind.of.operation = "+"){
 # k: matrix number
 # z: number of matrices
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_2D_comp()
+# fun_check()
+# fun_2d_comp()
 # ARGUMENTS:
 # mat.list: list of matrices
 # kind.of.operation: either "+" (by case addition), "-" (by case subtraction) or "*" (by case multiplication)
 # RETURN
 # the assembled matrix, with row and/or column names only if all the matrices have identical row/column names
 # EXAMPLES
-# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2), kind.of.operation = "+")
-# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2), kind.of.operation = "*")
-# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], c(NA, NA))) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2), kind.of.operation = "-")
-# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(c("A1", "A2", "A3", "A4"), letters[1:2])) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat3 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_by_case_matrix_op(mat.list = list(mat1, mat2, mat3), kind.of.operation = "+")
+# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; fun_mat_op(mat.list = list(mat1, mat2), kind.of.operation = "+")
+# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_mat_op(mat.list = list(mat1, mat2), kind.of.operation = "*")
+# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], c(NA, NA))) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_mat_op(mat.list = list(mat1, mat2), kind.of.operation = "-")
+# mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(c("A1", "A2", "A3", "A4"), letters[1:2])) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat3 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; fun_mat_op(mat.list = list(mat1, mat2, mat3), kind.of.operation = "+")
 # DEBUGGING
 # mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2) ; mat.list = list(mat1, mat2) ; kind.of.operation = "+" # for function debugging
 # mat1 = matrix(c(1,1,1,2,1,5,9,8), ncol = 2, dimnames = list(LETTERS[1:4], c(NA, NA))) ; mat2 = matrix(c(1,1,1,2,1,5,9,NA), ncol = 2, dimnames = list(LETTERS[1:4], letters[1:2])) ; mat.list = list(mat1, mat2) ; kind.of.operation = "*" # for function debugging
@@ -1781,33 +1781,33 @@ fun_by_case_matrix_op <- function(mat.list, kind.of.operation = "+"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2D_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2d_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking with fun_param_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = mat.list, class = "list", fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = kind.of.operation, options = c("+", "-", "*"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = mat.list, class = "list", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = kind.of.operation, options = c("+", "-", "*"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# argument checking without fun_param_check()
+# end argument checking with fun_check()
+# argument checking without fun_check()
 if(length(mat.list) < 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat.list ARGUMENT MUST BE A LIST CONTAINING AT LEAST 2 MATRICES\n\n================\n\n")
 stop(tempo.cat)
 }
 for(i0 in 1:length(mat.list)){
-tempo <- fun_param_check(data = mat.list[[i0]], class = "matrix", mode = "numeric", na.contain = TRUE)
+tempo <- fun_check(data = mat.list[[i0]], class = "matrix", mode = "numeric", na.contain = TRUE)
 if(tempo$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ELEMENT ", i0, " OF mat.list ARGUMENT MUST BE A NUMERIC MATRIX\n\n================\n\n")
 stop(tempo.cat)
@@ -1816,7 +1816,7 @@ stop(tempo.cat)
 ident.row.names <- TRUE
 ident.col.names <- TRUE
 for(i0 in 2:length(mat.list)){
-tempo <- fun_2D_comp(data1 = mat.list[[1]], data2 = mat.list[[i0]])
+tempo <- fun_2d_comp(data1 = mat.list[[1]], data2 = mat.list[[i0]])
 if(tempo$same.dim == FALSE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX ", i0, " OF mat.list ARGUMENT MUST HAVE THE SAME DIMENSION (", paste(dim(mat.list[[i0]]), collapse = " "), ") THAN THE MATRIX 1 IN mat.list (", paste(dim(mat.list[[1]]), collapse = " "), ")\n\n================\n\n")
 stop(tempo.cat)
@@ -1832,8 +1832,8 @@ ident.col.names <- FALSE
 }
 }
 }
-# end argument checking without fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking without fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 output <- mat.list[[1]]
@@ -1859,7 +1859,7 @@ fun_mat_inv <- function(mat){
 # AIM
 # return the inverse of a square matrix when solve() cannot
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS:
 # mat: a square numeric matrix without NULL, NA, Inf or single case (dimension 1, 1) of 0
 # RETURN
@@ -1878,22 +1878,22 @@ fun_mat_inv <- function(mat){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking with fun_param_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = mat, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = mat, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# argument checking without fun_param_check()
+# end argument checking with fun_check()
+# argument checking without fun_check()
 if(ncol(mat) != nrow(mat)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX\n\n================\n\n")
 stop(tempo.cat)
@@ -1906,8 +1906,8 @@ if(all(mat == 0) & ncol(mat) == 1){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUARE MATRIX MADE OF A SINGLE CASE OF 0\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking without fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(any(grepl(x = try(solve(mat), silent = TRUE)[], pattern = "[Ee]rror"))){
@@ -1933,7 +1933,7 @@ fun_mat_fill <- function(mat, empty.cell.string = 0, warning.print = TRUE){
 # detect the empty half part of a symmetric square matrix (either topleft, topright, bottomleft or bottomright)
 # fill this empty half part using the other symmetric half part of the matrix
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS:
 # mat: a numeric or character square matrix with the half part (according to the grand diagonal) filled with NA (any kind of matrix), "0" (character matrix) or 0 (numeric matrix) exclusively (not a mix of 0 and NA in the empty part)
 # empty.cell.string: a numeric, character or NA (no quotes) indicating what empty cells are filled with
@@ -1958,24 +1958,24 @@ fun_mat_fill <- function(mat, empty.cell.string = 0, warning.print = TRUE){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking with fun_param_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = mat, class = "matrix", na.contain = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = empty.cell.string, class = "vector", na.contain = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = warning.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = mat, class = "matrix", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = empty.cell.string, class = "vector", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = warning.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# argument checking without fun_param_check()
+# end argument checking with fun_check()
+# argument checking without fun_check()
 if(ncol(mat) != nrow(mat)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX\n\n================\n\n")
 stop(tempo.cat)
@@ -1992,8 +1992,8 @@ if(ifelse(is.na(empty.cell.string), ! any(is.na(mat)), ! any(mat == empty.cell.s
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MATRIX MUST HAVE CELLS WITH THE EMPTY STRING SPECIFIED IN empty.cell.string ARGUMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking without fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 list.diag <- vector("list", length = nrow(mat) - 1)
@@ -2091,8 +2091,8 @@ fun_consec_pos_perm <- function(data1, data2 = NULL, n = 20, seed = NULL, count.
 # REQUIRED PACKAGES
 # lubridate
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # RETURN
 # a list containing:
 # $data: the modified vector
@@ -2109,17 +2109,17 @@ fun_consec_pos_perm <- function(data1, data2 = NULL, n = 20, seed = NULL, count.
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if( ! all(is.vector(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A VECTOR\n\n================\n\n")
 stop(tempo.cat)
@@ -2128,13 +2128,13 @@ if(length(data1) < 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A VECTOR OF MINIMUM LENGTH 2. HERE IT IS: ", length(data1),"\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 if( ! is.null(data2)){
-tempo <- fun_param_check(data = data1, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(tempo$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 MUST BE A NUMERIC VECTOR IF data2 ARGUMENT IS SPECIFIED\n\n================\n\n")
 cat(tempo.cat)
@@ -2145,36 +2145,36 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data2
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = data2, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(length(data1) != length(data2)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 AND data2 MUST BE VECTOR OF SAME LENGTH. HERE IT IS ", length(data1)," AND ", length(data2), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if( ! is.null(seed)){
-tempo <- fun_param_check(data = seed, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = seed, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = count.print, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.print, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = cor.method, options = c("pearson", "kendall", "spearman"), length =1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = cor.limit, class = "vector", mode = "numeric", prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = count.print, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.print, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = cor.method, options = c("pearson", "kendall", "spearman"), length =1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = cor.limit, class = "vector", mode = "numeric", prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
-fun_pack_import(req.package = "lubridate", path.lib = path.lib)
+fun_pack(req.package = "lubridate", path.lib = path.lib)
 # end package checking
 # main code
 if( ! is.null(seed)){
@@ -2263,31 +2263,31 @@ return(output)
 
 
 # this order can be used:
-# fun_window_width_resizing()
-# fun_open_window()
+# fun_width()
+# fun_open()
 # fun_prior_plot() # not for ggplot2
 # plot() or any other plotting
 # fun_post_plot() if fun_prior_plot() has been used # not for ggplot2
-# fun_close_specif_window()
+# fun_close()
 
 
-######## fun_window_width_resizing() #### window width depending on classes to plot
+######## fun_width() #### window width depending on classes to plot
 
 
 # Check OK: clear to go Apollo
-fun_window_width_resizing <- function(class.nb, inches.per.class.nb = 1, ini.window.width = 7, inch.left.space, inch.right.space, boundarie.space = 0.5){
+fun_width <- function(class.nb, inches.per.class.nb = 1, ini.window.width = 7, inch.left.space, inch.right.space, boundarie.space = 0.5){
 # AIM
 # rescale the width of a window to open depending on the number of classes to plot
 # can be used for height, considering that it is as if it was a width
 # this order can be used:
-# fun_window_width_resizing()
-# fun_open_window()
+# fun_width()
+# fun_open()
 # fun_prior_plot() # not for ggplot2
 # plot() or any other plotting
 # fun_post_plot() if fun_prior_plot() has been used # not for ggplot2
-# fun_close_specif_window()
+# fun_close()
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # class.nb: number of class to plot
 # inches.per.class.nb: number of inches per unit of class.nb. 2 means 2 inches for each boxplot for instance
@@ -2298,15 +2298,15 @@ fun_window_width_resizing <- function(class.nb, inches.per.class.nb = 1, ini.win
 # RETURN
 # the new window width in inches
 # EXAMPLES
-# fun_window_width_resizing(class.nb = 10, inches.per.class.nb = 0.2, ini.window.width = 7, inch.left.space = 1, inch.right.space = 1, boundarie.space = 0.5)
+# fun_width(class.nb = 10, inches.per.class.nb = 0.2, ini.window.width = 7, inch.left.space = 1, inch.right.space = 1, boundarie.space = 0.5)
 # DEBUGGING
 # class.nb = 10 ; inches.per.class.nb = 0.2 ; ini.window.width = 7 ; inch.left.space = 1 ; inch.right.space = 1 ; boundarie.space = 0.5 # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -2314,16 +2314,16 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = class.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = inches.per.class.nb, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = ini.window.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = inch.left.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = inch.right.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = boundarie.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = class.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = inches.per.class.nb, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ini.window.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = inch.left.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = inch.right.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = boundarie.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 range.max <- class.nb + boundarie.space # the max range of the future plot
@@ -2333,23 +2333,23 @@ return(window.width)
 }
 
 
-######## fun_open_window() #### open a GUI or pdf graphic window
+######## fun_open() #### open a GUI or pdf graphic window
 
 
 # Check OK: clear to go Apollo
-fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = FALSE){
+fun_open <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = FALSE){
 # AIM
 # open a pdf or screen (GUI) graphic window
 # BEWARE: on Linux, use pdf.disp = TRUE, if (GUI) graphic window is not always available, meaning that X is not installed (clusters for instance). Use X11() in R to test if available
 # this order can be used:
-# fun_window_width_resizing()
-# fun_open_window()
+# fun_width()
+# fun_open()
 # fun_prior_plot() # not for ggplot2
 # plot() or any other plotting
 # fun_post_plot() if fun_prior_plot() has been used # not for ggplot2
-# fun_close_specif_window()
+# fun_close()
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS:
 # pdf.disp: use pdf or not
 # path.fun: where the pdf is saved. Write "working.dir" if working directory is required (default)
@@ -2365,7 +2365,7 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
 # $ini.par: initial par() parameters (to reset in a new graph)
 # $zone.ini: initial window spliting (to reset in a new graph)
 # EXAMPLES
-# fun_open_window(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
+# fun_open(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
 # DEBUGGING
 # pdf.disp = TRUE ; path.fun = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
 # pdf.disp = TRUE ; path.fun = "/pasteur/homes/gmillot/" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
@@ -2373,8 +2373,8 @@ fun_open_window <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -2382,19 +2382,19 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = pdf.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = width.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = height.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data =no.pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = pdf.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = width.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = height.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data =no.pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(path.fun == "working.dir"){
@@ -2416,7 +2416,7 @@ invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
 if(pdf.disp == TRUE){
 if(file.exists(paste0(path.fun, "/recover_ini_par.pdf"))){
-tempo.cat <- paste0("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT BE USED ON LINUX IF A recover_ini_par.pdf FILE ALREADY EXISTS HERE: ", paste(path.fun, collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT BE USED ON LINUX IF A recover_ini_par.pdf FILE ALREADY EXISTS HERE: ", paste(path.fun, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }else{
 pdf(width = width.fun, height = height.fun, file=paste0(path.fun, "/recover_ini_par.pdf"), paper = paper)
@@ -2436,7 +2436,7 @@ ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters
 invisible(dev.off()) # close the new window
 }else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
-tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
 stop(tempo.cat)
 }
 }
@@ -2462,7 +2462,7 @@ if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" f
 windows(width = width.fun, height = height.fun, rescale="fixed")
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! is.null(open.fail)){
-stop("\n\n================\n\nPROBLEM IN fun_open_window(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+stop("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
 }else{
 X11(width = width.fun, height = height.fun)
 }
@@ -2487,7 +2487,7 @@ fun_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FALSE, ylog.sca
 # reinitialize and set the graphic parameters before plotting
 # CANNOT be used if no graphic device already opened
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # param.reinitial: reinitialize graphic parameters before applying the new ones, as defined by the other arguments? Either TRUE or FALSE
 # xlog.scale: Log scale for the x-axis? Either TRUE or FALSE. If TRUE, erases the x-axis, except legend, for further drawing by fun_post_plot()(xlog argument of par())
@@ -2519,8 +2519,8 @@ fun_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FALSE, ylog.sca
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -2528,30 +2528,30 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = param.reinitial, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = xlog.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = ylog.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = remove.label, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = remove.x.axis, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = remove.y.axis, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = std.x.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = std.y.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = down.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = left.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = up.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = right.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = orient, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = box.type, options = c("o", "l", "7", "c", "u", "]", "n"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = amplif.label, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = amplif.axis, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = display.extend, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = return.par, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = param.reinitial, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlog.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylog.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = remove.label, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = remove.x.axis, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = remove.y.axis, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = std.x.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = std.y.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = down.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = left.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = up.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = right.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = orient, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = box.type, options = c("o", "l", "7", "c", "u", "]", "n"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = amplif.label, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = amplif.axis, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = display.extend, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return.par, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(is.null(dev.list())){
@@ -2656,7 +2656,7 @@ fun_scale <- function(n, lim, kind = "approx", log = "no", path.lib = NULL){
 # ggplot2
 # scales
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # fun_round()
 # RETURN
 # a vector of numbers
@@ -2670,8 +2670,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # end initial argument checking
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -2679,13 +2679,13 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & n == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON NULL AND POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE) # 
 }
-tempo <- fun_param_check(data = lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & diff(lim) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": lim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES)\n\n================\n\n")
 cat(tempo.cat)
@@ -2695,25 +2695,25 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": lim A
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = kind, options = c("approx", "strict", "strict.cl"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = kind, options = c("approx", "strict", "strict.cl"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & log != "no" & any(lim < 0)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL lim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(lim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH log PARAMETER SET TO log10 OR log2\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE) # 
 }
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 lim.order <- order(lim) # to deal with inverted axis
@@ -2723,8 +2723,8 @@ kind <- "approx"
 }
 if(kind == "approx"){
 # package checking
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
-fun_pack_import(req.package = c("scales"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("scales"), path.lib = path.lib)
 # end package checking
 output <- ggplot2::ggplot_build(ggplot2::ggplot() + ggplot2::scale_y_continuous(
 breaks = scales::trans_breaks(
@@ -2848,8 +2848,8 @@ fun_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NULL, x.cat
 # provide also positions for legend or additional text on the graph
 # use fun_prior_plot() before this function for initial inactivation of the axis drawings
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_open_window() to reinitialize graph parameters if par.reset = TRUE and custom.par = NULL
+# fun_check()
+# fun_open() to reinitialize graph parameters if par.reset = TRUE and custom.par = NULL
 # ARGUMENTS
 # x.side: axis at the bottom (1) or top (3) of the region figure. Write 0 for no change
 # x.log.scale: Log scale for the x-axis? Either TRUE or FALSE
@@ -2918,12 +2918,12 @@ fun_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NULL, x.cat
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_open_window", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open_window() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_open", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -2931,37 +2931,37 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = x.side, options = c(0, 1, 3), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.log.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.side, options = c(0, 1, 3), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.log.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(x.categ)){
-tempo <- fun_param_check(data = x.categ, class = "character", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.categ, class = "character", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(x.categ.pos)){
-tempo <- fun_param_check(data = x.categ.pos, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.categ.pos, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = x.lab, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.axis.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.label.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.nb.inter.tick, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.side, options = c(0, 2, 4), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.log.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.lab, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.axis.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.label.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.nb.inter.tick, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.side, options = c(0, 2, 4), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.log.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.categ)){
-tempo <- fun_param_check(data = y.categ, class = "character", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.categ, class = "character", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(y.categ.pos)){
-tempo <- fun_param_check(data = y.categ.pos, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.categ.pos, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = y.lab, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.axis.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.label.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.nb.inter.tick, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.angle, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = sec.tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.lab, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.axis.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.label.magnific, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.nb.inter.tick, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.angle, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = sec.tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
 if( ! is.null(bg.color)){
-tempo <- fun_param_check(data = bg.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = bg.color, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if( ! (bg.color %in% colors() | grepl(pattern = "^#", bg.color))){ # check color
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": bg.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # OR A COLOR NAME GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
@@ -2969,27 +2969,27 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(grid.lwd)){
-tempo <- fun_param_check(data = grid.lwd, class = "vector", mode = "numeric", neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = grid.lwd, class = "vector", mode = "numeric", neg.values = FALSE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(grid.col)){
-tempo <- fun_param_check(data = grid.col, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = grid.col, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if( ! (grid.col %in% colors() | grepl(pattern = "^#", grid.col))){ # check color
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": grid.col ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # OR A COLOR NAME GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = corner.text, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = magnific.corner.text, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = just.label.add, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = par.reset, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = corner.text, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = magnific.corner.text, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = just.label.add, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = par.reset, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(custom.par)){
-tempo <- fun_param_check(data = custom.par, typeof = "list", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = custom.par, typeof = "list", length = 1, fun.name = function.name) ; eval(ee)
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- NULL
@@ -3175,7 +3175,7 @@ text(x = y.mid.plot.region, y = x.mid.left.fig.region, y.lab, adj=c(0.5, 0.5), c
 }
 par(xpd=FALSE)
 if(par.reset == TRUE){
-tempo.par <- fun_open_window(pdf.disp = FALSE, return.output = TRUE)
+tempo.par <- fun_open(pdf.disp = FALSE, return.output = TRUE)
 invisible(dev.off()) # close the new window
 if( ! is.null(custom.par)){
 if( ! names(custom.par) %in% names(tempo.par$ini.par)){
@@ -3194,30 +3194,30 @@ return(output)
 }
 
 
-######## fun_close_specif_window() #### close specific graphic windows
+######## fun_close() #### close specific graphic windows
 
 
 # Check OK: clear to go Apollo
-fun_close_specif_window <- function(kind = "pdf", return.text = FALSE){
+fun_close <- function(kind = "pdf", return.text = FALSE){
 # AIM
 # close only specific graphic windows (devices)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS:
 # kind: vector, among c("windows", "quartz", "x11", "X11", "pdf", "bmp", "png", "tiff"), indicating the kind of graphic windows (devices) to close. BEWARE: either "windows", "quartz", "x11" or "X11" means that all the X11 GUI graphics devices will be closed, whatever the OS used
 # return.text: print text regarding the kind parameter and the devices that were finally closed?
 # RETURN
 # text regarding the kind parameter and the devices that were finally closed
 # EXAMPLES
-# windows() ; windows() ; pdf() ; dev.list() ; fun_close_specif_window(kind = c("pdf", "x11"), return.text = TRUE) ; dev.list()
+# windows() ; windows() ; pdf() ; dev.list() ; fun_close(kind = c("pdf", "x11"), return.text = TRUE) ; dev.list()
 # DEBUGGING
 # kind = c("windows", "pdf") ; return.text = FALSE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3225,12 +3225,12 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = kind, options = c("windows", "quartz", "x11", "X11", "pdf", "bmp", "png", "tiff"), fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = return.text, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = kind, options = c("windows", "quartz", "x11", "X11", "pdf", "bmp", "png", "tiff"), fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return.text, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- paste0("THE REQUIRED KIND OF GRAPHIC DEVICES TO CLOSE ARE ", paste(kind, collapse = " "))
@@ -3287,7 +3287,7 @@ fun_empty_graph <- function(text, title = NULL, text.size = 1){
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # RETURN
 # an empty plot
 # EXAMPLES
@@ -3298,8 +3298,8 @@ fun_empty_graph <- function(text, title = NULL, text.size = 1){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3307,12 +3307,12 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
@@ -3346,7 +3346,7 @@ fun_gg_palette <- function(n){
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # RETURN
 # the vector of hexadecimal colors
 # EXAMPLES
@@ -3359,8 +3359,8 @@ fun_gg_palette <- function(n){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3368,16 +3368,16 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & n == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON ZERO INTEGER. HERE IT IS: ", paste(n, collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 hues = seq(15, 375, length = n + 1)
@@ -3401,7 +3401,7 @@ fun_gg_just <- function(angle, axis){
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # RETURN
 # a list containing:
 # $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed)
@@ -3419,8 +3419,8 @@ fun_gg_just <- function(angle, axis){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3428,12 +3428,12 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = angle, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = axis, options = c("x", "y"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = angle, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = axis, options = c("x", "y"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 # to get angle between -360 and 360
@@ -3519,20 +3519,20 @@ fun_gg_point_rast <- function(data = NULL, mapping = NULL, stat = "identity", po
 # raster.width : width of the result image (in inches). Default: deterined by the current device parameters
 # raster.height: height of the result image (in inches). Default: deterined by the current device parameters
 # raster.dpi: resolution of the result image
-# inactivate: logical. Inactivate the fun.name argument of the fun_param_check() function? If TRUE, the name of the fun_param_check() function in error messages coming from this function. Use TRUE if fun_gg_point_rast() is used like this: eval(parse(text = "fun_gg_point_rast"))
+# inactivate: logical. Inactivate the fun.name argument of the fun_check() function? If TRUE, the name of the fun_check() function in error messages coming from this function. Use TRUE if fun_gg_point_rast() is used like this: eval(parse(text = "fun_gg_point_rast"))
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
 # grid
 # Cairo
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # RETURN
 # a raster scatter plot
 # EXAMPLES
 # Two pdf in the current directory
-# set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(10000)) ; fun_open_window(pdf.name.file = "Raster") ; ggplot2::ggplot() + fun_gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; fun_open_window(pdf.name.file = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off() ; dev.off()
+# set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(10000)) ; fun_open(pdf.name.file = "Raster") ; ggplot2::ggplot() + fun_gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; fun_open(pdf.name.file = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off() ; dev.off()
 # DEBUGGING
 # 
 # function name
@@ -3546,12 +3546,12 @@ stop(tempo.cat)
 }
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3560,39 +3560,39 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 if( ! is.null(data)){
-tempo <- fun_param_check(data = data, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(mapping)){
-tempo <- fun_param_check(data = mapping, class = "uneval", typeof = "list", fun.name = function.name) ; eval(ee) # aes() is tested
+tempo <- fun_check(data = mapping, class = "uneval", typeof = "list", fun.name = function.name) ; eval(ee) # aes() is tested
 }
 # stat and position not tested because too complicate
-tempo <- fun_param_check(data = na.rm, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = show.legend, class = "vector", mode = "logical", length = 1, na.contain = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = inherit.aes, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = na.rm, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = show.legend, class = "vector", mode = "logical", length = 1, na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = inherit.aes, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(raster.width)){
-tempo <- fun_param_check(data = raster.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = raster.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(raster.height)){
-tempo <- fun_param_check(data = raster.height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = raster.height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = raster.dpi, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = inactivate, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = raster.dpi, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = inactivate, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
-fun_pack_import(req.package = c("grid"), path.lib = path.lib)
-fun_pack_import(req.package = c("Cairo"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("grid"), path.lib = path.lib)
+fun_pack(req.package = c("Cairo"), path.lib = path.lib)
 # end package checking
 # additional functions
 DrawGeomPointRast <- function(data, panel_params, coord, na.rm = FALSE, raster.width = NULL, raster.height= NULL, raster.dpi = 300){
@@ -3694,8 +3694,8 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_gg_palette()
 # fun_gg_point_rast()
-# fun_pack_import()
-# fun_param_check()
+# fun_pack()
+# fun_check()
 # RETURN
 # a scatter plot is plot argument is TRUE
 # a list of the graph info if return argument is TRUE:
@@ -3826,12 +3826,12 @@ if(length(find("fun_gg_point_rast", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_point_rast() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -3977,7 +3977,7 @@ if(any(is.na(color[[i1]]))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ": color ARGUMENT CANNOT CONTAIN NA\n\n================\n\n")
 stop(tempo.cat)
 }
-tempo.check.color <- c(tempo.check.color, fun_param_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem)
+tempo.check.color <- c(tempo.check.color, fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem)
 }
 tempo.check.color <- ! tempo.check.color # invert TRUE and FALSE because if integer, then problem = FALSE
 if(any(tempo.check.color == TRUE)){ # convert integers into colors
@@ -3999,7 +3999,7 @@ data1.ini <- data1 # to report NA removal
 removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
 removed.rows <- vector("list", length = length(data1)) # to report NA removal
 for(i1 in 1:length(data1)){
-tempo <- fun_param_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 # reserved word checking
 if(any(names(data1[[i1]]) %in% reserved.words)){ # I do not use fun_name_change() because cannot control y before creating "fake_y". But ok because reserved are not that common
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COLUMN NAMES OF ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", paste(reserved.words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function.name, " FUNCTION\n\n================\n\n")
@@ -4008,7 +4008,7 @@ arg.check <- c(arg.check, TRUE)
 }
 # end reserved word checking
 # check of geom now because required for y argument
-tempo <- fun_param_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_hline", "geom_vline"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_hline", "geom_vline"), length = 1, fun.name = function.name) ; eval(ee)
 # end check of geom now because required for y argument
 if(is.null(x[[i1]])){
 if(all(geom[[i1]] != "geom_hline")){
@@ -4028,7 +4028,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", if
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = x[[i1]], data.name = ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x[[i1]], data.name = ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 if(is.null(y[[i1]])){
 if(all(geom[[i1]] != "geom_vline")){
@@ -4048,7 +4048,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", if
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = y[[i1]], data.name = ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1)), class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y[[i1]], data.name = ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1)), class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 if( ! (x[[i1]] %in% names(data1[[i1]]))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), "\n\n================\n\n")
@@ -4074,10 +4074,10 @@ tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NA DETECTED IN COLUM
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # end na detection and removal (done now to be sure of the correct length of categ)
-tempo <- fun_param_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x OF data1", paste0("x NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "vector", mode = "numeric", na.contain = ifelse(x[[i1]] == "fake_x", TRUE, FALSE), fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y OF data1", paste0("y NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "vector", mode = "numeric", na.contain = ifelse(y[[i1]] == "fake_y", TRUE, FALSE), fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x OF data1", paste0("x NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "vector", mode = "numeric", na.contain = ifelse(x[[i1]] == "fake_x", TRUE, FALSE), fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y OF data1", paste0("y NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "vector", mode = "numeric", na.contain = ifelse(y[[i1]] == "fake_y", TRUE, FALSE), fun.name = function.name) ; eval(ee)
 if(( ! is.null(categ)) & ( ! is.null(categ[[i1]]))){ # if categ[[i1]] = NULL, fake_categ will be created later on
-tempo <- fun_param_check(data = categ[[i1]], data.name = ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
+tempo <- fun_check(data = categ[[i1]], data.name = ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
 if( ! (categ[[i1]] %in% names(data1[[i1]]))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), "\n\n================\n\n")
 cat(tempo.cat)
@@ -4093,8 +4093,8 @@ tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # end na detection and removal (done now to be sure of the correct length of categ)
-tempo1 <- fun_param_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1", paste0("categ NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "vector", mode = "character", na.contain = FALSE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1", paste0("categ NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "factor", na.contain = FALSE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1", paste0("categ NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "vector", mode = "character", na.contain = FALSE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1", paste0("categ NUMBER ", i1, " OF data1 NUMBER ", i1)), class = "factor", na.contain = FALSE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ OF data1", paste0("categ NUMBER ", i1, " OF data1 NUMBER ", i1)), " MUST BE A FACTOR OR CHARACTER VECTOR\n\n================\n\n")
 cat(tempo.cat)
@@ -4130,7 +4130,7 @@ tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(lengt
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 if( ! is.null(legend.name[[i1]])){
-tempo <- fun_param_check(data = legend.name[[i1]], data.name = ifelse(length(legend.name) == 1, "legend.name", paste0("legend.name NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
+tempo <- fun_check(data = legend.name[[i1]], data.name = ifelse(length(legend.name) == 1, "legend.name", paste0("legend.name NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
 }
 if( ! is.null(color)){ # if color is NULL, will be filled later on
 # check the nature of color
@@ -4140,8 +4140,8 @@ color[[i1]] <- grey(compart.null.color / 8) # cannot be more than 7 overlays. Th
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL COLOR IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", SINGLE COLOR ", paste(color[[i1]], collapse = " "), " HAS BEEN ATTRIBUTED")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo1 <- fun_param_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
 cat(tempo.cat)
@@ -4201,7 +4201,7 @@ if(categ[[i1]] == "fake_categ"){
 data1[[i1]][, "fake_categ"] <- paste0("Line_", 1:nrow(data1[[i1]]))
 }
 }
-tempo <- fun_param_check(data = alpha[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = alpha[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 }
 if(length(data1) > 1){
 if(length(unique(unlist(x))) > 1){
@@ -4224,10 +4224,10 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom 
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if( ! is.null(xlim)){
-tempo <- fun_param_check(data = xlim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(xlim %in% c(Inf, -Inf))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": xlim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
 cat(tempo.cat)
@@ -4236,12 +4236,12 @@ arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(xlab)){
 if(all(class(xlab) %in% "expression")){ # to deal with math symbols
-tempo <- fun_param_check(data = xlab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
 }else{
-tempo <- fun_param_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 }
-tempo <- fun_param_check(data = xlog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & xlog != "no"){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": xlog ARGUMENT SET TO ", xlog, ".\nVALUES FROM THE x ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(xlog), " TRANSFORMED, AS THE xlog ARGUMENT JUST MODIFIES THE AXIS SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -4253,7 +4253,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 }
 if( ! is.null(x.tick.nb)){
-tempo <- fun_param_check(data = x.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & x.tick.nb < 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
@@ -4261,17 +4261,17 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(x.inter.tick.nb)){
-tempo <- fun_param_check(data = x.inter.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.inter.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & x.inter.tick.nb < 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x.inter.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = x.left.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.right.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.left.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.right.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(ylim)){
-tempo <- fun_param_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
 cat(tempo.cat)
@@ -4280,12 +4280,12 @@ arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(ylab)){
 if(all(class(ylab) %in% "expression")){ # to deal with math symbols
-tempo <- fun_param_check(data = ylab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
 }else{
-tempo <- fun_param_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 }
-tempo <- fun_param_check(data = ylog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no"){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(ylog), " TRANSFORMED, AS THE ylog ARGUMENT JUST MODIFIES THE AXIS SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -4297,7 +4297,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 }
 if( ! is.null(y.tick.nb)){
-tempo <- fun_param_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.tick.nb < 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
@@ -4305,34 +4305,34 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(y.inter.tick.nb)){
-tempo <- fun_param_check(data = y.inter.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.inter.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.inter.tick.nb < 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.inter.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = xy.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xy.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog == TRUE & xy.include.zero == TRUE){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BOTH ylog AND xy.include.zero ARGUMENTS SET TO TRUE -> xy.include.zero ARGUMENT RESET TO FALSE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = show.legend, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = raster, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = show.legend, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = raster, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(vectorial.limit)){
-tempo <- fun_param_check(data = vectorial.limit, class = "vector", typeof = "integer", neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = vectorial.limit, class = "vector", typeof = "integer", neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
-tempo <- fun_param_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
@@ -4348,19 +4348,19 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
 # packages Cairo and grid tested by fun_gg_point_rast()
 # end package checking
 # main code
@@ -4857,12 +4857,12 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # ggplot2
 # scales
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_2D_comp()
+# fun_2d_comp()
 # fun_gg_just()
 # fun_gg_palette()
 # fun_name_change()
-# fun_pack_import()
-# fun_param_check()
+# fun_pack()
+# fun_check()
 # fun_round()
 # fun_scale()
 # RETURN
@@ -4993,8 +4993,8 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_2D_comp", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2D_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_2d_comp", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2d_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(length(find("fun_gg_just", mode = "function")) == 0){
@@ -5009,12 +5009,12 @@ if(length(find("fun_name_change", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(length(find("fun_round", mode = "function")) == 0){
@@ -5034,21 +5034,21 @@ warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(duplicated(names(data1)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y %in% names(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE){
-tempo <- fun_param_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(categ) > 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT CANNOT HAVE MORE THAN 2 COLUMN NAMES OF data1\n\n================\n\n")
 cat(tempo.cat)
@@ -5100,8 +5100,8 @@ if(any(is.na(data1[, categ[i1]]))){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CATEGORY COLUMN ", categ[i1], " CONTAINS NA")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo1 <- fun_param_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", paste0("categ NUMBER ", i1, " OF data1"), " MUST BE A FACTOR OR CHARACTER VECTOR\n\n================\n\n")
 cat(tempo.cat)
@@ -5113,7 +5113,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 }
 if( ! is.null(categ.class.order)){
-tempo <- fun_param_check(data = categ.class.order, class = "list", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = categ.class.order, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(categ.class.order) > 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A LIST OF MAX LENGTH 2\n\n================\n\n")
 cat(tempo.cat)
@@ -5140,17 +5140,17 @@ data1[, categ[i3]] <- factor(data1[, categ[i3]], levels = categ.class.order[[i3]
 }
 }
 if( ! is.null(categ.legend.name)){
-tempo <- fun_param_check(data = categ.legend.name, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = categ.legend.name, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 }else{
 categ.legend.name <- categ[length(categ)] # if only categ1, then legend name of categ1, if length(categ) == 2, then legend name of categ2
 }
 if( ! is.null(categ.color)){
 # check the nature of color
-tempo1 <- fun_param_check(data = categ.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = categ.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = categ.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = categ.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 # integer colors into gg_palette
-tempo.check.color <- fun_param_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
+tempo.check.color <- fun_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
 if(tempo.check.color == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
 cat(tempo.cat)
@@ -5212,18 +5212,18 @@ levels(data1$categ.color) <- categ.color
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = bar.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = bar.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(error.disp)){
-tempo <- fun_param_check(data = error.disp, options = c("SD", "SD.TOP", "SEM", "SEM.TOP"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = error.disp, options = c("SD", "SD.TOP", "SEM", "SEM.TOP"), length = 1, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = error.whisker.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = error.whisker.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(dot.color)){
 # check the nature of color
-tempo1 <- fun_param_check(data = dot.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = dot.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = dot.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = dot.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 # integer colors into gg_palette
-tempo.check.color <- fun_param_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
+tempo.check.color <- fun_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
 if(tempo.check.color == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
 cat(tempo.cat)
@@ -5270,14 +5270,14 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(ylim)){
-tempo <- fun_param_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
 
@@ -5285,7 +5285,7 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = ylog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no"){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(ylog), " TRANSFORMED, AS THE ylog ARGUMENT JUST MODIFIES THE AXIS SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
@@ -5297,7 +5297,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 }
 if( ! is.null(y.tick.nb)){
-tempo <- fun_param_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.tick.nb < 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
@@ -5305,55 +5305,55 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(y.inter.tick.nb)){
-tempo <- fun_param_check(data = y.inter.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.inter.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.inter.tick.nb < 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.inter.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no" & y.include.zero == TRUE){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE NO 0 ALLOWED IN LOG SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(stat.disp)){
-tempo <- fun_param_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(xlab)){
 if(all(class(xlab) %in% "expression")){ # to deal with math symbols
-tempo <- fun_param_check(data = xlab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
 }else{
-tempo <- fun_param_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 }
 if( ! is.null(ylab)){
 if(all(class(ylab) %in% "expression")){ # to deal with math symbols
-tempo <- fun_param_check(data = ylab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
 }else{
-tempo <- fun_param_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 }
-tempo <- fun_param_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no" & vertical == FALSE){
 vertical <- TRUE
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BARS HORIZONTALLY WITH A YLOG SCALE -> vertical ARGUMENT RESET TO TRUE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
-tempo <- fun_param_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
@@ -5369,20 +5369,20 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking (and modification for proper color management)
 # package checking
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
-fun_pack_import(req.package = c("scales"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("scales"), path.lib = path.lib)
 # end package checking
 # main code
 if(length(categ) == 1){
@@ -5631,7 +5631,7 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_2D_comp(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
+if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -5685,7 +5685,7 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_2D_comp(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
+if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -5733,7 +5733,7 @@ stat.coord4 <- cbind(stat[order(stat[, categ[1]]), ], tempo.data1[order(tempo.da
 }
 }else if(length(categ) == 2){
 tempo.data1 <- unique(data.frame(data1[c(categ[1], categ[2])], group = as.integer(factor(paste0(as.numeric(data1[, categ[2]]), ".", as.numeric(data1[, categ[1]])))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-if( ! fun_2D_comp(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
+if( ! fun_2d_comp(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
 tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE stat AND tempo.data1\n\n============\n\n"))
 stop(tempo.cat)
 }else{
@@ -5931,11 +5931,11 @@ fun_gg_boxplot <- function(data1, y, categ, class.order = NULL, legend.name = NU
 # REQUIRED PACKAGES
 # ggplot2
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # fun_gg_palette()
 # fun_round()
-# fun_2D_comp()
+# fun_2d_comp()
 # RETURN
 # a boxplot
 # a list of the graph info if return argument is TRUE:
@@ -6048,12 +6048,12 @@ fun_gg_line <- function(data1, y, categ, categ.class.order = NULL, categ.legend.
 # REQUIRED PACKAGES
 # ggplot2
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # fun_gg_palette()
 # fun_gg_just()
 # fun_round()
-# fun_2D_comp()
+# fun_2d_comp()
 # fun_name_change()
 # RETURN
 # a barplot
@@ -6180,12 +6180,12 @@ fun_gg_line <- function(data1, y, categ, categ.class.order = NULL, categ.legend.
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(length(find("fun_gg_palette", mode = "function")) == 0){
@@ -6196,11 +6196,11 @@ if(length(find("fun_round", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_2D_comp", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2D_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_2d_comp", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2d_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_2D_comp", mode = "function")) == 0){
+if(length(find("fun_2d_comp", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6213,23 +6213,23 @@ warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(duplicated(names(data1)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
 
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y %in% names(data1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
 
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE){
-tempo <- fun_param_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(categ) > 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT CANNOT HAVE MORE THAN 2 COLUMN NAMES OF data1\n\n================\n\n")
 cat(tempo.cat)
@@ -6281,8 +6281,8 @@ if(any(is.na(data1[, categ[i1]]))){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CATEGORY COLUMN ", categ[i1], " CONTAINS NA")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo1 <- fun_param_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", paste0("categ NUMBER ", i1, " OF data1"), " MUST BE A FACTOR OR CHARACTER VECTOR\n\n================\n\n")
 cat(tempo.cat)
@@ -6294,7 +6294,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 }
 if( ! is.null(categ.class.order)){
-tempo <- fun_param_check(data = categ.class.order, class = "list", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = categ.class.order, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(categ.class.order) > 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A LIST OF MAX LENGTH 2\n\n================\n\n")
 cat(tempo.cat)
@@ -6321,17 +6321,17 @@ data1[, categ[i3]] <- factor(data1[, categ[i3]], levels = categ.class.order[[i3]
 }
 }
 if( ! is.null(categ.legend.name)){
-tempo <- fun_param_check(data = categ.legend.name, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = categ.legend.name, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 }else{
 categ.legend.name <- categ[length(categ)] # if only categ1, then legend name of categ1, if length(categ) == 2, then legend name of categ2
 }
 if( ! is.null(categ.color)){
 # check the nature of color
-tempo1 <- fun_param_check(data = categ.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = categ.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = categ.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = categ.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 # integer colors into gg_palette
-tempo.check.color <- fun_param_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
+tempo.check.color <- fun_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
 if(tempo.check.color == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
 cat(tempo.cat)
@@ -6393,18 +6393,18 @@ levels(data1$categ.color) <- categ.color
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = line.size, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = line.size, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(error.disp)){
-tempo <- fun_param_check(data = error.disp, options = c("SD", "SD.TOP", "SEM", "SEM.TOP"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = error.disp, options = c("SD", "SD.TOP", "SEM", "SEM.TOP"), length = 1, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = error.whisker.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = error.whisker.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(dot.color)){
 # check the nature of color
-tempo1 <- fun_param_check(data = dot.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_param_check(data = dot.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo1 <- fun_check(data = dot.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = dot.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 # integer colors into gg_palette
-tempo.check.color <- fun_param_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
+tempo.check.color <- fun_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
 if(tempo.check.color == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
 cat(tempo.cat)
@@ -6451,68 +6451,68 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(ylim)){
-tempo <- fun_param_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = ylog, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylog, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.tick.nb)){
-tempo <- fun_param_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog == TRUE & y.include.zero == TRUE){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BOTH ylog AND y.include.zero ARGUMENTS SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(stat.disp)){
-tempo <- fun_param_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(xlab)){
-tempo <- fun_param_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(ylab)){
-tempo <- fun_param_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog == TRUE & vertical == FALSE){
 ylog <- FALSE
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BARS HORIZONTALLY WITH A YLOG SCALE -> ylog ARGUMENT RESET TO FALSE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
-tempo <- fun_param_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking (and modification for proper color management)
 # package checking
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
 # end package checking
 # main code
 # convert categ[1] to numeric for lines
@@ -6598,7 +6598,7 @@ stop(tempo.cat)
 data2 <- mean.dataframe
 # add color to data2
 tempo.categ.color <- unique(data1[, c(categ, "categ.color")])
-if( ! fun_2D_comp(data2[categ], tempo.categ.color[categ])$identical.content){
+if( ! fun_2d_comp(data2[categ], tempo.categ.color[categ])$identical.content){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data2[categ] AND tempo.categ.color[categ] MUST HAVE IDENTICAL CONTENT. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }else{
@@ -6749,7 +6749,7 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_2D_comp(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
+if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6803,7 +6803,7 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_2D_comp(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
+if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6851,7 +6851,7 @@ stat.coord4 <- cbind(stat[order(stat[, categ[1]]), ], tempo.data1[order(tempo.da
 }
 }else if(length(categ) == 2){
 tempo.data1 <- unique(data.frame(data1[c(categ[1], categ[2])], group = as.integer(factor(paste0(as.numeric(data1[, categ[2]]), ".", as.numeric(data1[, categ[1]])))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-if( ! fun_2D_comp(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
+if( ! fun_2d_comp(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
 tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE stat AND tempo.data1\n\n============\n\n"))
 stop(tempo.cat)
 }else{
@@ -6995,8 +6995,8 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 # ggplot2
 # reshape2
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # RETURN
 # a heatmap if plot argument is TRUE
 # a list of the graph info if return argument is TRUE:
@@ -7021,12 +7021,12 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -7037,43 +7037,43 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 if(all(is.matrix(data1))){
-tempo <- fun_param_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }else if(all(is.data.frame(data1))){
-tempo <- fun_param_check(data = data1, class = "data.frame", length = 3, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "data.frame", length = 3, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 # structure of reshape2::melt() data frame
-tempo <- fun_param_check(data = data1[, 1], typeof = "integer", fun.name = function.name)
-tempo <- fun_param_check(data = data1[, 2], typeof = "integer", fun.name = function.name)
-tempo <- fun_param_check(data = data1[, 3], mode = "numeric", na.contain = TRUE, fun.name = function.name)
+tempo <- fun_check(data = data1[, 1], typeof = "integer", fun.name = function.name)
+tempo <- fun_check(data = data1[, 2], typeof = "integer", fun.name = function.name)
+tempo <- fun_check(data = data1[, 3], mode = "numeric", na.contain = TRUE, fun.name = function.name)
 }
 }else{
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = legend.name1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = low.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = legend.name1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = low.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(low.color1 %in% colors() | grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(mid.color1)){
-tempo <- fun_param_check(data = mid.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = mid.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(mid.color1 %in% colors() | grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = high.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = high.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(high.color1 %in% colors() | grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(limit1)){
-tempo <- fun_param_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(limit1 %in% c(Inf, -Inf))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
 cat(tempo.cat)
@@ -7081,11 +7081,11 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(midpoint1)){
-tempo <- fun_param_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(data2)){
 if(all(is.matrix(data2))){
-tempo <- fun_param_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(unique(data2) %in% c(0,1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)\n\n================\n\n")
 cat(tempo.cat)
@@ -7100,12 +7100,12 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }else if(all(is.data.frame(data2))){
-tempo <- fun_param_check(data = data2, class = "data.frame", length = 3, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2, class = "data.frame", length = 3, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 # structure of reshape2::melt() data frame
-tempo <- fun_param_check(data = data2[, 1], typeof = "integer", fun.name = function.name)
-tempo <- fun_param_check(data = data2[, 2], typeof = "integer", fun.name = function.name)
-tempo <- fun_param_check(data = data2[, 3], mode = "numeric", fun.name = function.name)
+tempo <- fun_check(data = data2[, 1], typeof = "integer", fun.name = function.name)
+tempo <- fun_check(data = data2[, 2], typeof = "integer", fun.name = function.name)
+tempo <- fun_check(data = data2[, 3], mode = "numeric", fun.name = function.name)
 }
 if(tempo$problem == FALSE & ! all(unique(data2[, 3]) %in% c(0,1))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)\n\n================\n\n")
@@ -7126,22 +7126,22 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = color2, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = color2, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = invert2, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = title, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = show.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = invert2, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = show.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
-tempo <- fun_param_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
@@ -7157,19 +7157,19 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
-fun_pack_import(req.package = c("reshape2", "ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("reshape2", "ggplot2"), path.lib = path.lib)
 # end package checking
 # main code
 if(all(is.matrix(data1))){
@@ -7276,8 +7276,8 @@ fun_gg_empty_graph <- function(text, text.size = 12, title = NULL, path.lib = NU
 # REQUIRED PACKAGES
 # ggplot2
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # RETURN
 # an empty plot
 # EXAMPLES
@@ -7288,12 +7288,12 @@ fun_gg_empty_graph <- function(text, text.size = 12, title = NULL, path.lib = NU
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -7301,18 +7301,18 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(title)){
-tempo <- fun_param_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
 # end package checking
 # main code
 tempo.gg.name <- "gg.indiv.plot."
@@ -7329,11 +7329,11 @@ suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.
 ################ Graphic extraction
 
 
-######## fun_var_trim_display() #### display values from a quantitative variable and trim according to defined cut-offs
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs
 
 
 # Check OK: clear to go Apollo
-fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display = FALSE, trim.method = "", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 1, sec.tick.length = 0.75, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = FALSE){
+fun_trim <- function(data, displayed.nb = NULL, single.value.display = FALSE, trim.method = "", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 1, sec.tick.length = 0.75, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = FALSE){
 # AIM
 # trim and display values from a numeric vector or matrix
 # plot 4 graphs: stripchart of values, stripchart of rank of values, hitogramme and normal QQPlot
@@ -7341,7 +7341,7 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
 # the trimming interval chosen is displayed on top of graphs
 # both trimmed and not trimmed values are returned in a list
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data: values to plot (either a numeric vector or a numeric matrix)
 # displayed.nb: number of values displayed. If NULL, all the values are displayed. Otherwise, if the number of values is over displayed.nb, then displayed.nb values are displayed after random selection
@@ -7378,67 +7378,67 @@ fun_var_trim_display <- function(data, displayed.nb = NULL, single.value.display
 # $trimmed.values: the values outside of the trimming interval as defined in trim.cutoffs above
 # $kept.values: the values inside the trimming interval as defined in trim.cutoffs above
 # EXAMPLES
-# fun_var_trim_display(data = c(1:100, 1:10), displayed.nb = NULL, single.value.display = FALSE, trim.method = "mean.sd", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 0.5, sec.tick.length = 0.3, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = TRUE)
+# fun_trim(data = c(1:100, 1:10), displayed.nb = NULL, single.value.display = FALSE, trim.method = "mean.sd", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 0.5, sec.tick.length = 0.3, corner.text = "", amplif.legend = 1, magnific.corner.text = 0.75, trim.return = TRUE)
 # DEBUGGING
 # data = c(1:100, 1:10) ; displayed.nb = NULL ; single.value.display = FALSE ; trim.method = "quantile" ; trim.cutoffs = c(0.05, 0.975) ; interval.scale.disp = TRUE ; down.space = 1 ; left.space = 1 ; up.space = 0.5 ; right.space = 0.25 ; orient = 1 ; dist.legend = 0.5 ; box.type = "l" ; amplif.label = 1 ; amplif.axis = 1 ; std.x.range = TRUE ; std.y.range = TRUE ; cex.pt = 0.1 ; col.box = hsv(0.55, 0.8, 0.8) ; x.nb.inter.tick = 4 ; y.nb.inter.tick = 0 ; tick.length = 0.5 ; sec.tick.length = 0.3 ; corner.text = "" ; amplif.legend = 1 ; magnific.corner.text = 0.75 ; trim.return = TRUE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if( ! (all(class(data) == "numeric") | all(class(data) == "integer") | (all(class(data) == "matrix") & mode(data) == "numeric"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A NUMERIC VECTOR OR NUMERIC MATRIX\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 if( ! is.null(displayed.nb)){
-tempo <- fun_param_check(data = displayed.nb, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = displayed.nb, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(displayed.nb < 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": displayed.nb ARGUMENT MUST BE A SINGLE INTEGER VALUE GREATER THAN 1 AND NOT: ", paste(displayed.nb, collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = single.value.display, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = trim.method, options = c("", "mean.sd", "quantile"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = trim.cutoffs, class = "vector", mode = "numeric", length = 2, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = interval.scale.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = down.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = left.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = up.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = right.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = orient, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = box.type, options = c("o", "l", "7", "c", "u", "]", "n"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = amplif.label, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = amplif.axis, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = std.x.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = std.y.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = cex.pt, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = col.box, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = x.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = y.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = sec.tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = corner.text, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = amplif.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = magnific.corner.text, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = trim.return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = single.value.display, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = trim.method, options = c("", "mean.sd", "quantile"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = trim.cutoffs, class = "vector", mode = "numeric", length = 2, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = interval.scale.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = down.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = left.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = up.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = right.space, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = orient, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = dist.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = box.type, options = c("o", "l", "7", "c", "u", "]", "n"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = amplif.label, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = amplif.axis, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = std.x.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = std.y.range, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = cex.pt, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = col.box, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.nb.inter.tick, class = "integer", length = 1, neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = sec.tick.length, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = corner.text, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = amplif.legend, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = magnific.corner.text, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = trim.return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(class(data) == "matrix"){
@@ -7653,14 +7653,14 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # REQUIRED PACKAGES
 # ggplot2 if plot is TRUE
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # if plot is TRUE:
-# fun_pack_import()
-# fun_open_window()
+# fun_pack()
+# fun_open()
 # fun_gg_palette()
 # fun_gg_scatter()
 # fun_gg_empty_graph()
-# fun_close_specif_window()
+# fun_close()
 # RETURN
 # several graphs if plot is TRUE
 # a list containing:
@@ -7692,8 +7692,8 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -7702,93 +7702,93 @@ warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data1) < 2){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = x1, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x1, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (x1 %in% names(data1))){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": x1 ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & x1 %in% names(data1)){
-tempo <- fun_param_check(data = data1[, x1], data.name = "x1 COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[, x1], data.name = "x1 COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = y1, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y1, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y1 %in% names(data1))){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": y1 ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & y1 %in% names(data1)){
-tempo <- fun_param_check(data = data1[, y1], data.name = "y1 COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data1[, y1], data.name = "y1 COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 if(is.null(x.range.split) & is.null(y.range.split)){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": AT LEAST ONE OF THE x.range.split AND y.range.split ARGUMENTS MUST BE NON NULL\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(x.range.split)){
-tempo <- fun_param_check(data = x.range.split, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.range.split, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & x.range.split < 1){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": x.range.split ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(y.range.split)){
-tempo <- fun_param_check(data = y.range.split, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.range.split, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.range.split < 1){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": y.range.split ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_param_check(data = x.step.factor, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x.step.factor, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & x.step.factor < 1){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": x.step.factor ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = y.step.factor, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y.step.factor, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.step.factor < 1){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": y.step.factor ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = error, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = error, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(data2)){
 if(is.null(x2) | is.null(y2)){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": x2 AND y2 ARGUMENTS CANNOT BE NULL IF data2 ARGUMENT IS NON NULL\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = data2, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data2) < 2){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": data2 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(x2)){
-tempo <- fun_param_check(data = x2, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = x2, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (x2 %in% names(data2))){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": x2 ARGUMENT MUST BE A COLUMN NAME OF data2\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & x2 %in% names(data2)){
-tempo <- fun_param_check(data = data2[, x2], data.name = "x2 COLUMN OF data2", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2[, x2], data.name = "x2 COLUMN OF data2", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 }
 if( ! is.null(y2)){
-tempo <- fun_param_check(data = y2, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = y2, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y2 %in% names(data2))){
 cat(paste0("\n\n================\n\nERROR IN ", function.name, ": y2 ARGUMENT MUST BE A COLUMN NAME OF data2\n\n================\n\n"))
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & y2 %in% names(data2)){
-tempo <- fun_param_check(data = data2[, y2], data.name = "y2 COLUMN OF data2", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2[, y2], data.name = "y2 COLUMN OF data2", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 }
 }
 if( ! is.null(data2)){
-tempo <- fun_param_check(data = data2.pb.dot, options = c("signif", "not.signif", "unknown"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data2.pb.dot, options = c("signif", "not.signif", "unknown"), length = 1, fun.name = function.name) ; eval(ee)
 }
 if( ! (is.null(x.range.split)) & ! (is.null(y.range.split))){
-tempo <- fun_param_check(data = xy.cross.kind, options = c("&", "|"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = xy.cross.kind, options = c("&", "|"), length = 1, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_param_check(data = plot, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = plot, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & plot == TRUE){
-tempo <- fun_param_check(data = raster, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = graph.in.file, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = raster, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = graph.in.file, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & graph.in.file == TRUE & is.null(dev.list())){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \ngraph.in.file PARAMETER SET TO TRUE BUT NO ACTIVE GRAPHIC DEVICE DETECTED\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
@@ -7797,7 +7797,7 @@ tempo.warning <- paste0("FROM FUNCTION ", function.name, ": GRAPHS PRINTED IN TH
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
@@ -7805,18 +7805,18 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # other required function checking
 if(plot == TRUE){
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_open_window", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open_window() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_open", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(length(find("fun_gg_palette", mode = "function")) == 0){
@@ -7831,15 +7831,15 @@ if(length(find("fun_gg_scatter", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_scatter() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_close_specif_window", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_close_specif_window() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_close", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_close() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 }
 # end other required function checking
 # package checking
 if(plot == TRUE){
-fun_pack_import(req.package = c("ggplot2"), path.lib = path.lib)
+fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
 }
 # end package checking
 # main code
@@ -8516,7 +8516,7 @@ stop(tempo.cat)
 if(plot == TRUE){
 if(( ! is.null(x.range.split)) & ( ! is.null(y.range.split))){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe), x = list(x1, "x", "x"), y = list(y1, "y", "y"), categ = list(NULL, "kind", "kind"), legend.name = list("data1", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8524,7 +8524,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.signif.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list(NULL, "kind", "kind", NULL), legend.name = list("data1", "hframe" , "vframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8532,13 +8532,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.incon.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list(NULL, "kind", "kind", NULL), legend.name = list("data1", "hframe" , "vframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8546,13 +8546,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe , vframe), x = list(x1, x2, "x", "x"), y = list(y1, y2, "y", "y"), categ = list(NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8560,7 +8560,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8568,13 +8568,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8582,13 +8582,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 
@@ -8597,14 +8597,14 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(( ! is.null(x.range.split)) & is.null(y.range.split)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe), x = list(x1, "x"), y = list(y1, "y"), categ = list(NULL, "kind"), legend.name = list("data1", "hframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8612,7 +8612,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "hframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8620,13 +8620,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "hframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8634,13 +8634,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list(NULL, NULL, "kind"), legend.name = list("data1", "data2", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8648,7 +8648,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8656,13 +8656,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8670,13 +8670,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8684,14 +8684,14 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(is.null(x.range.split) & ( ! is.null(y.range.split))){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe), x = list(x1, "x"), y = list(y1, "y"), categ = list(NULL, "kind"), legend.name = list("data1", "vframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8699,7 +8699,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "vframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8707,13 +8707,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "vframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8721,13 +8721,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, vframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list(NULL, NULL, "kind"), legend.name = list("data1", "data2", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8735,7 +8735,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8743,13 +8743,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8757,13 +8757,13 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster)
 if( ! is.null(tempo.graph$warnings)){
@@ -8771,7 +8771,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open_window(pdf.disp = FALSE)
+fun_open(pdf.disp = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
@@ -8787,11 +8787,11 @@ return(tempo.list)
 ################ Import
 
 
-######## fun_pack_import() #### check if R packages are present and import into the working environment
+######## fun_pack() #### check if R packages are present and import into the working environment
 
 
 # Check OK: clear to go Apollo
-fun_pack_import <- function(req.package, load = FALSE, path.lib = NULL){
+fun_pack <- function(req.package, load = FALSE, path.lib = NULL){
 # AIM
 # check if the specified R packages are present in the computer and import them into the working environment
 # ARGUMENTS
@@ -8801,21 +8801,21 @@ fun_pack_import <- function(req.package, load = FALSE, path.lib = NULL){
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # RETURN
 # nothing
 # EXAMPLES
-# fun_pack_import(req.package = "nopackage")
-# fun_pack_import(req.package = "ggplot2")
-# fun_pack_import(req.package = "ggplot2", path.lib = "blablabla")
+# fun_pack(req.package = "nopackage")
+# fun_pack(req.package = "ggplot2")
+# fun_pack(req.package = "ggplot2", path.lib = "blablabla")
 # DEBUGGING
 # req.package = "ggplot2" ; path.lib = "C:/Program Files/R/R-3.5.1/library"
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -8823,19 +8823,19 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = req.package, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = load, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = req.package, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = load, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(is.null(path.lib)){
@@ -8855,11 +8855,11 @@ suppressWarnings(suppressPackageStartupMessages(library(req.package[i0], lib.loc
 }
 
 
-######## fun_python_pack_import() #### check if python packages are present
+######## fun_python_pack() #### check if python packages are present
 
 
 # Check OK: clear to go Apollo
-fun_python_pack_import <- function(req.package, path.lib = NULL, R.path.lib = NULL){
+fun_python_pack <- function(req.package, path.lib = NULL, R.path.lib = NULL){
 # AIM
 # check if the specified python packages are present in the computer (no import)
 # ARGUMENTS
@@ -8869,14 +8869,14 @@ fun_python_pack_import <- function(req.package, path.lib = NULL, R.path.lib = NU
 # REQUIRED PACKAGES
 # reticulate
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
-# fun_pack_import()
+# fun_check()
+# fun_pack()
 # RETURN
 # nothing
 # EXAMPLES
-# fun_python_pack_import(req.package = "nopackage")
-# fun_python_pack_import(req.package = "serpentine")
-# fun_python_pack_import(req.package = "serpentine", path.lib = "blablabla")
+# fun_python_pack(req.package = "nopackage")
+# fun_python_pack(req.package = "serpentine")
+# fun_python_pack(req.package = "serpentine", path.lib = "blablabla")
 # DEBUGGING
 # req.package = "serpentine" ; path.lib = "C:/Program Files/R/R-3.5.1/library" ; R.path.lib = NULL
 # req.package = "bad" ; path.lib = NULL ; R.path.lib = NULL
@@ -8884,12 +8884,12 @@ fun_python_pack_import <- function(req.package, path.lib = NULL, R.path.lib = NU
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack_import", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack_import() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -8897,28 +8897,28 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = req.package, class = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = req.package, class = "character", fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
-tempo <- fun_param_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(R.path.lib)){
-tempo <- fun_param_check(data = R.path.lib, class = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = R.path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(R.path.lib))){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE R.path.lib PARAMETER DOES NOT EXISTS: ", R.path.lib, "\n\n============\n\n"))
 arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
-fun_pack_import(req.package = "reticulate", path.lib = R.path.lib)
+fun_pack(req.package = "reticulate", path.lib = R.path.lib)
 # end package checking
 # main code
 if(is.null(path.lib)){
@@ -8949,11 +8949,11 @@ assign(req.package[i0], reticulate::import(req.package[i0]))
 
 
 # Check OK: clear to go Apollo
-fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
+fun_report <- function(data = NULL, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
 # AIM
 # log file function: print a character string or a data object into a same output file
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_param_check()
+# fun_check()
 # ARGUMENTS
 # data: object to print in the output file. cannot be NULL
 # output: name of the output file
@@ -8974,44 +8974,44 @@ fun_export_data <- function(data = NULL, output ="results.txt", path = "C:/Users
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_param_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_param_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_param_check()
+# argument checking without fun_check()
 if(is.null(data)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT CANNOT BE NULL\n\n================\n\n")
 stop(tempo.cat)
 }
-# end argument checking without fun_param_check()
-# argument checking with fun_param_check()
+# end argument checking without fun_check()
+# argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_param_check(data = output, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = output, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & output == ""){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": output ARGUMENT AS \"\" DOES NOT CORRESPOND TO A VALID FILE NAME\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & dir.exists(path) == FALSE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", paste(path, collapse = "\n"),"\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_param_check(data = no.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = rownames.kept, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = vector.cat, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = noquote, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_param_check(data = sep, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = no.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = rownames.kept, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = vector.cat, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = noquote, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = sep, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_param_check()
+stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_param_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_param_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_param_check()
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # the 4 next lines are inactivated but kept because at a time, I might have a problem with data (solved with data = NULL). These 4 lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
 # arg.user.list <- as.list(match.call(expand.dots=FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
 # default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)

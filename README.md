@@ -131,11 +131,24 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 ## v6.0.0
 
 1) name of functions changed:
+fun_param_check()	fun_check()
 fun_object_info()	fun_info()
+fun_1D_comp()	fun_1d_comp()
+fun_2D_comp()	fun_2d_comp()
+fun_2D_head()	fun_2d_head()
+fun_2D_tail()	fun_2d_tail()
+fun_dataframe_remodeling()	fun_df_remod()
+fun_refactorization()	fun_refact()
+fun_by_case_matrix_op()	fun_mat_op()
 fun_rounding()	fun_round()
 fun_hexa_hsv_color_matrix()	fun_num2color_mat()
 fun_graph_param_prior_plot()	fun_prior_plot()
 fun_feature_post_plot()	fun_post_plot()
+fun_window_width_resizing()	fun_width()
+fun_open_window()	fun_open()
+fun_close_specif_window()	fun_close()
+fun_var_trim_display()	fun_trim()
+fun_data_export()	fun_report()
 
 2) new functions added:
 fun_name_change()
@@ -149,8 +162,8 @@ fun_gg_bar_mean()
 fun_gg_heatmap()
 fun_gg_empty_graph()
 fun_segmentation()
-fun_pack_import()
-fun_python_pack_import()
+fun_pack()
+fun_python_pack()
 
 3) text error modified in fun_2D_head() and fun_2D_tail()
 
