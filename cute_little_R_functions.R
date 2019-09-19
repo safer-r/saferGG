@@ -7900,14 +7900,14 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 }
 }
 # end na and Inf detection and removal (done now to be sure of the correct length of categ)
-# removal of the duplicated rows and row annotation (dot number)
-data1 <- data1[ ! duplicated(data1[, c(x1, y1)]), ] # remove the dots that have same x and y values
+# row annotation (dot number)
+# data1 <- data1[ ! duplicated(data1[, c(x1, y1)]), ] # do not remove the dots that have same x and y values, because they will have different dot number -> not the same position on the matrices (so true for symmetric matrices)
 data1 <- cbind(data1, DOT_NB = 1:nrow(data1))
 if( ! is.null(data2)){
-data2 <- data2[ ! duplicated(data2[, c(x2, y2)]), ] # remove the dots that have same x and y values
+# data2 <- data2[ ! duplicated(data2[, c(x2, y2)]), ] # do not remove the dots that have same x and y values, because they will have different dot number -> not the same position on the matrices (so true for symmetric matrices)
 data2 <- cbind(data2, DOT_NB = 1:nrow(data2))
 }
-# end removal of the duplicated rows and row annotation (dot number)
+# end row annotation (dot number)
 
 
 
@@ -8514,17 +8514,28 @@ stop(tempo.cat)
 }
 # end verif
 # plot
+# recovering the axes data whatever plot or not
 if(is.null(data2)){
 axes <- fun_gg_scatter(data1 = list(data1), x = list(x1), y = list(y1), categ = list(NULL), color = list(fun_gg_palette(2)[2]), geom = list("geom_point"), alpha = list(0.5), xlim = x.range.plot, ylim = y.range.plot, raster = raster, plot = FALSE, return = TRUE)$axes
 }else{
 axes <- fun_gg_scatter(data1 = list(data1, data2), x = list(x1, x2), y = list(y1, y2), categ = list(NULL, NULL), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1]), geom = list("geom_point", "geom_point"), alpha = list(0.5, 0.5), xlim = x.range.plot, ylim = y.range.plot, raster = raster, plot = FALSE, return = TRUE)$axes
 }
+# end recovering the axes data whatever plot or not
 if(plot == TRUE){
+# add a categ for plot legend
+tempo.df.name <- c("data1", "data1.signif.dot", "data1.incon.dot", "data2", "data2.signif.dot", "data2.unknown.dot", "data2.incon.dot")
+tempo.class.name <- c("data1", "data1", "data1", "data2", "data2", "data2", "data2")
+for(i2 in 1:length(tempo.df.name)){
+if( ! is.null(get(tempo.df.name[i2]))){
+assign(tempo.df.name[i2], data.frame(get(tempo.df.name[i2]), kind = tempo.class.name[i2]))
+}
+}
+# end add a categ for plot legend
 if(( ! is.null(x.range.split)) & ( ! is.null(y.range.split))){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe), x = list(x1, "x", "x"), y = list(y1, "y", "y"), categ = list(NULL, "kind", "kind"), legend.name = list("data1", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe), x = list(x1, "x", "x"), y = list(y1, "y", "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8532,7 +8543,7 @@ if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.signif.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list(NULL, "kind", "kind", NULL), legend.name = list("data1", "hframe" , "vframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.signif.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8546,7 +8557,7 @@ if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.incon.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list(NULL, "kind", "kind", NULL), legend.name = list("data1", "hframe" , "vframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.incon.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8560,7 +8571,7 @@ if( ! is.null(data2)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe , vframe), x = list(x1, x2, "x", "x"), y = list(y1, y2, "y", "y"), categ = list(NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe , vframe), x = list(x1, x2, "x", "x"), y = list(y1, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8568,7 +8579,7 @@ if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8582,7 +8593,7 @@ if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8596,7 +8607,7 @@ if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list(NULL, NULL, NULL, "kind", "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "hframe" , "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
@@ -8612,7 +8623,7 @@ fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 1
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe), x = list(x1, "x"), y = list(y1, "y"), categ = list(NULL, "kind"), legend.name = list("data1", "hframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe), x = list(x1, "x"), y = list(y1, "y"), categ = list("kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8620,7 +8631,7 @@ if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "hframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8634,7 +8645,7 @@ if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "hframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8648,7 +8659,7 @@ if( ! is.null(data2)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list(NULL, NULL, "kind"), legend.name = list("data1", "data2", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8656,7 +8667,7 @@ if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8670,7 +8681,7 @@ if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8684,7 +8695,7 @@ if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "hframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8699,7 +8710,7 @@ fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 1
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe), x = list(x1, "x"), y = list(y1, "y"), categ = list(NULL, "kind"), legend.name = list("data1", "vframe"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe), x = list(x1, "x"), y = list(y1, "y"), categ = list("kind", "kind"), legend.name = list("DATASET", "VERT FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8707,7 +8718,7 @@ if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "vframe", "data1.signif.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "VERT FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8721,7 +8732,7 @@ if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list(NULL, "kind", NULL), legend.name = list("data1", "vframe", "data1.incon.dots"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "VERT FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8735,7 +8746,7 @@ if( ! is.null(data2)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, vframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list(NULL, NULL, "kind"), legend.name = list("data1", "data2", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, vframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8743,7 +8754,7 @@ if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.signif.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8757,7 +8768,7 @@ if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.incon.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -8771,7 +8782,7 @@ if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list(NULL, NULL, NULL, "kind"), legend.name = list("data1", "data2", "data2.unknown.dots", "vframe"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
+tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", xlim = x.range.plot, ylim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warnings)){
 warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning, "\n", tempo.graph$warnings)))
 }
@@ -9032,7 +9043,7 @@ if(all(class(data) %in% c("matrix", "data.frame", "table"))){
 if(rownames.kept == FALSE & all(class(data) == "data.frame") & nrow(data) != 0 & nrow(data) <= 4){ # for data frames with nrows <= 4
 rownames.output.tables <- ""
 length.rows <- nrow(data)
-for(i in 1:length.rows){ # replace the rownames of the first 4 rows by increasing number of spaces (beacause identical row names not allowed in data frames). This method cannot be extended to more rows as the printed data frame is shifted on the right because of "big empty rownames"
+for(i in 1:length.rows){ # replace the rownames of the first 4 rows by increasing number of spaces (because identical row names not allowed in data frames). This method cannot be extended to more rows as the printed data frame is shifted on the right because of "big empty rownames"
 rownames.output.tables <- c(rownames.output.tables, paste0(rownames.output.tables[i]," ", collapse=""))
 }
 row.names(data) <- rownames.output.tables[1:length.rows]
