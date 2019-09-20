@@ -96,9 +96,9 @@ Gael A. Millot, Hub-C3BI, Institut Pasteur, USR 3756 IP CNRS, Paris, France
 
 #### HOW TO USE IT
 
-Download the desired Tagged version, never the current master.
+1) Download the desired Tagged version, never the current master, at https://gitlab.pasteur.fr/gmillot/cute_little_R_functions/-/tags
 
-Source the cute_little_R_functions.R into R/RStudio to have the functions available in the working environment.
+2) Directly source the cute_little_R_functions.R into R/RStudio to have the functions available in the working environment, using for instance source("https://gitlab.pasteur.fr/gmillot/cute_little_R_functions/raw/v6.0.0/cute_little_R_functions.R")
 
 Description of the functions is at the beginning of the function body. To obtain it:
 
@@ -120,7 +120,7 @@ examples_alone.txt	compile all the examples of the functions into a single file
 
 #### WEB LOCATION
 
-Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmillot/cute_little_functions/tags
+Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmillot/cute_little_R_functions/-/tags
 
 
 

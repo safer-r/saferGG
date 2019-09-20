@@ -3278,12 +3278,14 @@ return(text)
 
 
 # Check OK: clear to go Apollo
-fun_empty_graph <- function(text, title = NULL, text.size = 1){
+fun_empty_graph <- function(text = NULL, text.size = 1, title = NULL, title.size = 1.5){
 # AIM
 # display an empty plot with a text in the middle of the window (for instance to specify that no plot can be drawn)
 # ARGUMENTS
 # text: character string of the message to display
 # text.size: numeric value of the text size
+# title: character string of the graph title
+# title.size: numeric value of the title size (in points)
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
@@ -3291,7 +3293,12 @@ fun_empty_graph <- function(text, title = NULL, text.size = 1){
 # RETURN
 # an empty plot
 # EXAMPLES
-# fun_empty_graph(text = "NO GRAPH", title = "GRAPH1")
+# simple example
+# fun_empty_graph(text = "NO GRAPH")
+# white page
+# fun_empty_graph() # white page
+# all the arguments
+# fun_empty_graph(text = "NO GRAPH", text.size = 2, title = "GRAPH1", title.size = 1)
 # DEBUGGING
 # text = "NO GRAPH" ; title = "GRAPH1" ; text.size = 1
 # function name
@@ -3307,8 +3314,14 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+if( ! is.null(text)){
 tempo <- fun_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+}
+tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(title)){
+tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+}
+tempo <- fun_check(data = title.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
 }
@@ -3320,8 +3333,12 @@ par(ann=FALSE, xaxt="n", yaxt="n", mar = rep(1, 4), bty = "n", xpd = NA)
 plot(1, 1, type = "n") # no display with type = "n"
 x.left.dev.region <- (par("usr")[1] - ((par("usr")[2] - par("usr")[1]) / (par("plt")[2] - par("plt")[1])) * par("plt")[1] - ((par("usr")[2] - par("usr")[1]) / ((par("omd")[2] - par("omd")[1]) * (par("plt")[2] - par("plt")[1]))) * par("omd")[1])
 y.top.dev.region <- (par("usr")[4] + ((par("usr")[4] - par("usr")[3]) / (par("plt")[4] - par("plt")[3])) * (1 - par("plt")[4]) + ((par("usr")[4] - par("usr")[3]) / ((par("omd")[4] - par("omd")[3]) * (par("plt")[4] - par("plt")[3]))) * (1 - par("omd")[4]))
+if( ! is.null(text)){
 text(x = 1, y = 1, labels = text, cex = text.size)
-text(x = x.left.dev.region, y = y.top.dev.region, labels = title, adj=c(0, 1), cex = text.size)
+}
+if( ! is.null(title)){
+text(x = x.left.dev.region, y = y.top.dev.region, labels = title, adj=c(0, 1), cex = title.size)
+}
 par(ini.par)
 }
 
@@ -7265,13 +7282,14 @@ return(list(data = output, axes = output$layout$panel_params[[1]], scale = c(lim
 
 
 # Check OK: clear to go Apollo
-fun_gg_empty_graph <- function(text, text.size = 12, title = NULL, path.lib = NULL){
+fun_gg_empty_graph <- function(text = NULL, text.size = 12, title = NULL, title.size = 8, path.lib = NULL){
 # AIM
 # display an empty ggplot2 plot with a text in the middle of the window (for instance to specify that no plot can be drawn)
 # ARGUMENTS
 # text: character string of the message to display
 # text.size: numeric value of the text size (in points)
 # title: character string of the graph title
+# title.size: numeric value of the title size (in points)
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
@@ -7281,9 +7299,14 @@ fun_gg_empty_graph <- function(text, text.size = 12, title = NULL, path.lib = NU
 # RETURN
 # an empty plot
 # EXAMPLES
-# fun_gg_empty_graph(text = "NO GRAPH", title = "GRAPH1")
+# simple example
+# fun_gg_empty_graph(text = "NO GRAPH")
+# white page
+# fun_gg_empty_graph() # white page
+# all the arguments
+# fun_gg_empty_graph(text = "NO GRAPH", text.size = 20, title = "GRAPH1", title.size = 14, path.lib = NULL) # all the arguments
 # DEBUGGING
-# text = "NO GRAPH" ; text.size = 12 ; title = "GRAPH1" ; path.lib = NULL
+# text = "NO GRAPH" ; text.size = 12 ; title = "GRAPH1" ; title.size = 8 ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -7301,11 +7324,14 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+if( ! is.null(text)){
 tempo <- fun_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+}
 tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(title)){
 tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
+tempo <- fun_check(data = title.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
 }
@@ -7319,9 +7345,14 @@ tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0
 # no need loop part
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(data = data.frame(x = 1, y = 1), ggplot2::aes(x = x, y = y, label = text)))
+if( ! is.null(text)){
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(data = data.frame(x = 1, y = 1), ggplot2::aes(x = x, y = y, label = text), size = text.size))
+}
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
+plot.title = ggplot2::element_text(size = title.size) # stronger than text
+))
 suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
 }
 
