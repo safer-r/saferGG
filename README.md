@@ -112,7 +112,7 @@ Description of the functions is at the beginning of the function body. To obtain
 #### FILE DESCRIPTIONS
 
 cute_little_R_functions.R	file that has to be sourced
-cute_little_R_functions.docx	just for easier code reading
+cute_little_R_functions.docx	file that facilitate reading of the function description
 examples_alone.txt	compile all the examples of the functions into a single file
 
 
@@ -141,7 +141,8 @@ fun_dataframe_remodeling()	fun_df_remod()
 fun_refactorization()	fun_refact()
 fun_by_case_matrix_op()	fun_mat_op()
 fun_rounding()	fun_round()
-fun_hexa_hsv_color_matrix()	fun_num2color_mat()
+fun_90clock_matrix_rot()	fun_mat_rotate()
+fun_hexa_hsv_color_matrix()	fun_mat_num2color()
 fun_graph_param_prior_plot()	fun_prior_plot()
 fun_feature_post_plot()	fun_post_plot()
 fun_window_width_resizing()	fun_width()
@@ -153,7 +154,7 @@ fun_export_data()	fun_report()
 2) new functions added:
 fun_name_change()
 fun_mat_fill()
-fun_consec_pos_perm()
+fun_permut()
 fun_empty_graph()
 fun_gg_palette()
 fun_gg_just()
