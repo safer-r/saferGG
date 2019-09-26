@@ -11,7 +11,7 @@
 
 # https://usethis.r-lib.org/ and usethat also
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
-
+# add print warning argument using warning(warnings)
 # update graphic examples with good comment, as in barplot
 # Templates: https://prettydoc.statr.me/themes.html
 # https://pkgdown.r-lib.org/
@@ -31,44 +31,44 @@
 ################ Object modification    24
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
 ######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
-######## fun_refact() #### remove classes that are not anymore present in factors or factor columns in data frames  29
-######## fun_round() #### rounding number if decimal present    31
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    32
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    33
-######## fun_mat_op() #### assemble several matrices with operation 36
-######## fun_mat_inv() #### return the inverse of a square matrix   38
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  40
-######## fun_permut() #### progressively breaks a vector order  43
-################ Graphics management    47
-######## fun_width() #### window width depending on classes to plot 48
-######## fun_open() #### open a GUI or pdf graphic window   49
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    52
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 56
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   61
-######## fun_close() #### close specific graphic windows    72
-################ Standard graphics  74
-######## fun_empty_graph() #### text to display for empty graphs    74
-################ gg graphics    75
-######## fun_gg_palette() #### ggplot2 default color palette    76
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  77
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  79
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   82
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    118
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    152
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  157
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   158
-######## fun_gg_violin() #### ggplot2 violins   158
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  158
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  188
-######## fun_gg_empty_graph() #### text to display for empty graphs 201
-################ Graphic extraction 203
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 203
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   211
-################ Import 243
-######## fun_pack() #### check if R packages are present and import into the working environment    243
-######## fun_python_pack() #### check if python packages are present    245
-################ Exporting results (text & tables)  246
-######## fun_report() #### print string or data object into output file 246
+######## fun_merge() #### merge the columns of 2 data frames or 2 matrices  29
+######## fun_round() #### rounding number if decimal present    35
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    37
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    37
+######## fun_mat_op() #### assemble several matrices with operation 40
+######## fun_mat_inv() #### return the inverse of a square matrix   43
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  44
+######## fun_permut() #### progressively breaks a vector order  47
+################ Graphics management    54
+######## fun_width() #### window width depending on classes to plot 54
+######## fun_open() #### open a GUI or pdf graphic window   56
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    59
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 63
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   68
+######## fun_close() #### close specific graphic windows    79
+################ Standard graphics  80
+######## fun_empty_graph() #### text to display for empty graphs    80
+################ gg graphics    82
+######## fun_gg_palette() #### ggplot2 default color palette    82
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  83
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  86
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   89
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    124
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    159
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  164
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   164
+######## fun_gg_violin() #### ggplot2 violins   164
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  164
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  194
+######## fun_gg_empty_graph() #### text to display for empty graphs 207
+################ Graphic extraction 209
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 209
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   218
+################ Import 250
+######## fun_pack() #### check if R packages are present and import into the working environment    250
+######## fun_python_pack() #### check if python packages are present    251
+################ Exporting results (text & tables)  253
+######## fun_report() #### print string or data object into output file 253
 
 
 ################################ FUNCTIONS ################################
@@ -1393,33 +1393,35 @@ return(output.data)
 }
 
 
-######## fun_refact() #### remove classes that are not anymore present in factors or factor columns in data frames
+######## fun_merge() #### merge the columns of 2D objects
 
 
-# Check OK: clear to go Apollo
-fun_refact <- function(data, also.ordered = TRUE){
+fun_merge <- function(data1, data2, name1, name2, factor.as = "numeric", warn.print = FALSE){
 # AIM
-# refactorize a factor or the factor columns of a data frame, such as only the class present are in the levels (no empty levels). The class order in levels is kept. Do not work on character vector or column of data frame
-# useful to remove the empty classes after row removing for instance
+# merge the columns of 2 data frames or 2 matrices or 2 tables, according to 1 or several common colums that must be strictly similar between the 2 objects
+# contrary to the classical merge() function of R, fun_merge() orders the rows of the 2 objects according to the common columns, and merge only and only if the ordered common columns are strictly identical. Otherwise return an error
+# keep row names of data1 in the merged object if they exist. Do not consider row names of data2
+# keep the intial row order of data1 after merging
+# BEWARE:
+# REQUIRED PACKAGES
+# none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_2d_comp()
 # fun_check()
 # ARGUMENTS
-# data: factor (ordered or not) or data frame
-# also.ordered: refactorize also ordered factors? This to deal with ordered factors that have class "ordered" "factor"
+# data1: matrix or data frame or table
+# data2: same class of object as data1 (data frame for data1 data frame, matrix for data1 matrix and table for data1 table) with same number of rows as in data1
+# name1: either a vector of character strings or a vector of integer. If character strings, they must be the name of the columns in data1 that are common to the columns in data2. If integers, they must be the column numbers in data1 that are common to column numbers in data2. name1 can be strings and name2 (below) integers, and vice-versa. BEWARE: order of the elements in data1 are important as ordering is according to the first element, then the second, etc.
+# name2: as in name1 but for data2. Order in name2 is not important as order in name1 is used for the ordering
+# factor.as: either "numeric" (sort factors according to levels order, i.e., class number) or "character" (sort factors according to alphabetical order)
 # RETURN
 # a list containing:
-# $data: the modified object
-# $removed: the removed classes for a factor and a list of the removed classes for each factor class of the data frame
+#$data: the merged data frame or matrix or table
+#$warnings: the warning messages
 # EXAMPLES
-# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refact(obs, FALSE)
-# obs <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A")[-c(1:2),] ; sapply(obs, levels) ; fun_refact(obs, TRUE)
-# obs <- factor(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refact(obs, TRUE)
-# obs <- ordered(LETTERS[1:6])[-c(1:2)] ; obs ; fun_refact(obs, TRUE)
-# obs <- factor(LETTERS[1:6], levels = rev(LETTERS[1:6]))[-c(1:2)] ; obs ; fun_refact(obs, FALSE)
+# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
 # DEBUGGING
-# data <- data.frame(a = LETTERS[1:6], b = paste0(letters[1.6], c(1,1,2,2,3,3)), c = ordered(LETTERS[7:12]), d = 1:6, e = "A") ; data <- data[-c(1:2),] ; also.ordered <- TRUE # for function debugging
-# data <- factor(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
-# data <- ordered(LETTERS[1:6])[-c(1:2)] ; also.ordered <- TRUE # for function debugging
+# data1 = matrix(1.0001:21, ncol = 4) ; dimnames(data1) <- list(LETTERS[1:5], letters[1:4]); data2 = matrix(1.0001:31, ncol = 6) ; dimnames(data2) <- list(NULL, c("a", "aa", "c", "d", "aaa", "aaaa")) ; set.seed(1) ; data2[, "c"] <- sample(data2[, "c"]) ; data2[, "d"] <- sample(data2[, "d"]) ; set.seed(NULL) ; data1 ; data2 ; name1 = c("c", "d") ; name2 = c("d", "c") ; factor.as = "numeric" # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -1429,66 +1431,142 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUI
 stop(tempo.cat)
 }
 # end required function checking
-# argument checking
-# argument checking with fun_check()
+# argument checking using fun_check()
 arg.check <- NULL # for function debbuging
-checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_check(data = also.ordered, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo1 <- fun_check(data = data1, class = "matrix", print = FALSE)
+tempo2 <- fun_check(data = data1, class = "data.frame", print = FALSE)
+tempo3 <- fun_check(data = data1, class = "table", print = FALSE)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\ndata1 ARGUMENT MUST BE A 2D OBJECT (MATRIX, DATA FRAME OR TABLE)\nHERE IT IS: ", paste(class(data1), collapse = " "), "\n\n================\n\n") #
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo1 <- fun_check(data = data2, class = "matrix", print = FALSE)
+tempo2 <- fun_check(data = data2, class = "data.frame", print = FALSE)
+tempo3 <- fun_check(data = data2, class = "table", print = FALSE)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\ndata2 ARGUMENT MUST BE A 2D OBJECT (MATRIX, DATA FRAME OR TABLE)\nHERE IT IS: ", paste(class(data2), collapse = " "), "\n\n================\n\n") #
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+if( ! identical(class(data1), class(data2))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\ndata1 and data2 ARGUMENTS MUST BE A 2D OBJECT (MATRIX, DATA FRAME OR TABLE) OF SAME CLASS\nHERE IT IS RESPECTIVELY: ", paste(class(data1), collapse = " "), " AND ", paste(class(data2), collapse = " "), "\n\n================\n\n") #
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo1 <- fun_check(data = name1, class = "vector", typeof = "integer", , double.as.integer.allowed = TRUE, print = FALSE)
+tempo2 <- fun_check(data = name1, class = "vector", typeof = "character", , print = FALSE)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\nname1 ARGUMENT MUST BE A UNIQUE CHARACTER STRING OR INTEGER\nHERE IT IS: ", paste(name1, collapse = " "), "\n\n================\n\n") #
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo1 <- fun_check(data = name2, class = "vector", typeof = "integer", , double.as.integer.allowed = TRUE, print = FALSE)
+tempo2 <- fun_check(data = name2, class = "vector", typeof = "character", , print = FALSE)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\nname2 ARGUMENT MUST BE A UNIQUE CHARACTER STRING OR INTEGER\nHERE IT IS: ", paste(name2, collapse = " "), "\n\n================\n\n") #
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo <- fun_check(data = factor.as, options = c("numeric", "character"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
 }
-# end argument checking with fun_check()
-# argument checking without fun_check()
-if(also.ordered == FALSE){
-if( ! (all(class(data) == "data.frame") | all(class(data) == "factor"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A FACTOR (NON ORDERED BECAUSE THE also.ordered ARGUMENT IS SET TO FALSE) OR A DATA FRAME\n\n================\n\n")
-stop(tempo.cat)
-}
-}
-if(also.ordered == TRUE){
-if( ! (all(class(data) == "data.frame") | all(class(data) == "factor") | all(class(data) %in% c("ordered", "factor")))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A FACTOR OR A DATA FRAME\n\n================\n\n")
-stop(tempo.cat)
-}
-}
-# end argument checking without fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end argument checking
+# end argument checking using fun_check()
+# other argument checking
+# column existence
+if(mode(name1) == "character"){
+if( ! all(name1 %in% colnames(data1))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\nTHE CHARACTER STRINGS IN name1 ARGUMENT ARE NOT ALL COLUMN NAMES OF data1:\n", paste(name1, collapse = " "), "\n", colnames(data1), "\n\n================\n\n") #
+stop(tempo.cat)
+}
+}else if(mode(name1) == "numeric"){
+if( ! all((name1 > ncol(data1) & name1 <= 0))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\nINTEGERS IN name1 ARGUMENT ARE NOT ALL COLUMN NUMBERS OF data1:\n", paste(name1, collapse = " "), "\n1:", ncol(data1), "\n\n================\n\n") #
+stop(tempo.cat)
+}
+}else{
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n")
+stop(tempo.cat)
+}
+if(mode(name2) == "character"){
+if( ! all(name2 %in% colnames(data2))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\nTHE CHARACTER STRINGS IN name2 ARGUMENT ARE NOT ALL COLUMN NAMES OF data2:\n", paste(name2, collapse = " "), "\n", colnames(data2), "\n\n================\n\n") #
+stop(tempo.cat)
+}
+}else if(mode(name2) == "numeric"){
+if( ! all((name2 > ncol(data2) & name2 <= 0))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ":\nINTEGERS IN name2 ARGUMENT ARE NOT ALL COLUMN NUMBERS OF data2:\n", paste(name2, collapse = " "), "\n1:", ncol(data2), "\n\n================\n\n") #
+stop(tempo.cat)
+}
+}else{
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n")
+stop(tempo.cat)
+}
+if(length(name1) != length(name2)){
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ":\nLENGTH OF name1 ARGUMENT (", length(name1), ") IS NOT THE SAME AS LENGTH OF name2 ARGUMENT (", length(name2), "):\n", paste(name1, collapse = " "), "\n", paste(name2, collapse = " "), "\n\n============\n\n")
+stop(tempo.cat)
+}
+# end column existence
+# end other argument checking
 # main code
-text <- NULL
-if(all(class(data) == "factor")){
-tempo.keep.log <- levels(data) %in% unique(data)
-text <- levels(data)[ ! tempo.keep.log]
-data <- factor(data, levels = levels(data)[tempo.keep.log])
-}else if(all(class(data) %in% c("ordered", "factor"))){
-tempo.keep.log <- levels(data) %in% unique(data)
-text <- levels(data)[ ! tempo.keep.log]
-data <- ordered(data, levels = levels(data)[tempo.keep.log])
-}else if(all(class(data) == "data.frame")){
-text <- vector("list", length(data))
-names(text) <- names(data)
-tempo.factor.col <- sapply(sapply(lapply(data, class), FUN = "%in%", "factor"), FUN = "all") # get the factor column (logical)
-for(i in 1:length(tempo.factor.col)){
-if(tempo.factor.col[i] == TRUE){
-tempo.keep.log <- levels(data[[i]]) %in% unique(data[[i]])
-text[[i]] <- levels(data[[i]])[ ! tempo.keep.log]
-data[[i]] <- factor(data[[i]], levels = levels(data[[i]])[tempo.keep.log])
+# column identity
+set1 <- data1[, name1, drop = FALSE] # set1 will be the reference for merging, drop = FALSE to keep the 2D structure
+if(any(apply(set1, 2, FUN = "%in%", "factor"))){
+if(factor.as == "numeric"){
+set1[, apply(set1, 2, FUN = "%in%", "factor")] <- as.numeric(set1[, apply(set1, 2, FUN = "%in%", "factor")])
 }
 }
-tempo.ordered.col <- sapply(sapply(lapply(data, class), FUN = "%in%", "ordered"), FUN = "any") # get the ordered factor column (logical) if they exist
-if(also.ordered == TRUE){
-for(i in 1:length(tempo.ordered.col)){
-if(tempo.ordered.col[i] == TRUE){
-tempo.keep.log <- levels(data[[i]]) %in% unique(data[[i]])
-text[[i]] <- levels(data[[i]])[ ! tempo.keep.log]
-data[[i]] <- ordered(data[[i]], levels = levels(data[[i]])[tempo.keep.log])
+set2 <- data2[, name2, drop = FALSE] # set2 will be the reference for merging, drop = FALSE to keep the 2D structure
+if(any(apply(set2, 2, FUN = "%in%", "factor"))){
+if(factor.as == "numeric"){
+set2[, apply(set2, 2, FUN = "%in%", "factor")] <- as.numeric(set2[, apply(set2, 2, FUN = "%in%", "factor")])
+}
+}
+# conversion as character to avoid floating point problems
+options.ini <- options()$digits
+options(digits = 22)
+set1 <- as.matrix(set1)
+set2 <- as.matrix(set2)
+mode(set1) <- "character"
+mode(set2) <- "character"
+options(digits = options.ini)
+# end conversion as character to avoid floating point problems
+ini.set1.order <- eval(parse(text = paste("order(", paste("set1[, ", 1:ncol(set1), "]", sep = "", collapse = ", "), ")")))
+set1 <- set1[ini.set1.order, ]
+ini.set2.order <- eval(parse(text = paste("order(", paste("set2[, ", 1:ncol(set2), "]", sep = "", collapse = ", "), ")")))
+set2 <- set2[ini.set2.order, ]
+if(length(name1) > 1){
+for(i2 in 1:(length(name1) - 1)){
+for(i3 in (i2 + 1):length(name1)){
+if(identical(set1[, i2], set1[, i3])){
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ":\nCOLUMN ", i2, " OF data1 CORRESPONDING TO ELEMENT ", name1[i2], " OF name1 ARGUMENT IS IDENTICAL TO COLUMN ", i3, " OF data1 CORRESPONDING TO ELEMENT ", name1[i3], " OF name1 ARGUMENT\n\n============\n\n")
+stop(tempo.cat)
 }
 }
 }
-text <- text[(tempo.factor.col | tempo.ordered.col) & ! (sapply(text, FUN = length) == 0)] # remove the compartments of text that are not modified factors columns of data frame
 }
-output <- list(data = data, removed = text)
+if(length(name2) > 1){
+for(i2 in 1:(length(name2) - 1)){
+for(i3 in (i2 + 1):length(name2)){
+if(identical(set2[, i2], set2[, i3])){
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ":\nCOLUMN ", i2, " OF data2 CORRESPONDING TO ELEMENT ", name2[i2], " OF name2 ARGUMENT IS IDENTICAL TO COLUMN ", i3, " OF data2 CORRESPONDING TO ELEMENT ", name2[i3], " OF name2 ARGUMENT\n\n============\n\n")
+stop(tempo.cat)
+}
+}
+}
+}
+# end column identity
+# warning duplicates
+#repositioning of the column in set2 as in set1 by comparing the two sorted column
+#deal with identical col names when merging -> .x for data1, .y for data2
+
+
+
+# output <- list()
 return(output)
 }
 
@@ -2132,7 +2210,8 @@ ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <-
 tempo <- fun_check(data = data1, class = "vector", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data1) < 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A VECTOR OF MINIMUM LENGTH 2. HERE IT IS: ", length(data1),"\n\n================\n\n")
-stop(tempo.cat)
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(data2)){
 tempo <- fun_check(data = data1, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
@@ -2165,7 +2244,8 @@ tempo <- fun_check(data = cor.limit, class = "vector", mode = "numeric", prop = 
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
-cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n")
+cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
@@ -2740,7 +2820,7 @@ return(tempo.par)
  
 
 
-# Check OK: clear to go Apollo
+# does not work well with log scale
 fun_scale <- function(n, lim, kind = "approx", log = "no", path.lib = NULL){
 # AIM
 # attempt to select nice scale numbers when setting n ticks on a lim axis range
@@ -2761,9 +2841,10 @@ fun_scale <- function(n, lim, kind = "approx", log = "no", path.lib = NULL){
 # a vector of numbers
 # EXAMPLES
 # ymin = 2; ymax = 3.101; n = 10; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "approx", log = "no") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
+# ymin = 0.01; ymax = 300; n = 10; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "approx", log = "log10") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], log = "y", xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
 # DEBUGGING
 # n = 9 ; lim = c(2, 3.101) ; kind = "approx" ; log = "no" ; path.lib = NULL # for function debugging
-# n = 10 ; lim = c(25, -15) ; kind = "approx" ; log = "no" ; path.lib = NULL # for function debugging
+# n = 10 ; lim = c(1e-4, 1e6) ; kind = "approx" ; log = "log10" ; path.lib = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -2797,7 +2878,7 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = kind, options = c("approx", "strict", "strict.cl"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & log != "no" & any(lim < 0)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL lim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(lim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH log PARAMETER SET TO log10 OR log2\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL lim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(lim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH log PARAMETER SET TO ", log, "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE) # 
 }
@@ -3780,22 +3861,20 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # alpha: numeric value (from 0 to 1) of the transparency or list of numeric values (one compartment for each list compartment of data1)
 # dot.size: numeric value of point size
 # line.size: numeric value of line size
-# xlim: 2 numeric values for x-axis range. If NULL, range of x in data1. Order of the 2 values matters (for inverted axis)
+# xlim: 2 numeric values for x-axis range. If NULL, range of x in data1. Order of the 2 values matters (for inverted axis). BEWARE: values of the xlim must be already in the corresponding log if xlog argument is not "no" (see below)
 # xlab: a character string or expression for x-axis legend. If NULL, x of the first data frame in data1. Warning message if the elements in x are different between data frames in data1
 # xlog: Either "no" (values in the x argument column of the data1 data frame are not log), "log2" (values in the x argument column of the data1 data frame are log2 transformed) or "log10" (values in the x argument column of the data1 data frame are log10 transformed). BEWARE: do not tranform the data, but just display ticks in a log scale manner. Thus, negative or zero values allowed. BEWARE: not possible to have horizontal bars with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # x.tick.nb: approximate number of desired label values on the x-axis (n argument of the the fun_scale() function)
 # x.inter.tick.nb: number of desired secondary ticks between main ticks. Not considered if xlog is other than "no". In that case, play with the xlim and x.tick.nb arguments
-# x.include.zero: logical. Does xlim range include 0? BEWARE: if xlog is other than "no", will be automately set to FALSE with a warning message
 # x.left.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to xlim. If different from 0, add the range of the axis * x.left.extra.margin (e.g., abs(xlim[2] - xlim[1]) * x.left.extra.margin) to the left of x-axis
 # x.right.extra.margin: idem as x.left.extra.margin but to the bottom of x-axis
-# ylim: 2 numeric values for y-axis range. If NULL, range of y in data1. Order of the 2 values matters (for inverted axis)
+# ylim: 2 numeric values for y-axis range. If NULL, range of y in data1. Order of the 2 values matters (for inverted axis). BEWARE: values of the ylim must be already in the corresponding log if ylog argument is not "no" (see below)
 # ylab: a character string or expression for y-axis legend. If NULL, y of the first data frame in data1. Warning message if the elements in y are different between data frames in data1
 # ylog: Either "no" (values in the y argument column of the data1 data frame are not log), "log2" (values in the y argument column of the data1 data frame are log2 transformed) or "log10" (values in the y argument column of the data1 data frame are log10 transformed). BEWARE: do not tranform the data, but just display ticks in a log scale manner. Thus, negative or zero values allowed. BEWARE: not possible to have horizontal bars with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # y.tick.nb: approximate number of desired label values on the y-axis (n argument of the the fun_scale() function)
 # y.inter.tick.nb: number of desired secondary ticks between main ticks. Not considered if ylog is other than "no". In that case, play with the ylim and y.tick.nb arguments
-# y.include.zero: logical. Does ylim range include 0? BEWARE: if ylog is other than "no", will be automately set to FALSE with a warning message
 # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to ylim. If different from 0, add the range of the axis * y.top.extra.margin (e.g., abs(ylim[2] - ylim[1]) * y.top.extra.margin) to the top of y-axis
-# xy.include.zero: logical. Does xlim and ylim range include 0? Beware: if xlog = TRUE or ylog = TRUE, will be automately set to FALSE with a warning message
+# xy.include.zero: logical. Does xlim and ylim range include 0? Ok even if xlog = TRUE or ylog = TRUE because xlim and ylim must already be log transformed values
 # text.size: numeric value of the size of the (1) axis numbers and axis legends and (2) texts in the graphic legend
 # title: character string of the graph title
 # title.text.size: numeric value of the title size (in points)
@@ -3934,8 +4013,8 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = "TIME (s)", ylog = "log10", y.tick.nb = 5, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, text.size = 12, title = "", title.text.size = 8, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL)
 # DEBUGGING
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; xlim = c(25, 0) ; xlab = "KM" ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(1, 25) ; ylab = "TIME (s)" ; ylog = "log2" ; y.tick.nb = 5 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; xlim = c(14, 4) ; xlab = NULL ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(60, 5) ; ylab = NULL ; ylog = "no" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
-# data1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; data1 ; x = NULL; y = "km"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_hline"; alpha = 0.5 ; dot.size = 1 ; line.size = 0.5 ; xlim = c(1,10) ; xlab = NULL ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = NULL ; ylab = expression(paste("TIME (", 10^-20, " s)")) ; ylog = "no" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; xlim = c(14, 4) ; xlab = NULL ; xlog = "log10" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(60, 5) ; ylab = NULL ; ylog = "log10" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
+# data1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; data1 ; x = NULL; y = "km"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_hline"; alpha = 0.5 ; dot.size = 1 ; line.size = 0.5 ; xlim = c(1,10) ; xlab = NULL ; xlog = "log10" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = NULL ; ylab = expression(paste("TIME (", 10^-20, " s)")) ; ylog = "log10" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -4371,6 +4450,10 @@ if( ! is.null(xlim)){
 if(any(xlim <= 0)){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": xlim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF xlog ARGUMENT IS SET TO ", xlog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}else if(any( ! is.finite(if(xlog == "log10"){10^xlim}else{2^xlim}))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": xlim ARGUMENT RETURNS INF WITH THE xlog ARGUMENT SET TO ", xlog, "\nAS SCALE COMPUTATION IS ", ifelse(xlog == "log10", 10, 2), "^xlim:\n", paste(ifelse(xlog == "log10", 10, 2)^xlim, collapse = " "), "\nARE YOU SURE THAT xlim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(xlim, collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
 }
 }
 }
@@ -4415,6 +4498,10 @@ if( ! is.null(ylim)){
 if(any(ylim <= 0)){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF ylog ARGUMENT IS SET TO ", ylog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}else if(any( ! is.finite(if(ylog == "log10"){10^ylim}else{2^ylim}))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT RETURNS INF WITH THE ylog ARGUMENT SET TO ", ylog, "\nAS SCALE COMPUTATION IS ", ifelse(ylog == "log10", 10, 2), "^ylim:\n", paste(ifelse(ylog == "log10", 10, 2)^ylim, collapse = " "), "\nARE YOU SURE THAT ylim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(ylim, collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
 }
 }
 }
@@ -4437,10 +4524,11 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = xy.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ylog == TRUE & xy.include.zero == TRUE){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BOTH ylog AND xy.include.zero ARGUMENTS SET TO TRUE -> xy.include.zero ARGUMENT RESET TO FALSE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
+# inactivated because xlim and ylim already log transformed
+# if(tempo$problem == FALSE & ylog == TRUE & xy.include.zero == TRUE){
+#tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BOTH ylog AND xy.include.zero ARGUMENTS SET TO TRUE -> xy.include.zero ARGUMENT RESET TO FALSE")
+# warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+# }
 tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
@@ -4504,6 +4592,7 @@ stop(tempo.cat)
 }
 }
 xlim.order <- order(xlim) # to deal with inverse axis
+# print(xlim.order)
 xlim <- sort(xlim)
 xlim[1] <- xlim[1] - abs(xlim[2] - xlim[1]) * ifelse(diff(xlim.order) > 0, x.right.extra.margin, x.left.extra.margin) # diff(xlim.order) > 0 means not inversed axis
 xlim[2] <- xlim[2] + abs(xlim[2] - xlim[1]) * ifelse(diff(xlim.order) > 0, x.left.extra.margin, x.right.extra.margin) # diff(xlim.order) > 0 means not inversed axis
@@ -4511,10 +4600,10 @@ if(xy.include.zero == TRUE){ # no need to check xlog != "no" because done before
 xlim <- range(c(xlim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 xlim <- xlim[xlim.order]
-# if(xlog != "no" & any(xlim < 0)){
-# tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL xlim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(xlim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH xlog PARAMETER SET TO log10 OR log2\n\n================\n\n")
-# stop(tempo.cat)
-# }
+if(any(is.na(xlim))){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n"))
+stop(tempo.cat)
+}
 if(is.null(ylim)){
 if(any(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE y COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
@@ -4539,10 +4628,10 @@ if(xy.include.zero == TRUE){ # no need to check ylog != "no" because done before
 ylim <- range(c(ylim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 ylim <- ylim[ylim.order]
-# if(ylog != "no" & any(ylim < 0)){
-# tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL ylim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(ylim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH ylog PARAMETER SET TO log10 OR log2\n\n================\n\n")
-# stop(tempo.cat)
-# }
+if(any(is.na(ylim))){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n"))
+stop(tempo.cat)
+}
 # end axes management
 # create a fake categ if NULL to deal with legend display
 if(is.null(categ)){
@@ -4596,7 +4685,7 @@ tempo.data.frame[, x[[i1]]] <- xlim
 }else if(geom[[i1]] == "geom_vline"){
 tempo.data.frame[, y[[i1]]] <- ylim
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n"))
 stop(tempo.cat)
 }
 # if(is.null(categ[[i1]])){
@@ -4802,7 +4891,7 @@ tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.nam
 tempo.scale <- fun_scale(lim = xlim, n = ifelse(is.null(x.tick.nb), length(tempo.coord$x.major_source), x.tick.nb), log = "no") # "no" because already log transformed
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
 breaks = tempo.scale, 
-labels = if(xlog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(xlog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(xlog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n")) ; stop(tempo.cat)}, 
+labels = if(xlog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(xlog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(xlog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n")) ; stop(tempo.cat)}, 
 expand = c(0, 0),
 limits = NA,
 trans = ifelse(diff(xlim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_x_reverse()
@@ -4813,7 +4902,7 @@ tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.nam
 tempo.scale <- fun_scale(lim = ylim, n = ifelse(is.null(y.tick.nb), length(tempo.coord$y.major_source), y.tick.nb), log = "no") # "no" because already log transformed
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
-labels = if(ylog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n")) ; stop(tempo.cat)}, 
+labels = if(ylog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n")) ; stop(tempo.cat)}, 
 expand = c(0, 0),
 limits = NA,
 trans = ifelse(diff(ylim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse()
@@ -4830,13 +4919,15 @@ if(diff(ylim.order) < 0){y.range <- -(y.range)}
 ini.scipen <- options()$scipen
 options(scipen = -1000) # force scientific format
 power10.exp <- as.integer(substring(text = 10^xlim, first = (regexpr(pattern = "\\+|\\-", text = 10^xlim)))) # recover the power of 10. Example recover 08 from 1e+08
+# print(xlim)
 mantisse <- as.numeric(substr(x = 10^xlim, start = 1, stop = (regexpr(pattern = "\\+|\\-", text = 10^xlim) - 2))) # recover the mantisse. Example recover 1.22 from 1.22e+08
 options(scipen = ini.scipen) # restore the initial scientific penalty
+# print(power10.exp)
 tempo.tick.pos <- as.vector(outer(log10(2:10), 10^((power10.exp[1] - ifelse(diff(xlim.order) > 0, 1, -1)):(power10.exp[2] + ifelse(diff(xlim.order) > 0, 1, -1)))))
 tempo.tick.pos <- sort(tempo.tick.pos, decreasing = ifelse(diff(xlim.order) > 0, FALSE, TRUE))
 tempo.tick.pos <- log10(tempo.tick.pos[tempo.tick.pos >= min(10^xlim) & tempo.tick.pos <= max(10^xlim)])
 if(any(is.na(tempo.tick.pos) | ! is.finite(tempo.tick.pos))){ 
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 8\n\n============\n\n"))
 stop(tempo.cat)
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", x = tempo.tick.pos, xend = tempo.tick.pos, y = y.range[1], yend = y.range[1] + diff(y.range) / 80))
@@ -4844,7 +4935,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 if(x.inter.tick.nb > 0){
 x.ticks.pos <- suppressWarnings(as.numeric(tempo.coord$x.labels)) # too difficult to predict the behavior of tempo.coord$x.major_source depending on xlim neg or not, inv or not. Inv is respected
 if(any(is.na(x.ticks.pos))){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 9\n\n============\n\n"))
 stop(tempo.cat)
 }
 y.range <- tempo.coord$y.range
@@ -4871,7 +4962,7 @@ tempo.tick.pos <- as.vector(outer(log10(2:10), 10^((power10.exp[1] - ifelse(diff
 tempo.tick.pos <- sort(tempo.tick.pos, decreasing = ifelse(diff(ylim.order) > 0, FALSE, TRUE))
 tempo.tick.pos <- log10(tempo.tick.pos[tempo.tick.pos >= min(10^ylim) & tempo.tick.pos <= max(10^ylim)])
 if(any(is.na(tempo.tick.pos) | ! is.finite(tempo.tick.pos))){ 
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 8\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n"))
 stop(tempo.cat)
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", y = tempo.tick.pos, yend = tempo.tick.pos, x = x.range[1], xend = x.range[1] + diff(x.range) / 80))
@@ -4879,7 +4970,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 if(y.inter.tick.nb > 0){
 y.ticks.pos <- suppressWarnings(as.numeric(tempo.coord$y.labels)) # too difficult to predict the behavior of tempo.coord$y.major_source depending on ylim neg or not, inv or not. Inv is respected
 if(any(is.na(y.ticks.pos))){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 9\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 11\n\n============\n\n"))
 stop(tempo.cat)
 }
 x.range <- tempo.coord$x.range
@@ -4952,11 +5043,11 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # dot.size: numeric value of dot size. Not considered if dot.tidy is TRUE
 # dot.border.size: numeric value of border dot size. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border. Another one leave the border without size control (geom_doplot() feature)
 # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
-# ylim: 2 numeric values for y-axis range. If NULL, range of y in data1. Order of the 2 values matters (for inverted axis)
+# ylim: 2 numeric values for y-axis range. If NULL, range of y in data1. Order of the 2 values matters (for inverted axis). BEWARE: values of the ylim must be already in the corresponding log if ylog argument is not "no" (see below)
 # ylog: Either "no" (values in the y argument column of the data1 data frame are not log), "log2" (values in the y argument column of the data1 data frame are log2 transformed) or "log10" (values in the y argument column of the data1 data frame are log10 transformed). BEWARE: do not tranform the data, but just display ticks in a log scale manner. Thus, negative or zero values allowed. BEWARE: not possible to have horizontal bars with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # y.tick.nb: approximate number of desired label values on the y-axis (n argument of the the fun_scale() function)
 # y.inter.tick.nb: number of desired secondary ticks between main ticks. Not considered if ylog is other than "no". In that case, play with the ylim and y.tick.nb arguments
-# y.include.zero: logical. Does ylim range include 0? BEWARE: if ylog is other than "no", will be automately set to FALSE with a warning message
+# y.include.zero: logical. Does ylim range include 0? Ok even if ylog = TRUE because ylim must already be log transformed values
 # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to ylim. If different from 0, add the range of the axis * y.top.extra.margin (e.g., abs(ylim[2] - ylim[1]) * y.top.extra.margin) to the top of y-axis
 # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
 # stat.disp: add the mean number above the corresponding bar. Either NULL (no number shown), "top" (at the top of the figure region) or "above" (above each bar)
@@ -5415,6 +5506,10 @@ if( ! is.null(ylim)){
 if(any(ylim <= 0)){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF ylog ARGUMENT IS SET TO ", ylog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}else if(any( ! is.finite(if(ylog == "log10"){10^ylim}else{2^ylim}))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT RETURNS INF WITH THE ylog ARGUMENT SET TO ", ylog, "\nAS SCALE COMPUTATION IS ", ifelse(ylog == "log10", 10, 2), "^ylim:\n", paste(ifelse(ylog == "log10", 10, 2)^ylim, collapse = " "), "\nARE YOU SURE THAT ylim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(ylim, collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
 }
 }
 }
@@ -5435,10 +5530,11 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ylog != "no" & y.include.zero == TRUE){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE NO 0 ALLOWED IN LOG SCALE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
+# inactivated because xlim and ylim already log transformed
+# if(tempo$problem == FALSE & ylog != "no" & y.include.zero == TRUE){
+# tempo.warning <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE NO 0 ALLOWED IN LOG SCALE")
+# warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+# }
 tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(stat.disp)){
@@ -5637,17 +5733,17 @@ if(y.include.zero == TRUE){ # no need to check ylog != "no" because done before
 ylim <- range(c(ylim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 ylim <- ylim[ylim.order]
-# if(ylog != "no" & any(ylim < 0)){
-# tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL ylim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(ylim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH ylog PARAMETER SET TO log10 OR log2\n\n================\n\n")
-# stop(tempo.cat)
-# }
+if(any(is.na(ylim))){
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n"))
+stop(tempo.cat)
+}
 # width commputations
 if(length(categ) == 2){
 bar.width2 <- bar.width / length(unique(data1[, categ[length(categ)]])) # real width of each bar in x-axis unit, among the set of grouped bar. Not relevant if no grouped bars length(categ) == 1
 }else if(length(categ) == 1){
 bar.width2 <- bar.width
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n"))
 stop(tempo.cat)
 }
 error.whisker.width <- bar.width * error.whisker.width # real error bar width
@@ -5749,7 +5845,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
 stop(tempo.cat)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
@@ -5803,7 +5899,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n"))
 stop(tempo.cat)
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
@@ -5865,7 +5961,7 @@ names(tempo.data1)[names(tempo.data1) == "group"] <- "group.check"
 stat.coord4 <- cbind(stat[order(stat[, categ[1]], stat[, categ[2]]), ], tempo.data1[order(tempo.data1[, paste0(categ[1], ".check")], tempo.data1[,paste0(categ[2], ".check")]), ])
 }
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 8\n\n============\n\n"))
 stop(tempo.cat)
 }
 if( ! identical(bar.coord$group[order(bar.coord$group)], stat.coord4$group.check[order(stat.coord4$group.check)])){
@@ -5920,7 +6016,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 }
 # end stat display
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 8\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 9\n\n============\n\n"))
 stop(tempo.cat)
 }
 }
@@ -5931,7 +6027,7 @@ tempo.scale <- fun_scale(lim = ylim, n = ifelse(is.null(y.tick.nb), length(tempo
 # for the ggplot2 bug with ylog, this does not work: eval(parse(text = ifelse(vertical == FALSE & ylog == "log10", "ggplot2::scale_x_continuous", "ggplot2::scale_y_continuous")))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
-labels = if(ylog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 9\n\n============\n\n")) ; stop(tempo.cat)}, 
+labels = if(ylog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n")) ; stop(tempo.cat)}, 
 expand = c(0, 0),
 limits = NA,
 trans = ifelse(diff(ylim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse()
@@ -5955,7 +6051,7 @@ tempo.tick.pos <- as.vector(outer(log10(2:10), 10^((power10.exp[1] - ifelse(diff
 tempo.tick.pos <- sort(tempo.tick.pos, decreasing = ifelse(diff(ylim.order) > 0, FALSE, TRUE))
 tempo.tick.pos <- log10(tempo.tick.pos[tempo.tick.pos >= min(10^ylim) & tempo.tick.pos <= max(10^ylim)])
 if(any(is.na(tempo.tick.pos) | ! is.finite(tempo.tick.pos))){ 
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 11\n\n============\n\n"))
 stop(tempo.cat)
 }
 # if(vertical == TRUE){ # do not remove in case the bug is fixed
@@ -6167,915 +6263,6 @@ fun_gg_line <- function(data1, y, categ, categ.class.order = NULL, categ.legend.
 # grid: logical. draw horizontal lines in the background to better read the bar values? Not considered if classic = FALSE
 # return: logical. Return the graph parameters?
 # path.lib: absolute path of the required packages, if not in the default folders
-# REQUIRED PACKAGES
-# ggplot2
-# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_check()
-# fun_pack()
-# fun_gg_palette()
-# fun_gg_just()
-# fun_round()
-# fun_2d_comp()
-# fun_name_change()
-# RETURN
-# a barplot
-# a list of the graph info if return argument is TRUE:
-# $stat: the graphic statistics
-# $removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
-# $removed.rows: removed rows containing NA (NULL if no row removed)
-# $data: the graphic info coordinates
-# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
-# EXAMPLES
-# nice representation (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.3, error.disp = "SD.TOP", error.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", title = "GRAPH1", text.size = 20, text.angle = 0, classic = TRUE, grid = TRUE)
-# nice representation (2)
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), Group1 = rep(c("CAT", "DOG"), times = 48), Group2 = rep(c("A", "B", "C", "D"), each = 24)) ; set.seed(NULL) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.8, dot.color = "grey50", dot.tidy = TRUE, dot.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim= c(-20, 30), stat.disp = "above", stat.size = 4, stat.dist = 1, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, title = "GRAPH1", text.size = 20, text.angle = 45, classic = FALSE)
-# simple example
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1")
-# separate bars. Example (1) of modification of bar color using a single value
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = "white")
-# separate bars. Example (2) of modification of bar color using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = c("coral", "lightblue"))
-# separate bars. Example (3) of modification of bar color using the bar.color data frame column, with respect of the correspondence between categ2 and bar.color columns
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), bar.color = rep(c("coral", "lightblue"), time = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = obs1$bar.color)
-# separate bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = "same")
-# separate bars. Example (2) of modification of dot color, using a single color for all the dots
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = "green")
-# separate bars. Example (3) of modification of dot color, using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = c("green", "brown"))
-# separate bars. Example (4) of modification of dot color, using different colors for each dot
-# obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
-# grouped bars. Simple example
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
-# grouped bars. More grouped bars
-# obs1 <- data.frame(Time = 1:24, Group1 = rep(c("G", "H"), times = 12), Group2 = rep(c("A", "B", "C", "D"), each = 6)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
-# grouped bars. Example (1) of modification of bar color, using a single value
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = "white")
-# grouped bars. Example (2) of modification of bar color, using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = c("coral", "lightblue"))
-# grouped bars. Example (3) of modification of bar color, using one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("coral", "lightblue"), each = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = obs1$bar.color)
-# grouped bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same")
-# grouped bars. Example (2) of modification of dot color, using a single color for all the dots
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "green")
-# grouped bars. Example (3) of modification of dot color, using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = c("green", "brown"))
-# grouped bars. Example (4) of modification of dot color, using different colors for each dot
-# obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5), Group2 = rep(c("A", "B"), each = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
-# no dots (y.include.zero set to TRUE to see the lowest bar):
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE)
-# bar width. Example (1) with bar.width = 0.25 -> three times more space between single bars than the bar width (y.include.zero set to TRUE to see the lowest bar)
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
-# bar width. Example (2) with bar.width = 1, no space between single bars
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
-# bar width. Example (3) with bar.width = 0.25 -> three times more space between sets of grouped bars than the set width
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
-# bar width. Example (4) with bar.width = 0 -> no space between sets of grouped bars
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
-# error bars
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD.TOP")
-# whisker width. Example (1) with error.whisker.width = 1 -> whiskers have the width of the corresponding bar
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 1)
-# whisker width. Example (2) error bars with no whiskers
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 0)
-# tidy dot distribution. Example (1)
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 100)
-# tidy dot distribution. Example (2) reducing the dot size with dot.bin.nb
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 150)
-# dot jitter. Example (1)
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = FALSE, dot.jitter = 1, dot.size = 2)
-# dot jitter. Example (2) with dot.jitter = 1 -> dispersion around the corresponding bar width
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 1)
-# dot jitter. Example (3) with no dispersion
-# obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 0)
-# dot size, dot border size and dot transparency
-# obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 4, dot.border.size = 0, dot.alpha = 0.6)
-# y-axis limits. Example (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(-1, 25))
-# y-axis limits. Example (2) showing that order matters in ylim argument
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(25, -1))
-# log scale. Example (1). BEWARE: y column must be log, otherwise incoherent scale (see below warning message with the return argument)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10")
-# log scale. Example (2). BEWARE: values of the ylim must be in the corresponding log
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", ylim = c(1,4))
-# tick number. Example (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10)
-# tick number. Example (2) using a log2 scale
-# obs1 <- data.frame(Time = log2((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log2", y.tick.nb = 10, ylim = c(1, 16))
-# tick number. Example (3) using a log10 scale
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10)
-# tick number. Example (4) using a log10 scale: the reverse y-axis correctly deal with log10 scale
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10, ylim = c(4, 1))
-# secondary tick number. Example (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.inter.tick.nb = 2)
-# secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.inter.tick.nb = 2)
-# include zero in the y-axis
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.include.zero = TRUE)
-# extra margins. To avoid dot cuts
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.25, y.bottom.extra.margin = 0.25)
-# mean diplay. Example (1) at the top of the plot region
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "top", stat.size = 4, stat.dist = 2)
-# mean diplay. Example (2) above bars
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "above", stat.size = 4, stat.dist = 2)
-# bar orientation.  Example (1) without log scale, showing that the other arguments are still operational
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10, y.inter.tick.nb = 2, y.include.zero = TRUE, vertical = FALSE)
-# bar orientation. Example (2) with log scale. Horizontal orientation is blocked with log2 and log10 scales because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", vertical = FALSE)
-# classic representation (use grid = TRUE to display the background lines of the y axis ticks)
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), classic = TRUE, grid = FALSE)
-# graphic info. Example (1)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), return = TRUE)
-# graphic info. Example (2) of assignation and warning message display
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; warn <- fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", return = TRUE) ; cat(warn$warnings)
-# all the arguments:
-# obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = c(0, 25), ylog = "no", y.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, title = "GRAPH1", text.size = 14, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, path.lib = NULL)
-# DEBUGGING
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = FALSE ; y.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; title = "" ; text.size = 12 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# set.seed(1) ; data1 <- data.frame(a = c(rnorm(25, 0), rnorm(25, -10), rnorm(25, 10), rnorm(25, 20)), group1 = rep(c("G", "H"), times = 50), group2 = rep(c("A", "B", "C", "D"), each = 25)) ; set.seed(NULL) ; y = "Time" ; categ = c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; title = "GRAPH1" ; text.size = 20 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# set.seed(1) ; data1 <- data.frame(x = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "x" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; line.size = 1 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = FALSE ; y.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; title = "GRAPH1" ; text.size = 20 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE ; path.lib = NULL
-# function name
-function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
-# end function name
-# required function checking
-if(length(find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(find("fun_gg_palette", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(find("fun_round", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(find("fun_2d_comp", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2d_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(find("fun_2d_comp", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-# end required function checking
-# reserved words to avoid bugs (used in this function)
-reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.max", "dot.min", "ERROR.INF", "ERROR.SUP", "group", "group.check", "max.dot.error", "MEAN", "min.dot.error", "SD", "SEM", "tempo.categ1", "tempo.categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax")
-# end reserved words to avoid bugs (used in this function)
-# argument checking (and modification for proper color management)
-warning <- NULL
-arg.check <- NULL # for function debbuging
-checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & any(duplicated(names(data1)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
-
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-tempo <- fun_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! (y %in% names(data1))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
-
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE){
-tempo <- fun_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
-}
-tempo <- fun_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & length(categ) > 2){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT CANNOT HAVE MORE THAN 2 COLUMN NAMES OF data1\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE & ! all(categ %in% names(data1))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", paste(categ, collapse = " "), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-# reserved word checking
-if(any(names(data1) %in% reserved.words)){
-if(any(duplicated(names(data1)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-tempo.output <- fun_name_change(names(data1), reserved.words)
-for(i3 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
-names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
-if(any(y == tempo.output$ini[i3])){
-y[y == tempo.output$ini[i3]] <- tempo.output$post[i3]
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-if(any(categ == tempo.output$ini[i3])){
-categ[categ == tempo.output$ini[i3]] <- tempo.output$post[i3]
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-}
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": REGARDING COLUMN NAMES REPLACEMENT, TOTALLY THE NAMES,\n", paste(tempo.output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-# end reserved word checking
-# na detection and removal (done now to be sure of the correct length of categ)
-if(any(is.na(data1[, c(y, categ)]))){
-removed.row.nb <- unlist(lapply(lapply(c(data1[c(y, categ)]), FUN = is.na), FUN = which))
-removed.rows <- data1[removed.row.nb, ]
-data1 <- data1[-removed.row.nb, ]
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NA DETECTED IN COLUMN ", paste(c(y, categ), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}else{
-removed.row.nb <- NULL
-removed.rows <- NULL
-}
-# end na detection and removal (done now to be sure of the correct length of categ)
-for(i1 in 1:length(categ)){
-if(any(is.na(data1[, categ[i1]]))){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CATEGORY COLUMN ", categ[i1], " CONTAINS NA")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-tempo1 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
-if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", paste0("categ NUMBER ", i1, " OF data1"), " MUST BE A FACTOR OR CHARACTER VECTOR\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if(tempo1$problem == FALSE){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-}
-if( ! is.null(categ.class.order)){
-tempo <- fun_check(data = categ.class.order, class = "list", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & length(categ.class.order) > 2){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A LIST OF MAX LENGTH 2\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE){
-for(i3 in 1:length(categ.class.order)){
-if(is.null(categ.class.order[[i3]])){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE categ.class.order COMPARTMENT ", i3, " IS NULL. ALPHABETICAL ORDER WILL BE APPLIED")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-data1[, categ[i3]] <- factor(as.character(data1[, categ[i3]])) # if already a factor, change nothing, if characters, levels according to alphabetical order
-}else if(any(duplicated(categ.class.order[[i3]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COMPARTMENT ", i3, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(categ.class.order[[i3]], collapse = " "), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if( ! (all(categ.class.order[[i3]] %in% unique(data1[, categ[i3]])) & all(unique(data1[, categ[i3]]) %in% categ.class.order[[i3]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COMPARTMENT ", i3, " OF categ.class.order ARGUMENT MUST BE CLASSES OF ELEMENT ", i3, " OF categ\nHERE IT IS:\nCOMPARTMENT ", i3, " OF categ.class.order:", paste(categ.class.order[[i3]], collapse = " "), "\nCOLUMN ", categ[i3], " OF data1: ", paste( unique(data1[, categ[i3]]), collapse = " "), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else{
-data1[, categ[i3]] <- factor(data1[, categ[i3]], levels = categ.class.order[[i3]]) # reorder the factor
-
-}
-}
-}
-}
-if( ! is.null(categ.legend.name)){
-tempo <- fun_check(data = categ.legend.name, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-}else{
-categ.legend.name <- categ[length(categ)] # if only categ1, then legend name of categ1, if length(categ) == 2, then legend name of categ2
-}
-if( ! is.null(categ.color)){
-# check the nature of color
-tempo1 <- fun_check(data = categ.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_check(data = categ.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
-if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-# integer colors into gg_palette
-tempo.check.color <- fun_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
-if(tempo.check.color == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else{ # convert integers into colors
-categ.color <- fun_gg_palette(max(categ.color, na.rm = TRUE))
-}
-# end integer colors into gg_palette
-}
-if( ! (all(categ.color %in% colors() | grepl(pattern = "^#", categ.color)))){ # check that all strings of low.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(categ.color), collapse = " "), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-if(any(is.na(categ.color))){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": categ.color ARGUMENT CONTAINS NA")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-# end check the nature of color
-# check the length of color
-# No problem of NA management by ggplot2 because already removed
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-if(length(categ.color) == length(unique(data1[, categ[i0]]))){ # here length(categ.color) is equal to the different number of categ
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
-levels(data1$categ.color) <- categ.color
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}else if(length(categ.color) == length(data1[, categ[i0]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
-data1 <- data.frame(data1, categ.color = categ.color)
-tempo.check <- unique(data1[ , c(categ[i0], "categ.color")])
-if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[i0]])))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[i0]], data1[ ,"categ.color"])), collapse = "\n"), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else{
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-categ.color <- unique(categ.color[order(data1[, categ[i0]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-}else if(length(categ.color) == 1){
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-data1 <- data.frame(data1, categ.color = categ.color)
-categ.color <- rep(categ.color, length(levels(data1[, categ[i0]])))
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-}else{
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-categ.color <- fun_gg_palette(length(levels(data1[, categ[i0]])))
-data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
-levels(data1$categ.color) <- categ.color
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-tempo <- fun_check(data = line.size, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(error.disp)){
-tempo <- fun_check(data = error.disp, options = c("SD", "SD.TOP", "SEM", "SEM.TOP"), length = 1, fun.name = function.name) ; eval(ee)
-}
-tempo <- fun_check(data = error.whisker.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(dot.color)){
-# check the nature of color
-tempo1 <- fun_check(data = dot.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_check(data = dot.color, class = "factor", na.contain = TRUE, fun.name = function.name, print = FALSE)
-if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-# integer colors into gg_palette
-tempo.check.color <- fun_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name, print = FALSE)$problem
-if(tempo.check.color == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else{ # convert integers into colors
-dot.color <- fun_gg_palette(max(dot.color, na.rm = TRUE))
-}
-# end integer colors into gg_palette
-}
-if(all(dot.color == "same") & length(dot.color) == 1){
-dot.color <- categ.color # same color of the dots as the corresponding bar color
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS BEEN SET TO \"SAME\"\nTHUS, DOT COLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(levels(factor(dot.color)), collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}else if( ! (all(dot.color %in% colors() | grepl(pattern = "^#", dot.color)))){ # check that all strings of low.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGERS, OR THE STRING\"same\"\nHERE IT IS: ", paste(unique(dot.color), collapse = " "), "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-if(any(is.na(dot.color))){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": dot.color ARGUMENT CONTAINS NA")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-# end check the nature of color
-# check the length of color
-# No problem of NA management by ggplot2 because already removed
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-if(length(dot.color) == length(unique(data1[, categ[i0]]))){ # here length(dot.color) is equal to the different number of categ
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-data1 <- data.frame(data1, dot.color = data1[, categ[i0]])
-levels(data1$dot.color) <- dot.color
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}else if(length(dot.color) == length(data1[, categ[i0]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[i0]])))
-data1 <- data.frame(data1, dot.color = dot.color)
-}else if(length(dot.color) == 1 & ! all(dot.color == "same")){
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-data1 <- data.frame(data1, dot.color = dot.color)
-dot.color <- rep(dot.color, length(levels(data1[, categ[i0]])))
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-}
-tempo <- fun_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = dot.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(ylim)){
-tempo <- fun_check(data = ylim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & any(ylim %in% c(Inf, -Inf))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ylim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-}
-tempo <- fun_check(data = ylog, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(y.tick.nb)){
-tempo <- fun_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-}
-tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ylog == TRUE & y.include.zero == TRUE){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BOTH ylog AND y.include.zero ARGUMENTS SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(stat.disp)){
-tempo <- fun_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
-}
-tempo <- fun_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(xlab)){
-tempo <- fun_check(data = xlab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-}
-if( ! is.null(ylab)){
-tempo <- fun_check(data = ylab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-}
-tempo <- fun_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ylog == TRUE & vertical == FALSE){
-ylog <- FALSE
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BARS HORIZONTALLY WITH A YLOG SCALE -> ylog ARGUMENT RESET TO FALSE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = classic, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(path.lib)){
-tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
-cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE path.lib PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
-arg.check <- c(arg.check, TRUE)
-}
-}
-if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_check()
-}
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end argument checking (and modification for proper color management)
-# package checking
-fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
-# end package checking
-# main code
-# convert categ[1] to numeric for lines
-categ1.levels <- levels(data1[, categ[1]])
-data1[, categ[1]] <- as.numeric(data1[, categ[1]])
-# end convert categ[1] to numeric for lines
-if(length(categ) == 1){
-# new data frames for bar and error bars
-mean.dataframe <- aggregate(x = data1[y], by = {x.env <- list(data1[, categ[1]]) ; names(x.env) <-categ[1] ; x.env}, FUN = mean, na.rm = TRUE)
-sd.dataframe <- aggregate(x = data1[y], by = {x.env <- list(data1[, categ[1]]) ; names(x.env) <-categ[1] ; x.env}, FUN = sd, na.rm = TRUE)
-nb.dataframe <- aggregate(x = data1[y], by = {x.env <- list(data1[, categ[1]]) ; names(x.env) <- categ[1] ; x.env}, FUN = function(x.env2){length(x.env2[ ! is.na(x.env2)])})
-if( ! all(identical(mean.dataframe[, categ[1]], sd.dataframe[, categ[1]]) & identical(mean.dataframe[, categ[1]], nb.dataframe[, categ[1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": aggregate OUTPUT IS DIFFERENT IN TERM OF CLASS ORDER FOR mean.dataframe, sd.dataframe AND nb.dataframe. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}else{
-sem.dataframe <- sd.dataframe
-sem.dataframe[, y] <- sd.dataframe[, y] / (nb.dataframe[, y])^0.5
-}
-# end new data frames for bar and error bars
-# data1 check categ order for dots coordinates recovery
-data1 <- data.frame(data1, categ.check = data1[, categ[1]])
-data1$categ.check <- as.integer(data1$categ.check) # to check that data1[, categ[1]] and dot.coord$group are similar, during merging
-# end data1 check categ order for dots coordinates recovery
-# per bar dots coordinates recovery
-tempo.gg.name <- "gg.indiv.plot."
-tempo.gg.count <- 0
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[1]))) # fill because this is what is used with geom_bar
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(stroke = dot.border.size, size = dot.size, alpha = dot.alpha, pch = 21))
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot()) # to easily have the equivalent of the grouped bars
-dot.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data[[1]]
-if( ! is.null(dot.color)){
-dot.coord <- data.frame(dot.coord[order(dot.coord$group, dot.coord$y), ], y.check = as.double(data1[order(data1$categ.check, data1[, y]), y]), categ.check = data1[order(data1$categ.check, data1[, y]), "categ.check"], dot.color = data1[order(data1$categ.check, data1[, y]), "dot.color"], tempo.categ1 = data1[order(data1$categ.check, data1[, y]), categ[1]]) # y.check to be sure that the order is the same between the y of data1 and the y of dot.coord
-names(dot.coord)[names(dot.coord) == "tempo.categ1"] <- categ[1]
-if( ! identical(dot.coord$y, dot.coord$y.check)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": (dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-}
-# end per bar dots coordinates recovery
-}else if(length(categ) == 2){
-# new data frames for bar and error bars
-mean.dataframe <- aggregate(x = data1[y], by = {x.env <- list(data1[, categ[1]], data1[, categ[2]]) ; names(x.env) <- c(categ[1], categ[2]) ; x.env}, FUN = mean, na.rm = TRUE)
-sd.dataframe <- aggregate(x = data1[y], by = {x.env <- list(data1[, categ[1]], data1[, categ[2]]) ; names(x.env) <- c(categ[1], categ[2]) ; x.env}, FUN = sd, na.rm = TRUE)
-nb.dataframe <- aggregate(x = data1[y], by = {x.env <- list(data1[, categ[1]], data1[, categ[2]]) ; names(x.env) <- c(categ[1], categ[2]) ; x.env}, FUN = function(x.env2){length(x.env2[ ! is.na(x.env2)])})
-tempo.check.mean <- mapply(FUN = "paste", mean.dataframe[, categ[1]], mean.dataframe[, categ[2]], sep = "_")
-tempo.check.sd <- mapply(FUN = "paste", sd.dataframe[, categ[1]], sd.dataframe[, categ[2]], sep = "_")
-tempo.check.nb <- mapply(FUN = "paste", nb.dataframe[, categ[1]], nb.dataframe[, categ[2]], sep = "_")
-if( ! all(identical(tempo.check.mean, tempo.check.sd) & identical(tempo.check.mean, tempo.check.nb))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": aggregate OUTPUT IS DIFFERENT IN TERM OF CLASS ORDER FOR mean.dataframe, sd.dataframe AND nb.dataframe. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}else{
-sem.dataframe <- sd.dataframe
-sem.dataframe[, y] <- sd.dataframe[, y] / (nb.dataframe[, y])^0.5
-}
-# end new data frames for bar and error bars
-# data1 check categ order for dots coordinates recovery
-tempo.factor <- paste0(data1[order(data1[, categ[2]], data1[, categ[1]]), categ[2]], "_", data1[order(data1[, categ[2]], data1[, categ[1]]), categ[1]])
-data1 <- data.frame(data1[order(data1[, categ[2]], data1[, categ[1]]), ], categ.check = factor(tempo.factor, levels = unique(tempo.factor)))
-data1$categ.check <- as.integer(data1$categ.check)
-# end data1 check categ order for dots coordinates recovery
-# per bar dots coordinates recovery
-tempo.gg.name <- "gg.indiv.plot."
-tempo.gg.count <- 0
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[2]))) # fill because this is what is used with geom_bar
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(stroke = dot.border.size, size = dot.size, alpha = dot.alpha, pch = 21))
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot()) # to easily have the equivalent of the grouped bars
-dot.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data[[1]]
-names(dot.coord)[names(dot.coord) == "fill"] <- "colour"
-dot.coord$colour <- factor(dot.coord$colour, levels = levels(bar.coord$colour))
-if( ! is.null(dot.color)){
-dot.coord <- data.frame(dot.coord[order(dot.coord$group, dot.coord$y), ], y.check = as.double(data1[order(data1$categ.check, data1[, y]), y]), categ.check = data1[order(data1$categ.check, data1[, y]), "categ.check"], dot.color = data1[order(data1$categ.check, data1[, y]), "dot.color"], tempo.categ1 = data1[order(data1$categ.check, data1[, y]), categ[1]], tempo.categ2 = data1[order(data1$categ.check, data1[, y]), categ[2]]) # y.check to be sure that the order is the same between the y of data1 and the y of dot.coord
-names(dot.coord)[names(dot.coord) == "tempo.categ1"] <- categ[1]
-names(dot.coord)[names(dot.coord) == "tempo.categ2"] <- categ[2]
-if( ! (identical(dot.coord$y, dot.coord$y.check) & identical(dot.coord$group, dot.coord$categ.check))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": (dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-}
-}else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n"))
-stop(tempo.cat)
-}
-data2 <- mean.dataframe
-# add color to data2
-tempo.categ.color <- unique(data1[, c(categ, "categ.color")])
-if( ! fun_2d_comp(data2[categ], tempo.categ.color[categ])$identical.content){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data2[categ] AND tempo.categ.color[categ] MUST HAVE IDENTICAL CONTENT. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}else{
-data2 <- data.frame(data2, categ.color = tempo.categ.color$categ.color)
-}
-# end add color to data2
-if( ! is.null(error.disp)){
-if(error.disp == "SD"){
-data2 <- data.frame(data2, SD = sd.dataframe[, y], ERROR.INF = mean.dataframe[, y] - sd.dataframe[, y], ERROR.SUP = mean.dataframe[, y] + sd.dataframe[, y])
-}else if(error.disp == "SD.TOP"){
-data2 <- data.frame(data2, SD = sd.dataframe[, y], ERROR.INF = mean.dataframe[, y], ERROR.SUP = mean.dataframe[, y] + sd.dataframe[, y])
-}else if(error.disp == "SEM"){
-data2 <- data.frame(data2, SEM = sem.dataframe[, y], ERROR.INF = mean.dataframe[, y] - sem.dataframe[, y], ERROR.SUP = mean.dataframe[, y] + sem.dataframe[, y])
-}else if(error.disp == "SEM.TOP"){
-data2 <- data.frame(data2, SEM = sem.dataframe[, y], ERROR.INF = mean.dataframe[, y], ERROR.SUP = mean.dataframe[, y] + sem.dataframe[, y])
-}else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n"))
-stop(tempo.cat)
-}
-}
-# stat output
-stat <- data2
-names(stat)[names(stat) == y] <- "MEAN"
-# end stat output
-# range depending on means and error bars
-if(is.null(ylim)){
-if(is.null(dot.color)){ # no dots plotted
-if( ! is.null(error.disp)){
-if(any(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]) %in% c(Inf, -Inf))){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ERROR.INF OR ERROR.SUP COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-ylim <- range(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-}else{
-if(any(data2[, y] %in% c(Inf, -Inf))){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-ylim <- range(data2[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-}
-}else{
-if(any(data2[, y] %in% c(Inf, -Inf))){
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
-warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
-}
-ylim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-}
-}
-if(suppressWarnings(all(ylim %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED YLIM CONTAINS Inf VALUES, BECAUSE VALUES FROM data2 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
-stop(tempo.cat)
-}
-# end range depending on means and error bars
-ylim <- sort(ylim)
-ylim[1] <- ylim[1] - abs(ylim[2] - ylim[1]) * y.bottom.extra.margin
-ylim[2] <- ylim[2] + abs(ylim[2] - ylim[1]) * y.top.extra.margin
-if(y.include.zero == TRUE){ # no need to check ylog == TRUE because done before
-ylim <- range(c(ylim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-}
-if(ylog == TRUE & any(ylim < 0)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL ylim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(ylim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH ylog PARAMETER SET TO TRUE\n\n================\n\n")
-stop(tempo.cat)
-}
-# barplot
-# constant part
-tempo.gg.name <- "gg.indiv.plot."
-tempo.gg.count <- 0
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xlab(if(is.null(xlab)){categ[1]}else{xlab}))
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(ylab)){y}else{ylab}))
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
-# text angle management
-tempo.just <- fun_gg_just(angle = text.angle, axis = ifelse(vertical == TRUE, "x", "y"))
-# end text angle management
-if(classic == TRUE){
-# BEWARE: not possible to add several times theme(). NO message but the last one overwrites the others
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
-if(grid == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
-line = ggplot2::element_line(size = 0.5), 
-axis.line.y.left = ggplot2::element_line(colour = "black"), # draw lines for the y axis
-axis.line.x.bottom = ggplot2::element_line(colour = "black"), # draw lines for the x axis
-panel.grid.major.x = if(vertical == TRUE){NULL}else{ggplot2::element_line(colour = "grey75")},
-panel.grid.major.y = if(vertical == TRUE){ggplot2::element_line(colour = "grey75")}else{NULL},
-axis.text.x = if(vertical == TRUE){ggplot2::element_text(size = text.size, angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{ggplot2::element_text(size = text.size)},
-axis.text.y = if(vertical == TRUE){ggplot2::element_text(size = text.size)}else{ggplot2::element_text(size = text.size, angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
-))
-}else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
-line = ggplot2::element_line(size = 0.5), 
-axis.line.y.left = ggplot2::element_line(colour = "black"), 
-axis.line.x.bottom = ggplot2::element_line(colour = "black"),
-axis.text.x = if(vertical == TRUE){ggplot2::element_text(size = text.size, angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{ggplot2::element_text(size = text.size)},
-axis.text.y = if(vertical == TRUE){ggplot2::element_text(size = text.size)}else{ggplot2::element_text(size = text.size, angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
-))
-}
-}else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
-text = ggplot2::element_text(size = text.size), 
-line = ggplot2::element_line(size = 0.5), 
-panel.background = ggplot2::element_rect(fill = "grey95"), 
-axis.line.y.left = ggplot2::element_line(colour = "black"), 
-axis.line.x.bottom = ggplot2::element_line(colour = "black"), 
-panel.grid.major.x = ggplot2::element_line(colour = "grey75"), 
-panel.grid.major.y = ggplot2::element_line(colour = "grey75"), 
-panel.grid.minor.x = ggplot2::element_blank(), 
-panel.grid.minor.y = ggplot2::element_blank(), 
-strip.background = ggplot2::element_rect(fill = "white", colour = "black"),
-axis.text.x = if(vertical == TRUE){ggplot2::element_text(size = text.size, angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{ggplot2::element_text(size = text.size)},
-axis.text.y = if(vertical == TRUE){ggplot2::element_text(size = text.size)}else{ggplot2::element_text(size = text.size, angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
-))
-}
-# end constant part
-# barplot and error bars
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_line(data = data2, mapping = ggplot2::aes_string(x = categ[1], y = y, linetype = categ[length(categ)]), color = data2$categ.color, size = line.size, lineend = "round")) #
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = categ.legend.name, values = rep(1, length(categ.color)), guide = ggplot2::guide_legend(override.aes = list(linetype = line.size, color = categ.color)))) # values are the values of color (which is the border color in geom_bar. BEWARE: values = categ.color takes the numbers to make the colors if categ.color is a factor
-if( ! is.null(error.disp)){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_errorbar(data = data2, mapping = ggplot2::aes_string(x = categ[1], group = categ[length(categ)], ymin = "ERROR.INF", ymax = "ERROR.SUP"), color = "black", width = error.whisker.width)) # cannot use fill = categ[length(categ)] because not an aesthetic of geom_errorbar, but if only x = categ[1], wrong x coordinates with grouped bars
-}
-# end barplot and error bars
-# coordinates management (for random plotting and for stat display)
-# bars
-bar.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data[[1]] # to have the summary statistics of the plot. Here because can be required for stat.disp when just bar are plotted
-# end bars
-if( ! is.null(dot.color)){
-# random dots
-if(dot.tidy == FALSE){
-dot.coord.rd1 <- merge(dot.coord, bar.coord[c("colour", "group", "x")], by = intersect("group", "group"), sort = FALSE) # rd for random. Send the coord of the bars into the coord data.frame of the dots (in the column x.y). BEWARE: by = intersect("group", "group") because group is enough as only one value of x per group number in bar.coord. Thus, no need to consider fill
-if(nrow(dot.coord.rd1) != nrow(dot.coord)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd1 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-set.seed(1)
-sampled.dot.jitter <- if(nrow(dot.coord.rd1) == 1){runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2)}else{sample(x = runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2), size = nrow(dot.coord.rd1), replace = FALSE)}
-dot.coord.rd2 <- data.frame(dot.coord.rd1, dot.x = dot.coord.rd1$x.y + sampled.dot.jitter) # set the dot.jitter thanks to runif and dot.jitter range. Then, send the coord of the bars into the coord data.frame of the dots (in the column x.y)
-set.seed(NULL)
-if(length(categ) == 1){
-tempo.data1 <- unique(data.frame(data1[categ[1]], group = as.integer(factor(as.numeric(data1[, categ[1]]))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
-verif <- paste0(categ[1], ".check")
-}else if(length(categ) == 2){
-tempo.data1 <- unique(data.frame(data1[c(categ[1], categ[2])], group = as.integer(factor(paste0(as.numeric(data1[, categ[2]]), ".", as.numeric(data1[, categ[1]])))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
-names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
-verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
-}else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n"))
-stop(tempo.cat)
-}
-dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-# end random dots
-}
-# tidy dots
-# coordinates are recover during plotting (see dot.coord.tidy1 below)
-# end tidy dots
-}
-# end coordinates management (for random plotting and for stat display)
-# dot display
-if( ! is.null(dot.color)){
-if(dot.tidy == FALSE){
-if(dot.border.size == 0){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), size = dot.size, color = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 16)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
-}else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), stroke = dot.border.size, size = dot.size, fill = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 21)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
-}
-}else if(dot.tidy == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = if(dot.border.size == 0){as.character(levels(dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"]))}else{rep("black", length(categ.color))})) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. BEWARE: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
-# coordinates of tidy dots
-tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
-if(length(which(sapply(tempo.coord, FUN = nrow) == nrow(data1))) > 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MORE THAN 2 COMPARTMENT WITH NROW EQUAL TO nrow(data1) IN THE tempo.coord LIST (FOR TIDY DOT COORDINATES). CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}else{
-dot.coord.tidy1 <- tempo.coord[[which(sapply(tempo.coord, FUN = nrow) == nrow(data1))]]
-}
-tempo.bar.coord <- merge(bar.coord, unique(dot.coord[, c("group", categ)]), by = intersect("group", "group"), sort = FALSE) # add the categ in bar.coord. BEWARE: by = intersect("group", "group") because group is enough as only one value of x per group number in bar.coord. Thus, no need to consider fill
-if(nrow(tempo.bar.coord) != nrow(bar.coord)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT tempo.bar.coord DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-dot.coord.tidy2 <- merge(dot.coord.tidy1, tempo.bar.coord[c("fill", "group", "x", categ)], by = intersect("group", "group"), sort = FALSE) # send the coord of the bars into the coord data.frame of the dots (in the column x.y). BEWARE: by = intersect("group", "group") because group is enough as only one value of x per group number in bar.coord. Thus, no need to consider fill
-if(nrow(dot.coord.tidy2) != nrow(dot.coord)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-if(length(categ) == 1){
-tempo.data1 <- unique(data.frame(data1[categ[1]], group = as.integer(factor(as.numeric(data1[, categ[1]]))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
-verif <- paste0(categ[1], ".check")
-}else if(length(categ) == 2){
-tempo.data1 <- unique(data.frame(data1[c(categ[1], categ[2])], group = as.integer(factor(paste0(as.numeric(data1[, categ[2]]), ".", as.numeric(data1[, categ[1]])))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
-names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
-verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
-}else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
-stop(tempo.cat)
-}
-dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-# end coordinates of tidy dots
-}
-}
-# end dot display
-# stat display
-# layer after dots but ok, behind dots on the plot
-if( ! is.null(stat.disp)){
-if(stat.disp == "top"){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1),  ggplot2::annotate(geom = "text", x = bar.coord$x, y = ylim[2], label = fun_round(bar.coord$y, 2), size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 1.1), vjust = ifelse(vertical == TRUE, 1.1, 0.5))) # beware: no need of order() for labels because bar.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
-}else if(stat.disp == "above"){
-# stat coordinates
-if( ! is.null(dot.color)){ # for text just above max dot
-if(dot.tidy == FALSE){
-tempo.stat.ini <- dot.coord.rd3
-}else if(dot.tidy == TRUE){
-tempo.stat.ini <- dot.coord.tidy3
-}
-stat.coord1 <- aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(length(categ) == 1){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(length(categ) == 2){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; names(x.env) <- if(length(categ) == 1){c("group", "x.y", categ[1])}else if(length(categ) == 2){c("group", "x.y", categ[1], categ[2])} ; x.env}, FUN = min, na.rm = TRUE)
-names(stat.coord1)[names(stat.coord1) == "y"] <- "dot.min"
-stat.coord2 <- aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(length(categ) == 1){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(length(categ) == 2){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; names(x.env) <- if(length(categ) == 1){c("group", "x.y", categ[1])}else if(length(categ) == 2){c("group", "x.y", categ[1], categ[2])} ; x.env}, FUN = max, na.rm = TRUE)
-names(stat.coord2) <- paste0(names(stat.coord2), "_from.dot.max")
-names(stat.coord2)[names(stat.coord2) == "y_from.dot.max"] <- "dot.max"
-stat.coord3 <- cbind(bar.coord[order(bar.coord$x), ], stat.coord1[order(stat.coord1$x.y), ], stat.coord2[order(stat.coord2$x.y), ]) # should be ok to use bar.coord$x and stat.coord$x.y to assemble the two data frames because x coordinates of the bars. Thus, we cannot have identical values
-if( ! all(identical(round(stat.coord3$x, 9), round(stat.coord3$x.y, 9)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FUSION OF bar.coord, stat.coord1 AND stat.coord2 ACCORDING TO bar.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
-}
-dot.text.coord <- stat.coord3[, c("x", "group", "dot.min", "dot.max")]
-names(dot.text.coord)[names(dot.text.coord) == "dot.min"] <- "text.min.pos"
-names(dot.text.coord)[names(dot.text.coord) == "dot.max"] <- "text.max.pos"
-}
-if( ! is.null(error.disp)){ # for text just above error bars
-if(length(categ) == 1){
-tempo.data1 <- unique(data.frame(data1[categ[1]], group = as.integer(factor(as.numeric(data1[, categ[1]]))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-if( ! identical(stat[order(stat[, categ[1]]), categ[1]], tempo.data1[order(tempo.data1[, categ[1]]), categ[1]])){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE stat AND tempo.data1\n\n============\n\n"))
-stop(tempo.cat)
-}else{
-names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
-names(tempo.data1)[names(tempo.data1) == "group"] <- "group.check"
-stat.coord4 <- cbind(stat[order(stat[, categ[1]]), ], tempo.data1[order(tempo.data1[, paste0(categ[1], ".check")]), ])
-}
-}else if(length(categ) == 2){
-tempo.data1 <- unique(data.frame(data1[c(categ[1], categ[2])], group = as.integer(factor(paste0(as.numeric(data1[, categ[2]]), ".", as.numeric(data1[, categ[1]])))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-if( ! fun_2d_comp(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE stat AND tempo.data1\n\n============\n\n"))
-stop(tempo.cat)
-}else{
-names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
-names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
-names(tempo.data1)[names(tempo.data1) == "group"] <- "group.check"
-stat.coord4 <- cbind(stat[order(stat[, categ[1]], stat[, categ[2]]), ], tempo.data1[order(tempo.data1[, paste0(categ[1], ".check")], tempo.data1[,paste0(categ[2], ".check")]), ])
-}
-}else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n"))
-stop(tempo.cat)
-}
-# if( ! identical(bar.coord[order(bar.coord$group), categ], stat.coord4$group.check[order(stat.coord4$group.check)])){
-# tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE bar.coord AND stat.coord4\n\n============\n\n"))
-# stop(tempo.cat)
-# }else{
-stat.coord5 <- cbind(bar.coord[order(bar.coord$group), ], stat.coord4[order(stat.coord4$group.check), ])
-error.text.coord <- stat.coord5[, c("x", "group", "ERROR.INF", "ERROR.SUP")] # 
-names(error.text.coord)[names(error.text.coord) == "ERROR.INF"] <- "text.min.pos"
-names(error.text.coord)[names(error.text.coord) == "ERROR.SUP"] <- "text.max.pos"
-# }
-}
-if(( ! is.null(dot.color)) & ! is.null(error.disp)){ # for text above max dot or error bar
-stat.coord3 <- stat.coord3[order(stat.coord3$x), ]
-stat.coord5 <- stat.coord5[order(stat.coord5$x), ]
-if( ! identical(stat.coord3$group, stat.coord5$group)){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE stat.coord3 AND stat.coord5\n\n============\n\n"))
-stop(tempo.cat)
-}else{
-stat.coord6 <- data.frame(stat.coord3, min.dot.error =  mapply(FUN = min, stat.coord3$dot.min, stat.coord5$ERROR.INF, na.rm = TRUE))
-stat.coord7 <- data.frame(stat.coord6, max.dot.error =  mapply(FUN = max, stat.coord3$dot.max, stat.coord5$ERROR.SUP, na.rm = TRUE))
-both.text.coord <- stat.coord7[, c("x", "group", "min.dot.error", "max.dot.error")] # 
-names(both.text.coord)[names(both.text.coord) == "min.dot.error"] <- "text.min.pos"
-names(both.text.coord)[names(both.text.coord) == "max.dot.error"] <- "text.max.pos"
-}
-}
-if(( ! is.null(dot.color)) & is.null(error.disp)){
-text.coord <- dot.text.coord
-}else if(is.null(dot.color) & ! is.null(error.disp)){
-text.coord <- error.text.coord
-}else if(( ! is.null(dot.color)) & ! is.null(error.disp)){
-text.coord <- both.text.coord
-}
-if( ! (is.null(dot.color) & is.null(error.disp))){
-bar.coord <- bar.coord[order(bar.coord$x), ]
-text.coord <- text.coord[order(text.coord$x), ] # to be sure to have the two objects in the same order for x. BEWARE: cannot add identical(as.integer(text.coord$group), as.integer(bar.coord$group)) because with error, the correspondence between x and group is not the same
-if( ! identical(text.coord$x, bar.coord$x)){
-tempo.cat <- (paste0("\n\n============\n\nERROR: text.coord AND bar.coord DO NOT HAVE THE SAME x COLUMN CONTENT\n\n============\n\n"))
-stop(tempo.cat)
-}
-}
-# end stat coordinates
-# stat display
-if(is.null(dot.color) & is.null(error.disp)){ # text just above bars
-# performed twice: first for y values >=0, then y values < 0, because only a single value allowed for hjust anf vjust
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = bar.coord$x[bar.coord$y >= 0], y = bar.coord$y[bar.coord$y >= 0], label = fun_round(bar.coord$y, 2)[bar.coord$y >= 0], size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 0.5 - stat.dist), vjust = ifelse(vertical == TRUE, 0.5 - stat.dist, 0.5))) # beware: no need of order() for labels because bar.coord$x set the order
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = bar.coord$x[bar.coord$y < 0], y = bar.coord$y[bar.coord$y < 0], label = fun_round(bar.coord$y, 2)[bar.coord$y < 0], size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), vjust = ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5))) # beware: no need of order() for labels because bar.coord$x set the order
-}else{ # text just above error bars or dots
-# I checked that text.coord and bar.coord have the same x and group column content. Thus, ok to use them together
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = text.coord$x[bar.coord$y >= 0], y = text.coord$text.max.pos[bar.coord$y >= 0], label = fun_round(bar.coord$y, 2)[bar.coord$y >= 0], size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 0.5 - stat.dist), vjust = ifelse(vertical == TRUE, 0.5 - stat.dist, 0.5))) # beware: no need of order() for labels because bar.coord$x set the order
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = text.coord$x[bar.coord$y < 0], y = text.coord$text.min.pos[bar.coord$y < 0], label = fun_round(bar.coord$y, 2)[bar.coord$y < 0], size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), vjust = ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5))) # beware: no need of order() for labels because bar.coord$x set the order
-}
-# end stat display
-}else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 8\n\n============\n\n"))
-stop(tempo.cat)
-}
-}
-# end stat display
-# y scale management (cannot be before dot plot management)
-if(ylog == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotation_logticks(sides = "l")) # string containing any of "trbl", for top, right, bottom, and left
-if( ! is.null(y.tick.nb)){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(breaks = fun_scale(lim = ylim, n = y.tick.nb)))
-}
-}else{
-if( ! is.null(y.tick.nb)){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
-breaks = fun_scale(lim = ylim, n = y.tick.nb), 
-expand = c(0, 0),
-limits = NA
-))
-}else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
-expand = c(0, 0),
-limits = NA
-))
-}
-}
-if(vertical == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = ylim))
-}else{
-# assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = ylim))
-}
-# end y scale  management (cannot be before dot plot management)
-suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
-# end barplot
-if(return == TRUE){
-output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
-output <- list(stat = stat, removed.row.nb = removed.row.nb, removed.rows = removed.rows, data = output$data, warnings = paste0("\n", warning, "\n\n"))
-return(output)
-}
 }
 
 
