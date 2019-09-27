@@ -22,53 +22,53 @@
 
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_info() #### recover object information 8
-######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
-######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
-######## fun_2d_head() #### head of the left or right of big 2D objects 20
-######## fun_2d_tail() #### tail of the left or right of big 2D objects 21
-######## fun_list_comp() #### comparison of two lists   22
-################ Object modification    24
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
-######## fun_merge() #### merge the columns of 2 data frames or 2 matrices  29
-######## fun_round() #### rounding number if decimal present    35
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    37
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    37
-######## fun_mat_op() #### assemble several matrices with operation 40
-######## fun_mat_inv() #### return the inverse of a square matrix   43
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  44
-######## fun_permut() #### progressively breaks a vector order  47
-################ Graphics management    54
-######## fun_width() #### window width depending on classes to plot 54
-######## fun_open() #### open a GUI or pdf graphic window   56
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    59
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 63
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   68
-######## fun_close() #### close specific graphic windows    79
-################ Standard graphics  80
-######## fun_empty_graph() #### text to display for empty graphs    80
-################ gg graphics    82
-######## fun_gg_palette() #### ggplot2 default color palette    82
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  83
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  86
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   89
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    124
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    159
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  164
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   164
-######## fun_gg_violin() #### ggplot2 violins   164
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  164
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  194
-######## fun_gg_empty_graph() #### text to display for empty graphs 207
-################ Graphic extraction 209
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 209
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   218
-################ Import 250
-######## fun_pack() #### check if R packages are present and import into the working environment    250
-######## fun_python_pack() #### check if python packages are present    251
-################ Exporting results (text & tables)  253
-######## fun_report() #### print string or data object into output file 253
+######## fun_info() #### recover object information 2
+######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 2
+######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   2
+######## fun_2d_head() #### head of the left or right of big 2D objects 2
+######## fun_2d_tail() #### tail of the left or right of big 2D objects 2
+######## fun_list_comp() #### comparison of two lists   2
+################ Object modification    2
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  2
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 2
+######## fun_merge() #### merge the columns of 2 data frames or 2 matrices  2
+######## fun_round() #### rounding number if decimal present    2
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    2
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    2
+######## fun_mat_op() #### assemble several matrices with operation 2
+######## fun_mat_inv() #### return the inverse of a square matrix   2
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  2
+######## fun_permut() #### progressively breaks a vector order  2
+################ Graphics management    2
+######## fun_width() #### window width depending on classes to plot 2
+######## fun_open() #### open a GUI or pdf graphic window   2
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    2
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 2
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   2
+######## fun_close() #### close specific graphic windows    2
+################ Standard graphics  2
+######## fun_empty_graph() #### text to display for empty graphs    2
+################ gg graphics    2
+######## fun_gg_palette() #### ggplot2 default color palette    2
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  2
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  2
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   2
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    2
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    2
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  2
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   2
+######## fun_gg_violin() #### ggplot2 violins   2
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  2
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  2
+######## fun_gg_empty_graph() #### text to display for empty graphs 2
+################ Graphic extraction 2
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 2
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   2
+################ Import 2
+######## fun_pack() #### check if R packages are present and import into the working environment    2
+######## fun_python_pack() #### check if python packages are present    2
+################ Exporting results (text & tables)  2
+######## fun_report() #### print string or data object into output file 2
 
 
 ################################ FUNCTIONS ################################
@@ -1393,12 +1393,12 @@ return(output.data)
 }
 
 
-######## fun_merge() #### merge the columns of 2D objects
+######## fun_merge() #### merge the columns of two 2D objects, by common rows
 
 
 fun_merge <- function(data1, data2, name1, name2, factor.as = "numeric", warn.print = FALSE){
 # AIM
-# merge the columns of 2 data frames or 2 matrices or 2 tables, according to 1 or several common colums that must be strictly similar between the 2 objects
+# merge the columns of 2 data frames or 2 matrices or 2 tables, by associating the rows according to 1 or several common colums that must be strictly similar between the 2 objects
 # contrary to the classical merge() function of R, fun_merge() orders the rows of the 2 objects according to the common columns, and merge only and only if the ordered common columns are strictly identical. Otherwise return an error
 # keep row names of data1 in the merged object if they exist. Do not consider row names of data2
 # keep the intial row order of data1 after merging
@@ -1414,10 +1414,11 @@ fun_merge <- function(data1, data2, name1, name2, factor.as = "numeric", warn.pr
 # name1: either a vector of character strings or a vector of integer. If character strings, they must be the name of the columns in data1 that are common to the columns in data2. If integers, they must be the column numbers in data1 that are common to column numbers in data2. name1 can be strings and name2 (below) integers, and vice-versa. BEWARE: order of the elements in data1 are important as ordering is according to the first element, then the second, etc.
 # name2: as in name1 but for data2. Order in name2 is not important as order in name1 is used for the ordering
 # factor.as: either "numeric" (sort factors according to levels order, i.e., class number) or "character" (sort factors according to alphabetical order)
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # RETURN
 # a list containing:
-#$data: the merged data frame or matrix or table
-#$warnings: the warning messages
+# $data: the merged data frame or matrix or table
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 # obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
 # DEBUGGING
@@ -1471,6 +1472,7 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = factor.as, options = c("numeric", "character"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = warn.print, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
 }
@@ -1513,7 +1515,7 @@ stop(tempo.cat)
 # end column existence
 # end other argument checking
 # main code
-# column identity
+# definition of set1 and set2: common columns
 set1 <- data1[, name1, drop = FALSE] # set1 will be the reference for merging, drop = FALSE to keep the 2D structure
 if(any(apply(set1, 2, FUN = "%in%", "factor"))){
 if(factor.as == "numeric"){
@@ -1526,6 +1528,7 @@ if(factor.as == "numeric"){
 set2[, apply(set2, 2, FUN = "%in%", "factor")] <- as.numeric(set2[, apply(set2, 2, FUN = "%in%", "factor")])
 }
 }
+# end definition of set1 and set2: common columns
 # conversion as character to avoid floating point problems
 options.ini <- options()$digits
 options(digits = 22)
@@ -1535,10 +1538,13 @@ mode(set1) <- "character"
 mode(set2) <- "character"
 options(digits = options.ini)
 # end conversion as character to avoid floating point problems
+# recovering initial order of set1
 ini.set1.order <- eval(parse(text = paste("order(", paste("set1[, ", 1:ncol(set1), "]", sep = "", collapse = ", "), ")")))
 set1 <- set1[ini.set1.order, ]
 ini.set2.order <- eval(parse(text = paste("order(", paste("set2[, ", 1:ncol(set2), "]", sep = "", collapse = ", "), ")")))
 set2 <- set2[ini.set2.order, ]
+# end recovering initial order of set1
+# check non identical columns
 if(length(name1) > 1){
 for(i2 in 1:(length(name1) - 1)){
 for(i3 in (i2 + 1):length(name1)){
@@ -1559,13 +1565,15 @@ stop(tempo.cat)
 }
 }
 }
-# end column identity
+# end check non identical columns
 # warning duplicates
-#repositioning of the column in set2 as in set1 by comparing the two sorted column
+# repositioning of the column in set2 as in set1 by comparing the two sorted column
 #deal with identical col names when merging -> .x for data1, .y for data2
 
 
-
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
+}
 # output <- list()
 return(output)
 }
@@ -2006,32 +2014,32 @@ return(solve(mat))
 
 
 # Check OK: clear to go Apollo
-fun_mat_fill <- function(mat, empty.cell.string = 0, warning.print = TRUE){
+fun_mat_fill <- function(mat, empty.cell.string = 0, warn.print = FALSE){
 # AIM
 # detect the empty half part of a symmetric square matrix (either topleft, topright, bottomleft or bottomright)
 # fill this empty half part using the other symmetric half part of the matrix
+# WARNINGS
+# a plot verification using fun_gg_heatmap() is recommanded
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS:
 # mat: a numeric or character square matrix with the half part (according to the grand diagonal) filled with NA (any kind of matrix), "0" (character matrix) or 0 (numeric matrix) exclusively (not a mix of 0 and NA in the empty part)
 # empty.cell.string: a numeric, character or NA (no quotes) indicating what empty cells are filled with
-# warning.print: logical. Print warning message?
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # RETURN
-# if warning.print = FALSE, the filled matrix
-# if warning.print = TRUE, a list containing:
+# a list containing:
 # $mat: the filled matrix
-# $warnings: the warning messages
-# a plot verification using fun_gg_heatmap() is recommanded
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
-# mat1 = matrix(c(1,NA,NA,NA, 0,2,NA,NA, NA,3,4,NA, 5,6,7,8), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = NA, warning.print = TRUE) # bottomleft example
-# mat1 = matrix(c(1,1,1,2, 0,2,3,0, NA,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = NA, warning.print = TRUE) # error example
-# mat1 = matrix(c(1,1,1,2, 0,2,3,0, NA,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warning.print = TRUE) # bottomright example
-# mat1 = matrix(c(1,1,1,2, "a",2,3,NA, "a","a",0,0, "a","a","a",0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = "a", warning.print = TRUE) # topright example
-# mat1 = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,NA, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warning.print = TRUE) # topleft example
-# mat1 = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warning.print = TRUE) # error example
+# mat1 = matrix(c(1,NA,NA,NA, 0,2,NA,NA, NA,3,4,NA, 5,6,7,8), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = NA, warn.print = TRUE) # bottomleft example
+# mat1 = matrix(c(1,1,1,2, 0,2,3,0, NA,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = NA, warn.print = TRUE) # error example
+# mat1 = matrix(c(1,1,1,2, 0,2,3,0, NA,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warn.print = TRUE) # bottomright example
+# mat1 = matrix(c(1,1,1,2, "a",2,3,NA, "a","a",0,0, "a","a","a",0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = "a", warn.print = TRUE) # topright example
+# mat1 = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,NA, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warn.print = TRUE) # topleft example
+# mat1 = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,0, 5,0,0,0), ncol = 4) ; mat1 ; fun_mat_fill(mat = mat1, empty.cell.string = 0, warn.print = TRUE) # error example
 # DEBUGGING
-# mat = matrix(c(1,NA,NA,NA, 0,2,NA,NA, NA,3,4,NA, 5,6,7,8), ncol = 4) ; empty.cell.string = NA ; warning.print = TRUE # for function debugging
-# mat = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,NA, 5,0,0,0), ncol = 4) ; empty.cell.string = 0 ; warning.print = TRUE # for function debugging # topleft example
+# mat = matrix(c(1,NA,NA,NA, 0,2,NA,NA, NA,3,4,NA, 5,6,7,8), ncol = 4) ; empty.cell.string = NA ; warn.print = TRUE # for function debugging
+# mat = matrix(c(0,0,0,2, 0,0,3,0, 0,3,0,NA, 5,0,0,0), ncol = 4) ; empty.cell.string = 0 ; warn.print = TRUE # for function debugging # topleft example
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -2048,7 +2056,7 @@ checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_check(data = mat, class = "matrix", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = empty.cell.string, class = "vector", na.contain = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = warning.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
 }
@@ -2139,18 +2147,17 @@ eval(parse(text = paste0(diag.scan[4], " <- ", diag.scan[2])))
 }
 # end matrix filling
 }
-if(warning.print == TRUE){
-return(list(mat = mat, warnings = warning))
-}else{
-return(mat)
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
 }
+return(list(mat = mat, warnings = warning))
 }
 
 
 ######## fun_permut() #### progressively breaks a vector order
 
 
-fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, path.lib = NULL){
+fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, path.lib = NULL){
 # AIM
 # reorder the elements of the data1 vector by flipping 2 randomly selected consecutive positions either:
 # 1) n times (when n is precised) or
@@ -2165,6 +2172,7 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 
 # text.print: optional message to add to the working progress message every count.print loop
 # cor.method: correlation method. Either "pearson", "kendall" or "spearman". Ignored if data2 is not specified
 # cor.limit: a correlation limit (between 0 and 1). Ignored if data2 is not specified. Compute the correlation between data1 and data2, permute the data1 values, and stop the permutation process when the correlation between data1 and data2 decreases down below the cor limit value (0.2 by default). If cor(data1, data2) is negative, then -cor.limit is used and the process stops until the correlation between data1 and data2 increases up over cor.limit (-0.2 by default). BEWARE: write a positive cor.limit even if cor(data1, data2) is known to be negative. The function will automatically uses -cor.limit. If the initial correlation is already below cor.limit (positive correlation) or over -cor.limit (negative correlation), then the data1 value positions are completely randomized (correlation between data1 and data2 is expected to be 0)
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # lubridate
@@ -2174,7 +2182,7 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 
 # RETURN
 # a list containing:
 # $data: the modified vector
-# $warnings: potential warning messages (in case of negative correlation when data2 is specified)
+# $warnings: potential warning messages (in case of negative correlation when data2 is specified). NULL if non warning message
 # $cor: a spearman correlation between the initial positions (1:length(data1) and the final positions if data2 is not specified and the final correlation between data1 and data2 otherwise, according to cor.method
 # $count: the number of loops used
 # EXAMPLES
@@ -2184,12 +2192,12 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 
 # obs1 <- 101:110 ; fun_permut(data1 = obs1, data2 = obs1, seed = 1, count.print = 10, cor.method = "spearman", cor.limit = 0.2)
 # fun_permut(data1 = 1:1e3, data2 = 1e3:1, n = 20, seed = 1, count.print = 1e6, text.print = "", cor.method = "spearman", cor.limit = 0.7)
 # fun_permut(data1 = 1:1e2, data2 = 1e2:1, seed = 1, count.print = 1e3, cor.limit = 0.5)
-
+# fun_permut(data1 = c(0,0,0,0,0), n = 5, data2 = NULL, seed = 1, count.print = 1e3, cor.limit = 0.5)
 # DEBUGGING
-# data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = NULL ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; path.lib = NULL
-# data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; path.lib = NULL
-# data1 = 101:110 ; data2 = 21:30 ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; path.lib = NULL
-# data1 = 1:1e3 ; data2 = 1e3:1 ; n = 20 ; seed = 22 ; count.print = 1e6 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.7 ; path.lib = NULL
+# data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = NULL ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; path.lib = NULL
+# data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; path.lib = NULL
+# data1 = 101:110 ; data2 = 21:30 ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; path.lib = NULL
+# data1 = 1:1e3 ; data2 = 1e3:1 ; n = 20 ; seed = 22 ; count.print = 1e6 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.7 ; warn.print = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -2241,6 +2249,7 @@ tempo <- fun_check(data = count.print, class = "vector", typeof = "integer", len
 tempo <- fun_check(data = text.print, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = cor.method, options = c("pearson", "kendall", "spearman"), length =1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = cor.limit, class = "vector", mode = "numeric", prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
@@ -2258,7 +2267,7 @@ stop() # nothing else because print = TRUE by default in fun_check()
 fun_pack(req.package = "lubridate", path.lib = path.lib)
 # end package checking
 # local function
-fun_loop <- function(round, count, tempo.pos, pos.seq.max, pos, data1, data2, cor.method, cor.ini, cor.limit, tempo.cor, tempo.time, tempo.lapse, final.loop, final.exp, BREAK){
+fun_loop <- function(round, count, tempo.pos, pos.seq.max, pos, data1, data2, cor.method, cor.ini, cor.limit, tempo.cor, tempo.time, tempo.lapse, final.loop, final.exp, BREAK, seed){
 loop1 <- trunc(count/(abs(cor.ini) - abs(tempo.cor)) * (abs(tempo.cor) - cor.limit)) # count/(abs(cor.ini) - abs(tempo.cor)) is the number of count per unit of corr. Tis is multiplied by the remaining distance to run ceiling to be over the number of approximate loops in order to reach the cor.limit value
 if(is.na(loop1) | ! is.finite(loop1)){
 tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n"))
@@ -2299,23 +2308,17 @@ return(list(tempo.pos = tempo.pos, count = count, BREAK = BREAK)) # BEWARE: resp
 }
 #end local function
 # main code
-if( ! is.null(seed)){
-# code that does not affect set.seed() in the global environment
-# as soon as set.seed() or a random function, like runif() or sample(), is used, R creates the .Random.seed in the global environment, that will control the subsequent random operations (vector of number used by the random number generator). The .Random.seed object is systematically stored in the global environment, wherever the environment of set.seed() or runif() execution
-# thanks to this code, when the function end, .Random.seed recovers the last vector of .Random.seed, whatever random execution performed by the function. Thus, if a set.seed() was performed in the global environment, the reproducibility of successive random operation in this environment will not be impaired
-# Example:
-## open a new R session. Then
-## myfunction <- function (){if(exists(".Random.seed", envir = .GlobalEnv)){old <- .Random.seed ; on.exit(assign(".Random.seed", old, env = .GlobalEnv))} ; set.seed(2) ; runif(1)}
-## set.seed(1) ; rnorm(1) ; rnorm(1) ; rnorm(1)
-## rerun the same in a new session but without the previous line
-## set.seed(1) ; rnorm(1) ; myfunction() ; rnorm(1) ; rnorm(1)
-if(exists(".Random.seed", envir = .GlobalEnv)){ # .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
+warning <- NULL
+# code that protects set.seed() in the global environment
+# see also Protocol 100-rev0 Parallelization in R.docx
+if(exists(".Random.seed", envir = .GlobalEnv)){ # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
 tempo.random.seed <- .Random.seed
 on.exit(assign(".Random.seed", tempo.random.seed, env = .GlobalEnv))
 }else{
-on.exit(set.seed(NULL)) # inactivate set.seed()
+on.exit(set.seed(NULL)) # inactivate seeding -> return to complete randomness
 }
-# end code that does not affect set.seed() in the global environment
+# end code that protects set.seed() in the global environment
+if( ! is.null(seed)){
 set.seed(seed)
 }
 ini.date <- Sys.time() # time of process begin, converted into seconds
@@ -2339,7 +2342,14 @@ round <- 0
 BREAK <- FALSE
 tempo.res <- vector("list", 3)
 # end variable allocation before the loops to save time
+tempo.cor <- NULL
+permut.done <- TRUE
 if(is.null(data2)){
+if(length(table(data1)) == 1){
+tempo.warnings <- paste0("NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
+warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
+permut.done <- FALSE
+}else{
 if(tempo.count.print > n){
 tempo.count.print <- n
 }
@@ -2357,6 +2367,16 @@ cat(paste0("\nFOR LOOP ", i2, " / ", n, ifelse(text.print == "", "", paste0(" | 
 # pos.check <- c(pos.check, pos)
 }
 cat("\n\n")
+}
+}else{
+if(length(table(data1)) == 1){
+tempo.warnings <- paste0("NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
+warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
+tempo.cor <- 1
+}else if(length(table(data2)) == 1){
+tempo.warnings <- paste0("NO PERMUTATION PERFORMED BECAUSE data2 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data2)))
+warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
+tempo.cor <- 1
 }else{
 cor.ini <- cor(x = data1, y = data2, use = "pairwise.complete.obs", method = cor.method)
 tempo.cor <- cor.ini # correlation that will be modified during loops
@@ -2432,8 +2452,13 @@ cat(paste0("\nSECOND WHILE LOOP ", ifelse(text.print == "", "", paste0(" | ", te
 }
 cat("\nSECOND WHILE LOOP END\n\n")
 }
+tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
-output <- list(data = data1[tempo.pos], warnings = warnings, cor = ifelse(is.null(data2), cor(ini.pos, tempo.pos, method = "spearman"), ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)), count = count)
+}
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
+}
+output <- list(data = data1[tempo.pos], warnings = warnings, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
 return(output)
 }
 
@@ -2531,7 +2556,7 @@ fun_open <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = 
 # fun_check()
 # ARGUMENTS:
 # pdf.disp: use pdf or not
-# path.fun: where the pdf is saved. Write "working.dir" if working directory is required (default)
+# path.fun: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default)
 # pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function)
 # width.fun: width of the windows (in inches)
 # height.fun: height of the windows (in inches)
@@ -2820,15 +2845,14 @@ return(tempo.par)
  
 
 
-# does not work well with log scale
-fun_scale <- function(n, lim, kind = "approx", log = "no", path.lib = NULL){
+# Check OK: clear to go Apollo
+fun_scale <- function(n, lim, kind = "approx", path.lib = NULL){
 # AIM
 # attempt to select nice scale numbers when setting n ticks on a lim axis range
 # ARGUMENTS
-# n: desired number of ticks on the axis (integer more than 0)
-# lim: vector of 2 numbers indicating the limit range of the axis. Order of the 2 values matters (for inverted axis)
-# kind: either "approx" (approximative), "strict" (strict) or "strict.cl" (strict clean). If "approx", use the scales::trans_breaks() function to provide an easy to read scale of approximately n ticks spanning the range of the lim argument. If "strict", cut the range of the lim argument into n + 1 equidistant part and return the n numbers at each boundary. This often generates numbers uneasy to read. If "strict.cl", provide an easy to read scale of exactly n ticks, but sometimes not completely spanning the range of the lim argument. Automatically set to "approx" if the log argument is other than no
-# log: either "no" (values of the lim argument are not log), "log2" (values of the lim argument are log2 transformed) or "log10" (values of the lim argument are log10 transformed). If other than "no" (log scale), the kind argument is automatically set to "approx"
+# n: desired number of main ticks on the axis (integer more than 0)
+# lim: vector of 2 numbers indicating the limit range of the axis. Order of the 2 values matters (for inverted axis). Can be log transformed values
+# kind: either "approx" (approximative), "strict" (strict) or "strict.cl" (strict clean). If "approx", use the scales::trans_breaks() function to provide an easy to read scale of approximately n ticks spanning the range of the lim argument. If "strict", cut the range of the lim argument into n + 1 equidistant part and return the n numbers at each boundary. This often generates numbers uneasy to read. If "strict.cl", provide an easy to read scale of exactly n ticks, but sometimes not completely spanning the range of the lim argument
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # if kind = "approx":
@@ -2840,11 +2864,17 @@ fun_scale <- function(n, lim, kind = "approx", log = "no", path.lib = NULL){
 # RETURN
 # a vector of numbers
 # EXAMPLES
-# ymin = 2; ymax = 3.101; n = 10; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "approx", log = "no") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
-# ymin = 0.01; ymax = 300; n = 10; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "approx", log = "log10") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], log = "y", xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
+# approximate number of main ticks
+# ymin = 2 ; ymax = 3.101 ; n = 5 ; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "approx") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
+# strict number of main ticks
+# ymin = 2 ; ymax = 3.101 ; n = 5 ; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "strict") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
+# strict "clean" number of main ticks
+# ymin = 2 ; ymax = 3.101 ; n = 5 ; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "strict.cl") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
+# approximate number of main ticks, scale inversion
+# ymin = 3.101 ; ymax = 2 ; n = 5 ; scale <- fun_scale(n = n, lim = c(ymin, ymax), kind = "approx") ; scale ; par(yaxt = "n", yaxs = "i", las = 1) ; plot(ymin:ymax, ymin:ymax, xlim = range(scale, ymin, ymax)[order(c(ymin, ymax))], ylim = range(scale, ymin, ymax)[order(c(ymin, ymax))], xlab = "DEFAULT SCALE", ylab = "NEW SCALE") ; par(yaxt = "s") ; axis(side = 2, at = scale)
 # DEBUGGING
-# n = 9 ; lim = c(2, 3.101) ; kind = "approx" ; log = "no" ; path.lib = NULL # for function debugging
-# n = 10 ; lim = c(1e-4, 1e6) ; kind = "approx" ; log = "log10" ; path.lib = NULL # for function debugging
+# n = 9 ; lim = c(2, 3.101) ; kind = "approx" ; path.lib = NULL # for function debugging
+# n = 10 ; lim = c(1e-4, 1e6) ; kind = "approx" ; path.lib = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -2876,12 +2906,6 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = kind, options = c("approx", "strict", "strict.cl"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & log != "no" & any(lim < 0)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FINAL lim RANGE SPAN NULL OR NEGATIVE VALUES:", paste(lim, collapse = " "), "\nWHICH IS IMCOMPATIBLE WITH log PARAMETER SET TO ", log, "\n\n================\n\n")
-cat(tempo.cat)
-arg.check <- c(arg.check, TRUE) # 
-}
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
@@ -2898,9 +2922,6 @@ stop() # nothing else because print = TRUE by default in fun_check()
 # main code
 lim.order <- order(lim) # to deal with inverted axis
 lim <- sort(lim)
-if(log != "no"){
-kind <- "approx"
-}
 if(kind == "approx"){
 # package checking
 fun_pack(req.package = c("ggplot2"), path.lib = path.lib)
@@ -2908,8 +2929,8 @@ fun_pack(req.package = c("scales"), path.lib = path.lib)
 # end package checking
 output <- ggplot2::ggplot_build(ggplot2::ggplot() + ggplot2::scale_y_continuous(
 breaks = scales::trans_breaks(
-trans = if(log == "no"){"identity"}else if(log == "log10"){"log10"}else if(log == "log2"){"log2"}, 
-inv = if(log == "no"){"identity"}else if(log == "log10"){function(x){10^x}}else if(log == "log2"){function(x){2^x}}, 
+trans = "identity", 
+inv = "identity", 
 n = n
 ), 
 limits = lim
@@ -3844,7 +3865,7 @@ raster.dpi = raster.dpi,
 
 
 # Check OK: clear to go Apollo
-fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color = NULL, geom = "geom_point", alpha = 0.5, dot.size = 2, line.size = 0.5, xlim = NULL, xlab = NULL, xlog = "no", x.tick.nb = NULL, x.inter.tick.nb = NULL, x.left.extra.margin = 0.05, x.right.extra.margin = 0.05, ylim = NULL, ylab = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0.05, xy.include.zero = FALSE, text.size = 12, title = "", title.text.size = 12, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL){
+fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color = NULL, geom = "geom_point", alpha = 0.5, dot.size = 2, line.size = 0.5, xlim = NULL, xlab = NULL, xlog = "no", x.tick.nb = NULL, x.inter.tick.nb = NULL, x.left.extra.margin = 0.05, x.right.extra.margin = 0.05, ylim = NULL, ylab = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0.05, xy.include.zero = FALSE, text.size = 12, title = "", title.text.size = 12, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, warn.print = FALSE, path.lib = NULL){
 # AIM
 # ggplot2 scatterplot with the possibility to overlay dots from up to 3 different data frames and lines from up to 3 different data frames (up to 6 overlays totally)
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
@@ -3886,6 +3907,7 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # return: logical. Return the graph info?
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
@@ -3904,7 +3926,7 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # $removed.row.nb: a list of the removed rows numbers in data frames (because of NA). NULL if no row removed
 # $removed.rows: a list of the removed rows in data frames (because of NA). NULL if no row removed
 # $axes: the x-axis and y-axis info
-# $warnings: the warning messages
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 #### NICE REPRESENTATION
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = expression(paste("TIME (", 10^-20, " s)")), ylog = "log10", y.tick.nb = 5, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, classic = TRUE)
@@ -4010,11 +4032,11 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # add ggplot2 functions
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", add = "+ggplot2::theme_classic()")
 # all the arguments
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = "TIME (s)", ylog = "log10", y.tick.nb = 5, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, text.size = 12, title = "", title.text.size = 8, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL)
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = "TIME (s)", ylog = "log10", y.tick.nb = 5, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, text.size = 12, title = "", title.text.size = 8, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; xlim = c(25, 0) ; xlab = "KM" ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(1, 25) ; ylab = "TIME (s)" ; ylog = "log2" ; y.tick.nb = 5 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; xlim = c(14, 4) ; xlab = NULL ; xlog = "log10" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(60, 5) ; ylab = NULL ; ylog = "log10" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
-# data1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; data1 ; x = NULL; y = "km"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_hline"; alpha = 0.5 ; dot.size = 1 ; line.size = 0.5 ; xlim = c(1,10) ; xlab = NULL ; xlog = "log10" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = NULL ; ylab = expression(paste("TIME (", 10^-20, " s)")) ; ylog = "log10" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; xlim = c(25, 0) ; xlab = "KM" ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(1, 25) ; ylab = "TIME (s)" ; ylog = "log2" ; y.tick.nb = 5 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; xlim = c(14, 4) ; xlab = NULL ; xlog = "log10" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(60, 5) ; ylab = NULL ; ylog = "log10" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
+# data1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; data1 ; x = NULL; y = "km"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_hline"; alpha = 0.5 ; dot.size = 1 ; line.size = 0.5 ; xlim = c(1,10) ; xlab = NULL ; xlog = "log10" ; x.tick.nb = 10 ; x.inter.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = NULL ; ylab = expression(paste("TIME (", 10^-20, " s)")) ; ylog = "log10" ; y.tick.nb = 10 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -4557,6 +4579,7 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
@@ -4888,7 +4911,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::gui
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(xlim = xlim, ylim = ylim)) # clip = "off" to have secondary ticks outside plot region does not work
 # x-axis ticks and inv
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
-tempo.scale <- fun_scale(lim = xlim, n = ifelse(is.null(x.tick.nb), length(tempo.coord$x.major_source), x.tick.nb), log = "no") # "no" because already log transformed
+tempo.scale <- fun_scale(lim = xlim, n = ifelse(is.null(x.tick.nb), length(tempo.coord$x.major_source), x.tick.nb))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
 breaks = tempo.scale, 
 labels = if(xlog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(xlog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(xlog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n")) ; stop(tempo.cat)}, 
@@ -4899,7 +4922,7 @@ trans = ifelse(diff(xlim) < 0, "reverse", "identity") # equivalent to ggplot2::s
 # end x-axis ticks and inv
 # y-axis ticks and inv
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
-tempo.scale <- fun_scale(lim = ylim, n = ifelse(is.null(y.tick.nb), length(tempo.coord$y.major_source), y.tick.nb), log = "no") # "no" because already log transformed
+tempo.scale <- fun_scale(lim = ylim, n = ifelse(is.null(y.tick.nb), length(tempo.coord$y.major_source), y.tick.nb))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 labels = if(ylog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n")) ; stop(tempo.cat)}, 
@@ -4989,6 +5012,9 @@ suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tem
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
+}
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
 if(is.null(unlist(removed.row.nb))){
@@ -5015,7 +5041,7 @@ return(output)
 
 
 # Check OK: clear to go Apollo
-fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, text.size = 12, title = "", title.text.size = 8, text.angle = 0, classic = FALSE, grid = FALSE, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL){
+fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, text.size = 12, title = "", title.text.size = 8, text.angle = 0, classic = FALSE, grid = FALSE, return = FALSE, plot = TRUE, add = NULL, warn.print = FALSE, path.lib = NULL){
 # AIM
 # ggplot2 vertical barplot representing mean values with the possibility to add error bars and to overlay dots
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
@@ -5065,6 +5091,7 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # return: logical. Return the graph parameters?
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
@@ -5195,13 +5222,13 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # add ggplot2 functions
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
 # all the arguments
-# obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = c(0, 25), ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, path.lib = NULL)
+# obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = c(0, 25), ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
 # DEBUGGING
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
-# data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; path.lib = NULL
-# set.seed(1) ; data1 <- data.frame(a = c(rnorm(25, 0), rnorm(25, -10), rnorm(25, 10), rnorm(25, 20)), group1 = rep(c("G", "H"), times = 50), group2 = rep(c("A", "B", "C", "D"), each = 25)) ; set.seed(NULL) ; y = "Time" ; categ = c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = "no" ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; path.lib = NULL
-# set.seed(1) ; data1 <- data.frame(x = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "x" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = NULL ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(1, 4) ; ylog = "log10" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
+# data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
+# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
+# set.seed(1) ; data1 <- data.frame(a = c(rnorm(25, 0), rnorm(25, -10), rnorm(25, 10), rnorm(25, 20)), group1 = rep(c("G", "H"), times = 50), group2 = rep(c("A", "B", "C", "D"), each = 25)) ; set.seed(NULL) ; y = "Time" ; categ = c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0 ; dot.alpha = 1 ; ylim= c(-15, 25) ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = "no" ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 2 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = FALSE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
+# set.seed(1) ; data1 <- data.frame(x = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; set.seed(NULL) ; y = "x" ; categ <- c("group1", "group2") ; categ.class.order = list(NULL, c("B", "A", "D", "C", "E")) ; categ.legend.name = "LEGEND" ; categ.color = NULL ; bar.width = 0.8 ; error.disp = "SD" ; error.whisker.width = 1 ; dot.color = NULL ; dot.tidy = FALSE ; dot.bin.nb = 60 ; dot.jitter = 0.25 ; dot.size = 3.5 ; dot.border.size = 0.2 ; dot.alpha = 1 ; ylim= c(1, 4) ; ylog = "log10" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; stat.disp = "above" ; stat.size = 4 ; stat.dist = 1 ; xlab = "GROUP" ; ylab = "MEAN" ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = -200 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -5586,6 +5613,7 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
@@ -6023,11 +6051,11 @@ stop(tempo.cat)
 # end stat display
 # y scale management (cannot be before dot plot management)
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
-tempo.scale <- fun_scale(lim = ylim, n = ifelse(is.null(y.tick.nb), length(tempo.coord$y.major_source), y.tick.nb), log = "no") # "no" because already log transformed
+tempo.scale <- fun_scale(lim = ylim, n = ifelse(is.null(y.tick.nb), length(tempo.coord$y.major_source), y.tick.nb))
 # for the ggplot2 bug with ylog, this does not work: eval(parse(text = ifelse(vertical == FALSE & ylog == "log10", "ggplot2::scale_x_continuous", "ggplot2::scale_y_continuous")))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
-labels = if(ylog == "log10"){scales::trans_format("identity",  scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n")) ; stop(tempo.cat)}, 
+labels = if(ylog == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(ylog == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(ylog == "no"){ggplot2::waiver()}else{tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n")) ; stop(tempo.cat)}, 
 expand = c(0, 0),
 limits = NA,
 trans = ifelse(diff(ylim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse()
@@ -6093,6 +6121,9 @@ tempo.warning <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS RE
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # end barplot
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
+}
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
 output <- list(stat = stat, removed.row.nb = removed.row.nb, removed.rows = removed.rows, data = output$data, axes = output$layout$panel_params[[1]], warnings = paste0("\n", warning, "\n\n"))
@@ -6272,7 +6303,7 @@ fun_gg_line <- function(data1, y, categ, categ.class.order = NULL, categ.legend.
 #test plot.margin = margin(up.space.mds, right.space.mds, down.space.mds, left.space.mds, "inches") to set the dim of the region plot ?
 
 # Check OK: clear to go Apollo
-fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.color1 = "white", high.color1 = "red", limit1 = NULL, midpoint1 = NULL, data2 = NULL, color2 = "black", alpha2 = 0.5, invert2 = FALSE, text.size = 12, title = "", title.text.size = 12, show.scale = TRUE, rotate = FALSE, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL){
+fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.color1 = "white", high.color1 = "red", limit1 = NULL, midpoint1 = NULL, data2 = NULL, color2 = "black", alpha2 = 0.5, invert2 = FALSE, text.size = 12, title = "", title.text.size = 12, show.scale = TRUE, rotate = FALSE, return = FALSE, plot = TRUE, add = NULL, warn.print = FALSE, path.lib = NULL){
 # AIM
 # ggplot2 heatmap with the possibility to overlay a mask
 # see also:
@@ -6299,6 +6330,7 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 # return: logical. Return the graph parameters?
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # path.lib: absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
 # ggplot2
@@ -6428,14 +6460,14 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 # add ggplot2 functions
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", add = "+ggplot2::theme_classic()")
 # all the arguments
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = "TIME (s)", ylog = "log10", y.tick.nb = 5, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, text.size = 12, title = "", title.text.size = 8, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, path.lib = NULL)
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = "TIME (s)", ylog = "log10", y.tick.nb = 5, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, text.size = 12, title = "", title.text.size = 8, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
 
 
 
 
 
 # DEBUGGING
-# data1 = matrix(1:16, ncol = 4) ; legend.name1 = "" ; low.color1 = "blue" ; mid.color1 = "white" ; high.color1 = "red" ; limit1 = NULL ; midpoint1 = NULL ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; text.size = 12 ; title = "" ; title.text.size = 12 ; show.scale = TRUE ; rotate = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; path.lib = NULL
+# data1 = matrix(1:16, ncol = 4) ; legend.name1 = "" ; low.color1 = "blue" ; mid.color1 = "white" ; high.color1 = "red" ; limit1 = NULL ; midpoint1 = NULL ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; text.size = 12 ; title = "" ; title.text.size = 12 ; show.scale = TRUE ; rotate = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -6575,6 +6607,7 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
@@ -6667,6 +6700,9 @@ print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), col
 }else{
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
+}
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -7060,7 +7096,7 @@ return(output)
 
 
 # Check OK: clear to go Apollo
-fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = NULL, x2, y2, data2.pb.dot = "unknown", xy.cross.kind = "&", plot = FALSE, graph.in.file = FALSE, raster = TRUE, path.lib = NULL){
+fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = NULL, x2, y2, data2.pb.dot = "unknown", xy.cross.kind = "&", plot = FALSE, graph.in.file = FALSE, raster = TRUE, warn.print = FALSE, path.lib = NULL){
 # AIM
 # if data1 is a data frame corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() delimits a frame around the dots cloud using a sliding window set by x.range.split and x.step.factor to frame the top and bottom part of the cloud, and set by y.range.split and y.step.factor to frame the left and right part of the cloud
 # if a second data frame is provided, corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() defines the dots of this data frame, outside of the frame of the first data frame
@@ -7085,6 +7121,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # plot: logical. Print graphs that check the frame?
 # graph.in.file: logical. Graphs sent into a graphic device already opened? If FALSE, GUI are opened for each graph. If TRUE, no GUI are opended. The graphs are displayed on the current active graphic device. Ignored if plot is FALSE
 # raster: logical. Dots in raster mode? If FALSE, dots from each geom_point from geom argument are in vectorial mode (bigger pdf and long to display if millions of dots). If TRUE, dots from each geom_point from geom argument are in matricial mode (smaller pdf and easy display if millions of dots, but long to generate the layer). If TRUE, the region plot will be square to avoid a bug in fun_gg_point_rast(). If TRUE, solve the transparency problem with some GUI. Not considered if plot is FALSE
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # path.lib: absolute path of the required packages, if not in the default folders. Ignored if plot is FALSE
 # REQUIRED PACKAGES
 # ggplot2 if plot is TRUE
@@ -7114,7 +7151,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # $data2.unknown.dot: the problematic dots of data2 (i.e., data2 dots outside of the range of data1, or data2 dots in a sliding window without data1 dots). Is systematically NULL except if argument data2.pb.dot = "unknown" and some data2 dots are in such situation. Modifying the segmentation x.range.split, x.step.factor, y.range.split, y.step.factor arguments can solve this problem
 # $data2.inconsistent.dot: see the warning section above
 # $axes: the x-axis and y-axis info
-# $warnings: warning messages
+# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 # example explaining the unknown and inconsistent dots, and the cross 
 
@@ -7122,9 +7159,9 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = NULL, x.step.factor = 10, y.range.split = 23, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "|", plot = TRUE, graph.in.file = FALSE, raster = FALSE, path.lib = NULL)
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "&", plot = TRUE, graph.in.file = FALSE, raster = FALSE, path.lib = NULL)
 # DEBUGGING
-# set.seed(1) ; data1 = data.frame(x = rnorm(50), y = rnorm(50)) ; data1[5:7, 2] <- NA ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 5 ; x.step.factor = 10 ; y.range.split = 5 ; y.step.factor = 10 ; error = 0 ; data2 = data.frame(x = rnorm(50, 0, 2), y = rnorm(50, 0, 2)) ; set.seed(NULL) ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; path.lib = NULL
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = NULL ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; path.lib = NULL
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 20 ; x.step.factor = 10 ; y.range.split = NULL ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "&" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; path.lib = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(50), y = rnorm(50)) ; data1[5:7, 2] <- NA ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 5 ; x.step.factor = 10 ; y.range.split = 5 ; y.step.factor = 10 ; error = 0 ; data2 = data.frame(x = rnorm(50, 0, 2), y = rnorm(50, 0, 2)) ; set.seed(NULL) ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; path.lib = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = NULL ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; path.lib = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 20 ; x.step.factor = 10 ; y.range.split = NULL ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "&" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -7223,6 +7260,7 @@ if( ! (is.null(x.range.split)) & ! (is.null(y.range.split))){
 tempo <- fun_check(data = xy.cross.kind, options = c("&", "|"), length = 1, fun.name = function.name) ; eval(ee)
 }
 tempo <- fun_check(data = plot, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & plot == TRUE){
 tempo <- fun_check(data = raster, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = graph.in.file, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -8232,6 +8270,9 @@ fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 1
 }
 }
 # end plot
+if(warn.print == TRUE & ! is.null(warning)){
+warning(warning)
+}
 tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, axes = axes, warnings = warning)
 return(tempo.list)
 }
