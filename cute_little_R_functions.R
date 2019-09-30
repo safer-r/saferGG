@@ -1599,9 +1599,10 @@ fun_round <- function(data, dec.nb = 2, after.lead.zero = TRUE){
 # RETURN
 # the modified vector
 # EXAMPLES
-# cat(fun_round(data = c(10, 100.001, 333.0001254, 12312.1235), dec.nb = 2, after.lead.zero = FALSE), "\n\n")
-# cat(fun_round(data = c("10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = FALSE), "\n\n")
-# cat(fun_round(data = c("10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = TRUE), "\n\n")
+# ini.options <- options()$digits ; options(digits = 8) ; cat(fun_round(data = c(NA, 10, 100.001, 333.0001254, 12312.1235), dec.nb = 2, after.lead.zero = FALSE), "\n\n") ; options(digits = ini.options)
+# ini.options <- options()$digits ; options(digits = 8) ; cat(fun_round(data = c(NA, 10, 100.001, 333.0001254, 12312.1235), dec.nb = 2, after.lead.zero = TRUE), "\n\n") ; options(digits = ini.options)
+# ini.options <- options()$digits ; options(digits = 8) ; cat(fun_round(data = c(NA, "10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = FALSE), "\n\n") ; options(digits = ini.options)
+# ini.options <- options()$digits ; options(digits = 8) ; cat(fun_round(data = c(NA, "10", "100.001", "333.0001254", "12312.1235"), dec.nb = 2, after.lead.zero = TRUE), "\n\n") ; options(digits = ini.options)
 # DEBUGGING
 # data = data = c(10, 100.001, 333.0001254, 12312.1235) ; dec.nb = 2 ; after.lead.zero = FALSE # # for function debugging
 # data = data = c("10", "100.001", "333.0001254", "12312.1235") ; dec.nb = 2 ; after.lead.zero = TRUE # # for function debugging
@@ -1625,7 +1626,7 @@ stop(tempo.cat)
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_check(data = data, class = "vector", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = data, class = "vector", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = dec.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = after.lead.zero, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -2179,6 +2180,7 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # fun_pack()
+# fun_round()
 # RETURN
 # a list containing:
 # $data: the modified vector
@@ -2207,6 +2209,10 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUI
 stop(tempo.cat)
 }
 if(length(find("fun_pack", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+if(length(find("fun_round", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2388,7 +2394,10 @@ neg.cor <- TRUE
 tempo.cor <- abs(tempo.cor)
 }
 if(tempo.cor < cor.limit){ # randomize directly all the position to be close to correlation zero
+tempo.warnings <- paste0("INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
+warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
 for(i1 in 1:5){ # done 5 times to be sure of the complete randomness
+count[1] <- count + 1
 tempo.pos <- sample(x = tempo.pos, size = length(tempo.pos), replace = FALSE)
 }
 }else{
