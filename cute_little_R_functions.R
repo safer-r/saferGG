@@ -366,16 +366,18 @@ fun_info <- function(data){
 # end argument checking
 # main code
 data.name <- deparse(substitute(data))
-output <- list("FILE_NAME" = data.name)
+output <- list("NAME" = data.name)
 tempo <- list("CLASS" = class(data))
 output <- c(output, tempo)
-tempo <- list("FILE_HEAD" = head(data))
+tempo <- list("TYPE" = typeof(data))
+output <- c(output, tempo)
+tempo <- list("HEAD" = head(data))
 output <- c(output, tempo)
 if( ! is.null(data)){
-tempo <- list("FILE_TAIL" = tail(data))
+tempo <- list("TAIL" = tail(data))
 output <- c(output, tempo)
 if( ! is.null(dim(data))){
-tempo <- list("FILE_DIMENSION" = dim(data))
+tempo <- list("DIMENSION" = dim(data))
 names(tempo[[1]]) <- c("NROW", "NCOL")
 output <- c(output, tempo)
 }
@@ -2158,7 +2160,7 @@ return(list(mat = mat, warnings = warning))
 ######## fun_permut() #### progressively breaks a vector order
 
 
-fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, path.lib = NULL){
+fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, path.lib = NULL){
 # AIM
 # reorder the elements of the data1 vector by flipping 2 randomly selected consecutive positions either:
 # 1) n times (when n is precised) or
@@ -2188,7 +2190,11 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = 555, count.print = 
 # $cor: a spearman correlation between the initial positions (1:length(data1) and the final positions if data2 is not specified and the final correlation between data1 and data2 otherwise, according to cor.method
 # $count: the number of loops used
 # EXAMPLES
-# fun_permut(data1 = LETTERS[1:5], data2 = NULL, n = 20, seed = 1, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2)
+# example (1) showing that for loop is faster than while loop
+# ini.time <- as.numeric(Sys.time()) ; count <- 0 ; for(i0 in 1:1e9){count <- count + 1} ; tempo.time <- as.numeric(Sys.time()) ; tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time)) ; tempo.lapse
+# example (2) showing that for loop is faster than while loop
+# ini.time <- as.numeric(Sys.time()) ; count <- 0 ; while(count < 1e9){count <- count + 1} ; tempo.time <- as.numeric(Sys.time()) ; tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time)) ; tempo.lapse
+# fun_permut(data1 = LETTERS[1:5], data2 = NULL, n = 20, seed = 1, count.print = 10, text.print = "CPU NB 4", cor.method = "spearman", cor.limit = 0.2)
 # fun_permut(data1 = 101:110, data2 = 21:30, n = 20, seed = 1, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2)
 # a way to use the cor.limit argument just considering data1
 # obs1 <- 101:110 ; fun_permut(data1 = obs1, data2 = obs1, seed = 1, count.print = 10, cor.method = "spearman", cor.limit = 0.2)
@@ -2285,7 +2291,7 @@ loop1 <- 1e9
 }else{
 loop2 <- 1
 }
-cat(paste0("\n\nFOR LOOP STEP | ROUND: ", round, " | LOOP1: ", format(loop1, big.mark=","), " | LOOP2: ", format(loop2, big.mark=","), " | TEMPO CORRELATION: ", tempo.cor, "\n"))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP STEP | ROUND: ", round, " | LOOP1: ", format(loop1, big.mark=","), " | LOOP2: ", format(loop2, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4), "\n"))
 if(loop2 == 1 & loop1 < 100000){
 BREAK <- TRUE
 }else{
@@ -2305,7 +2311,7 @@ tempo.time[1] <- as.numeric(Sys.time())
 tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
 final.loop[1] <- (tempo.time - tempo.time.loop) / ((i3 - 1) * loop1 + i4) * total.loop # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
 final.exp[1] <- as.POSIXct(final.loop, origin = tempo.date.loop)
-cat(paste0("\nFOR LOOP | ROUND ", round, ifelse(text.print == "", "", paste0(" | ", text.print)), " | LOOP 1: ", format(i4, big.mark=","), " / ", format(loop1, big.mark=","), ifelse(loop2 == 1, "", paste0(" | LOOP 2: ", format(i3, big.mark=","), " / ", format(loop2, big.mark=","), " | TOTAL LOOP 1+2 ", format((i3 - 1) * loop1 + i4, big.mark=","), " / ", total.loop)), " | ", format(count, big.mark=","), " PERMUTATION IN data1 | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP | ROUND ", round, " | LOOP 1: ", format(i4, big.mark=","), " / ", format(loop1, big.mark=","), ifelse(loop2 == 1, "", paste0(" | LOOP 2: ", format(i3, big.mark=","), " / ", format(loop2, big.mark=","), " | TOTAL LOOP 1+2 ", format((i3 - 1) * loop1 + i4, big.mark=","), " / ", total.loop)), " | ", format(count, big.mark=","), " PERMUTATION IN data1 | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
 }
 }
@@ -2368,7 +2374,7 @@ if(count == tempo.count.print){
 tempo.count.print[1] <- tempo.count.print + count.print
 tempo.time[1] <- as.numeric(Sys.time())
 tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-cat(paste0("\nFOR LOOP ", i2, " / ", n, ifelse(text.print == "", "", paste0(" | ", text.print)), " | TIME SPENT: ", tempo.lapse))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP ", i2, " / ", n, " | TIME SPENT: ", tempo.lapse))
 }
 # pos.check <- c(pos.check, pos)
 }
@@ -2406,7 +2412,7 @@ count2[1] <- 1 # 1 and not 0 because already 1 performed just below
 pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
 tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
-cat("\nFIRST WHILE LOOP STEP\n")
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP STEP"))
 while(tempo.cor == abs(cor.ini)){
 count[1] <- count + 1
 count2[1] <- count2 + 1
@@ -2417,10 +2423,10 @@ if(count2 == tempo.count.print){
 tempo.count.print[1] <- tempo.count.print + count.print
 tempo.time[1] <- as.numeric(Sys.time())
 tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-cat(paste0("\nFIRST WHILE LOOP ", format(count2, big.mark=","), " / ? ", ifelse(text.print == "", "", paste0(" | ", text.print)), " | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", cor.limit, " | TEMPO CORRELATION: ", round(tempo.cor, 3), " | TIME SPENT: ", tempo.lapse))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP ", format(count2, big.mark=","), " / ? | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse))
 }
 }
-cat("\nFIRST WHILE LOOP END")
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP END"))
 tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 if(tempo.cor < cor.limit){
 tempo.warnings <- paste0("THE FOR LOOP STEPS HAVE BEEN TOO FAR AND THE SECOND WHILE LOOP STEP HAS NOT BEEN USED")
@@ -2437,13 +2443,13 @@ count[1] <- tempo.res[[2]]
 BREAK[1] <- tempo.res[[3]]
 tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 }
-cat(paste0("\n\nFOR LOOP END | TEMPO CORRELATION: ", tempo.cor, "\n"))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP END | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
 tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
 tempo.cor.loop <- tempo.cor
 count4[1] <- 0
-cat("\nSECOND WHILE LOOP STEP\n")
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "SECOND WHILE LOOP STEP"))
 while(tempo.cor > cor.limit){
 count[1] <- count + 1
 count4[1] <- count4 + 1
@@ -2456,16 +2462,17 @@ tempo.time[1] <- as.numeric(Sys.time())
 tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 final.loop[1] <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
 final.exp[1] <- as.POSIXct(final.loop, origin = tempo.date.loop)
-cat(paste0("\nSECOND WHILE LOOP ", ifelse(text.print == "", "", paste0(" | ", text.print)), format(count4, big.mark=","), " / ? | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", cor.limit, " | TEMPO CORRELATION: ", round(tempo.cor, 3), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "SECOND WHILE LOOP ", format(count4, big.mark=","), " / ? | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
 }
-cat("\nSECOND WHILE LOOP END\n\n")
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "SECOND WHILE LOOP END\n\n"))
 }
 tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 }
 if(warn.print == TRUE & ! is.null(warning)){
 warning(warning)
+cat("\n\n")
 }
 output <- list(data = data1[tempo.pos], warnings = warnings, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
 return(output)
@@ -6347,6 +6354,7 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # fun_pack()
+# fun_round()
 # RETURN
 # a heatmap if plot argument is TRUE
 # a list of the graph info if return argument is TRUE:
@@ -6487,6 +6495,10 @@ stop(tempo.cat)
 }
 if(length(find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+if(length(find("fun_round", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -6673,7 +6685,7 @@ tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0 # to facilitate debugging
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data1, mapping = ggplot2::aes_string(x = names(data1)[ifelse(rotate == FALSE, 2, 1)], y = names(data1)[ifelse(rotate == FALSE, 1, 2)], fill = names(data1)[3]), show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color1, high = high.color1, mid = mid.color1, midpoint = midpoint1, limit = limit1, breaks = c(limit1, midpoint1), name = legend.name1))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color1, high = high.color1, mid = mid.color1, midpoint = midpoint1, limit = limit1, breaks = c(limit1[1], midpoint1, limit1[2]), labels = fun_round(c(limit1[1], midpoint1, limit1[2])), name = legend.name1))
 if( ! is.null(data2)){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], alpha = names(data2)[3]), fill = color2, show.legend = FALSE))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", values = if(invert2 == FALSE){c(0, alpha2)}else{c(alpha2, 0)}, guide = FALSE))
