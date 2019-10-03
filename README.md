@@ -1,6 +1,6 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 40 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 41 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
@@ -26,8 +26,8 @@ fun_num2color_mat() #### convert a numeric matrix into hexadecimal color matrix
 fun_by_case_matrix_op() #### assemble several matrices with operation
 fun_mat_inv() #### return the inverse of a square matrix
 fun_mat_fill() #### fill the empty half part of a symmetric square matrix
-fun_consec_pos_perm() #### progressively breaks a vector order
-
+fun_perm() #### progressively breaks a vector order
+fun_perm_consec() #### progressively breaks a vector order
 
 ## Graphics management
 
@@ -155,6 +155,7 @@ fun_export_data()	fun_report()
 fun_name_change()
 fun_mat_fill()
 fun_permut()
+fun_permut_consec()
 fun_empty_graph()
 fun_gg_palette()
 fun_gg_just()
