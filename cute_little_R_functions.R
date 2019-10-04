@@ -39,13 +39,13 @@
 ######## fun_mat_inv() #### return the inverse of a square matrix   41
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  42
 ######## fun_permut() #### progressively breaks a vector order  45
-######## fun_permut2() #### progressively breaks a vector order 52
+######## fun_permut_consec() #### as fun permut() but permuting consecutive positions   51
 ################ Graphics management    60
 ######## fun_width() #### window width depending on classes to plot 60
-######## fun_open() #### open a GUI or pdf graphic window   62
+######## fun_open() #### open a GUI or pdf graphic window   61
 ######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    65
 ######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 69
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   74
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   73
 ######## fun_close() #### close specific graphic windows    85
 ################ Standard graphics  86
 ######## fun_empty_graph() #### text to display for empty graphs    86
@@ -55,19 +55,19 @@
 ######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  92
 ######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   95
 ######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    131
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    166
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  171
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    165
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  170
 ######## fun_gg_strip() #### ggplot2 stripchart + mean/median   171
 ######## fun_gg_violin() #### ggplot2 violins   171
 ######## fun_gg_line() #### ggplot2 lines + background dots and error bars  171
 ######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  173
 ######## fun_gg_empty_graph() #### text to display for empty graphs 187
-################ Graphic extraction 189
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 189
+################ Graphic extraction 188
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 188
 ######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   197
 ################ Import 229
 ######## fun_pack() #### check if R packages are present and import into the working environment    229
-######## fun_python_pack() #### check if python packages are present    231
+######## fun_python_pack() #### check if python packages are present    230
 ################ Exporting results (text & tables)  232
 ######## fun_report() #### print string or data object into output file 232
 
@@ -2320,64 +2320,70 @@ if(tempo.count.print > n){
 tempo.count.print <- n
 }
 # pos.check <- NULL
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP OF ", n, "LOOPS INITIATED | LOOP COUNT: ", count))
 for(i2 in 1:n){
-count[1] <- count + 1
-pos[] <- sample.int(n = pos.seq.max, size = 2, replace = FALSE) # random sample of a position to permute, sample.int samples in 1:pos.seq.max. Or sample(x = pos.seq, size = 1, replace = FALSE) but slower
-tempo.pos[pos[1:2]] <- tempo.pos[pos[2:1]]
+count <- count + 1
+pos <- sample.int(n = pos.seq.max, size = 2, replace = FALSE) # random sample of a position to permute, sample.int samples in 1:pos.seq.max. Or sample(x = pos.seq, size = 1, replace = FALSE) but slower
+tempo.pos[pos] <- tempo.pos[rev(pos)]
 if(count == tempo.count.print){
-tempo.count.print[1] <- tempo.count.print + count.print
-tempo.time[1] <- as.numeric(Sys.time())
-tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+tempo.count.print <- tempo.count.print + count.print
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP ", i2, " / ", n, " | TIME SPENT: ", tempo.lapse))
 }
 # pos.check <- c(pos.check, pos)
 }
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP OF ", n, "LOOPS ENDED | LOOP COUNT: ", count))
 cat("\n\n")
 }
 }else{
 if(length(table(data1)) == 1){
 tempo.warnings <- paste0("NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
-tempo.cor[1] <- 1
+tempo.cor <- 1
 }else if(length(table(data2)) == 1){
 tempo.warnings <- paste0("NO PERMUTATION PERFORMED BECAUSE data2 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data2)))
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
-tempo.cor[1] <- 1
+tempo.cor <- 1
 }else{
 cor.ini <- cor(x = data1, y = data2, use = "pairwise.complete.obs", method = cor.method)
-tempo.cor[1] <- cor.ini # correlation that will be modified during loops
+tempo.cor <- cor.ini # correlation that will be modified during loops
 neg.cor <- FALSE
 if(tempo.cor < 0){
 tempo.warnings <- paste0("INITIAL ", toupper(cor.method), " CORRELATION BETWEEN data1 AND data2 HAS BEEN DETECTED AS NEGATIVE: ", tempo.cor, ". THE cor.limit PARAMETER WILL BE SWITCHED TO THE NEGATIVE EQUIVALENT: ", -cor.limit)
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
-neg.cor[1] <- TRUE
-tempo.cor[1] <- abs(tempo.cor)
+neg.cor <- TRUE
+tempo.cor <- abs(tempo.cor)
 }
 if(tempo.cor < cor.limit){ # randomize directly all the position to be close to correlation zero
 tempo.warnings <- paste0("INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP TO TOTALLY RANDOMIZE data1 BECAUSE TEMPO CORRELATION BELOW CORRELATION LIMIT | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
 for(i1 in 1:5){ # done 5 times to be sure of the complete randomness
-count[1] <- count + 1
+count <- count + 1
 tempo.pos <- sample(x = tempo.pos, size = length(tempo.pos), replace = FALSE)
 }
+cat("\n\n")
 }else{
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "WHILE LOOP INITIATED | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
 while(tempo.cor >= abs(cor.limit)){
-count[1] <- count + 1
-pos[] <- sample.int(n = pos.seq.max, size = 2, replace = FALSE) # selection of 1 position
-tempo.pos[pos[1:2]] <- tempo.pos[pos[2:1]]
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+count <- count + 1
+pos <- sample.int(n = pos.seq.max, size = 2, replace = FALSE) # selection of 1 position
+tempo.pos[pos] <- tempo.pos[rev(pos)]
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 if(count == tempo.count.print){
-tempo.count.print[1] <- tempo.count.print + count.print
-tempo.time[1] <- as.numeric(Sys.time())
-tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+tempo.count.print <- tempo.count.print + count.print
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "WHILE LOOP ", format(count, big.mark=","), " / ? | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse))
 }
 }
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "WHILE LOOP ENDED | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
+cat("\n\n")
 }
 tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 }
-cat("\n\n")
 if(warn.print == TRUE & ! is.null(warning)){
 warning(warning)
 cat("\n\n")
@@ -2509,11 +2515,11 @@ stop() # nothing else because print = TRUE by default in fun_check()
 fun_pack(req.package = "lubridate", path.lib = path.lib)
 # end package checking
 # local function
-fun_loop <- function(round, count, tempo.pos, pos.seq.max, pos, data1, data2, cor.method, cor.ini, cor.limit, tempo.cor, tempo.time, tempo.lapse, final.loop, final.exp, BREAK){
+fun_loop <- function(round, count, tempo.count.print, count.print, tempo.pos, pos.seq.max, pos, data1, data2, cor.method, cor.ini, cor.limit, tempo.cor, tempo.time, tempo.lapse, final.loop, final.exp, BREAK){
 # no need to set seed because already done ine the main function
 loop1 <- trunc(count/(abs(cor.ini) - abs(tempo.cor)) * (abs(tempo.cor) - cor.limit)) # count/(abs(cor.ini) - abs(tempo.cor)) is the number of count per unit of corr. Tis is multiplied by the remaining distance to run ceiling to be over the number of approximate loops in order to reach the cor.limit value
 if(is.na(loop1) | ! is.finite(loop1)){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n"))
+tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\ncount: ", count, "\ncor.ini: ", cor.ini, "\ntempo.cor: ", tempo.cor, "\ncor.limit: ", cor.limit, "\n\n============\n\n"))
 stop(tempo.cat)
 }
 if(loop1 > 1e9){
@@ -2533,16 +2539,16 @@ total.loop <- loop1 * loop2
 count3 <- 0
 for(i3 in 1:loop2){
 for(i4 in 1:loop1){
-count[1] <- count + 1
-count3[1] <- count3 + 1
-pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
+count <- count + 1
+count3 <- count3 + 1
+pos <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
 if(count3 == tempo.count.print){
-tempo.count.print[1] <- tempo.count.print + count.print
-tempo.time[1] <- as.numeric(Sys.time())
-tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
-final.loop[1] <- (tempo.time - tempo.time.loop) / ((i3 - 1) * loop1 + i4) * total.loop # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
-final.exp[1] <- as.POSIXct(final.loop, origin = tempo.date.loop)
+tempo.count.print <- tempo.count.print + count.print
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
+final.loop <- (tempo.time - tempo.time.loop) / ((i3 - 1) * loop1 + i4) * total.loop # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.exp <- as.POSIXct(final.loop, origin = tempo.date.loop)
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP | ROUND ", round, " | LOOP 1: ", format(i4, big.mark=","), " / ", format(loop1, big.mark=","), ifelse(loop2 == 1, "", paste0(" | LOOP 2: ", format(i3, big.mark=","), " / ", format(loop2, big.mark=","), " | TOTAL LOOP 1+2 ", format((i3 - 1) * loop1 + i4, big.mark=","), " / ", total.loop)), " | ", format(count, big.mark=","), " PERMUTATION IN data1 | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
 }
@@ -2571,20 +2577,12 @@ tempo.pos <- ini.pos # positions of data1 that will be modified during loops
 pos.seq <- ini.pos[-length(data1)] # selection of 1 position in initial position, without the last because always up permutation (pos -> pos+1 & pos+1 -> pos)
 pos.seq.max <- length(pos.seq) # max position (used by sample.int() function)
 warnings <- NULL
-# variable allocation before the loops to save time
-tempo.time <- as.numeric(Sys.time())
-tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-final.loop <- tempo.time
-final.exp <- Sys.time()
-pos <- 0 # position randomly selected
-tempo.count.print <- count.print # for the printing message
 count <- 0
 count2 <- 0
 count4 <- 0
 round <- 0
+tempo.count.print <- count.print
 BREAK <- FALSE
-tempo.res <- vector("list", 3)
-# end variable allocation before the loops to save time
 tempo.cor <- NULL
 permut.done <- TRUE
 if(is.null(data2)){
@@ -2598,13 +2596,13 @@ tempo.count.print <- n
 }
 # pos.check <- NULL
 for(i2 in 1:n){
-count[1] <- count + 1
-pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # random sample of a position to permute, sample.int samples in 1:pos.seq.max. Or sample(x = pos.seq, size = 1, replace = FALSE) but slower
+count <- count + 1
+pos <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # random sample of a position to permute, sample.int samples in 1:pos.seq.max. Or sample(x = pos.seq, size = 1, replace = FALSE) but slower
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
 if(count == tempo.count.print){
-tempo.count.print[1] <- tempo.count.print + count.print
-tempo.time[1] <- as.numeric(Sys.time())
-tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+tempo.count.print <- tempo.count.print + count.print
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP ", i2, " / ", n, " | TIME SPENT: ", tempo.lapse))
 }
 # pos.check <- c(pos.check, pos)
@@ -2634,26 +2632,26 @@ if(tempo.cor < cor.limit){ # randomize directly all the position to be close to 
 tempo.warnings <- paste0("INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
 for(i1 in 1:5){ # done 5 times to be sure of the complete randomness
-count[1] <- count + 1
+count <- count + 1
 tempo.pos <- sample(x = tempo.pos, size = length(tempo.pos), replace = FALSE)
 }
 }else{
-count[1] <- count + 1 # 1 and not 0 because already 1 performed just below
-count2[1] <- 1 # 1 and not 0 because already 1 performed just below
-pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
+count <- count + 1 # 1 and not 0 because already 1 performed just below
+count2 <- 1 # 1 and not 0 because already 1 performed just below
+pos <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST FOR & WHILE LOOP STEP | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
 while(tempo.cor == abs(cor.ini)){ # to be out of equality between tempo.cor and abs(cor.ini) at the beginning (only valid for very long vector)
-count[1] <- count + 1
-count2[1] <- count2 + 1
-pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
+count <- count + 1
+count2 <- count2 + 1
+pos <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 if(count2 == tempo.count.print){
-tempo.count.print[1] <- tempo.count.print + count.print
-tempo.time[1] <- as.numeric(Sys.time())
-tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+tempo.count.print <- tempo.count.print + count.print
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP ", format(count2, big.mark=","), " / ? | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse))
 }
 }
@@ -2664,16 +2662,16 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }else if(loop1 > 100000){ # to be sure that 100 more loops will not push tempo.cor below cor.limit
 for(i4 in 1:100){
-count[1] <- count + 1
-pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
+count <- count + 1
+pos <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
 }
 }else if(loop1 <= 100000){
-BREAK[1] <- TRUE # to inactivate the for loop and go directly to the third while loop
+BREAK <- TRUE # to inactivate the for loop and go directly to the third while loop
 }
 }
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST FOR & WHILE LOOP STEP END | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 if(tempo.cor < cor.limit){
 tempo.warnings <- paste0("THE FIRST FOR & WHILE LOOP STEPS HAVE BEEN TOO FAR AND SUBSEQUENT LOOP STEPS HAVE NOT BEEN USED")
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
@@ -2683,15 +2681,15 @@ tempo.time.loop <- as.numeric(tempo.date.loop)
 tempo.cor.loop <- tempo.cor
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "SECOND FOR LOOP STEP | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
 while(tempo.cor > cor.limit & BREAK == FALSE){
-round[1] <- round + 1
-tempo.res[] <- fun_loop(round, count, tempo.pos, pos.seq.max, pos, data1, data2, cor.method, cor.ini, cor.limit, tempo.cor, tempo.time, tempo.lapse, final.loop, final.exp, BREAK)
-tempo.pos[] <- tempo.res[[1]]
-count[1] <- tempo.res[[2]]
-BREAK[1] <- tempo.res[[3]]
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+round <- round + 1
+tempo.res <- fun_loop(round, count, tempo.count.print, count.print, tempo.pos, pos.seq.max, pos, data1, data2, cor.method, cor.ini, cor.limit, tempo.cor, tempo.time, tempo.lapse, final.loop, final.exp, BREAK)
+tempo.pos <- tempo.res[[1]]
+count <- tempo.res[[2]]
+BREAK <- tempo.res[[3]]
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 }
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "SECOND FOR LOOP END | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 if(tempo.cor < cor.limit){
 tempo.warnings <- paste0("THE FOR LOOP STEPS HAVE BEEN TOO FAR AND THE THIRD WHILE LOOP STEP HAS NOT BEEN USED")
 warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings) # in fact, abs(tempo.cor) is systematicallu used
@@ -2699,20 +2697,20 @@ warnings <- paste0(warnings, ifelse(is.null(warnings), "", "\n"), tempo.warnings
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
 tempo.cor.loop <- tempo.cor
-count4[1] <- 0
+count4 <- 0
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "THIRD WHILE LOOP STEP | LOOP COUNT: ", count, " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
 while(tempo.cor > cor.limit){
-count[1] <- count + 1
-count4[1] <- count4 + 1
-pos[1] <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
+count <- count + 1
+count4 <- count4 + 1
+pos <- sample.int(n = pos.seq.max, size = 1, replace = FALSE) # selection of 1 position
 tempo.pos[(pos + 1):pos] <- tempo.pos[pos:(pos + 1)]
-tempo.cor[1] <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
+tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
 if(count4 == tempo.count.print){
-tempo.count.print[1] <- tempo.count.print + count.print
-tempo.time[1] <- as.numeric(Sys.time())
-tempo.lapse[1] <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-final.loop[1] <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
-final.exp[1] <- as.POSIXct(final.loop, origin = tempo.date.loop)
+tempo.count.print <- tempo.count.print + count.print
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+final.loop <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
+final.exp <- as.POSIXct(final.loop, origin = tempo.date.loop)
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "THIRD WHILE LOOP ", format(count4, big.mark=","), " / ? | ", format(count, big.mark=","), " PERMUTATION IN data1 | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
 }
