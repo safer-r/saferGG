@@ -39,37 +39,36 @@
 ######## fun_mat_inv() #### return the inverse of a square matrix   41
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  42
 ######## fun_permut() #### progressively breaks a vector order  45
-######## fun_permut_consec() #### as fun permut() but permuting consecutive positions   51
-################ Graphics management    60
-######## fun_width() #### window width depending on classes to plot 60
-######## fun_open() #### open a GUI or pdf graphic window   61
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    65
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 69
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   73
-######## fun_close() #### close specific graphic windows    85
-################ Standard graphics  86
-######## fun_empty_graph() #### text to display for empty graphs    86
-################ gg graphics    88
-######## fun_gg_palette() #### ggplot2 default color palette    88
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  89
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  92
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   95
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    131
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    165
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  170
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   171
-######## fun_gg_violin() #### ggplot2 violins   171
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  171
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  173
-######## fun_gg_empty_graph() #### text to display for empty graphs 187
-################ Graphic extraction 188
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 188
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   197
-################ Import 229
-######## fun_pack() #### check if R packages are present and import into the working environment    229
-######## fun_python_pack() #### check if python packages are present    230
-################ Exporting results (text & tables)  232
-######## fun_report() #### print string or data object into output file 232
+################ Graphics management    55
+######## fun_width() #### window width depending on classes to plot 56
+######## fun_open() #### open a GUI or pdf graphic window   57
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    60
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 64
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   69
+######## fun_close() #### close specific graphic windows    80
+################ Standard graphics  81
+######## fun_empty_graph() #### text to display for empty graphs    82
+################ gg graphics    83
+######## fun_gg_palette() #### ggplot2 default color palette    83
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  84
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  87
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   90
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    126
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    161
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  166
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   166
+######## fun_gg_violin() #### ggplot2 violins   166
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  166
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
+######## fun_gg_empty_graph() #### text to display for empty graphs 182
+################ Graphic extraction 184
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 184
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   192
+################ Import 224
+######## fun_pack() #### check if R packages are present and import into the working environment    224
+######## fun_python_pack() #### check if python packages are present    226
+################ Exporting results (text & tables)  227
+######## fun_report() #### print string or data object into output file 227
 
 
 ################################ FUNCTIONS ################################
@@ -2158,10 +2157,10 @@ return(list(mat = mat, warnings = warning))
 }
 
 
-######## fun_permut_consec() #### progressively breaks a vector order
+######## fun_permut() #### progressively breaks a vector order
 
 
-fun_permut_consec <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, path.lib = NULL){
+fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, path.lib = NULL){
 # AIM
 # reorder the elements of the data1 vector by flipping 2 randomly selected  consecutive positions either:
 # 1) n times (when n is precised) or
@@ -2194,17 +2193,17 @@ fun_permut_consec <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.
 # $cor: a spearman correlation between the initial positions (1:length(data1) and the final positions if data2 is not specified and the final correlation between data1 and data2 otherwise, according to cor.method
 # $count: the number of loops used
 # EXAMPLES
-# example (1) showing that for loop, used in fun_permut_consec(), is faster than while loop
+# example (1) showing that for loop, used in fun_permut(), is faster than while loop
 # ini.time <- as.numeric(Sys.time()) ; count <- 0 ; for(i0 in 1:1e9){count <- count + 1} ; tempo.time <- as.numeric(Sys.time()) ; tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time)) ; tempo.lapse
-# example (2) showing that for loop, used in fun_permut_consec(), is faster than while loop
+# example (2) showing that for loop, used in fun_permut(), is faster than while loop
 # ini.time <- as.numeric(Sys.time()) ; count <- 0 ; while(count < 1e9){count <- count + 1} ; tempo.time <- as.numeric(Sys.time()) ; tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time)) ; tempo.lapse
-# fun_permut_consec(data1 = LETTERS[1:5], data2 = NULL, n = 100, seed = 1, count.print = 10, text.print = "CPU NB 4")
-# fun_permut_consec(data1 = 101:110, data2 = 21:30, seed = 1, count.print = 1e4, text.print = "", cor.method = "spearman", cor.limit = 0.2)
+# fun_permut(data1 = LETTERS[1:5], data2 = NULL, n = 100, seed = 1, count.print = 10, text.print = "CPU NB 4")
+# fun_permut(data1 = 101:110, data2 = 21:30, seed = 1, count.print = 1e4, text.print = "", cor.method = "spearman", cor.limit = 0.2)
 # a way to use the cor.limit argument just considering data1
-# obs1 <- 101:110 ; fun_permut_consec(data1 = obs1, data2 = obs1, seed = 1, count.print = 10, cor.method = "spearman", cor.limit = 0.2)
-# fun_permut_consec(data1 = 1:1e3, data2 = 1e3:1, seed = 1, count.print = 1e6, text.print = "", cor.method = "spearman", cor.limit = 0.7)
-# fun_permut_consec(data1 = 1:1e2, data2 = 1e2:1, seed = 1, count.print = 1e3, cor.limit = 0.5)
-# fun_permut_consec(data1 = c(0,0,0,0,0), n = 5, data2 = NULL, seed = 1, count.print = 1e3, cor.limit = 0.5)
+# obs1 <- 101:110 ; fun_permut(data1 = obs1, data2 = obs1, seed = 1, count.print = 10, cor.method = "spearman", cor.limit = 0.2)
+# fun_permut(data1 = 1:1e3, data2 = 1e3:1, seed = 1, count.print = 1e6, text.print = "", cor.method = "spearman", cor.limit = 0.7)
+# fun_permut(data1 = 1:1e2, data2 = 1e2:1, seed = 1, count.print = 1e3, cor.limit = 0.5)
+# fun_permut(data1 = c(0,0,0,0,0), n = 5, data2 = NULL, seed = 1, count.print = 1e3, cor.limit = 0.5)
 # DEBUGGING
 # data1 = LETTERS[1:5] ; data2 = NULL ; n = 1e6 ; seed = NULL ; count.print = 1e3 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; path.lib = NULL
 # data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; path.lib = NULL
