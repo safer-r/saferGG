@@ -2491,6 +2491,7 @@ count.print.loop <- logical(length = count.print)
 count.print.loop[length(count.print.loop)] <- TRUE # counter to speedup
 count.loop <- 0 # 
 pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
+tempo.cor.loop <- tempo.cor
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
 while(tempo.cor > cor.limit){
@@ -2506,7 +2507,7 @@ tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
 final.loop <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
 final.exp <- as.POSIXct(final.loop, origin = tempo.date.loop)
-cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "WHILE LOOP | LOOP NB: ", format(count4, big.mark=","), " | COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "WHILE LOOP | LOOP NB: ", format(count.loop, big.mark=","), " | COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
 }
 }
