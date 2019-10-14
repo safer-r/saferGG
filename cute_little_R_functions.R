@@ -16,59 +16,60 @@
 # Templates: https://prettydoc.statr.me/themes.html
 # https://pkgdown.r-lib.org/
 # https://rdrr.io/github/gastonstat/cointoss/
+# doc:https://www.sphinx-doc.org/en/master/man/sphinx-autogen.html considering that https://www.ericholscher.com/blog/2014/feb/11/sphinx-isnt-just-for-python/
 
 ################################ OUTLINE ################################
 
 
-################ Object analysis    2
-######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_info() #### recover object information 8
-######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
-######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
-######## fun_2d_head() #### head of the left or right of big 2D objects 20
-######## fun_2d_tail() #### tail of the left or right of big 2D objects 21
-######## fun_list_comp() #### comparison of two lists   22
-################ Object modification    24
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
-######## fun_merge() #### merge the columns of two 2D objects, by common rows   29
-######## fun_round() #### rounding number if decimal present    33
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    35
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    35
-######## fun_mat_op() #### assemble several matrices with operation 38
-######## fun_mat_inv() #### return the inverse of a square matrix   41
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  42
-######## fun_permut() #### progressively breaks a vector order  45
-################ Graphics management    55
-######## fun_width() #### window width depending on classes to plot 56
-######## fun_open() #### open a GUI or pdf graphic window   57
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    60
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 64
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   69
-######## fun_close() #### close specific graphic windows    80
-################ Standard graphics  81
-######## fun_empty_graph() #### text to display for empty graphs    82
-################ gg graphics    83
-######## fun_gg_palette() #### ggplot2 default color palette    83
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  84
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  87
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   90
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    126
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    161
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  166
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   166
-######## fun_gg_violin() #### ggplot2 violins   166
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  166
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
-######## fun_gg_empty_graph() #### text to display for empty graphs 182
-################ Graphic extraction 184
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 184
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   192
-################ Import 224
-######## fun_pack() #### check if R packages are present and import into the working environment    224
-######## fun_python_pack() #### check if python packages are present    226
-################ Exporting results (text & tables)  227
-######## fun_report() #### print string or data object into output file 227
+################ Object analysis	2
+######## fun_check() #### check class, type, length, etc., of objects	2
+######## fun_info() #### recover object information	8
+######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	9
+######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	13
+######## fun_2d_head() #### head of the left or right of big 2D objects	20
+######## fun_2d_tail() #### tail of the left or right of big 2D objects	21
+######## fun_list_comp() #### comparison of two lists	22
+################ Object modification	24
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector	24
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa	26
+######## fun_merge() #### merge the columns of two 2D objects, by common rows	29
+######## fun_round() #### rounding number if decimal present	33
+######## fun_mat_rotate() #### 90° clockwise matrix rotation	35
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix	35
+######## fun_mat_op() #### assemble several matrices with operation	38
+######## fun_mat_inv() #### return the inverse of a square matrix	41
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix	42
+######## fun_permut() #### progressively breaks a vector order	45
+################ Graphics management	55
+######## fun_width() #### window width depending on classes to plot	56
+######## fun_open() #### open a GUI or pdf graphic window	57
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)	60
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis	64
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)	69
+######## fun_close() #### close specific graphic windows	80
+################ Standard graphics	81
+######## fun_empty_graph() #### text to display for empty graphs	82
+################ gg graphics	83
+######## fun_gg_palette() #### ggplot2 default color palette	83
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle	84
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer	87
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)	90
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required	126
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required	161
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot	166
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median	166
+######## fun_gg_violin() #### ggplot2 violins	166
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars	166
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required	168
+######## fun_gg_empty_graph() #### text to display for empty graphs	182
+################ Graphic extraction	184
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs	184
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation	192
+################ Import	224
+######## fun_pack() #### check if R packages are present and import into the working environment	224
+######## fun_python_pack() #### check if python packages are present	226
+################ Exporting results (text & tables)	227
+######## fun_report() #### print string or data object into output file	227
 
 
 ################################ FUNCTIONS ################################
@@ -3626,13 +3627,14 @@ par(ini.par)
 
 
 # Check OK: clear to go Apollo
-fun_gg_palette <- function(n){
+fun_gg_palette <- function(n, kind = "std"){
 # AIM
 # provide colors used by ggplot2
 # the interest is to use another single color that is not the red one used by default
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 # ARGUMENTS
 # n: number of groups on the graph
+# kind: either "std" for standard gg colors, "dark" for darkened gg colors, or "light" for pastel gg colors
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
@@ -3640,11 +3642,19 @@ fun_gg_palette <- function(n){
 # RETURN
 # the vector of hexadecimal colors
 # EXAMPLES
+# output of the function
 # fun_gg_palette(n = 2)
-# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)) # the ggplot2 palette when 7 different colors
-# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette when 7 different colors
+# the ggplot2 palette when asking for 7 different colors
+# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7))
+# selection of the 5th color of the ggplot2 palette made of 7 different colors
+# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7)[5])
+# the ggplot2 palette made of 7 darkened colors
+# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7, kind = "dark"))
+# the ggplot2 palette made of 7 lighten colors
+# plot(1:7, pch = 16, cex = 5, col = fun_gg_palette(n = 7, kind = "light"))
 # DEBUGGING
 # n = 0
+# kind = "std"
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3663,6 +3673,7 @@ if(tempo$problem == FALSE & n == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON ZERO INTEGER. HERE IT IS: ", paste(n, collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
+tempo <- fun_check(data = kind, options = c("std", "dark", "light"), length = 1, fun.name = function.name) ; eval(ee)
 }
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
@@ -3671,7 +3682,7 @@ stop() # nothing else because print = TRUE by default in fun_check()
 # end argument checking
 # main code
 hues = seq(15, 375, length = n + 1)
-hcl(h = hues, l = 65, c = 100)[1:n]
+hcl(h = hues, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind == "light"){85}, c = 100)[1:n]
 }
 
 
@@ -3994,110 +4005,110 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 # $axes: the x-axis and y-axis info
 # $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
-#### NICE REPRESENTATION
+## NICE REPRESENTATION
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = expression(paste("TIME (", 10^-20, " s)")), ylog = "log10", y.tick.nb = 5, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, classic = TRUE)
-#### SINGLE GEOMETRIC LAYER
-# simple example (1) of scatter plot using the classical writting
+## SINGLE GEOMETRIC LAYER
+### simple example (1) of scatter plot using the classical writting
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time")
-# simple example (2) of scatter plot, identical to (1) but using the list writting. Here, a list of one compartment, systematically named L1, is provided to the data1, x, y, categ, geom and alpha. Contrary to example (1), the geom and alpha argument have to be included because the default value are not lists (if data1 is a list, all the x, y, categ, legend.name, color, geom and alpha must also be list if non NULL)
+### simple example (2) of scatter plot, identical to (1) but using the list writting. Here, a list of one compartment, systematically named L1, is provided to the data1, x, y, categ, geom and alpha. Contrary to example (1), the geom and alpha argument have to be included because the default value are not lists (if data1 is a list, all the x, y, categ, legend.name, color, geom and alpha must also be list if non NULL)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = "km"), y = list(L1 = "time"), geom = list(L1 = "geom_point"), alpha = list(L1 = 0.5))
-# color of dots. Example (1) using the classical writting
+### color of dots. Example (1) using the classical writting
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", color = "blue")
-# color of dots. Example (2) using the list writting
+### color of dots. Example (2) using the list writting
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = "km"), y = list(L1 = "time"), color = list(L1 = "blue"), geom = list(L1 = "geom_point"), alpha = list(L1 = 1))
-# From here, classical writting is use for single element in data1 and list writting otherwise
-# color of dots. Example (3) when dots are in different categories. Note that categ argument controls the legend display
+### From here, classical writting is use for single element in data1 and list writting otherwise
+### color of dots. Example (3) when dots are in different categories. Note that categ argument controls the legend display
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group")
-# color of dots. Example (4) when dots are in different categories. A single color mentionned is applied to all the dots
+### color of dots. Example (4) when dots are in different categories. A single color mentionned is applied to all the dots
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", color = "coral")
-# color of dots. Example (5) when dots are in different categories. Numbers can be used if ggplot colors are desired
+### color of dots. Example (5) when dots are in different categories. Numbers can be used if ggplot colors are desired
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", color = 2)
-# color of dots. Example (6) when dots are in different categories, with one color per category (try also color = 2:1)
+### color of dots. Example (6) when dots are in different categories, with one color per category (try also color = 2:1)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", color = c("coral", "green"))
-# color of dots. Example (7) when dots are in different categories, with colors as a data frame column. BEWARE: one color per category must be respected (try also numbers)
+### color of dots. Example (7) when dots are in different categories, with colors as a data frame column. BEWARE: one color per category must be respected (try also numbers)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B"), col = rep(c("coral", "green"), each = 3)) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", color = obs1$col)
-# color of dots. Example (8) when dots are in different categories, with colors as a data frame column. Easiest way (ggplot colors)
+### color of dots. Example (8) when dots are in different categories, with colors as a data frame column. Easiest way (ggplot colors)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", color = as.numeric(obs1$group))
-# legend name
+### legend name
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", legend.name = "CLASSES")
-# different geom features. Example (1) with geom_line kind of lines
+### different geom features. Example (1) with geom_line kind of lines
 # obs1 <- data.frame(km = c(1, 3, 2, 6, 4, 5), time = c(1, 3, 2, 6, 4, 5)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", geom = "geom_line", categ = "group")
-# different geom features. Example (2) with geom_path kind of lines (see the difference with (1))
+### different geom features. Example (2) with geom_path kind of lines (see the difference with (1))
 # obs1 <- data.frame(km = c(1, 3, 2, 6, 4, 5), time = c(1, 3, 2, 6, 4, 5)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", geom = "geom_path", categ = "group")
-# different geom features. Example (3) with geom_hline kind of lines. Fake_y y-axis name by default because y argument must be NULL (see ylab argument below to change this)
+### different geom features. Example (3) with geom_hline kind of lines. Fake_y y-axis name by default because y argument must be NULL (see ylab argument below to change this)
 # obs1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = NULL, y = "km", geom = "geom_hline", categ = "group", xlim = c(1,10))
-# different geom features. Example (4) with geom_vline kind of lines. Fake_y y-axis name by default because y argument must be NULL (see ylab argument below to change this)
+### different geom features. Example (4) with geom_vline kind of lines. Fake_y y-axis name by default because y argument must be NULL (see ylab argument below to change this)
 # obs1 <- data.frame(km = 1:2, time = (1:2)^2, group = c("A", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = NULL, geom = "geom_vline", categ = "group", ylim = c(1,10))
-#### MULTI GEOMETRIC LAYERS
-# Note that in subsequent examples, names of list compartments are systematically referred to as L1, L2, etc., to show the correspondence between the arguments data1, x, y, categ, etc.
-# single layer (as examples above)
+## MULTI GEOMETRIC LAYERS
+### Note that in subsequent examples, names of list compartments are systematically referred to as L1, L2, etc., to show the correspondence between the arguments data1, x, y, categ, etc.
+### single layer (as examples above)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1), x = list(L1 = "km"), y = list(L1 = "time"), geom = list(L1 = "geom_point"), alpha = list(L1 = 0.5))
-# simple example of two layers
+### simple example of two layers
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
-# color of dots. Example (1)
+### color of dots. Example (1)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = "coral", L2 = "green"))
-# color of dots. Example (2) of the legend display. The categ argument must be supplied. Make a fake categorical colum in the data frame if necessary (as in this example). The categ argument triggers the legend display. The legend.name argument is used to remove the legend title of each layer
+### color of dots. Example (2) of the legend display. The categ argument must be supplied. Make a fake categorical colum in the data frame if necessary (as in this example). The categ argument triggers the legend display. The legend.name argument is used to remove the legend title of each layer
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = "GROUP1") ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = "GROUP2") ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = list(L1 = NULL, L2 = NULL), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = "coral", L2 = "green"))
-# color of dots. Example (3) when dots are in different categories (default colors)
+### color of dots. Example (3) when dots are in different categories (default colors)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
-# color of dots. Example (3) when dots are in different categories. A single color mentionned per layer is applied to all the dots of the layer
+### color of dots. Example (3) when dots are in different categories. A single color mentionned per layer is applied to all the dots of the layer
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = "coral", L2 = "green"))
-# color of dots. Example (5) when dots are in different categories, with one color per category in each layer
+### color of dots. Example (5) when dots are in different categories, with one color per category in each layer
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = c("coral", "blue"), L2 = c("green", "black")))
-# color of dots. Example (4) when dots are in different categories. Numbers can be used if ggplot colors are desired
+### color of dots. Example (4) when dots are in different categories. Numbers can be used if ggplot colors are desired
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = 1:2, L2 = c(4, 7)))
-# color of dots. Example (7) when dots are in different categories, with colors as a data frame column. BEWARE: one color per category must be respected (try also numbers). BEWARE: in color argument, if the column of the data frame does not exist, color can be still displayed (L2 = obs2$notgood is equivalent to L2 = NULL). Such situation is reported in the warning messages (see below)
+### color of dots. Example (7) when dots are in different categories, with colors as a data frame column. BEWARE: one color per category must be respected (try also numbers). BEWARE: in color argument, if the column of the data frame does not exist, color can be still displayed (L2 = obs2$notgood is equivalent to L2 = NULL). Such situation is reported in the warning messages (see below)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500), col1 = rep(c("coral", "blue"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500), col2 = rep(c("green", "black"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = obs1$col1, L2 = obs2$col2))
-# color of dots. Example (8) when dots are in different categories, with colors as a data frame column. Easiest way is not recommended with mutiple layers
+### color of dots. Example (8) when dots are in different categories, with colors as a data frame column. Easiest way is not recommended with mutiple layers
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500), col1 = rep(c("coral", "blue"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500), col2 = rep(c("green", "black"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = as.numeric(obs1$group1), L2 = as.numeric(obs2$group2)))
-# legend name
+### legend name
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), legend.name = list(L1 = "CLASS A", L2 = "CLASS G"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
-# different geom features. Example (1) with 5 layers. Note that order in data1 defines the overlay order (from below to above) and the order in the legend (from top to bottom)
+### different geom features. Example (1) with 5 layers. Note that order in data1 defines the overlay order (from below to above) and the order in the legend (from top to bottom)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; obs3 <- data.frame(time = c(29, 31), group3 = c("HORIZ.THRESHOLD.1", "HORIZ.THRESHOLD.2")) ; obs4 <- data.frame(km = 26, group4 = "VERTIC.THRESHOLD") ; obs5 <- data.frame(km = seq(1, 100, 0.1), time = 7*seq(1, 100, 0.1)^0.5, group5 = "FUNCTION") ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2, L3 = obs3, L4 = obs4, L5 = obs5), x = list(L1 = "km", L2 = "km", L3 = NULL, L4 = "km", L5 = "km"), y = list(L1 = "time", L2 = "time", L3 = "time", L4 = NULL, L5 = "time"), categ = list(L1 = "group1", L2 = "group2", L3 = "group3", L4 = "group4", L5 = "group5"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline", L4 = "geom_vline", L5 = "geom_line"), alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5, L4 = 0.5, L5 = 0.5), xlim = c(10, 40), ylim = c(10, 40), classic = TRUE, line.size = 0.75)
-# layer transparency. One transparency defined by layer (from 0 invisible to 1 opaque). Note that for lines, transparency in not applied in the legend to prevent a ggplot2 bug (https://github.com/tidyverse/ggplot2/issues/2452)
+### layer transparency. One transparency defined by layer (from 0 invisible to 1 opaque). Note that for lines, transparency in not applied in the legend to prevent a ggplot2 bug (https://github.com/tidyverse/ggplot2/issues/2452)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 1, L2 = 0.1))
-# other different example of mutiple geom features are shown in the fun_segmentation function
-#### OTHER GRAPHIC ARGUMENTS
-# dot size (line.size argument controls size of lines)
+### other different example of mutiple geom features are shown in the fun_segmentation function
+## OTHER GRAPHIC ARGUMENTS
+### dot size (line.size argument controls size of lines)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", dot.size = 5)
-# axis management: examples are shown for x-axis but are identical for y-axis
-# x-axis limits. Example (1)
+### axis management: examples are shown for x-axis but are identical for y-axis
+### x-axis limits. Example (1)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlim = c(-1, 25))
-# x-axis limits. Example (2) showing that order matters in ylim argument
+### x-axis limits. Example (2) showing that order matters in ylim argument
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlim = c(25, -1))
-# log scale. Example (1). BEWARE: x column must be log, otherwise incoherent scale (see below warning message with the return argument)
+### log scale. Example (1). BEWARE: x column must be log, otherwise incoherent scale (see below warning message with the return argument)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log10")
-# log scale. Example (2). BEWARE: values of the xlim must be in the corresponding log
+### log scale. Example (2). BEWARE: values of the xlim must be in the corresponding log
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log10", xlim = c(1, 10))
-# tick number. Example (1). Note that the final number shown is approximate
+### tick number. Example (1). Note that the final number shown is approximate
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", x.tick.nb = 6)
-# tick number. Example (2) using a log2 scale
+### tick number. Example (2) using a log2 scale
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log2", x.tick.nb = 6)
-# tick number. Example (3) using a log10 scale
+### tick number. Example (3) using a log10 scale
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log10", x.tick.nb = 6)
-# tick number. Example (4) using a log10 scale: the reverse x-axis correctly deal with log10 scale
+### tick number. Example (4) using a log10 scale: the reverse x-axis correctly deal with log10 scale
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log10", xlim = c(7, 2))
-# secondary tick number. Example (1)
+### secondary tick number. Example (1)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", x.inter.tick.nb = 4)
-# secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
+### secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log10", x.inter.tick.nb = 4)
-# extra margins. To avoid dot cuts
+### extra margins. To avoid dot cuts
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", x.left.extra.margin = 0.25, x.right.extra.margin = 0.25)
-# include zero in both the x-axis and y-xis
+### include zero in both the x-axis and y-xis
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", xy.include.zero = TRUE)
-# graph title, text size and legend display
+### graph title, text size and legend display
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", categ = "group", text.size = 8, title = "GRAPH1", title.text.size = 16, show.legend = TRUE)
-# raster display. This switchs from vectorial mode to raster mode. The display can takes some time, but this is easier to export and handle than vectorial display
+### raster display. This switchs from vectorial mode to raster mode. The display can takes some time, but this is easier to export and handle than vectorial display
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(100000, 22, 3), time = rnorm(100000, 22, 3)) ; set.seed(NULL) ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", raster = TRUE)
-# classic representation (use grid = TRUE to display the background lines of the y axis ticks)
+### classic representation (use grid = TRUE to display the background lines of the y axis ticks)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", classic = TRUE, grid = FALSE)
-# graphic info. Example (1)
+### graphic info. Example (1)
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", return = TRUE)
-# graphic info. Example (2) of assignation and warning message display
+### graphic info. Example (2) of assignation and warning message display
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; output <- fun_gg_scatter(data1 = obs1, x = "km", y = "time", xlog = "log10", return = TRUE) ; cat(output$warnings)
-# add ggplot2 functions
+### add ggplot2 functions
 # obs1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; obs1 ; fun_gg_scatter(data1 = obs1, x = "km", y = "time", add = "+ggplot2::theme_classic()")
-# all the arguments
+### all the arguments
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = NULL, color = list(L1 = 4:5, L2 = 7:8), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), dot.size = 3, line.size = 0.5, xlim = c(1, 25), xlab = "KM", xlog = "no", x.tick.nb = 10, x.inter.tick.nb = 1, x.left.extra.margin = 0, x.right.extra.margin = 0, ylim = c(1, 25), ylab = "TIME (s)", ylog = "log10", y.tick.nb = 5, y.inter.tick.nb = NULL, y.top.extra.margin = 0, y.bottom.extra.margin = 0, xy.include.zero = TRUE, text.size = 12, title = "", title.text.size = 8, show.legend = TRUE, classic = FALSE, grid = FALSE, raster = FALSE, vectorial.limit = NULL, return = FALSE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
 # DEBUGGING
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$L1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; xlim = c(25, 0) ; xlab = "KM" ; xlog = "no" ; x.tick.nb = 10 ; x.inter.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; ylim = c(1, 25) ; ylab = "TIME (s)" ; ylog = "log2" ; y.tick.nb = 5 ; y.inter.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; xy.include.zero = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; show.legend = TRUE ; classic = FALSE ; grid = FALSE ; raster = FALSE ; vectorial.limit = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
@@ -5181,113 +5192,113 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # $axes: the x-axis and y-axis info
 # $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
-# nice representation (1)
+### nice representation (1)
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.3, error.disp = "SD.TOP", error.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "MEAN", text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 0, classic = TRUE, grid = TRUE)
-# nice representation (2)
+### nice representation (2)
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), Group1 = rep(c("CAT", "DOG"), times = 48), Group2 = rep(c("A", "B", "C", "D"), each = 24)) ; set.seed(NULL) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.8, dot.color = "grey50", dot.tidy = TRUE, dot.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim= c(-20, 30), stat.disp = "above", stat.size = 4, stat.dist = 1, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 45, classic = FALSE)
-# simple example
+### simple example
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1")
-# separate bars. Example (1) of modification of bar color using a single value
+### separate bars. Example (1) of modification of bar color using a single value
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = "white")
-# separate bars. Example (2) of modification of bar color using one value par class of categ2
+### separate bars. Example (2) of modification of bar color using one value par class of categ2
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = c("coral", "lightblue"))
-# separate bars. Example (3) of modification of bar color using the bar.color data frame column, with respect of the correspondence between categ2 and bar.color columns
+### separate bars. Example (3) of modification of bar color using the bar.color data frame column, with respect of the correspondence between categ2 and bar.color columns
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), bar.color = rep(c("coral", "lightblue"), time = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = obs1$bar.color)
-# separate bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
+### separate bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = "same")
-# separate bars. Example (2) of modification of dot color, using a single color for all the dots
+### separate bars. Example (2) of modification of dot color, using a single color for all the dots
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = "green")
-# separate bars. Example (3) of modification of dot color, using one value par class of categ2
+### separate bars. Example (3) of modification of dot color, using one value par class of categ2
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = c("green", "brown"))
-# separate bars. Example (4) of modification of dot color, using different colors for each dot
+### separate bars. Example (4) of modification of dot color, using different colors for each dot
 # obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
-# grouped bars. Simple example
+### grouped bars. Simple example
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
-# grouped bars. More grouped bars
+### grouped bars. More grouped bars
 # obs1 <- data.frame(Time = 1:24, Group1 = rep(c("G", "H"), times = 12), Group2 = rep(c("A", "B", "C", "D"), each = 6)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
-# grouped bars. Example (1) of modification of bar color, using a single value
+### grouped bars. Example (1) of modification of bar color, using a single value
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = "white")
-# grouped bars. Example (2) of modification of bar color, using one value par class of categ2
+### grouped bars. Example (2) of modification of bar color, using one value par class of categ2
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = c("coral", "lightblue"))
-# grouped bars. Example (3) of modification of bar color, using one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns
+### grouped bars. Example (3) of modification of bar color, using one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("coral", "lightblue"), each = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = obs1$bar.color)
-# grouped bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
+### grouped bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same")
-# grouped bars. Example (2) of modification of dot color, using a single color for all the dots
+### grouped bars. Example (2) of modification of dot color, using a single color for all the dots
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "green")
-# grouped bars. Example (3) of modification of dot color, using one value par class of categ2
+### grouped bars. Example (3) of modification of dot color, using one value par class of categ2
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = c("green", "brown"))
-# grouped bars. Example (4) of modification of dot color, using different colors for each dot
+### grouped bars. Example (4) of modification of dot color, using different colors for each dot
 # obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5), Group2 = rep(c("A", "B"), each = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
-# no dots (y.include.zero set to TRUE to see the lowest bar):
+### no dots (y.include.zero set to TRUE to see the lowest bar):
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE)
-# bar width. Example (1) with bar.width = 0.25 -> three times more space between single bars than the bar width (y.include.zero set to TRUE to see the lowest bar)
+### bar width. Example (1) with bar.width = 0.25 -> three times more space between single bars than the bar width (y.include.zero set to TRUE to see the lowest bar)
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
-# bar width. Example (2) with bar.width = 1, no space between single bars
+### bar width. Example (2) with bar.width = 1, no space between single bars
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
-# bar width. Example (3) with bar.width = 0.25 -> three times more space between sets of grouped bars than the set width
+### bar width. Example (3) with bar.width = 0.25 -> three times more space between sets of grouped bars than the set width
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
-# bar width. Example (4) with bar.width = 0 -> no space between sets of grouped bars
+### bar width. Example (4) with bar.width = 0 -> no space between sets of grouped bars
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
-# error bars
+### error bars
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD.TOP")
-# whisker width. Example (1) with error.whisker.width = 1 -> whiskers have the width of the corresponding bar
+### whisker width. Example (1) with error.whisker.width = 1 -> whiskers have the width of the corresponding bar
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 1)
-# whisker width. Example (2) error bars with no whiskers
+### whisker width. Example (2) error bars with no whiskers
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 0)
-# tidy dot distribution. Example (1)
+### tidy dot distribution. Example (1)
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 100)
-# tidy dot distribution. Example (2) reducing the dot size with dot.bin.nb
+### tidy dot distribution. Example (2) reducing the dot size with dot.bin.nb
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 150)
-# dot jitter. Example (1)
+### dot jitter. Example (1)
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = FALSE, dot.jitter = 1, dot.size = 2)
-# dot jitter. Example (2) with dot.jitter = 1 -> dispersion around the corresponding bar width
+### dot jitter. Example (2) with dot.jitter = 1 -> dispersion around the corresponding bar width
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 1)
-# dot jitter. Example (3) with no dispersion
+### dot jitter. Example (3) with no dispersion
 # obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 0)
-# dot size, dot border size and dot transparency
+### dot size, dot border size and dot transparency
 # obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 4, dot.border.size = 0, dot.alpha = 0.6)
-# y-axis limits. Example (1)
+### y-axis limits. Example (1)
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(-1, 25))
-# y-axis limits. Example (2) showing that order matters in ylim argument
+### y-axis limits. Example (2) showing that order matters in ylim argument
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(25, -1))
-# log scale. Example (1). BEWARE: y column must be log, otherwise incoherent scale (see below warning message with the return argument)
+### log scale. Example (1). BEWARE: y column must be log, otherwise incoherent scale (see below warning message with the return argument)
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10")
-# log scale. Example (2). BEWARE: values of the ylim must be in the corresponding log
+### log scale. Example (2). BEWARE: values of the ylim must be in the corresponding log
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", ylim = c(1,4))
-# tick number. Example (1)
+### tick number. Example (1)
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10)
-# tick number. Example (2) using a log2 scale
+### tick number. Example (2) using a log2 scale
 # obs1 <- data.frame(Time = log2((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log2", y.tick.nb = 10, ylim = c(1, 16))
-# tick number. Example (3) using a log10 scale
+### tick number. Example (3) using a log10 scale
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10)
-# tick number. Example (4) using a log10 scale: the reverse y-axis correctly deal with log10 scale
+### tick number. Example (4) using a log10 scale: the reverse y-axis correctly deal with log10 scale
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10, ylim = c(4, 1))
-# secondary tick number. Example (1)
+### secondary tick number. Example (1)
 # obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.inter.tick.nb = 2)
-# secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
+### secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.inter.tick.nb = 2)
-# include zero in the y-axis
+### include zero in the y-axis
 # obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.include.zero = TRUE)
-# extra margins. To avoid dot cuts
+### extra margins. To avoid dot cuts
 # obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.25, y.bottom.extra.margin = 0.25)
-# mean diplay. Example (1) at the top of the plot region
+### mean diplay. Example (1) at the top of the plot region
 # obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "top", stat.size = 4, stat.dist = 2)
-# mean diplay. Example (2) above bars
+### mean diplay. Example (2) above bars
 # obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "above", stat.size = 4, stat.dist = 2)
-# bar orientation.  Example (1) without log scale, showing that the other arguments are still operational
+### bar orientation.  Example (1) without log scale, showing that the other arguments are still operational
 # obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10, y.inter.tick.nb = 2, y.include.zero = TRUE, vertical = FALSE)
-# bar orientation. Example (2) with log scale. Horizontal orientation is blocked with log2 and log10 scales because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
+### bar orientation. Example (2) with log scale. Horizontal orientation is blocked with log2 and log10 scales because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", vertical = FALSE)
-# classic representation (use grid = TRUE to display the background lines of the y axis ticks)
+### classic representation (use grid = TRUE to display the background lines of the y axis ticks)
 # obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), classic = TRUE, grid = FALSE)
-# graphic info. Example (1)
+### graphic info. Example (1)
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), return = TRUE)
-# graphic info. Example (2) of assignation and warning message display
+### graphic info. Example (2) of assignation and warning message display
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; warn <- fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", return = TRUE) ; cat(warn$warnings)
-# add ggplot2 functions
+### add ggplot2 functions
 # obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
-# all the arguments
+### all the arguments
 # obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = c(0, 25), ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, xlab = "GROUP", ylab = "MEAN", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
 # DEBUGGING
 # data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
@@ -5385,7 +5396,7 @@ tempo.warning <- paste0("FROM FUNCTION ", function.name, ": IN categ ARGUMENT (C
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 }
-tempo.warning <- paste0("FROM FUNCTION ", function.name, ": REGARDING COLUMN NAMES REPLACEMENT, TOTALLY THE NAMES,\n", paste(tempo.output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "))
+tempo.warning <- paste0("FROM FUNCTION ", function.name, ": REGARDING COLUMN NAMES REPLACEMENT, THE NAMES\n", paste(tempo.output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "))
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
 # end reserved word checking
@@ -5807,7 +5818,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n"
 ylim <- range(data2[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 }else{
-if(any(data2[, y] %in% c(Inf, -Inf))){
+if(any(data1[, y] %in% c(Inf, -Inf))){
 tempo.warning <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warning <- paste0(ifelse(is.null(warning), tempo.warning, paste0(warning, "\n\n", tempo.warning)))
 }
@@ -6201,100 +6212,7 @@ return(output)
 ######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required
 
 
-# http://www.sthda.com/english/wiki/ggplot2-box-plot-quick-start-guide-r-software-and-data-visualization
-# Example of boxplots: https://github.com/IndrajeetPatil/ggstatsplot
 
-fun_gg_boxplot <- function(data1, y, categ, class.order = NULL, legend.name = NULL, categ.color = NULL, dot.color = "same", box.width = 0.5, whisker.width = 0.5, jitter = 0.25, ylim = NULL, ylog = FALSE, y.include.zero = FALSE, top.extra.margin = 0.05, bottom.extra.margin = 0, xlab = NULL, ylab = NULL, pt.size = 3, pt.border.size = 0.5, alpha = 0.5, show.stat = NULL, stat.size = 4, title = "", text.size = 12, break.nb = NULL, classic = FALSE, grid = FALSE, return = FALSE, path.lib = NULL){
-# AIM
-# ggplot2 vertical barplot representing mean values with the possibility to add error bars and to overlay dots
-# for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
-# WARNINGS
-# rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
-# to have a single boxplot, create a factor column with a single class and specify the name of this column in categ argument as unique element (no categ2 in categ argument). For a single set of grouped boxplots, create a factor column with a single class and specify this column in categ argument as first element (categ1). See categ below
-# with several single boxplots (categ argument with only one element), bar.width argument (i.e., width argument of ggplot2::geom_bar()) defines each bar width. The bar.width argument also defines the space between bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each bar)
-# with several sets of grouped bars (categ argument with two elements), bar.width argument defines each set of grouped bar width. The bar.width argument also defines the space between set of grouped bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped bar)
-# ARGUMENTS
-# data1: a dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below)
-# y: character string of the data1 column name for y-axis (containing numeric values). Numeric values will be used to generate the boxplots and will also be used to plot the dots
-# categ: vector of character strings of the data1 column name for categories (column of characters or factor). Must either be one or two column names. If a single column name (further refered to as categ1), then one boxplot per class of categ1. If two column names (further refered to as categ1 and categ2), then one boxplot per class of categ2, which form a group of boxplots in each class of categ1. BEWARE, categ1 (and categ2 if it exists) must have a single value of y per class of categ1 (and categ2). To have a single boxplot, create a factor column with a single class and specify the name of this column in categ argument as unique element (no categ2 in categ argument). For a single set of grouped boxplots, create a factor column with a single class and specify this column in categ argument as first element (categ1)
-# class.order: list indicating the order of the classes of categ1 and categ2 represented on the boxplot (the first compartment for categ1 and and the second for categ2). If class.order = NULL, classes are represented according to the alphabetical order. Some compartment can be NULL and other not
-# legend.name: character string of the legend title for categ2. If legend.name = NULL, then legend.name <- categ1 if only categ1 is present and legend.name <- categ2 if categ1 and categ2 are present. Write "" if no legend required
-# categ.color: vector of character color string for boxplot color. If categ.color = NULL, default colors of ggplot2, whatever categ1 and categ2. If categ.color is non null and only categ1 in categ argument, categ.color can be either: (1) a single color string (all the boxplots will have this color, whatever the classes of categ1), (2) a vector of string colors, one for each class of categ1 (each color will be associated according to class.order of categ1), (3) a vector or factor of string colors, like if it was one of the column of data1 data frame (beware: a single color per class of categ1 and a single class of categ1 per color must be respected). Integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by fun_gg_palette() using the max integer value among all the integers in categ.color. If categ.color is non null and categ1 and categ2 specified, all the rules described above will apply to categ2 instead of categ1 (colors will be determined for boxplots inside a group of boxplots)
-# dot.color: vector of character string. Idem as categ.color but for dots, except that in the possibility (3), the rule "a single color per class of categ1 and a single class of categ1", cannot be respected (each dot can have a different color). If NULL, no dots plotted
-# box.width: numeric value (from 0 to 1) of the bar or set of grouped bar width (see warnings above)
-# whisker.width: numeric value (from 0 to 1) of the whisker (error bar extremities) width, with 0 meaning no whiskers and 1 meaning a width equal to the corresponding bar width
-# jitter: numeric value (from 0 to 1) of random dot horizontal dispersion, with 0 meaning no dispersion and 1 meaning a dispersion in the corresponding bar width interval
-# ylim: 2 numeric values for y-axis range. If NULL, range of y in data1
-# ylog: logical. Log scale for the y-axis?  BEWARE: do not tranform the data, but just display ticks in a log scale manner. BEWARE: if TRUE, ylim must not contain null or negative values
-# y.include.zero: logical. Does ylim range include 0? BEWARE: if ylog = TRUE, will be automately set to FALSE with a warning message
-# top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to ylim. If different from 0, add the range of the axis * top.extra.margin (e.g., abs(ylim[2] - ylim[1]) * top.extra.margin) to the top of y-axis. BEWARE with ylog = TRUE, the range result must not overlap zero or negative values
-# bottom.extra.margin: idem as top.extra.margin but to the bottom of y-axis
-# xlab: a character string for x-axis legend. If NULL, character string of categ1
-# ylab: a character string y-axis legend. If NULL, character string of the y argument
-# pt.size: numeric value of dot size
-# pt.border.size: numeric value of border dot size. Write zero for no stroke
-# alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
-# show.stat: add the mean number above the corresponding bar. Either NULL (no number shown), "top" (at the top of the  figure region) or "above" (above each bar)
-# stat.size: numeric value of the number size (in points)
-# title: character string of the graph title
-# text.size: numeric value of the text size (in points)
-# break.nb: number of desired values on the y-axis
-# classic: logical. Use the classic theme (article like)?
-# grid: logical. draw horizontal lines in the background to better read the boxplot values? Not considered if classic = FALSE
-# return: logical. Return the graph parameters?
-# path.lib: absolute path of the required packages, if not in the default folders
-# REQUIRED PACKAGES
-# ggplot2
-# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_check()
-# fun_pack()
-# fun_gg_palette()
-# fun_round()
-# fun_2d_comp()
-# RETURN
-# a boxplot
-# a list of the graph info if return argument is TRUE:
-# $stat: the graphic statistics
-# $removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
-# $removed.rows: removed rows containing NA (NULL if no row removed)
-# $data: the graphic info coordinates
-# $warnings: the warning messages. Use cat() for proper display. NULL if no warning
-# EXAMPLES
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = "white") # separate bars, modification of bar color 1 (a single value)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = c("red", "blue")) # separate bars, modification of bar color 2 (one value par class of categ2)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), bar.color = rep(c("brown", "orange"), time = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", categ.color = obs1$bar.color) # separate bars, modification of bar color 3 (one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = "same") # separate bars, modification of dot color 1 (same dot color as the corresponding bar)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = "green") # separate bars, modification of dot color 2 (single color for all the dots)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = c("green", "brown")) # separate bars, modification of dot color 3 (one value par class of categ2)
-# obs1 <- data.frame(a = 1:10, group1 = rep(c("G", "H"), times = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1))) # separate bars, modification of dot color 4 (any color for each dot)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2")) # grouped bars, default arguments
-# obs1 <- data.frame(a = 1:24, group1 = rep(c("G", "H"), times = 12), group2 = rep(c("A", "B", "C", "D"), each = 6)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), return = TRUE) # more grouped bars
-# obs1 <- data.frame(a = log10((1:20) * 100), group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), ylog = TRUE) # grouped bars, log scale. BEWARE, y column must be log, otherwise incoherent scale
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL) # grouped bars, no dots
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.color = "white") # grouped bars, modification of bar color 1 (a single value)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.color = c("red", "blue")) # grouped bars, modification of bar color 2 (one value par class of categ2)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), categ.color = obs1$bar.color) # grouped bars, modification of bar color 3 (one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "same") # grouped bars, modification of dot color 1 (same dot color as the corresponding bar)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "green") # grouped bars, modification of dot color 2 (single color for all the dots)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = c("green", "brown")) # grouped bars, modification of dot color 3 (one value par class of categ2)
-# obs1 <- data.frame(a = 1:10, group1 = rep(c("G", "H"), times = 5), group2 = rep(c("A", "B"), each = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1))) # grouped bars, modification of dot color 4 (any color for each dot)
-# obs1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), class.order = list(NULL, c("B", "A")), legend.name = "", categ.color = c("red", "blue"), dot.color = "grey", error.bar = "SD", bar.width = 0.25, error.bar.width = 0.8, jitter = 1, ylim = c(10, 30), y.include.zero = FALSE, top.extra.margin = 0.5, bottom.extra.margin = 1, xlab = "GROUP", ylab = "MEAN", pt.size = 4, pt.border.size = 0, alpha = 1, show.stat = "above", stat.size = 4, title = "GRAPH1", text.size = 20, return = TRUE, break.nb = 10, classic = TRUE, grid = TRUE) # grouped bars, all the arguments
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = NULL, bar.width = 0.25) # width example. With bar.width = 0.25, three times more space between single bars than the bar width
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = "group1", dot.color = NULL, bar.width = 1) # width example. With bar.width = 1, no space between single bars
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, bar.width = 0.25) # width example. With bar.width = 0.25, three times more space between sets of grouped bars than the set width
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, bar.width = 1) # width example. With bar.width = 0, no space between sets of grouped bars
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, error.bar = "SD", error.bar.width = 1) # width example. With error.bar.width = 1, whiskers have the width of the corresponding bar
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = NULL, error.bar = "SD", error.bar.width = 0) # width example. No whiskers
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", pt.size = 3, alpha = 1,  jitter = 1) # width example. With jitter = 1, dispersion around the corresponding bar width
-# obs1 <- data.frame(a = 1:1000, group1 = rep(c("G", "H"), times = 500), group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "a", categ = c("group1", "group2"), dot.color = "grey", pt.size = 3, alpha = 1,  jitter = 0) # width example. No dispersion
-# DEBUGGING
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10)) ; y = names(data1)[1] ; categ = names(data1)[2] ; class.order = list(L1 = NULL) ; legend.name = NULL ; categ.color = c("red", "blue") ; dot.color = "same" ; error.bar = "SEM.TOP" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = FALSE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 1 ; show.stat = NULL ; stat.size = 8 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = c("red", "blue") ; dot.color = "same" ; error.bar = "SEM.TOP" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = FALSE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 1 ; show.stat = NULL ; stat.size = 8 ; title = "GRAPH1" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = NULL ; dot.color = "same" ; error.bar = NULL ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = NULL ; stat.size = 8 ; title = "" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = data1$bar.color ; dot.color = "same" ; error.bar = "SD" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = NULL ; stat.size = 8 ; title = "" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; class.order = list(L1 = NULL, L2 = c("B", "A")) ; legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; dot.color = "same" ; error.bar = "SD" ; bar.width = 0.5 ; error.bar.width = 0.5 ; jitter = 0.25 ; ylim = NULL ; ylog = TRUE ; y.include.zero = FALSE ; top.extra.margin = 0.05 ; bottom.extra.margin = 0 ; xlab = NULL ; ylab = NULL ; pt.size = 3 ; pt.border.size = 0.1 ; alpha = 0.5 ; show.stat = "above" ; stat.size = 4 ; title = "" ; text.size = 12 ; text.angle = 0 ; return = FALSE ; break.nb = NULL ; classic = FALSE ; grid = FALSE ; path.lib = NULL
-# function name
-}
 
 
 
@@ -6811,11 +6729,11 @@ fun_gg_empty_graph <- function(text = NULL, text.size = 12, title = NULL, title.
 # RETURN
 # an empty plot
 # EXAMPLES
-# simple example
+### simple example
 # fun_gg_empty_graph(text = "NO GRAPH")
-# white page
+### white page
 # fun_gg_empty_graph()
-# all the arguments
+### all the arguments
 # fun_gg_empty_graph(text = "NO GRAPH", text.size = 8, title = "GRAPH1", title.size = 10, path.lib = NULL)
 # DEBUGGING
 # text = "NO GRAPH" ; text.size = 12 ; title = "GRAPH1" ; title.size = 8 ; path.lib = NULL
@@ -8096,7 +8014,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
@@ -8110,7 +8028,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1\nINCONSISTENT DOTS", text.size = 8, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
@@ -8132,7 +8050,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
@@ -8146,7 +8064,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nINCONSISTENT DOTS", text.size = 8, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
@@ -8161,7 +8079,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(( ! is.null(x.range.split)) & is.null(y.range.split)){
@@ -8184,7 +8102,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
@@ -8198,7 +8116,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1\nINCONSISTENT DOTS", text.size = 8, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
@@ -8220,7 +8138,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
@@ -8234,7 +8152,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nINCONSISTENT DOTS", text.size = 8, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
@@ -8248,7 +8166,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size = 8, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(is.null(x.range.split) & ( ! is.null(y.range.split))){
@@ -8271,7 +8189,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
@@ -8285,7 +8203,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA1 INCONSISTENT DOTS", text.size = 12, title = "DATA1 + DATA1 INCONSISTENT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1\nINCONSISTENT DOTS", text.size = 8, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
@@ -8307,7 +8225,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 DOTS OUTSIDE THE FRAMES", text.size = 12, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
@@ -8321,7 +8239,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 INCONSISTENT DOTS", text.size = 12, title = "DATA2 + DATA2 INCONSISTENT DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nINCONSISTENT DOTS", text.size = 8, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
@@ -8335,7 +8253,7 @@ warning <- paste0(ifelse(is.null(warning), tempo.graph$warnings, paste0(warning,
 if(graph.in.file == FALSE){
 fun_open(pdf.disp = FALSE)
 }
-fun_gg_empty_graph(text = "NO PLOT BECAUSE NO DATA2 UNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
+fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size = 8, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }
@@ -8430,8 +8348,8 @@ fun_python_pack <- function(req.package, path.lib = NULL, R.path.lib = NULL){
 # check if the specified python packages are present in the computer (no import)
 # ARGUMENTS
 # req.package: character vector of package names to import
-# path.lib: optional character vector specifying the absolute pathways of the directories containing some of the listed packages
-# R.path.lib: absolute path of the required packages, if not in the default folders
+# path.lib: optional character vector specifying the absolute pathways of the directories containing some of the listed packages in the req.package argument
+# R.path.lib: absolute path of the reticulate packages, if not in the default folders
 # REQUIRED PACKAGES
 # reticulate
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
@@ -8441,10 +8359,10 @@ fun_python_pack <- function(req.package, path.lib = NULL, R.path.lib = NULL){
 # nothing
 # EXAMPLES
 # fun_python_pack(req.package = "nopackage")
-# fun_python_pack(req.package = "serpentine")
+# fun_python_pack(req.package = "serpentine", path.lib = "c:/programdata/anaconda3/lib/site-packages/")
 # fun_python_pack(req.package = "serpentine", path.lib = "blablabla")
 # DEBUGGING
-# req.package = "serpentine" ; path.lib = NULL ; R.path.lib = NULL
+# req.package = "serpentine" ; path.lib = "c:/programdata/anaconda3/lib/site-packages/" ; R.path.lib = NULL
 # req.package = "bad" ; path.lib = NULL ; R.path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -8498,6 +8416,7 @@ for(i0 in 1:length(req.package)){
 tempo.try <- vector("list", length = length(path.lib))
 for(i1 in 1:length(path.lib)){
 tempo.try[[i1]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i0], path = path.lib[i1]), silent = TRUE))
+tempo.try[[i1]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i0], path = path.lib[i1]), silent = TRUE)) # done twice to avoid the error message  about flushing present the first time but not the second time. see https://stackoverflow.com/questions/57357001/reticulate-1-13-error-in-sysstdoutflush-attempt-to-apply-non-function
 }
 if(all(sapply(tempo.try, FUN = grepl, pattern = "[Ee]rror"))){
 stop(paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(path.lib, collapse = "\n"), "\n\n================\n\n"))
