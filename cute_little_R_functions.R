@@ -21,55 +21,55 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis	2
-######## fun_check() #### check class, type, length, etc., of objects	2
-######## fun_info() #### recover object information	8
-######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)	9
-######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	13
-######## fun_2d_head() #### head of the left or right of big 2D objects	20
-######## fun_2d_tail() #### tail of the left or right of big 2D objects	21
-######## fun_list_comp() #### comparison of two lists	22
-################ Object modification	24
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector	24
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa	26
-######## fun_merge() #### merge the columns of two 2D objects, by common rows	29
-######## fun_round() #### rounding number if decimal present	33
-######## fun_mat_rotate() #### 90° clockwise matrix rotation	35
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix	35
-######## fun_mat_op() #### assemble several matrices with operation	38
-######## fun_mat_inv() #### return the inverse of a square matrix	41
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix	42
-######## fun_permut() #### progressively breaks a vector order	45
-################ Graphics management	55
-######## fun_width() #### window width depending on classes to plot	56
-######## fun_open() #### open a GUI or pdf graphic window	57
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)	60
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis	64
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)	69
-######## fun_close() #### close specific graphic windows	80
-################ Standard graphics	81
-######## fun_empty_graph() #### text to display for empty graphs	82
-################ gg graphics	83
-######## fun_gg_palette() #### ggplot2 default color palette	83
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle	84
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer	87
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)	90
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required	126
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required	161
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot	166
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median	166
-######## fun_gg_violin() #### ggplot2 violins	166
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars	166
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required	168
-######## fun_gg_empty_graph() #### text to display for empty graphs	182
-################ Graphic extraction	184
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs	184
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation	192
-################ Import	224
-######## fun_pack() #### check if R packages are present and import into the working environment	224
-######## fun_python_pack() #### check if python packages are present	226
-################ Exporting results (text & tables)	227
-######## fun_report() #### print string or data object into output file	227
+################ Object analysis    2
+######## fun_check() #### check class, type, length, etc., of objects   2
+######## fun_info() #### recover object information 8
+######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
+######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
+######## fun_2d_head() #### head of the left or right of big 2D objects 20
+######## fun_2d_tail() #### tail of the left or right of big 2D objects 21
+######## fun_list_comp() #### comparison of two lists   22
+################ Object modification    24
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
+######## fun_merge() #### merge the columns of two 2D objects, by common rows   29
+######## fun_round() #### rounding number if decimal present    33
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    35
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    35
+######## fun_mat_op() #### assemble several matrices with operation 38
+######## fun_mat_inv() #### return the inverse of a square matrix   41
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  42
+######## fun_permut() #### progressively breaks a vector order  45
+################ Graphics management    55
+######## fun_width() #### window width depending on classes to plot 56
+######## fun_open() #### open a GUI or pdf graphic window   57
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    60
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 64
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   69
+######## fun_close() #### close specific graphic windows    80
+################ Standard graphics  81
+######## fun_empty_graph() #### text to display for empty graphs    82
+################ gg graphics    83
+######## fun_gg_palette() #### ggplot2 default color palette    83
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  84
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  87
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   90
+######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    126
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    161
+######## fun_gg_bar_prop() #### ggplot2 proportion barplot  166
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   166
+######## fun_gg_violin() #### ggplot2 violins   166
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  166
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
+######## fun_gg_empty_graph() #### text to display for empty graphs 182
+################ Graphic extraction 184
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 184
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   192
+################ Import 224
+######## fun_pack() #### check if R packages are present and import into the working environment    224
+######## fun_python_pack() #### check if python packages are present    226
+################ Exporting results (text & tables)  227
+######## fun_report() #### print string or data object into output file 227
 
 
 ################################ FUNCTIONS ################################
