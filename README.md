@@ -133,10 +133,11 @@ Check for updated versions (most recent tags) at https://gitlab.pasteur.fr/gmill
 1) name of functions changed:
 fun_param_check()	fun_check()
 fun_object_info()	fun_info()
-fun_1D_comp()	fun_1d_comp()
-fun_2D_comp()	fun_2d_comp()
-fun_2D_head()	fun_2d_head()
-fun_2D_tail()	fun_2d_tail()
+fun_1D_comp()	fun_comp_1d()
+fun_2D_comp()	fun_comp_2d()
+fun_list_comp()	fun_comp_list()
+fun_2D_head()	fun_head()
+fun_2D_tail()	fun_tail()
 fun_dataframe_remodeling()	fun_df_remod()
 fun_refactorization()	fun_refact()
 fun_by_case_matrix_op()	fun_mat_op()
@@ -159,15 +160,16 @@ fun_permut_consec()
 fun_empty_graph()
 fun_gg_palette()
 fun_gg_just()
+fun_gg_point_rast()
 fun_gg_scatter()
-fun_gg_bar_mean()
+fun_gg_bar()
 fun_gg_heatmap()
 fun_gg_empty_graph()
 fun_segmentation()
 fun_pack()
 fun_python_pack()
 
-3) text error modified in fun_2D_head() and fun_2D_tail()
+3) text error modified in fun_head() and fun_tail(), + deals without all objects but use head() and tail() if not 2D object
 
 4) in fun_param_check(): (1) has now the class = "vector", (2) argument fun.name added
 
