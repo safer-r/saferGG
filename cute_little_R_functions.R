@@ -25,52 +25,52 @@
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
 ######## fun_info() #### recover object information 8
-######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables) 9
-######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   13
-######## fun_2d_head() #### head of the left or right of big 2D objects 20
-######## fun_2d_tail() #### tail of the left or right of big 2D objects 21
-######## fun_list_comp() #### comparison of two lists   22
-################ Object modification    24
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  24
+######## fun_head() #### head of the left or right of big 2D objects    10
+######## fun_tail() #### tail of the left or right of big 2D objects    11
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 12
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   16
+######## fun_comp_list() #### comparison of two lists   22
+################ Object modification    25
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  25
 ######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
 ######## fun_merge() #### merge the columns of two 2D objects, by common rows   29
 ######## fun_round() #### rounding number if decimal present    33
 ######## fun_mat_rotate() #### 90° clockwise matrix rotation    35
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    35
-######## fun_mat_op() #### assemble several matrices with operation 38
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    36
+######## fun_mat_op() #### assemble several matrices with operation 39
 ######## fun_mat_inv() #### return the inverse of a square matrix   41
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  42
-######## fun_permut() #### progressively breaks a vector order  45
-################ Graphics management    55
+######## fun_permut() #### progressively breaks a vector order  46
+################ Graphics management    56
 ######## fun_width() #### window width depending on classes to plot 56
 ######## fun_open() #### open a GUI or pdf graphic window   57
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    60
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 64
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    61
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 65
 ######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   69
-######## fun_close() #### close specific graphic windows    80
-################ Standard graphics  81
+######## fun_close() #### close specific graphic windows    81
+################ Standard graphics  82
 ######## fun_empty_graph() #### text to display for empty graphs    82
-################ gg graphics    83
-######## fun_gg_palette() #### ggplot2 default color palette    83
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  84
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  87
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   90
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required    126
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    161
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot  166
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   166
-######## fun_gg_violin() #### ggplot2 violins   166
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  166
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
-######## fun_gg_empty_graph() #### text to display for empty graphs 182
-################ Graphic extraction 184
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 184
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   192
-################ Import 224
-######## fun_pack() #### check if R packages are present and import into the working environment    224
-######## fun_python_pack() #### check if python packages are present    226
-################ Exporting results (text & tables)  227
-######## fun_report() #### print string or data object into output file 227
+################ gg graphics    84
+######## fun_gg_palette() #### ggplot2 default color palette    84
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  85
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  88
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   91
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 127
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    162
+######## fun_gg_prop() #### ggplot2 proportion barplot  162
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   162
+######## fun_gg_violin() #### ggplot2 violins   162
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  162
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  164
+######## fun_gg_empty_graph() #### text to display for empty graphs 178
+################ Graphic extraction 179
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 180
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   188
+################ Import 220
+######## fun_pack() #### check if R packages are present and import into the working environment    220
+######## fun_python_pack() #### check if python packages are present    221
+################ Exporting results (text & tables)  223
+######## fun_report() #### print string or data object into output file 223
 
 
 ################################ FUNCTIONS ################################
@@ -351,7 +351,8 @@ fun_info <- function(data){
 # ARGUMENTS
 # data: object to test
 # RETURN
-# a list containing the info
+# a list containing information, depending on the class and type of data
+# is data is made of numerics, provide range, sum, mean, number of NA and number of Inf
 # please, use names(fun_info()) and remove what can be too big for easy analysis
 # EXAMPLES
 # fun_info(data = 1:3)
@@ -377,6 +378,20 @@ tempo <- list("CLASS" = class(data))
 output <- c(output, tempo)
 tempo <- list("TYPE" = typeof(data))
 output <- c(output, tempo)
+tempo <- list("LENGTH" = length(data))
+output <- c(output, tempo)
+if(all(typeof(data) %in% c("integer", "numeric", "double"))){
+tempo <- list("RANGE" = range(data[ ! is.infinite(data)], na.rm = TRUE))
+output <- c(output, tempo)
+tempo <- list("SUM" = sum(data[ ! is.infinite(data)], na.rm = TRUE))
+output <- c(output, tempo)
+tempo <- list("MEAN" = mean(data[ ! is.infinite(data)], na.rm = TRUE))
+output <- c(output, tempo)
+tempo <- list("NA.NB" = sum(is.na(data)))
+output <- c(output, tempo)
+tempo <- list("INF.NB" = sum(is.infinite(data)))
+output <- c(output, tempo)
+}
 tempo <- list("HEAD" = head(data))
 output <- c(output, tempo)
 if( ! is.null(data)){
@@ -430,11 +445,145 @@ return(output)
 }
 
 
-######## fun_1d_comp() #### comparison of two 1D datasets (vectors, factors, 1D tables)
+######## fun_head() #### head of the left or right of big 2D objects
 
 
 # Check OK: clear to go Apollo
-fun_1d_comp <- function(data1, data2){
+fun_head <- function(data1, n = 6, side = "l"){
+# AIM
+# as head() but display the left or right head of big 2D objects
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_check()
+# ARGUMENTS
+# data1: any object but more dedicated for matrix, data frame or table
+# n: as in head() but for for matrix, data frame or table, number of dimension to print (10 means 10 rows and columns)
+# side: either "l" or "r" for the left or right side of the 2D object (only for matrix, data frame or table)
+# BEWARE: other arguments of head() not used
+# RETURN
+# the head
+# EXAMPLES
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_head(obs1, 3)
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_head(obs1, 3, "right")
+# DEBUGGING
+# data1 = matrix(1:30, ncol = 5) # for function debugging
+# data1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+# argument checking without fun_check()
+# if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+# tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
+# stop(tempo.cat)
+# }
+# end argument checking without fun_check()
+# argument checking with fun_check()
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_check()
+}
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument checking
+# main code
+if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+return(head(data1, n))
+}else{
+obs.dim <- dim(data1)
+row <- 1:ifelse(obs.dim[1] < n, obs.dim[1], n)
+if(side == "l"){
+col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
+}
+if(side == "r"){
+col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
+}
+return(data1[row, col])
+}
+}
+
+
+######## fun_tail() #### tail of the left or right of big 2D objects
+
+
+# Check OK: clear to go Apollo
+fun_tail <- function(data1, n = 10, side = "l"){
+# AIM
+# as tail() but display the left or right head of big 2D objects
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_check()
+# ARGUMENTS
+# data1: any object but more dedicated for matrix, data frame or table
+# n: as in tail() but for for matrix, data frame or table, number of dimension to print (10 means 10 rows and columns)
+# side: either "l" or "r" for the left or right side of the 2D object (only for matrix, data frame or table)
+# BEWARE: other arguments of tail() not used
+# RETURN
+# the tail
+# EXAMPLES
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_tail(obs1, 3)
+# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_tail(obs1, 3, "r")
+# DEBUGGING
+# data1 = matrix(1:10, ncol = 5) # for function debugging
+# data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+# argument checking without fun_check()
+# if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+# tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
+# stop(tempo.cat)
+# }
+# end argument checking without fun_check()
+# argument checking with fun_check()
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_check()
+}
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument checking
+# main code
+if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+return(tail(data1, n))
+}else{
+obs.dim <- dim(data1)
+row <- ifelse(obs.dim[1] < n, 1, obs.dim[1] - n + 1):obs.dim[1]
+if(side == "l"){
+col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
+}
+if(side == "r"){
+col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
+}
+return(data1[row, col])
+}
+}
+
+
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables)
+
+
+# Check OK: clear to go Apollo
+fun_comp_1d <- function(data1, data2){
 # AIM
 # compare two 1D datasets (vector of factor or 1D table) of the same class or not. Check and report in a list if the 2 datasets have:
 # same class
@@ -471,16 +620,16 @@ fun_1d_comp <- function(data1, data2){
 # $identical.object: logical. Are objects identical (kind of object, element names and content)?
 # $identical.content: logical. Are content objects identical (identical elements excluding kind of object and element names)?
 # EXAMPLES
-# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:5] ; fun_1d_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; fun_1d_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = 3:6 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:4] ; fun_1d_comp(obs1, obs2)
-# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[1:5]) ; fun_1d_comp(obs1, obs2)
-# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[10:11]) ; fun_1d_comp(obs1, obs2)
-# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[4:7]) ; fun_1d_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = factor(LETTERS[1:5]) ; fun_1d_comp(obs1, obs2)
-# obs1 = 1:5 ; obs2 = 1.1:6.1 ; fun_1d_comp(obs1, obs2)
-# obs1 = as.table(1:5); obs2 = as.table(1:5) ; fun_1d_comp(obs1, obs2)
-# obs1 = as.table(1:5); obs2 = 1:5 ; fun_1d_comp(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:5] ; fun_comp_1d(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 1:5 ; names(obs1) <- LETTERS[1:5] ; fun_comp_1d(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 3:6 ; names(obs1) <- LETTERS[1:5] ; names(obs2) <- LETTERS[1:4] ; fun_comp_1d(obs1, obs2)
+# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[1:5]) ; fun_comp_1d(obs1, obs2)
+# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[10:11]) ; fun_comp_1d(obs1, obs2)
+# obs1 = factor(LETTERS[1:5]) ; obs2 = factor(LETTERS[4:7]) ; fun_comp_1d(obs1, obs2)
+# obs1 = 1:5 ; obs2 = factor(LETTERS[1:5]) ; fun_comp_1d(obs1, obs2)
+# obs1 = 1:5 ; obs2 = 1.1:6.1 ; fun_comp_1d(obs1, obs2)
+# obs1 = as.table(1:5); obs2 = as.table(1:5) ; fun_comp_1d(obs1, obs2)
+# obs1 = as.table(1:5); obs2 = 1:5 ; fun_comp_1d(obs1, obs2)
 # DEBUGGING
 # data1 = 1:5 ; data2 = 1:5 ; names(data1) <- LETTERS[1:5] ; names(data2) <- LETTERS[1:5] # for function debugging
 # function name
@@ -646,11 +795,11 @@ return(output)
 }
 
 
-######## fun_2d_comp() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
 
 
 # Check OK: clear to go Apollo
-fun_2d_comp <- function(data1, data2){
+fun_comp_2d <- function(data1, data2){
 # AIM
 # compare two 2D datasets of the same class or not. Check and report in a list if the 2 datasets have:
 # same class
@@ -696,10 +845,10 @@ fun_2d_comp <- function(data1, data2){
 # $identical.object: logical. Are objects identical (including row & column names)?
 # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
 # EXAMPLES
-# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
-# obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
-# obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
-# obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
+# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
+# obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
+# obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
+# obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
 # DEBUGGING
 # data1 = matrix(1:10, ncol = 5) ; data2 = matrix(1:10, ncol = 5) # for function debugging
 # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
@@ -788,11 +937,11 @@ identical.content <- TRUE
 }else{
 identical.object <- FALSE
 if(all(class(data1) == "table") & length(dim(data1)) == 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT IS A 1D TABLE. USE THE info_1D_dataset_fun FUNCTION\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION\n\n================\n\n")
 stop(tempo.cat)
 }
 if(all(class(data2) == "table") & length(dim(data2)) == 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT IS A 1D TABLE. USE THE info_1D_dataset_fun FUNCTION\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION\n\n================\n\n")
 stop(tempo.cat)
 }
 if( ! identical(class(data1), class(data2))){
@@ -953,135 +1102,11 @@ return(output)
 }
 
 
-######## fun_2d_head() #### head of the left or right of big 2D objects
+######## fun_comp_list() #### comparison of two lists
 
 
 # Check OK: clear to go Apollo
-fun_2d_head <- function(data1, n = 10, side = "l"){
-# AIM
-# display the head of the left or right of big 2D objects
-# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_check()
-# ARGUMENTS
-# data1: matrix, data frame or table
-# n: number of dimension to print (10 means 10 rows and columns)
-# side: either "l" or "r" for the left or right side of the 2D object
-# RETURN
-# the head
-# EXAMPLES
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_head(obs1, 3)
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_head(obs1, 3, "right")
-# DEBUGGING
-# data1 = matrix(1:30, ncol = 5) # for function debugging
-# data1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
-# function name
-function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
-# end function name
-# required function checking
-if(length(find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-# end required function checking
-# argument checking
-# argument checking without fun_check()
-if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
-stop(tempo.cat)
-}
-# end argument checking without fun_check()
-# argument checking with fun_check()
-arg.check <- NULL # for function debbuging
-checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
-if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_check()
-}
-# end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end argument checking
-# main code
-obs.dim <- dim(data1)
-row <- 1:ifelse(obs.dim[1] < n, obs.dim[1], n)
-if(side == "l"){
-col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
-}
-if(side == "r"){
-col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
-}
-return(data1[row, col])
-}
-
-
-######## fun_2d_tail() #### tail of the left or right of big 2D objects
-
-
-# Check OK: clear to go Apollo
-fun_2d_tail <- function(data1, n = 10, side = "l"){
-# AIM
-# display the tail of the left or right of big 2D objects
-# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_check()
-# ARGUMENTS
-# data1: matrix, data frame or table
-# n: number of dimension to print (10 means 10 rows and columns)
-# side: either "l" or "r" for the left or right side of the 2D object
-# RETURN
-# the tail
-# EXAMPLES
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_tail(obs1, 3)
-# obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_2d_tail(obs1, 3, "r")
-# DEBUGGING
-# data1 = matrix(1:10, ncol = 5) # for function debugging
-# data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
-# function name
-function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
-# end function name
-# required function checking
-if(length(find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
-}
-# end required function checking
-# argument checking
-# argument checking without fun_check()
-if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
-stop(tempo.cat)
-}
-# end argument checking without fun_check()
-# argument checking with fun_check()
-arg.check <- NULL # for function debbuging
-checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
-tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
-if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_check()
-}
-# end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end argument checking
-# main code
-obs.dim <- dim(data1)
-row <- ifelse(obs.dim[1] < n, 1, obs.dim[1] - n + 1):obs.dim[1]
-if(side == "l"){
-col <- 1:ifelse(obs.dim[2] < n, obs.dim[2], n)
-}
-if(side == "r"){
-col <- ifelse(obs.dim[2] < n, 1, obs.dim[2] - n + 1):obs.dim[2]
-}
-return(data1[row, col])
-}
-
-
-######## fun_list_comp() #### comparison of two lists
-
-
-# Check OK: clear to go Apollo
-fun_list_comp <- function(data1, data2){
+fun_comp_list <- function(data1, data2){
 # AIM
 # compare two lists. Check and report in a list if the 2 datasets have:
 # same length
@@ -1107,10 +1132,10 @@ fun_list_comp <- function(data1, data2){
 # $identical.object: logical. Are objects identical (kind of object, compartment names and content)?
 # $identical.content: logical. Are content objects identical (identical compartments excluding compartment names)?
 # EXAMPLES
-# obs1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_list_comp(obs1, obs2)
-# obs1 = list(1:5, LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2]) ; fun_list_comp(obs1, obs2)
-# obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_list_comp(obs1, obs2)
-# obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(LETTERS[5:9], matrix(1:6), 1:5) ; fun_list_comp(obs1, obs2)
+# obs1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_comp_list(obs1, obs2)
+# obs1 = list(1:5, LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2]) ; fun_comp_list(obs1, obs2)
+# obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; fun_comp_list(obs1, obs2)
+# obs1 = list(b = 1:5, c = LETTERS[1:2]) ; obs2 = list(LETTERS[5:9], matrix(1:6), 1:5) ; fun_comp_list(obs1, obs2)
 # DEBUGGING
 # data1 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
 # data1 = list(a = 1:5, b = LETTERS[1:2]) ; data2 = list(a = 1:5, b = LETTERS[1:2], d = matrix(1:6)) # for function debugging
@@ -1414,7 +1439,7 @@ fun_merge <- function(data1, data2, name1, name2, factor.as = "numeric", warn.pr
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_2d_comp()
+# fun_comp_2d()
 # fun_check()
 # ARGUMENTS
 # data1: matrix or data frame or table
@@ -1428,7 +1453,7 @@ fun_merge <- function(data1, data2, name1, name2, factor.as = "numeric", warn.pr
 # $data: the merged data frame or matrix or table
 # $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
-# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_2d_comp(obs1, obs2)
+# obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
 # DEBUGGING
 # data1 = matrix(1.0001:21, ncol = 4) ; dimnames(data1) <- list(LETTERS[1:5], letters[1:4]); data2 = matrix(1.0001:31, ncol = 6) ; dimnames(data2) <- list(NULL, c("a", "aa", "c", "d", "aaa", "aaaa")) ; set.seed(1) ; data2[, "c"] <- sample(data2[, "c"]) ; data2[, "d"] <- sample(data2[, "d"]) ; set.seed(NULL) ; data1 ; data2 ; name1 = c("c", "d") ; name2 = c("d", "c") ; factor.as = "numeric" # for function debugging
 # function name
@@ -1858,7 +1883,7 @@ fun_mat_op <- function(mat.list, kind.of.operation = "+"){
 # z: number of matrices
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
-# fun_2d_comp()
+# fun_comp_2d()
 # ARGUMENTS:
 # mat.list: list of matrices
 # kind.of.operation: either "+" (by case addition), "-" (by case subtraction) or "*" (by case multiplication)
@@ -1881,7 +1906,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUI
 stop(tempo.cat)
 }
 if(length(find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2d_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_comp_2d() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -1911,7 +1936,7 @@ stop(tempo.cat)
 ident.row.names <- TRUE
 ident.col.names <- TRUE
 for(i0 in 2:length(mat.list)){
-tempo <- fun_2d_comp(data1 = mat.list[[1]], data2 = mat.list[[i0]])
+tempo <- fun_comp_2d(data1 = mat.list[[1]], data2 = mat.list[[i0]])
 if(tempo$same.dim == FALSE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX ", i0, " OF mat.list ARGUMENT MUST HAVE THE SAME DIMENSION (", paste(dim(mat.list[[i0]]), collapse = " "), ") THAN THE MATRIX 1 IN mat.list (", paste(dim(mat.list[[1]]), collapse = " "), ")\n\n================\n\n")
 stop(tempo.cat)
@@ -5116,14 +5141,14 @@ return(output)
 }
 
 
-######## fun_gg_bar_mean() #### ggplot2 mean barplot + overlaid dots if required
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required
 
 
  
 
 
 # Check OK: clear to go Apollo
-fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, text.size = 12, title = "", title.text.size = 8, text.angle = 0, classic = FALSE, grid = FALSE, return = FALSE, plot = TRUE, add = NULL, warn.print = FALSE, path.lib = NULL){
+fun_gg_bar <- function(data1, y, categ, categ.class.order = NULL, categ.legend.name = NULL, categ.color = NULL, bar.width = 0.5, error.disp = NULL, error.whisker.width = 0.5,  dot.color = "same", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 0.25, dot.size = 3, dot.border.size = 0.5, dot.alpha = 0.5, ylim = NULL, ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0, y.bottom.extra.margin = 0, stat.disp = NULL, stat.size = 4, stat.dist = 2, xlab = NULL, ylab = NULL, vertical = TRUE, text.size = 12, title = "", title.text.size = 8, text.angle = 0, classic = FALSE, grid = FALSE, return = FALSE, plot = TRUE, add = NULL, warn.print = FALSE, path.lib = NULL){
 # AIM
 # ggplot2 vertical barplot representing mean values with the possibility to add error bars and to overlay dots
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
@@ -5131,8 +5156,8 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
 # if ever bars disappear, see the end of https://github.com/tidyverse/ggplot2/issues/2887
 # to have a single bar, create a factor column with a single class and specify the name of this column in categ argument as unique element (no categ2 in categ argument). For a single set of grouped bars, create a factor column with a single class and specify this column in categ argument as first element (categ1). See categ below
-# with several single bars (categ argument with only one element), bar.width argument (i.e., width argument of ggplot2::geom_bar()) defines each bar width. The bar.width argument also defines the space between bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each bar)
-# with several sets of grouped bars (categ argument with two elements), bar.width argument defines each set of grouped bar width. The bar.width argument also defines the space between set of grouped bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped bar)
+# with several single bars (categ argument with only one element), bar.width argument (i.e., width argument of ggplot2::geom_bar()) defines each bar width. The bar.width argument also defines the space between bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each bar)
+# with several sets of grouped bars (categ argument with two elements), bar.width argument defines each set of grouped bar width. The bar.width argument also defines the space between set of grouped bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped bar)
 # to manually change the 0 base bar into this code, see https://stackoverflow.com/questions/35324892/ggplot2-setting-geom-bar-baseline-to-1-instead-of-zero
 # ARGUMENTS
 # data1: a dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below). Duplicated column names not allowed
@@ -5179,7 +5204,7 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # ggplot2
 # scales
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# fun_2d_comp()
+# fun_comp_2d()
 # fun_gg_just()
 # fun_gg_palette()
 # fun_name_change()
@@ -5198,113 +5223,113 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 # $warnings: the warning messages. Use cat() for proper display. NULL if no warning
 # EXAMPLES
 ### nice representation (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.3, error.disp = "SD.TOP", error.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "VALUE", text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 0, classic = TRUE, grid = TRUE)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.3, error.disp = "SD.TOP", error.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, xlab = "GROUP", ylab = "VALUE", text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 0, classic = TRUE, grid = TRUE)
 ### nice representation (2)
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), Group1 = rep(c("CAT", "DOG"), times = 48), Group2 = rep(c("A", "B", "C", "D"), each = 24)) ; set.seed(NULL) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.8, dot.color = "grey50", dot.tidy = TRUE, dot.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim= c(-20, 30), stat.disp = "above", stat.size = 4, stat.dist = 1, xlab = "GROUP", ylab = "VALUE", vertical = FALSE, text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 45, classic = FALSE)
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), Group1 = rep(c("CAT", "DOG"), times = 48), Group2 = rep(c("A", "B", "C", "D"), each = 24)) ; set.seed(NULL) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, bar.width = 0.8, dot.color = "grey50", dot.tidy = TRUE, dot.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, ylim= c(-20, 30), stat.disp = "above", stat.size = 4, stat.dist = 1, xlab = "GROUP", ylab = "VALUE", vertical = FALSE, text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 45, classic = FALSE)
 ### simple example
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1")
 ### separate bars. Example (1) of modification of bar color using a single value
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = "white")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", categ.color = "white")
 ### separate bars. Example (2) of modification of bar color using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = c("coral", "lightblue"))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", categ.color = c("coral", "lightblue"))
 ### separate bars. Example (3) of modification of bar color using the bar.color data frame column, with respect of the correspondence between categ2 and bar.color columns
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), bar.color = rep(c("coral", "lightblue"), time = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", categ.color = obs1$bar.color)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), bar.color = rep(c("coral", "lightblue"), time = 10)) ; obs1 ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", categ.color = obs1$bar.color)
 ### separate bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = "same")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", dot.color = "same")
 ### separate bars. Example (2) of modification of dot color, using a single color for all the dots
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = "green")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", dot.color = "green")
 ### separate bars. Example (3) of modification of dot color, using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = c("green", "brown"))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", dot.color = c("green", "brown"))
 ### separate bars. Example (4) of modification of dot color, using different colors for each dot
-# obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
+# obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
 ### grouped bars. Simple example
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
 ### grouped bars. More grouped bars
-# obs1 <- data.frame(Time = 1:24, Group1 = rep(c("G", "H"), times = 12), Group2 = rep(c("A", "B", "C", "D"), each = 6)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
+# obs1 <- data.frame(Time = 1:24, Group1 = rep(c("G", "H"), times = 12), Group2 = rep(c("A", "B", "C", "D"), each = 6)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"))
 ### grouped bars. Example (1) of modification of bar color, using a single value
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = "white")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = "white")
 ### grouped bars. Example (2) of modification of bar color, using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = c("coral", "lightblue"))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = c("coral", "lightblue"))
 ### grouped bars. Example (3) of modification of bar color, using one value per line of obs1, with respect of the correspondence between categ2 and bar.color columns
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("coral", "lightblue"), each = 10)) ; obs1 ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = obs1$bar.color)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("coral", "lightblue"), each = 10)) ; obs1 ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.color = obs1$bar.color)
 ### grouped bars. Example (1) of modification of dot color, using the same dot color as the corresponding bar
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same")
 ### grouped bars. Example (2) of modification of dot color, using a single color for all the dots
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "green")
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "green")
 ### grouped bars. Example (3) of modification of dot color, using one value par class of categ2
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = c("green", "brown"))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = c("green", "brown"))
 ### grouped bars. Example (4) of modification of dot color, using different colors for each dot
-# obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5), Group2 = rep(c("A", "B"), each = 5)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
+# obs1 <- data.frame(Time = 1:10, Group1 = rep(c("G", "H"), times = 5), Group2 = rep(c("A", "B"), each = 5)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = hsv(h = (1:nrow(obs1)) / nrow(obs1)))
 ### no dots (y.include.zero set to TRUE to see the lowest bar):
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE)
 ### bar width. Example (1) with bar.width = 0.25 -> three times more space between single bars than the bar width (y.include.zero set to TRUE to see the lowest bar)
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
 ### bar width. Example (2) with bar.width = 1, no space between single bars
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), each = 500)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = "Group1", dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
 ### bar width. Example (3) with bar.width = 0.25 -> three times more space between sets of grouped bars than the set width
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 0.25)
 ### bar width. Example (4) with bar.width = 0 -> no space between sets of grouped bars
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, y.include.zero = TRUE, bar.width = 1)
 ### error bars
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD.TOP")
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD.TOP")
 ### whisker width. Example (1) with error.whisker.width = 1 -> whiskers have the width of the corresponding bar
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 1)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 1)
 ### whisker width. Example (2) error bars with no whiskers
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 0)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = NULL, error.disp = "SD", error.whisker.width = 0)
 ### tidy dot distribution. Example (1)
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 100)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 100)
 ### tidy dot distribution. Example (2) reducing the dot size with dot.bin.nb
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 150)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.bin.nb = 150)
 ### dot jitter. Example (1)
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = FALSE, dot.jitter = 1, dot.size = 2)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = FALSE, dot.jitter = 1, dot.size = 2)
 ### dot jitter. Example (2) with dot.jitter = 1 -> dispersion around the corresponding bar width
-# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 1)
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 1)
 ### dot jitter. Example (3) with no dispersion
-# obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 0)
+# obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 3, dot.alpha = 1,  dot.jitter = 0)
 ### dot size, dot border size and dot transparency
-# obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 4, dot.border.size = 0, dot.alpha = 0.6)
+# obs1 <- data.frame(Time = 1:100, Group1 = rep(c("G", "H"), times = 50), Group2 = rep(LETTERS[1:5], each = 20)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "grey", dot.size = 4, dot.border.size = 0, dot.alpha = 0.6)
 ### y-axis limits. Example (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(-1, 25))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(-1, 25))
 ### y-axis limits. Example (2) showing that order matters in ylim argument
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(25, -1))
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylim = c(25, -1))
 ### log scale. Example (1). BEWARE: y column must be log, otherwise incoherent scale (see below warning message with the return argument)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10")
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10")
 ### log scale. Example (2). BEWARE: values of the ylim must be in the corresponding log
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", ylim = c(1,4))
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", ylim = c(1,4))
 ### tick number. Example (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10)
 ### tick number. Example (2) using a log2 scale
-# obs1 <- data.frame(Time = log2((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log2", y.tick.nb = 10, ylim = c(1, 16))
+# obs1 <- data.frame(Time = log2((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log2", y.tick.nb = 10, ylim = c(1, 16))
 ### tick number. Example (3) using a log10 scale
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10)
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10)
 ### tick number. Example (4) using a log10 scale: the reverse y-axis correctly deal with log10 scale
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10, ylim = c(4, 1))
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.tick.nb = 10, ylim = c(4, 1))
 ### secondary tick number. Example (1)
-# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.inter.tick.nb = 2)
+# obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.inter.tick.nb = 2)
 ### secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.inter.tick.nb = 2)
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", y.inter.tick.nb = 2)
 ### include zero in the y-axis
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.include.zero = TRUE)
+# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.include.zero = TRUE)
 ### extra margins. To avoid dot cuts
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.25, y.bottom.extra.margin = 0.25)
+# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.25, y.bottom.extra.margin = 0.25)
 ### mean diplay. Example (1) at the top of the plot region
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "top", stat.size = 4, stat.dist = 2)
+# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "top", stat.size = 4, stat.dist = 2)
 ### mean diplay. Example (2) above bars
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "above", stat.size = 4, stat.dist = 2)
+# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "above", stat.size = 4, stat.dist = 2)
 ### bar orientation.  Example (1) without log scale, showing that the other arguments are still operational
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10, y.inter.tick.nb = 2, y.include.zero = TRUE, vertical = FALSE)
+# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10, y.inter.tick.nb = 2, y.include.zero = TRUE, vertical = FALSE)
 ### bar orientation. Example (2) with log scale. Horizontal orientation is blocked with log2 and log10 scales because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", vertical = FALSE)
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", vertical = FALSE)
 ### classic representation (use grid = TRUE to display the background lines of the y axis ticks)
-# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), classic = TRUE, grid = FALSE)
+# obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), classic = TRUE, grid = FALSE)
 ### graphic info. Example (1)
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), return = TRUE)
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), return = TRUE)
 ### graphic info. Example (2) of assignation and warning message display
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; warn <- fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", return = TRUE) ; cat(warn$warnings)
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; warn <- fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), ylog = "log10", return = TRUE) ; cat(warn$warnings)
 ### add ggplot2 functions
-# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
+# obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
 ### all the arguments
-# obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar_mean(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = c(0, 25), ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, xlab = "GROUP", ylab = "VALUE", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
+# obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_bar(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), bar.width = 0.25, error.disp = "SD", error.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, ylim = c(0, 25), ylog = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, xlab = "GROUP", ylab = "VALUE", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, classic = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, path.lib = NULL)
 # DEBUGGING
 # data1 <- data.frame(a = 1:20, group1 = rep(c("G", "H"), times = 10), group2 = rep(c("A", "B"), each = 10), bar.color = rep(c("brown", "orange"), each = 10)) ; data1[2:3, 1] <- NA ; data1[7:8, 2] <- NA ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A")) ; categ.legend.name = NULL ; categ.color = na.omit(data1)$bar.color ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = FALSE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
 # data1 <-data.frame(a = rep(1:20, 5), group1 = rep(c("G", "H"), times = 50), group2 = rep(LETTERS[1:5], each = 20)) ; y = names(data1)[1] ; categ = c(names(data1)[2], names(data1)[3]) ; categ.class.order = list(L1 = NULL, L2 = c("B", "A", "E", "D", "C")) ; categ.legend.name = NULL ; categ.color = NULL ; bar.width = 0.5 ; error.disp = "SD" ; error.whisker.width = 0.5 ; dot.color = "same" ; dot.tidy = TRUE ; dot.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.border.size = 0.5 ; dot.alpha = 1 ; ylim = NULL ; ylog = "no" ; y.tick.nb = NULL ; y.inter.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0 ; stat.disp = NULL ; stat.size = 4 ; stat.dist = 2 ; xlab = NULL ; ylab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; text.angle = 0 ; classic = FALSE ; grid = FALSE ; return = FALSE; plot = TRUE ; add = NULL ; warn.print = TRUE ; path.lib = NULL
@@ -5315,8 +5340,8 @@ fun_gg_bar_mean <- function(data1, y, categ, categ.class.order = NULL, categ.leg
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_2d_comp", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_2d_comp() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+if(length(find("fun_comp_2d", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_comp_2d() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(length(find("fun_gg_just", mode = "function")) == 0){
@@ -5959,7 +5984,7 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
+if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_comp_2d(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6013,7 +6038,7 @@ tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INC
 stop(tempo.cat)
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
-if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_2d_comp(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
+if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_comp_2d(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6061,7 +6086,7 @@ stat.coord4 <- cbind(stat[order(stat[, categ[1]]), ], tempo.data1[order(tempo.da
 }
 }else if(length(categ) == 2){
 tempo.data1 <- unique(data.frame(data1[c(categ[1], categ[2])], group = as.integer(factor(paste0(as.numeric(data1[, categ[2]]), ".", as.numeric(data1[, categ[1]])))))) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-if( ! fun_2d_comp(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
+if( ! fun_comp_2d(stat[order(stat[, categ[1]], stat[, categ[2]]), c(categ[1], categ[2])], tempo.data1[order(tempo.data1[, categ[1]], tempo.data1[, categ[2]]), c(categ[1], categ[2])])$identical.content){
 tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE PROBLEM IN TRYING TO ASSEMBLE stat AND tempo.data1\n\n============\n\n"))
 stop(tempo.cat)
 }else{
@@ -6222,7 +6247,7 @@ return(output)
 
 
 
-######## fun_gg_bar_prop() #### ggplot2 proportion barplot
+######## fun_gg_prop() #### ggplot2 proportion barplot
 
 
 ######## fun_gg_strip() #### ggplot2 stripchart + mean/median
@@ -6244,8 +6269,8 @@ fun_gg_line <- function(data1, y, categ, categ.class.order = NULL, categ.legend.
 # rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
 # if ever bars disappear, see the end of https://github.com/tidyverse/ggplot2/issues/2887
 # to have a single bar, create a factor column with a single class and specify the name of this column in categ argument as unique element (no categ2 in categ argument). For a single set of grouped bars, create a factor column with a single class and specify this column in categ argument as first element (categ1). See categ below
-# with several single bars (categ argument with only one element), bar.width argument (i.e., width argument of ggplot2::geom_bar()) defines each bar width. The bar.width argument also defines the space between bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each bar)
-# with several sets of grouped bars (categ argument with two elements), bar.width argument defines each set of grouped bar width. The bar.width argument also defines the space between set of grouped bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar_mean() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped bar)
+# with several single bars (categ argument with only one element), bar.width argument (i.e., width argument of ggplot2::geom_bar()) defines each bar width. The bar.width argument also defines the space between bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each bar)
+# with several sets of grouped bars (categ argument with two elements), bar.width argument defines each set of grouped bar width. The bar.width argument also defines the space between set of grouped bars by using (1 - bar.width). In addition, xmin and xmax of the fun_gg_bar() output report the bar boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped bar)
 # to manually change the 0 base bar into this code, see https://stackoverflow.com/questions/35324892/ggplot2-setting-geom-bar-baseline-to-1-instead-of-zero
 # ARGUMENTS
 # data1: a dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below). Duplicated column names not allowed
