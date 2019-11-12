@@ -8378,11 +8378,14 @@ suppressWarnings(suppressPackageStartupMessages(library(req.package[i0], lib.loc
 
 
 # Check OK: clear to go Apollo
-fun_python_pack <- function(req.package, path.lib = NULL, R.path.lib = NULL){
+fun_python_pack <- function(req.package, path.python.exec = NULL, path.lib = NULL, R.path.lib = NULL){
 # AIM
 # check if the specified python packages are present in the computer (no import)
+# WARNINGS
+# for python 3.7. Previous versions return an error "Error in sys$stdout$flush() : attempt to apply non-function"
 # ARGUMENTS
 # req.package: character vector of package names to import
+# path.python.exec: optional character vector specifying the absolute pathways of the executable python file to use (associated to the packages to use). If NULL, the reticulate::import_from_path() function used in fun_python_pack() seeks for an available version of python.exe, and then uses python_config(python_version, required_module, python_versions). But might not be the correct one for the path.lib parameter specified. Thus, it is recommanded to do not leave NULL, notably when using computing clusters
 # path.lib: optional character vector specifying the absolute pathways of the directories containing some of the listed packages in the req.package argument
 # R.path.lib: absolute path of the reticulate packages, if not in the default folders
 # REQUIRED PACKAGES
@@ -8396,11 +8399,11 @@ fun_python_pack <- function(req.package, path.lib = NULL, R.path.lib = NULL){
 # example of error message
 # fun_python_pack(req.package = "nopackage")
 # example without error message (require the installation of the python serpentine package from https://github.com/koszullab/serpentine
-# fun_python_pack(req.package = "serpentine", path.lib = "c:/programdata/anaconda3/lib/site-packages/")
+# fun_python_pack(req.package = "serpentine", path.python.exec = "C:/ProgramData/Anaconda3/python.exe", path.lib = "c:/programdata/anaconda3/lib/site-packages/")
 # another example of error message
 # fun_python_pack(req.package = "serpentine", path.lib = "blablabla")
 # DEBUGGING
-# req.package = "serpentine" ; path.lib = "c:/programdata/anaconda3/lib/site-packages/" ; R.path.lib = NULL
+# req.package = "serpentine" ; path.python.exec = "C:/ProgramData/Anaconda3/python.exe" ; path.lib = "c:/programdata/anaconda3/lib/site-packages/" ; R.path.lib = NULL
 # req.package = "bad" ; path.lib = NULL ; R.path.lib = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -8420,6 +8423,13 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_check(data = req.package, class = "character", fun.name = function.name) ; eval(ee)
+if( ! is.null(path.python.exec)){
+tempo <- fun_check(data = path.python.exec, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! all(file.exists(path.python.exec))){
+cat(paste0("\n\n============\n\nERROR IN ", function.name, ": \nFILE PATH INDICATED IN THE path.python.exec PARAMETER DOES NOT EXISTS: ", path.lib, "\n\n============\n\n"))
+arg.check <- c(arg.check, TRUE)
+}
+}
 if( ! is.null(path.lib)){
 tempo <- fun_check(data = path.lib, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(path.lib))){
@@ -8443,6 +8453,13 @@ stop() # nothing else because print = TRUE by default in fun_check()
 fun_pack(req.package = "reticulate", path.lib = R.path.lib)
 # end package checking
 # main code
+if(is.null(path.python.exec)){
+path.python.exec <- reticulate::py_run_string("
+import sys ;
+path_lib = sys.path
+") # python string
+path.python.exec <- path.python.exec$path_lib
+}
 if(is.null(path.lib)){
 path.lib <- reticulate::py_run_string("
 import sys ;
@@ -8450,6 +8467,7 @@ path_lib = sys.path
 ") # python string
 path.lib <- path.lib$path_lib
 }
+reticulate::use_python(Sys.which(path.python.exec), required = TRUE) # required to avoid the use of erratic python exec by reticulate::import_from_path()
 for(i0 in 1:length(req.package)){
 tempo.try <- vector("list", length = length(path.lib))
 for(i1 in 1:length(path.lib)){
