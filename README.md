@@ -1,6 +1,6 @@
 #### DESCRIPTION
 
-Cute Little R Functions contains 41 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
+Cute Little R Functions contains 42 functions for R/RStudio that facilitate basic procedures in 1) object analysis, 2) object modification, 3) graphic handling and 4) log file management.
 
 The function names are:
 
@@ -168,6 +168,7 @@ fun_gg_empty_graph()
 fun_segmentation()
 fun_pack()
 fun_python_pack()
+fun_warning()
 
 3) text error modified in fun_head() and fun_tail(), + deals without all objects but use head() and tail() if not 2D object
 

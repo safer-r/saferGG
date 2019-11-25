@@ -29,7 +29,7 @@
 ######## fun_tail() #### tail of the left or right of big 2D objects    11
 ######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 12
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   16
-######## fun_comp_list() #### comparison of two lists   22
+######## fun_comp_list() #### comparison of two lists   23
 ################ Object modification    25
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  25
 ######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
@@ -39,20 +39,20 @@
 ######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    36
 ######## fun_mat_op() #### assemble several matrices with operation 39
 ######## fun_mat_inv() #### return the inverse of a square matrix   41
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  42
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  43
 ######## fun_permut() #### progressively breaks a vector order  46
 ################ Graphics management    56
 ######## fun_width() #### window width depending on classes to plot 56
-######## fun_open() #### open a GUI or pdf graphic window   57
+######## fun_open() #### open a GUI or pdf graphic window   58
 ######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    61
 ######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 65
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   69
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   70
 ######## fun_close() #### close specific graphic windows    81
 ################ Standard graphics  82
 ######## fun_empty_graph() #### text to display for empty graphs    82
 ################ gg graphics    84
 ######## fun_gg_palette() #### ggplot2 default color palette    84
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  85
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  86
 ######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  88
 ######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   91
 ######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 127
@@ -61,16 +61,17 @@
 ######## fun_gg_strip() #### ggplot2 stripchart + mean/median   162
 ######## fun_gg_violin() #### ggplot2 violins   162
 ######## fun_gg_line() #### ggplot2 lines + background dots and error bars  162
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  164
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  165
 ######## fun_gg_empty_graph() #### text to display for empty graphs 178
-################ Graphic extraction 179
+################ Graphic extraction 180
 ######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 180
 ######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   188
 ################ Import 220
 ######## fun_pack() #### check if R packages are present and import into the working environment    220
-######## fun_python_pack() #### check if python packages are present    221
-################ Exporting results (text & tables)  223
-######## fun_report() #### print string or data object into output file 223
+######## fun_python_pack() #### check if python packages are present    222
+################ Print / Exporting results (text & tables)  224
+######## fun_report() #### print string or data object into output file 224
+######## fun_warning() #### return warnings of an expression (that can be exported) 227
 
 
 ################################ FUNCTIONS ################################
@@ -8484,14 +8485,14 @@ stop(paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", re
 }
 
 
-################ Exporting results (text & tables)
+################ Print / Exporting results (text & tables)
 
 
 ######## fun_report() #### print string or data object into output file
 
 
 # Check OK: clear to go Apollo
-fun_report <- function(data = NULL, output ="results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
+fun_report <- function(data = NULL, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
 # AIM
 # log file function: print a character string or a data object into a same output file
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
@@ -8596,5 +8597,84 @@ capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
 sep.final <- paste0(rep("\n", sep), collapse = "")
 write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 }
+
+
+######## fun_warning() #### return warnings of an expression (that can be exported)
+
+
+# make also fun_error
+# Check OK: clear to go Apollo
+fun_warning <- function(data, no.warn.print = FALSE, text_fun = NULL){
+# AIM
+# evaluate an instruction written between "" and return the first of the warning messages if ever exist
+# WARNING
+# Only the first warning message is returned
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_check()
+# ARGUMENTS
+# data: character string to evaluate
+# no.warn.print: logical. Print a message saying that no warning reported?
+# text_fun: character string added to the warning message (even if no warning exists)
+# RETURN
+# the warning message or NULL if no warning message
+# EXAMPLES
+# fun_warning(data = "wilcox.test(c(1,1), 2:3)", no.warn.print = FALSE, text_fun = NULL)
+# fun_warning(data = "sum(1)", no.warn.print = FALSE, text_fun = NULL)
+# fun_warning(data = "sum(1)", no.warn.print = TRUE, text_fun = "IN FUNCTION 1")
+# DEBUGGING
+# data = "wilcox.test(c(1,1), 2:3)" ; no.warn.print = FALSE ; text_fun = NULL # for function debugging
+# data = "sum(1)" ; no.warn.print = FALSE ; text_fun = NULL # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+# argument checking with fun_check()
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_check(data = data, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = no.warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(text_fun)){
+tempo <- fun_check(data = text_fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+}
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_check()
+}
+# end argument checking with fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument checking
+# main code
+warn.options.ini <- options()$warn
+# last warning cannot be used because suppressWarnings() does not modify last.warning present in the base evironment (created at first warning in a new R session), or warnings() # to reset the warning history : unlockBinding("last.warning", baseenv()) ; assign("last.warning", NULL, envir = baseenv())
+options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
+tempo.warning <- capture.output({tempo <- suppressMessages(eval(parse(text = data)))}, type = "message") # recover warnings not messages and not errors
+if(exists("tempo.warning", inherit = FALSE) == TRUE & length(tempo.warning) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
+# tempo.try <- try(suppressWarnings(eval(parse(text = data))), silent = TRUE) # to get errors
+# tempo.warning <- c(tempo.warning, tempo.try)
+tempo.warning <- unique(apply(matrix(tempo.warning, ncol = 2, byrow = TRUE), 1, paste, collapse = "")) # the output of capture.output() is two strings per warning messages
+if(any(grepl(x = tempo.warning, pattern = "(converted from warning)"))){
+tempo.warning[[1]] <- gsub(x = tempo.warning[[1]], pattern = "Error i", replacement = "I")
+tempo.warning <- gsub(x = tempo.warning[[1]], pattern = "\\(converted from warning\\)| *\n *", replacement = "")
+output <- paste0("WARNING REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warning) #
+}
+if(any(grepl(x = tempo.warning, pattern = "Warning i"))){
+tempo.warning <- gsub(x = tempo.warning, pattern = "Warning i", replacement = "I")
+}
+output <- paste0("WARNING REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warning) #
+}else if(no.warn.print == TRUE){
+output <- paste0("NO WARNING REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}else{
+output <- NULL
+}
+options(warn = warn.options.ini) # restore initial setting
+return(output)
+}
+
 
 
