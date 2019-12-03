@@ -472,7 +472,7 @@ fun_head <- function(data1, n = 6, side = "l"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -539,7 +539,7 @@ fun_tail <- function(data1, n = 10, side = "l"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1263,7 +1263,7 @@ fun_name_change <- function(data1, data2, added.string = "_modif"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1345,7 +1345,7 @@ fun_df_remod <- function(data, quanti.col.name = "quanti", quali.col.name = "qua
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1461,7 +1461,7 @@ fun_merge <- function(data1, data2, name1, name2, factor.as = "numeric", warn.pr
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1644,7 +1644,7 @@ fun_round <- function(data, dec.nb = 2, after.lead.zero = TRUE){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1720,7 +1720,7 @@ fun_mat_rotate <- function(data){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1772,7 +1772,7 @@ fun_mat_num2color <- function(mat1, mat.hsv.h = TRUE, notch = 1, s = 1, v = 1, f
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1902,11 +1902,11 @@ fun_mat_op <- function(mat.list, kind.of.operation = "+"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_comp_2d() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -1999,7 +1999,7 @@ fun_mat_inv <- function(mat){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2080,7 +2080,7 @@ fun_mat_fill <- function(mat, empty.cell.string = 0, warn.print = FALSE){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2249,15 +2249,15 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print =
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_round", mode = "function")) == 0){
+if(length(utils::find("fun_round", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2611,7 +2611,7 @@ fun_width <- function(class.nb, inches.per.class.nb = 1, ini.window.width = 7, i
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2679,7 +2679,7 @@ fun_open <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = 
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2825,7 +2825,7 @@ fun_prior_plot <- function(param.reinitial = FALSE, xlog.scale = FALSE, ylog.sca
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -2982,7 +2982,7 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # end initial argument checking
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -3224,11 +3224,11 @@ fun_post_plot <- function(x.side = 0, x.log.scale = FALSE, x.categ = NULL, x.cat
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_open", mode = "function")) == 0){
+if(length(utils::find("fun_open", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -3522,7 +3522,7 @@ fun_close <- function(kind = "pdf", return.text = FALSE){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -3614,7 +3614,7 @@ fun_empty_graph <- function(text = NULL, text.size = 1, title = NULL, title.size
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -3694,7 +3694,7 @@ fun_gg_palette <- function(n, kind = "std"){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -3755,7 +3755,7 @@ fun_gg_just <- function(angle, axis){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -3882,11 +3882,11 @@ stop(tempo.cat)
 }
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -4153,19 +4153,19 @@ fun_gg_scatter <- function(data1, x, y, categ = NULL, legend.name = NULL, color 
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_gg_palette", mode = "function")) == 0){
+if(length(utils::find("fun_gg_palette", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_point_rast", mode = "function")) == 0){
+if(length(utils::find("fun_gg_point_rast", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_point_rast() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -5345,35 +5345,35 @@ fun_gg_bar <- function(data1, y, categ, categ.class.order = NULL, categ.legend.n
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_comp_2d", mode = "function")) == 0){
+if(length(utils::find("fun_comp_2d", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_comp_2d() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_just", mode = "function")) == 0){
+if(length(utils::find("fun_gg_just", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_just() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_palette", mode = "function")) == 0){
+if(length(utils::find("fun_gg_palette", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_name_change", mode = "function")) == 0){
+if(length(utils::find("fun_name_change", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_name_change() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_round", mode = "function")) == 0){
+if(length(utils::find("fun_round", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_scale", mode = "function")) == 0){
+if(length(utils::find("fun_scale", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_scale() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6493,15 +6493,15 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_round", mode = "function")) == 0){
+if(length(utils::find("fun_round", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6777,11 +6777,11 @@ fun_gg_empty_graph <- function(text = NULL, text.size = 12, title = NULL, title.
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -6882,7 +6882,7 @@ fun_trim <- function(data, displayed.nb = NULL, single.value.display = FALSE, tr
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -7191,7 +7191,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -7311,27 +7311,27 @@ stop() # nothing else because print = TRUE by default in fun_check()
 # end argument checking
 # other required function checking
 if(plot == TRUE){
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_open", mode = "function")) == 0){
+if(length(utils::find("fun_open", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_palette", mode = "function")) == 0){
+if(length(utils::find("fun_gg_palette", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_empty_graph", mode = "function")) == 0){
+if(length(utils::find("fun_gg_empty_graph", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_empty_graph() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_gg_scatter", mode = "function")) == 0){
+if(length(utils::find("fun_gg_scatter", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_scatter() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_close", mode = "function")) == 0){
+if(length(utils::find("fun_close", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_close() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -8334,7 +8334,7 @@ fun_pack <- function(req.package, load = FALSE, path.lib = NULL){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -8364,7 +8364,7 @@ path.lib <- .libPaths() # .libPaths(new = path.lib) # or .libPaths(new = c(.libP
 .libPaths(new = sub(x = path.lib, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
 }
 for(i0 in 1:length(req.package)){
-if( ! req.package[i0] %in% rownames(installed.packages(lib.loc = path.lib))){
+if( ! req.package[i0] %in% rownames(utils::installed.packages(lib.loc = path.lib))){
 stop(paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN:\n", paste(path.lib, collapse = "\n"), "\n\n================\n\n"))
 }else{
 if(load == TRUE){
@@ -8410,11 +8410,11 @@ fun_python_pack <- function(req.package, path.python.exec = NULL, path.lib = NUL
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
-if(length(find("fun_pack", mode = "function")) == 0){
+if(length(utils::find("fun_pack", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -8517,7 +8517,7 @@ fun_report <- function(data = NULL, output = "results.txt", path = "C:/Users/Gae
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -8577,9 +8577,9 @@ row.names(data) <- rownames.output.tables[1:length.rows]
 rownames(data) <- rep("", nrow(data)) # identical row names allowed in matrices and tables
 }
 if(noquote == TRUE){
-capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
+utils::capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
 }else{
-capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
 }
 }else if(is.vector(data) & all(class(data) != "list") & (length(data) == 1 | vector.cat == TRUE)){
 if(noquote == TRUE){
@@ -8589,9 +8589,9 @@ cat(data, file= paste0(path, "/", output), append = no.overwrite)
 }
 }else{ # other (array, list, factor or vector with vector.cat = FALSE)
 if(noquote == TRUE){
-capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
+utils::capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
 }else{
-capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
 }
 }
 sep.final <- paste0(rep("\n", sep), collapse = "")
@@ -8628,7 +8628,7 @@ fun_warning <- function(data, no.warn.print = FALSE, text_fun = NULL){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
-if(length(find("fun_check", mode = "function")) == 0){
+if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -8653,7 +8653,7 @@ stop() # nothing else because print = TRUE by default in fun_check()
 warn.options.ini <- options()$warn
 # last warning cannot be used because suppressWarnings() does not modify last.warning present in the base evironment (created at first warning in a new R session), or warnings() # to reset the warning history : unlockBinding("last.warning", baseenv()) ; assign("last.warning", NULL, envir = baseenv())
 options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
-tempo.warning <- capture.output({tempo <- suppressMessages(eval(parse(text = data)))}, type = "message") # recover warnings not messages and not errors
+tempo.warning <- utils::capture.output({tempo <- suppressMessages(eval(parse(text = data)))}, type = "message") # recover warnings not messages and not errors
 if(exists("tempo.warning", inherit = FALSE) == TRUE & length(tempo.warning) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
 # tempo.try <- try(suppressWarnings(eval(parse(text = data))), silent = TRUE) # to get errors
 # tempo.warning <- c(tempo.warning, tempo.try)
