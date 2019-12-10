@@ -13,6 +13,7 @@
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
 # add print warning argument using warning(warnings)
 # update graphic examples with good comment, as in barplot
+#is there any interest to be able to source elsewhere ? If yes, but may be interesting to put it into a new environement just above .GlobalEnv environment. See https://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
 # Templates: https://prettydoc.statr.me/themes.html
 # # package: http://r-pkgs.had.co.nz/
 # https://pkgdown.r-lib.org/
@@ -35,7 +36,7 @@
 ######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
 ######## fun_merge() #### merge the columns of two 2D objects, by common rows   29
 ######## fun_round() #### rounding number if decimal present    33
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    35
+######## fun_mat_rotate() #### 90Â° clockwise matrix rotation    35
 ######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    36
 ######## fun_mat_op() #### assemble several matrices with operation 39
 ######## fun_mat_inv() #### return the inverse of a square matrix   41
@@ -285,7 +286,7 @@ text <- paste0(text, toupper(arg.names[i2]), " ", get(arg.names[i2]))
 '
 # end script to execute
 if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & get(arg.names[i2]) == "integer") | (arg.names[i2] == "typeof" & get(arg.names[i2]) == "integer"))){
-if(! all(data%%1 == 0)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line
+if( ! all(data%%1 == 0)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result
 eval(parse(text = tempo.script)) # execute tempo.script
 }
 }else if(get(arg.names[i2]) != "vector" & eval(parse(text = paste0(arg.names[i2], "(data)"))) != get(arg.names[i2])){
@@ -1418,9 +1419,9 @@ if(class(data[, 1]) == "character"){
 data <- cbind(data[2], data[1])
 }
 nc.max <- max(table(data[, 2])) # effectif maximum des classes
-nb.na <- nc.max - table(data[,2]) # nombre de NA à ajouter pour réaliser la data frame
+nb.na <- nc.max - table(data[,2]) # nombre de NA Ã  ajouter pour rÃ©aliser la data frame
 tempo<-split(data[, 1], data[, 2])
-for(i in 1:length(tempo)){tempo[[i]] <- append(tempo[[i]], rep(NA, nb.na[i]))} # des NA doivent être ajoutés lorsque les effectifs sont différents entre les classes. C'est uniquement pour que chaque colonne ait le même nombre de lignes
+for(i in 1:length(tempo)){tempo[[i]] <- append(tempo[[i]], rep(NA, nb.na[i]))} # des NA doivent Ãªtre ajoutÃ©s lorsque les effectifs sont diffÃ©rents entre les classes. C'est uniquement pour que chaque colonne ait le mÃªme nombre de lignes
 output.data<-data.frame(tempo)
 }
 return(output.data)
@@ -1697,13 +1698,13 @@ return(data)
 }
 
 
-######## fun_mat_rotate() #### 90° clockwise matrix rotation
+######## fun_mat_rotate() #### 90Â° clockwise matrix rotation
 
 
 # Check OK: clear to go Apollo
 fun_mat_rotate <- function(data){
 # AIM
-# 90° clockwise matrix rotation
+# 90Â° clockwise matrix rotation
 # applied twice, the function provide the mirror matrix, according to vertical and horizontal symmetry
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
@@ -1820,7 +1821,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat1 
 stop(tempo.cat)
 }
 }else{
-if(any(mat1 - floor(mat1) > 0, na.rm = TRUE) | any(mat1 == 0, na.rm = TRUE)){
+if(any(mat1 - floor(mat1) > 0, na.rm = TRUE) | any(mat1 == 0, na.rm = TRUE)){ # no need of isTRUE(all.equal()) because we do not require approx here but strictly 0, thus == is ok
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat1 MUST BE MADE OF INTEGER VALUES WITHOUT 0 BECAUSE mat.hsv.h ARGUMENT SET TO FALSE\n\n================\n\n")
 stop(tempo.cat)
 }else{
@@ -1840,7 +1841,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": LENGT
 stop(tempo.cat)
 }else{
 for(i in 1:length(different.color)){
-mat1[mat1 == different.color[i]] <- tempo.different.color[i]
+mat1[mat1 == different.color[i]] <- tempo.different.color[i] # no need of isTRUE(all.equal()) because different.color comes from mat1
 }
 }
 }
@@ -1856,11 +1857,11 @@ text.problem <- paste0("THE FOLLOWING COLORS WHERE INTRODUCED USING forced.color
 problem <- FALSE
 }
 for(i in 1:length(hexa.values.to.change)){
-if( ! any(mat1 == hexa.values.to.change[i], na.rm = TRUE)){
+if( ! any(mat1 == hexa.values.to.change[i], na.rm = TRUE)){# no need of isTRUE(all.equal()) because character
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE ", hexa.values.to.change[i], " VALUE FROM hexa.values.to.change IS NOT REPRESENTED IN mat1 : ", paste(unique(as.vector(mat1)), collapse = " "), "\n\n================\n\n")
 stop(tempo.cat)
 }else{
-mat1[which(mat1 == hexa.values.to.change[i])] <- forced.color[i]
+mat1[which(mat1 == hexa.values.to.change[i])] <- forced.color[i] # no need of isTRUE(all.equal()) because character
 }
 }
 }
@@ -2992,13 +2993,13 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & n == 0){
+if(tempo$problem == FALSE & isTRUE(all.equal(n, 0))){ # isTRUE(all.equal(n, 0)) equivalent to n == 0 but deals with floats (approx ok)
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON NULL AND POSITIVE INTEGER\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE) # 
 }
 tempo <- fun_check(data = lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & diff(lim) == 0){
+if(tempo$problem == FALSE & all(diff(lim) == 0)){ # isTRUE(all.equal(diff(lim), rep(0, length(diff(lim))))) not used because we strictly need zero as a result
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": lim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES)\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -3045,7 +3046,7 @@ tempo.max <- max(lim)
 tempo.min <- min(lim)
 mid <- tempo.min + (tempo.range/2) # middle of axis
 tempo.inter <- tempo.range / (n + 1) # current interval between two ticks, between 0 and Inf
-if(tempo.inter == 0){
+if(tempo.inter == 0){ # isTRUE(all.equal(tempo.inter, rep(0, length(tempo.inter)))) not used because we strictly need zero as a result
 tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": THE INTERVAL BETWEEN TWO TICKS OF THE SCALE IS NULL. MODIFY THE lim OR n ARGUMENT\n\n============\n\n"))
 stop(tempo.cat)
 }
@@ -3090,9 +3091,10 @@ options(scipen = ini.scipen) # restore the initial scientific penalty
 # centering the new scale 
 tempo.mid <- trunc((mid + (-1:1) * inter.select) / inter.select) * inter.select # tempo middle tick closest to the middle axis
 mid.tick <- tempo.mid[which.min(abs(tempo.mid - mid))]
-if(n == 1){
+if(isTRUE(all.equal(n, rep(1, length(n))))){ # isTRUE(all.equal(n, rep(1, length(n)))) is similar to n == 1 but deals with float
 output <- mid.tick
-}else if(n == 2){
+}else if(isTRUE(all.equal(n, rep(2, length(n))))){ # isTRUE(all.equal(n, rep(0, length(n)))) is similar to n == 2 but deals with float
+output <- mid.tick
 tempo.min.dist <- mid.tick - inter.select - tempo.min
 tempo.max.dist <- tempo.max - mid.tick + inter.select
 if(tempo.min.dist <= tempo.max.dist){ # distance between lowest tick and bottom axis <= distance between highest tick and top axis. If yes, extra tick but at the top, otherwise at the bottom
@@ -3366,18 +3368,18 @@ y.top.plot.region <- par("usr")[4] # in y coordinates, top of the plot region (a
 y.bottom.plot.region <- par("usr")[3] # in y coordinates, bottom of the plot region (according to y scale)
 y.mid.plot.region <- ((par("usr")[3] + par("usr")[4]) / 2) # in x coordinates, right of the plot region (according to x scale)
 }
-if(x.side == 1 | x.side == 3){
+if(any(sapply(FUN = all.equal, c(1, 3), x.side) == TRUE)){
 par(xpd=FALSE, xaxt="s")
 if(is.null(x.categ) & x.log.scale == TRUE){
-if(any(par()$xaxp[1:2] == 0)){
-if(par()$xaxp[1] == 0){
+if(any(par()$xaxp[1:2] == 0)){ # any(sapply(FUN = all.equal, par()$xaxp[1:2], 0) == TRUE) not used because we strictly need zero as a result. Beware: write "== TRUE", because the result is otherwise character and a warning message appears using any()
+if(par()$xaxp[1] == 0){ # isTRUE(all.equal(par()$xaxp[1], 0)) not used because we strictly need zero as a result
 par(xaxp = c(10^-30, par()$xaxp[2:3])) # because log10(par()$xaxp[1] == 0) == -Inf
 }
-if(par()$xaxp[2] == 0){
+if(par()$xaxp[2] == 0){ # isTRUE(all.equal(par()$xaxp[1], 0)) not used because we strictly need zero as a result
 par(xaxp = c(par()$xaxp[1], 10^-30, par()$xaxp[3])) # because log10(par()$xaxp[2] == 0) == -Inf
 }
 }
-axis(side=x.side, at=c(10^par()$usr[1], 10^par()$usr[2]), labels=rep("", 2), lwd=1, lwd.ticks=0) # draw the axis line
+axis(side = x.side, at = c(10^par()$usr[1], 10^par()$usr[2]), labels=rep("", 2), lwd=1, lwd.ticks = 0) # draw the axis line
 mtext(side = x.side, text = x.lab, line = x.dist.legend / 0.2, las = 0, cex = x.label.magnific)
 par(tcl = -par()$mgp[2] * sec.tick.length) # length of the secondary ticks are reduced
 suppressWarnings(rug(10^outer(c((log10(par("xaxp")[1]) -1):log10(par("xaxp")[2])), log10(1:10), "+"), ticksize = NA, side = x.side)) # ticksize = NA to allow the use of par()$tcl value
@@ -3402,10 +3404,10 @@ x.categ.pos <- 1:length(x.categ)
 stop("\n\nPROBLEM: x.categ.pos MUST BE THE SAME LENGTH AS x.categ\n\n")
 }
 par(xpd = TRUE)
-if(x.side == 1){
+if(isTRUE(all.equal(x.side, 1))){ #isTRUE(all.equal(x.side, 1)) is similar to x.side == 1 but deals with float
 segments(x0 = x.left.plot.region, x1 = x.right.plot.region, y0 = y.bottom.plot.region, y1 = y.bottom.plot.region) # draw the line of the axis
 text(x = x.categ.pos, y = y.mid.bottom.fig.region, labels = x.categ, srt = text.angle, cex = x.axis.magnific)
-}else if(x.side == 3){
+}else if(isTRUE(all.equal(x.side, 3))){ #isTRUE(all.equal(x.side, 1)) is similar to x.side == 3 but deals with float
 segments(x0 = x.left.plot.region, x1 = x.right.plot.region, y0 = y.top.plot.region, y1 = y.top.plot.region) # draw the line of the axis
 text(x = x.categ.pos, y = y.mid.top.fig.region, labels = x.categ, srt = text.angle, cex = x.axis.magnific)
 }else{
@@ -3419,14 +3421,14 @@ stop("\n\nPROBLEM WITH THE x.side (", x.side ,") OR x.log.scale (", x.log.scale,
 }else{
 x.text <- par("usr")[2]
 }
-if(y.side == 2 | y.side == 4){
+if(any(sapply(FUN = all.equal, c(2, 4), y.side) == TRUE)){
 par(xpd=FALSE, yaxt="s")
 if(is.null(y.categ) & y.log.scale == TRUE){
-if(any(par()$yaxp[1:2] == 0)){
-if(par()$yaxp[1] == 0){
+if(any(par()$yaxp[1:2] == 0)){ # any(sapply(FUN = all.equal, par()$yaxp[1:2], 0) == TRUE) not used because we strictly need zero as a result. Beware: write "== TRUE", because the result is otherwise character and a warning message appears using any()
+if(par()$yaxp[1] == 0){ # strict zero needed
 par(yaxp = c(10^-30, par()$yaxp[2:3])) # because log10(par()$yaxp[1] == 0) == -Inf
 }
-if(par()$yaxp[2] == 0){
+if(par()$yaxp[2] == 0){ # strict zero needed
 par(yaxp = c(par()$yaxp[1], 10^-30, par()$yaxp[3])) # because log10(par()$yaxp[2] == 0) == -Inf
 }
 }
@@ -3456,9 +3458,9 @@ stop("\n\nPROBLEM: y.categ.pos MUST BE THE SAME LENGTH AS y.categ\n\n")
 }
 axis(side = y.side, at = y.categ.pos, labels = rep("", length(y.categ)), lwd=0, lwd.ticks=1) # draw the line of the axis
 par(xpd = TRUE)
-if(y.side == 2){
+if(isTRUE(all.equal(y.side, 2))){ #isTRUE(all.equal(y.side, 2)) is similar to y.side == 2 but deals with float
 text(x = x.mid.left.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = y.axis.magnific)
-}else if(y.side == 4){
+}else if(isTRUE(all.equal(y.side, 4))){ # idem
 text(x = x.mid.right.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = y.axis.magnific)
 }else{
 stop("\n\nARGUMENT y.side CAN ONLY BE 2 OR 4\n\n")
@@ -3473,10 +3475,10 @@ y.text <- (par("usr")[4] + (par("usr")[4] - par("usr")[3]) / (par("plt")[4] - pa
 }
 par(xpd=NA)
 text(x = x.mid.right.fig.region, y = y.text, corner.text, adj=c(1, 1.1), cex = magnific.corner.text) # text at the topright corner. Replace x.right.fig.region by x.text if text at the right edge of the plot region
-if(just.label.add == TRUE & x.side == 0 & x.lab != ""){
+if(just.label.add == TRUE & isTRUE(all.equal(x.side, 0)) & x.lab != ""){
 text(x = x.mid.plot.region, y = y.mid.bottom.fig.region, x.lab, adj=c(0.5, 0.5), cex = x.label.magnific) # x label
 }
-if(just.label.add == TRUE & y.side == 0 & y.lab != ""){
+if(just.label.add == TRUE & isTRUE(all.equal(y.side, 0)) & y.lab != ""){
 text(x = y.mid.plot.region, y = x.mid.left.fig.region, y.lab, adj=c(0.5, 0.5), cex = y.label.magnific) # x label
 }
 par(xpd=FALSE)
@@ -3704,7 +3706,7 @@ arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & n == 0){
+if(tempo$problem == FALSE & isTRUE(all.equal(n, 0))){ # isTRUE(all.equal(n, 0))) is similar to n == 0 but deals with float
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON ZERO INTEGER. HERE IT IS: ", paste(n, collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -3782,13 +3784,13 @@ angle <- angle + 360
 # end to get angle between -360 and 360
 # justifications
 if(axis == "x"){
-if(angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360){
+if(any(sapply(FUN = all.equal, c(-360, -180, 0, 180, 360), angle) == TRUE)){ # equivalent of angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360 but deals with floats
 hjust <- 0.5
 vjust <- 0.5
-}else if(angle == -270 | angle == 90){
+}else if(any(sapply(FUN = all.equal, c(-270, 90), angle) == TRUE)){
 hjust <- 1
 vjust <- 0.5
-}else if(angle == -90 | angle == 270){
+}else if(any(sapply(FUN = all.equal, c(-90, 270), angle) == TRUE)){
 hjust <- 0
 vjust <- 0.5
 }else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
@@ -3805,13 +3807,13 @@ hjust <- 0
 vjust <- 1
 }
 }else if(axis == "y"){
-if(angle == -270 | angle == -90 | angle == 90 | angle == 270){
+if(any(sapply(FUN = all.equal, c(-270, -90, 90, 270), angle) == TRUE)){ # equivalent of angle == -270 | angle == -90 | angle == 90 | angle == 270 but deals with floats
 hjust <- 0.5
 vjust <- 0.5
-}else if(angle == -360 | angle == 0 | angle == 360){
+}else if(any(sapply(FUN = all.equal, c(-360, 0, 360), angle) == TRUE)){
 hjust <- 1
 vjust <- 0.5
-}else if(angle == -180 | angle == 180){
+}else if(any(sapply(FUN = all.equal, c(-180, 180), angle) == TRUE)){
 hjust <- 0
 vjust <- 0.5
 }else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
@@ -6003,14 +6005,14 @@ stop(tempo.cat)
 # dot display
 if( ! is.null(dot.color)){
 if(dot.tidy == FALSE){
-if(dot.border.size == 0){
+if(isTRUE(all.equal(dot.border.size, 0))){ # similar to dot.border.size == 0 but deals with floats (approx is enough)
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), size = dot.size, color = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 16)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
 }else{
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = dot.coord.rd3, mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[length(categ)]), stroke = dot.border.size, size = dot.size, fill = dot.coord.rd3$dot.color, alpha = dot.alpha, pch = 21)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
 }
 }else if(dot.tidy == TRUE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(data = dot.coord, mapping = ggplot2::aes_string(x = categ[1], y = "y", color = categ[length(categ)]), position = ggplot2::position_dodge(width = bar.width), binaxis = "y", stackdir = "center", alpha = dot.alpha, fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"], show.legend = FALSE, binwidth = (ylim[2] - ylim[1]) / dot.bin.nb)) # very weird behavior of geom_dotplot, because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have  to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = if(dot.border.size == 0){as.character(levels(dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"]))}else{rep("black", length(categ.color))})) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. BEWARE: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = categ.legend.name, values = if(isTRUE(all.equal(dot.border.size, 0))){as.character(levels(dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"]))}else{rep("black", length(categ.color))})) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. BEWARE: values = categ.color takes the numbers to make the colors if categ.color is a factor. BEWARE: , guide = ggplot2::guide_legend(override.aes = list(fill = levels(dot.color))) here
 # coordinates of tidy dots
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
 if(length(which(sapply(tempo.coord, FUN = nrow) == nrow(data1))) > 1){
@@ -6346,7 +6348,7 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 # title: character string of the graph title
 # title.text.size: numeric value of the title size (in points)
 # show.scale: logical. Show color scale?
-# rotate: logical. Rotate the heatmap 90° clockwise?
+# rotate: logical. Rotate the heatmap 90Â° clockwise?
 # return: logical. Return the graph parameters?
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
