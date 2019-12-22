@@ -2722,26 +2722,14 @@ ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
 if(pdf.disp == TRUE){
-# code that protects set.seed() in the global environment
-# see also Protocol 100-rev0 Parallelization in R.docx
-if(exists(".Random.seed", envir = .GlobalEnv)){ # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
-tempo.random.seed <- .Random.seed
-on.exit(assign(".Random.seed", tempo.random.seed, env = .GlobalEnv))
-}else{
-on.exit(set.seed(NULL)) # inactivate seeding -> return to complete randomness
+tempo.code <- 0
+while(file.exists(paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf")) == TRUE){
+tempo.code <- tempo.code + 1
 }
-# end code that protects set.seed() in the global environment
-set.seed(NULL)
-tempo.code <- sample.int(1e6, size = 1)
-if(file.exists(paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf"))){
-tempo.cat <- paste0("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT BE USED ON LINUX IF A recover_ini_par", tempo.code, ".pdf FILE ALREADY EXISTS HERE: ", paste(path.fun, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat)
-}else{
 pdf(width = width.fun, height = height.fun, file=paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
 ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the pdf windows
 file.remove(paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
-}
 }else{
 # test if X11 can be opened
 if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
