@@ -139,7 +139,6 @@ fun_list_comp()	fun_comp_list()
 fun_2D_head()	fun_head()
 fun_2D_tail()	fun_tail()
 fun_dataframe_remodeling()	fun_df_remod()
-fun_refactorization()	fun_refact()
 fun_by_case_matrix_op()	fun_mat_op()
 fun_rounding()	fun_round()
 fun_90clock_matrix_rot()	fun_mat_rotate()
@@ -176,7 +175,10 @@ fun_warning()
 
 5) writting and debugging message errors improved in all the functions
 
-6) Functions checked for R version 3.5.3
+6) Functions checked for R version 3.6.1
+
+7) function deprecated:
+fun_refactorization()
 
 
 ## v5.1.0
