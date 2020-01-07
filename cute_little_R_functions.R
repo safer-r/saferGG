@@ -28,12 +28,12 @@
 ######## fun_info() #### recover object information 8
 ######## fun_head() #### head of the left or right of big 2D objects    10
 ######## fun_tail() #### tail of the left or right of big 2D objects    11
-######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 12
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 13
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   16
 ######## fun_comp_list() #### comparison of two lists   23
 ################ Object modification    25
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  25
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 26
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 27
 ######## fun_merge() #### merge the columns of two 2D objects, by common rows   29
 ######## fun_round() #### rounding number if decimal present    33
 ######## fun_mat_rotate() #### 90° clockwise matrix rotation    35
@@ -43,35 +43,36 @@
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  43
 ######## fun_permut() #### progressively breaks a vector order  46
 ################ Graphics management    56
-######## fun_width() #### window width depending on classes to plot 56
+######## fun_width() #### window width depending on classes to plot 57
 ######## fun_open() #### open a GUI or pdf graphic window   58
 ######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    61
 ######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 65
 ######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   70
 ######## fun_close() #### close specific graphic windows    81
-################ Standard graphics  82
-######## fun_empty_graph() #### text to display for empty graphs    82
+################ Standard graphics  83
+######## fun_empty_graph() #### text to display for empty graphs    83
 ################ gg graphics    84
-######## fun_gg_palette() #### ggplot2 default color palette    84
+######## fun_gg_palette() #### ggplot2 default color palette    85
 ######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  86
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  88
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   91
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 127
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  89
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   92
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 128
 ######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    162
 ######## fun_gg_prop() #### ggplot2 proportion barplot  162
 ######## fun_gg_strip() #### ggplot2 stripchart + mean/median   162
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 162
 ######## fun_gg_violin() #### ggplot2 violins   162
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  162
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  163
 ######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  165
 ######## fun_gg_empty_graph() #### text to display for empty graphs 178
 ################ Graphic extraction 180
 ######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 180
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   188
-################ Import 220
-######## fun_pack() #### check if R packages are present and import into the working environment    220
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   189
+################ Import 221
+######## fun_pack() #### check if R packages are present and import into the working environment    221
 ######## fun_python_pack() #### check if python packages are present    222
-################ Print / Exporting results (text & tables)  224
-######## fun_report() #### print string or data object into output file 224
+################ Print / Exporting results (text & tables)  225
+######## fun_report() #### print string or data object into output file 225
 ######## fun_warning() #### return warnings of an expression (that can be exported) 227
 
 
@@ -1230,6 +1231,137 @@ identical.content <- FALSE
 }
 }
 output <- list(same.length = same.length, length = length, same.name = same.name, name = name, any.id.name = any.id.name, same.name.pos1 = same.name.pos1, same.name.pos2 = same.name.pos2, any.id.compartment = any.id.compartment, same.compartment.pos1 = same.compartment.pos1, same.compartment.pos2 = same.compartment.pos2, identical.object = identical.object, identical.content = identical.content)
+return(output)
+}
+
+
+######## fun_test() #### test combinations of argument values of a function
+
+
+# Check OK: clear to go Apollo
+fun_test <- function(x, l, fun){
+# AIM
+# test combinations of argument values of a function
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_check()
+# ARGUMENTS
+# x: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
+# l: list with number of compartments equal to length of x, each compartment containing values of the corresponding argument in x. By default, each different value must be in a list. If the values can be in a vector, a vector is accepted. For instance, argument 3 in x is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of l can be either l = list(TRUE, FALSE, NA), or l = c(TRUE, FALSE, NA)
+# fun: character string indicating the name of the function tested
+# RETURN
+# a list containing
+# $fun: the tested function
+# $data: a data frame of all the combination tested
+# $kind: a vector of character strings indicating the kind of test result: either "ERROR", or "WARNING", or "OK"
+# $problem: a logical vector indicating if error or not
+# $res: either NULL if $kind is always "OK", or a list of all the results, each compartment corresponding to each column of $data
+# $test.nb:  number of tests performed
+# EXAMPLES
+# fun_test(x = c("x", "incomparables"), l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)), fun = "unique")
+# DEBUGGING
+# x = c("x", "incomparables") ; l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; fun = "unique" # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(utils::find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+# end required function checking
+# argument checking
+arg.check <- NULL # for function debbuging
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+tempo <- fun_check(data = x, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = l, class = "list", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+for(i1 in 1:length(l)){
+tempo1 <- fun_check(data = l[[i1]], class = "vector", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = l[[i1]], class = "list", na.contain = TRUE, fun.name = function.name, print = FALSE)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COMPARTMENT ", i1, " OF l ARGUMENT MUST BE A VECTOR OR A LIST\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}else if(tempo1$problem == FALSE){ # vector split into list compartments
+l[[i1]] <- split(x = l[[i1]], f = 1:length(l[[i1]]))
+}
+}
+}
+tempo <- fun_check(data = fun, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(class(get(fun)) == "function")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": fun ARGUMENT IS NOT CLASS \"FUNCTION\" BUT: ", paste(class(get(fun)), collapse = "\n"),"\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}else{
+args <- names(formals(get(fun)))
+if( ! all(x %in% args)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": SOME OF THE STRINGS IN x ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN x: ", paste(x[ ! x %in% args], collapse = " "), "\n\n================\n\n")
+cat(tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
+}
+if(any(arg.check) == TRUE){
+stop() # nothing else because print = TRUE by default in fun_check()
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument checking
+# main code
+loop.string <- NULL
+end.loop.string <- NULL
+fun.args <- NULL
+arg.values <- "list("
+for(i1 in 1:length(x)){
+loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(l[[i1]]), "){")
+end.loop.string <- paste0(end.loop.string, "}")
+fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), x[i1], " = l[[", i1, "]][[i", i1,"]]")
+arg.values <- paste0(arg.values, "l[[", i1, "]][[i", i1, "]]", ifelse(i1 == length(x), "", ", "))
+}
+arg.values <- paste0(arg.values, ")")
+fun.test <- paste0(fun, "(", fun.args, ")")
+kind <- character()
+problem <- logical()
+res <- list()
+count <- 0
+code <- paste0(
+loop.string, '
+count <- count + 1
+if(count == 1){
+data <- data.frame(X = sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")) # each colum is a test
+}else{
+data <- data.frame(data, X = sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")) # each colum is a test
+}
+tempo.try <- try(suppressWarnings(eval(parse(text = fun.test))), silent = TRUE)
+if(any(grepl(x = tempo.try, pattern = "[Ee]rror"))){
+kind <- c(kind, "ERROR")
+problem <- c(problem, TRUE)
+res <- c(res, as.character(tempo.try))
+}else{
+tempo.warning <- fun_warning(data =fun.test)
+if( ! is.null(tempo.warning)){
+kind <- c(kind, "WARNING")
+problem <- c(problem, FALSE)
+res <- c(res, as.character(tempo.warning))
+}else{
+kind <- c(kind, "OK")
+problem <- c(problem, FALSE)
+res <- c(res, "")
+}
+}
+', 
+end.loop.string
+)
+eval(parse(text = code))
+if(all(sapply(res, FUN = "==", ""))){
+res <- NULL
+}
+data <- t(data)
+colnames(data) <- x
+row.names(data) <- paste0("test.", 1:count)
+data <- data.frame(data, kind = kind, problem = problem)
+output <- list(fun = fun, data = data, res = res, kind = kind, problem = problem, test.nb = count)
 return(output)
 }
 
@@ -8616,9 +8748,9 @@ fun_warning <- function(data, no.warn.print = FALSE, text_fun = NULL){
 # ARGUMENTS
 # data: character string to evaluate
 # no.warn.print: logical. Print a message saying that no warning reported?
-# text_fun: character string added to the warning message (even if no warning exists)
+# text_fun: character string added to the warning message (even if no warning exists and no.warn.print is TRUE)
 # RETURN
-# the warning message or NULL if no warning message
+# the warning message or NULL if no warning message and no.warn.print is FALSE
 # EXAMPLES
 # fun_warning(data = "wilcox.test(c(1,1), 2:3)", no.warn.print = FALSE, text_fun = NULL)
 # fun_warning(data = "sum(1)", no.warn.print = FALSE, text_fun = NULL)
