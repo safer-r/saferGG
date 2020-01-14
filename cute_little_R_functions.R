@@ -29,51 +29,52 @@
 ######## fun_head() #### head of the left or right of big 2D objects    10
 ######## fun_tail() #### tail of the left or right of big 2D objects    11
 ######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 13
-######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   16
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   17
 ######## fun_comp_list() #### comparison of two lists   23
-################ Object modification    25
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  25
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 27
-######## fun_merge() #### merge the columns of two 2D objects, by common rows   29
-######## fun_round() #### rounding number if decimal present    33
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    35
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    36
-######## fun_mat_op() #### assemble several matrices with operation 39
-######## fun_mat_inv() #### return the inverse of a square matrix   41
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  43
-######## fun_permut() #### progressively breaks a vector order  46
-################ Graphics management    56
-######## fun_width() #### window width depending on classes to plot 57
-######## fun_open() #### open a GUI or pdf graphic window   58
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    61
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 65
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   70
-######## fun_close() #### close specific graphic windows    81
-################ Standard graphics  83
-######## fun_empty_graph() #### text to display for empty graphs    83
-################ gg graphics    84
-######## fun_gg_palette() #### ggplot2 default color palette    85
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  86
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  89
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   92
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 128
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    162
-######## fun_gg_prop() #### ggplot2 proportion barplot  162
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   162
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 162
-######## fun_gg_violin() #### ggplot2 violins   162
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  163
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  165
-######## fun_gg_empty_graph() #### text to display for empty graphs 178
-################ Graphic extraction 180
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 180
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   189
-################ Import 221
-######## fun_pack() #### check if R packages are present and import into the working environment    221
-######## fun_python_pack() #### check if python packages are present    222
-################ Print / Exporting results (text & tables)  225
-######## fun_report() #### print string or data object into output file 225
-######## fun_warning() #### return warnings of an expression (that can be exported) 227
+######## fun_test() #### test combinations of argument values of a function 25
+################ Object modification    28
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  28
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 29
+######## fun_merge() #### merge the columns of two 2D objects, by common rows   32
+######## fun_round() #### rounding number if decimal present    36
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    38
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    39
+######## fun_mat_op() #### assemble several matrices with operation 42
+######## fun_mat_inv() #### return the inverse of a square matrix   44
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  45
+######## fun_permut() #### progressively breaks a vector order  49
+################ Graphics management    59
+######## fun_width() #### window width depending on classes to plot 59
+######## fun_open() #### open a GUI or pdf graphic window   61
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    64
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 68
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   73
+######## fun_close() #### close specific graphic windows    84
+################ Standard graphics  85
+######## fun_empty_graph() #### text to display for empty graphs    86
+################ gg graphics    87
+######## fun_gg_palette() #### ggplot2 default color palette    87
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  89
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  91
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   94
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 130
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    165
+######## fun_gg_prop() #### ggplot2 proportion barplot  165
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   165
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 165
+######## fun_gg_violin() #### ggplot2 violins   165
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  165
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
+######## fun_gg_empty_graph() #### text to display for empty graphs 181
+################ Graphic extraction 183
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 183
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   191
+################ Import 223
+######## fun_pack() #### check if R packages are present and import into the working environment    223
+######## fun_python_pack() #### check if python packages are present    225
+################ Print / Exporting results (text & tables)  227
+######## fun_report() #### print string or data object into output file 227
+######## fun_get_message() #### return messages of an expression (that can be exported) 230
 
 
 ################################ FUNCTIONS ################################
@@ -355,7 +356,7 @@ fun_info <- function(data){
 # data: object to test
 # RETURN
 # a list containing information, depending on the class and type of data
-# is data is made of numerics, provide range, sum, mean, number of NA and number of Inf
+# if data is made of numerics, provide range, sum, mean, number of NA and number of Inf
 # please, use names(fun_info()) and remove what can be too big for easy analysis
 # EXAMPLES
 # fun_info(data = 1:3)
@@ -415,7 +416,7 @@ tempo <- list("COLUM_NAMES" = dimnames(data)[[2]])
 output <- c(output, tempo)
 }
 if(all(class(data) == "data.frame")){
-tempo <- list("STRUCTURE" = ls.str(data))
+tempo <- list("STRUCTURE" = ls.str(data)) # str() print automatically, ls.str() not but does not give the order of the data.frame
 output <- c(output, tempo)
 tempo <- list("COLUMN_TYPE" = sapply(data, FUN = "typeof"))
 if(any(sapply(data, FUN = "class") %in% "factor")){ # if an ordered factor is present, then sapply(data, FUN = "class") return a list but works with any(sapply(data, FUN = "class") %in% "factor") 
@@ -1244,9 +1245,10 @@ fun_test <- function(x, l, fun){
 # test combinations of argument values of a function
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
+# fun_get_message()
 # ARGUMENTS
 # x: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
-# l: list with number of compartments equal to length of x, each compartment containing values of the corresponding argument in x. By default, each different value must be in a list. If the values can be in a vector, a vector is accepted. For instance, argument 3 in x is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of l can be either l = list(TRUE, FALSE, NA), or l = c(TRUE, FALSE, NA)
+# l: list with number of compartments equal to length of x, each compartment containing values of the corresponding argument in x. Each different value must be in a list or in a vector. For instance, argument 3 in x is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of l can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
 # fun: character string indicating the name of the function tested
 # RETURN
 # a list containing
@@ -1266,6 +1268,10 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat)
+}
+if(length(utils::find("fun_get_message", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_get_message() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 # end required function checking
@@ -1339,7 +1345,7 @@ kind <- c(kind, "ERROR")
 problem <- c(problem, TRUE)
 res <- c(res, as.character(tempo.try))
 }else{
-tempo.warning <- fun_warning(data =fun.test)
+tempo.warning <- fun_get_message(data = fun.test)
 if( ! is.null(tempo.warning)){
 kind <- c(kind, "WARNING")
 problem <- c(problem, FALSE)
@@ -8733,31 +8739,37 @@ write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 }
 
 
-######## fun_warning() #### return warnings of an expression (that can be exported)
+######## fun_get_message() #### return messages of an expression (that can be exported)
 
 
 # make also fun_error
 # Check OK: clear to go Apollo
-fun_warning <- function(data, no.warn.print = FALSE, text_fun = NULL){
+fun_get_message <- function(data, kind = c("error", "warning", "message"), print.no = FALSE, text_fun = NULL){
 # AIM
-# evaluate an instruction written between "" and return the first of the warning messages if ever exist
+# evaluate an instruction written between "" and return the first of the error, or warning or standard (non error non warning) messages if ever exist
+# using argument print.no = FALSE, return NULL if no message, which is convenient in some cases
 # WARNING
-# Only the first warning message is returned
+# Only the first message is returned
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS
 # data: character string to evaluate
-# no.warn.print: logical. Print a message saying that no warning reported?
-# text_fun: character string added to the warning message (even if no warning exists and no.warn.print is TRUE)
+# kind: character string. Either "error" to get error messages, or "warning" to get warning messages, or "message" to get non error and non warning messages
+# print.no: logical. Print a message saying that no message reported?
+# text_fun: character string added to the output message (even if no message exists and print.no is TRUE)
 # RETURN
-# the warning message or NULL if no warning message and no.warn.print is FALSE
+# the message or NULL if no message and print.no is FALSE
 # EXAMPLES
-# fun_warning(data = "wilcox.test(c(1,1), 2:3)", no.warn.print = FALSE, text_fun = NULL)
-# fun_warning(data = "sum(1)", no.warn.print = FALSE, text_fun = NULL)
-# fun_warning(data = "sum(1)", no.warn.print = TRUE, text_fun = "IN FUNCTION 1")
+# fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "error", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "wilcox.test()", kind = "error", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "sum(1)", kind = "error", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "message('ahah')", kind = "error", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
 # DEBUGGING
-# data = "wilcox.test(c(1,1), 2:3)" ; no.warn.print = FALSE ; text_fun = NULL # for function debugging
-# data = "sum(1)" ; no.warn.print = FALSE ; text_fun = NULL # for function debugging
+# data = "wilcox.test(c(1,1), 2:3)" ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = "sum(1)" ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = "message('ahah')" ; kind = "error" ; print.no = TRUE ; text_fun = "IN A"
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -8767,13 +8779,15 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUI
 stop(tempo.cat)
 }
 # end required function checking
+# no need to use reserved words to avoid bugs, because it is local, and  exists("tempo.warning", inherit = FALSE), never use the scope
 # argument checking
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
 tempo <- fun_check(data = data, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = no.warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = kind, options = c("error", "warning", "message"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = print.no, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(text_fun)){
 tempo <- fun_check(data = text_fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
@@ -8787,24 +8801,59 @@ stop() # nothing else because print = TRUE by default in fun_check()
 warn.options.ini <- options()$warn
 # last warning cannot be used because suppressWarnings() does not modify last.warning present in the base evironment (created at first warning in a new R session), or warnings() # to reset the warning history : unlockBinding("last.warning", baseenv()) ; assign("last.warning", NULL, envir = baseenv())
 options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
-tempo.warning <- utils::capture.output({tempo <- suppressMessages(eval(parse(text = data)))}, type = "message") # recover warnings not messages and not errors
-if(exists("tempo.warning", inherit = FALSE) == TRUE & length(tempo.warning) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
-# tempo.try <- try(suppressWarnings(eval(parse(text = data))), silent = TRUE) # to get errors
-# tempo.warning <- c(tempo.warning, tempo.try)
-tempo.warning <- unique(apply(matrix(tempo.warning, ncol = 2, byrow = TRUE), 1, paste, collapse = "")) # the output of capture.output() is two strings per warning messages
-if(any(grepl(x = tempo.warning, pattern = "(converted from warning)"))){
-tempo.warning[[1]] <- gsub(x = tempo.warning[[1]], pattern = "Error i", replacement = "I")
-tempo.warning <- gsub(x = tempo.warning[[1]], pattern = "\\(converted from warning\\)| *\n *", replacement = "")
-output <- paste0("WARNING REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warning) #
-}
-if(any(grepl(x = tempo.warning, pattern = "Warning i"))){
-tempo.warning <- gsub(x = tempo.warning, pattern = "Warning i", replacement = "I")
-}
-output <- paste0("WARNING REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warning) #
-}else if(no.warn.print == TRUE){
-output <- paste0("NO WARNING REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
-}else{
 output <- NULL
+tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data)))), silent = TRUE) # get error message, not warning or messages
+if(exists("tempo.error", inherit = FALSE) == TRUE){
+if((length(tempo.error) > 0 & ! any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) | (length(tempo.error) == 0)){
+tempo.error <- NULL
+}
+}else{
+tempo.error <- NULL
+}
+if(kind == "error" & ! is.null(tempo.error)){ # inherit = FALSE avoid the portee lexical and thus the declared word
+tempo.error[1] <- gsub(x = tempo.error[1], pattern = "^Error i|^error i|^ERROR I", replacement = "^I")
+output <- paste0("ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.error[1]) #
+}else if(kind == "error" & is.null(tempo.error) & print.no == TRUE){
+output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
+output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}else if(is.null(tempo.error)){
+tempo.warning <- utils::capture.output({
+tempo <- suppressMessages(eval(parse(text = data)))
+}, type = "message") # recover warnings not messages and not errors
+tempo.message <- utils::capture.output({
+tempo <- suppressMessages(suppressWarnings(eval(parse(text = data))))
+if(any(class(tempo) %in% c("gg", "ggplot"))){
+tempo <- ggplot2::ggplot_build(tempo)
+}else{
+tempo <- suppressWarnings(eval(parse(text = data)))
+}
+}, type = "message") # recover messages not warnings and not errors
+if(kind == "warning" & exists("tempo.warning", inherit = FALSE) == TRUE){
+if(length(tempo.warning) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
+tempo.warning <- unique(apply(matrix(tempo.warning, ncol = 2, byrow = TRUE), 1, paste, collapse = "")) # the output of capture.output() is two strings per warning messages
+if(any(grepl(x = tempo.warning, pattern = "(converted from warning)"))){# warning message converted to error
+tempo.warning[[1]] <- gsub(x = tempo.warning[[1]], pattern = "Error i", replacement = "I")
+tempo.warning[[1]] <- gsub(x = tempo.warning[[1]], pattern = "\\(converted from warning\\)| *\n *", replacement = "")
+}
+if(any(grepl(x = tempo.warning[[1]], pattern = "Warning i"))){
+tempo.warning[[1]] <- gsub(x = tempo.warning[[1]], pattern = "Warning i", replacement = "I")
+}
+output <- paste0("WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warning) #
+}else if(print.no == TRUE){
+output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}
+}else if(kind == "warning" & exists("tempo.warning", inherit = FALSE) == FALSE & print.no == TRUE){
+output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}else if(kind == "message" & exists("tempo.message", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
+if(length(tempo.message) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
+output <- paste0("STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.message) #
+}else if(print.no == TRUE){
+output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}
+}else if(kind == "message" & exists("tempo.message", inherit = FALSE) == FALSE & print.no == TRUE){
+output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+}
 }
 options(warn = warn.options.ini) # restore initial setting
 return(output) # do not use cat() because the idea is to reuse the message
