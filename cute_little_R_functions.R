@@ -1240,16 +1240,19 @@ return(output)
 
 
 # Check OK: clear to go Apollo
-fun_test <- function(x, l, fun){
+fun_test <- function(fun, x, l, thread.nb = NULL, plot = FALSE, plot.path = NULL){
 # AIM
 # test combinations of argument values of a function
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # fun_get_message()
 # ARGUMENTS
+# fun: character string indicating the name of the function tested
 # x: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
 # l: list with number of compartments equal to length of x, each compartment containing values of the corresponding argument in x. Each different value must be in a list or in a vector. For instance, argument 3 in x is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of l can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
-# fun: character string indicating the name of the function tested
+# thread.nb: numeric value indicating the number of available threads. NULL if no parallelization wanted
+# plot: logical. Plot the plotting function tested for each test?
+# plot.path: character string indicating the absolute pathway of the pdf containing all the plots. Several pdf, one per thread, if parallelization. Not considered if plot is FALSE
 # RETURN
 # a list containing
 # $fun: the tested function
@@ -1258,6 +1261,8 @@ fun_test <- function(x, l, fun){
 # $problem: a logical vector indicating if error or not
 # $res: either NULL if $kind is always "OK", or a list of all the results, each compartment corresponding to each column of $data
 # $test.nb:  number of tests performed
+# $sys.info: system and packages info
+# one or several pdf if a plotting function is tested and if plot = TRUE
 # EXAMPLES
 # fun_test(x = c("x", "incomparables"), l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)), fun = "unique")
 # DEBUGGING
@@ -1315,6 +1320,15 @@ stop() # nothing else because print = TRUE by default in fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
+cat("\fun_test JOB IGNITION\n")
+ini.date <- Sys.time()
+ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
+total.comp.nb <- prod(sapply(l, FUN = "length"))
+if( ! is.null(thread.nb)){
+
+
+
+}else{
 loop.string <- NULL
 end.loop.string <- NULL
 fun.args <- NULL
@@ -1339,22 +1353,20 @@ data <- data.frame(X = sapply(eval(parse(text = arg.values)), FUN = "paste", col
 }else{
 data <- data.frame(data, X = sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")) # each colum is a test
 }
-tempo.try <- try(suppressWarnings(eval(parse(text = fun.test))), silent = TRUE)
-if(any(grepl(x = tempo.try, pattern = "[Ee]rror"))){
+tempo.try.error <- fun_get_message(data = fun.test, kind = "error")
+tempo.try.error <- fun_get_message(data = fun.test, kind = "warning")
+if( ! is.null(tempo.try.error)){
 kind <- c(kind, "ERROR")
 problem <- c(problem, TRUE)
-res <- c(res, as.character(tempo.try))
-}else{
-tempo.warning <- fun_get_message(data = fun.test)
-if( ! is.null(tempo.warning)){
+res <- c(res, tempo.try.error)
+}else if( ! is.null(tempo.try.warning)){
 kind <- c(kind, "WARNING")
 problem <- c(problem, FALSE)
-res <- c(res, as.character(tempo.warning))
+res <- c(res, tempo.try.warning)
 }else{
 kind <- c(kind, "OK")
 problem <- c(problem, FALSE)
 res <- c(res, "")
-}
 }
 ', 
 end.loop.string
@@ -1367,7 +1379,20 @@ data <- t(data)
 colnames(data) <- x
 row.names(data) <- paste0("test.", 1:count)
 data <- data.frame(data, kind = kind, problem = problem)
-output <- list(fun = fun, data = data, res = res, kind = kind, problem = problem, test.nb = count)
+sys.info <- sessionInfo()
+end.date <- Sys.time()
+end.time <- as.numeric(end.date)
+total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
+cat(paste0("\nfun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n"))
+
+
+
+
+
+
+
+
+output <- list(fun = fun, data = data, res = res, kind = kind, problem = problem, test.nb = total.comp.nb, sys.info = sys.info)
 return(output)
 }
 
