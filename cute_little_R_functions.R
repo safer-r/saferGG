@@ -23,58 +23,58 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis	2
-######## fun_check() #### check class, type, length, etc., of objects	2
-######## fun_info() #### recover object information	8
-######## fun_head() #### head of the left or right of big 2D objects	10
-######## fun_tail() #### tail of the left or right of big 2D objects	11
-######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables)	13
-######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	17
-######## fun_comp_list() #### comparison of two lists	23
-######## fun_test() #### test combinations of argument values of a function	25
-################ Object modification	28
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector	28
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa	29
-######## fun_merge() #### merge the columns of two 2D objects, by common rows	32
-######## fun_round() #### rounding number if decimal present	36
-######## fun_mat_rotate() #### 90° clockwise matrix rotation	38
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix	39
-######## fun_mat_op() #### assemble several matrices with operation	42
-######## fun_mat_inv() #### return the inverse of a square matrix	44
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix	45
-######## fun_permut() #### progressively breaks a vector order	49
-################ Graphics management	59
-######## fun_width() #### window width depending on classes to plot	59
-######## fun_open() #### open a GUI or pdf graphic window	61
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)	64
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis	68
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)	73
-######## fun_close() #### close specific graphic windows	84
-################ Standard graphics	85
-######## fun_empty_graph() #### text to display for empty graphs	86
-################ gg graphics	87
-######## fun_gg_palette() #### ggplot2 default color palette	87
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle	89
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer	91
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)	94
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required	130
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required	165
-######## fun_gg_prop() #### ggplot2 proportion barplot	165
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median	165
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median	165
-######## fun_gg_violin() #### ggplot2 violins	165
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars	165
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required	168
-######## fun_gg_empty_graph() #### text to display for empty graphs	181
-################ Graphic extraction	183
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs	183
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation	191
-################ Import	223
-######## fun_pack() #### check if R packages are present and import into the working environment	223
-######## fun_python_pack() #### check if python packages are present	225
-################ Print / Exporting results (text & tables)	227
-######## fun_report() #### print string or data object into output file	227
-######## fun_get_message() #### return messages of an expression (that can be exported)	230
+################ Object analysis    2
+######## fun_check() #### check class, type, length, etc., of objects   2
+######## fun_info() #### recover object information 8
+######## fun_head() #### head of the left or right of big 2D objects    10
+######## fun_tail() #### tail of the left or right of big 2D objects    11
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 13
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   17
+######## fun_comp_list() #### comparison of two lists   23
+######## fun_test() #### test combinations of argument values of a function 25
+################ Object modification    28
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  28
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 29
+######## fun_merge() #### merge the columns of two 2D objects, by common rows   32
+######## fun_round() #### rounding number if decimal present    36
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    38
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    39
+######## fun_mat_op() #### assemble several matrices with operation 42
+######## fun_mat_inv() #### return the inverse of a square matrix   44
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  45
+######## fun_permut() #### progressively breaks a vector order  49
+################ Graphics management    59
+######## fun_width() #### window width depending on classes to plot 59
+######## fun_open() #### open a GUI or pdf graphic window   61
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    64
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 68
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   73
+######## fun_close() #### close specific graphic windows    84
+################ Standard graphics  85
+######## fun_empty_graph() #### text to display for empty graphs    86
+################ gg graphics    87
+######## fun_gg_palette() #### ggplot2 default color palette    87
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  89
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  91
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   94
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 130
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    165
+######## fun_gg_prop() #### ggplot2 proportion barplot  165
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median   165
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 165
+######## fun_gg_violin() #### ggplot2 violins   165
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  165
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
+######## fun_gg_empty_graph() #### text to display for empty graphs 181
+################ Graphic extraction 183
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 183
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   191
+################ Import 223
+######## fun_pack() #### check if R packages are present and import into the working environment    223
+######## fun_python_pack() #### check if python packages are present    225
+################ Print / Exporting results (text & tables)  227
+######## fun_report() #### print string or data object into output file 227
+######## fun_get_message() #### return messages of an expression (that can be exported) 230
 
 
 ################################ FUNCTIONS ################################
@@ -1240,13 +1240,13 @@ return(output)
 
 
 # problem: running the function od not work, bug debug with same arguments yes
-fun_test <- function(fun, x, l, thread.nb = NULL, plot.fun = FALSE, plot.path = NULL, lib.path = NULL){
+fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, plot.path = NULL, lib.path = NULL){
 # AIM
 # test combinations of argument values of a function
 # ARGUMENTS
 # fun: character string indicating the name of the function tested
-# x: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
-# l: list with number of compartments equal to length of x, each compartment containing values of the corresponding argument in x. Each different value must be in a list or in a vector. For instance, argument 3 in x is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of l can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
+# arg: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
+# val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
 # thread.nb: numeric value indicating the number of available threads. NULL if no parallelization wanted
 # plot.fun: logical. Plot the plotting function tested for each test?
 # plot.path: character string indicating the absolute pathway of folder where the pdfs, containing all the plots, will be saved. Several pdf, one per thread, if parallelization. Not considered if plot.fun is FALSE
@@ -1268,13 +1268,14 @@ fun_test <- function(fun, x, l, thread.nb = NULL, plot.fun = FALSE, plot.path = 
 # $sys.info: system and packages info
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
 # EXAMPLES
-# fun_test(fun = "unique", x = c("x", "incomparables"), l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
-# fun_test(fun = "plot", x = c("x", "y"), l <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", x = c("data1", "y", "categ"), l = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
+# fun_test(fun = "unique", arg = c("x", "incomparables"), val <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
+# fun_test(fun = "plot", arg = c("x", "y"), val <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\")
 # DEBUGGING
-# fun = "unique" ; x = c("x", "incomparables") ; l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; plot.path = NULL ; lib.path = NULL # for function debugging
-# fun = "plot" ; x = c("x", "y") ; l <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; x = c("data1", "y", "categ") ; l = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# fun = "unique" ; arg = c("x", "incomparables") ; val <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; plot.path = NULL ; lib.path = NULL # for function debugging
+# fun = "plot" ; arg = c("x", "y") ; val <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -1308,30 +1309,30 @@ cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_check(data = x, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = arg, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 args <- names(formals(get(fun)))
-if( ! all(x %in% args)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": SOME OF THE STRINGS IN x ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN x: ", paste(x[ ! x %in% args], collapse = " "), "\n\n================\n\n")
+if( ! all(arg %in% args)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": SOME OF THE STRINGS IN arg ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN arg: ", paste(arg[ ! arg %in% args], collapse = " "), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-tempo <- fun_check(data = l, class = "list", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = val, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
-for(i1 in 1:length(l)){
-tempo1 <- fun_check(data = l[[i1]], class = "vector", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_check(data = l[[i1]], class = "list", na.contain = TRUE, fun.name = function.name, print = FALSE)
+for(i1 in 1:length(val)){
+tempo1 <- fun_check(data = val[[i1]], class = "vector", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = val[[i1]], class = "list", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COMPARTMENT ", i1, " OF l ARGUMENT MUST BE A VECTOR OR A LIST\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COMPARTMENT ", i1, " OF val ARGUMENT MUST BE A VECTOR OR A LIST\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo1$problem == FALSE){ # vector split into list compartments
-l[[i1]] <- split(x = l[[i1]], f = 1:length(l[[i1]]))
+val[[i1]] <- split(x = val[[i1]], f = 1:length(val[[i1]]))
 }
 }
-if(length(unique(sapply(l, FUN = "length"))) != 1 | (length(unique(sapply(l, FUN = "length"))) == 1 & length(sapply(l, FUN = "length")) != length(l))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": CONVERSION IN l ARGUMENT LEADS TO DIFFERENT NUMBER OF SUBCOMPARTMENTS: ", paste(sapply(l, FUN = "length"), collapse = " "), "\n", paste(l, collapse = "\n"), "\n\n================\n\n")
+if(length(unique(sapply(val, FUN = "length"))) != 1 | (length(unique(sapply(val, FUN = "length"))) == 1 & length(sapply(val, FUN = "length")) != length(val))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": CONVERSION IN val ARGUMENT LEADS TO DIFFERENT NUMBER OF SUBCOMPARTMENTS: ", paste(sapply(val, FUN = "length"), collapse = " "), "\n", paste(val, collapse = "\n"), "\n\n================\n\n")
 cat(tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -1378,7 +1379,7 @@ sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
-total.comp.nb <- prod(sapply(l, FUN = "length"))
+total.comp.nb <- prod(sapply(val, FUN = "length"))
 cat(paste0("\nTHE TOTAL NUMBER OF TESTS IS: ", total.comp.nb, "\n"))
 if( ! is.null(thread.nb)){
 
@@ -1396,21 +1397,29 @@ window.nb <- dev.cur()
 loop.string <- NULL
 end.loop.string <- NULL
 fun.args <- NULL
+# fun.args2 <- NULL
+fun.args2 <- NULL
 arg.values <- "list("
-for(i1 in 1:length(x)){
-loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(l[[i1]]), "){")
+for(i1 in 1:length(arg)){
+loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
 end.loop.string <- paste0(end.loop.string, "}")
-fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), x[i1], " = l[[", i1, "]][[i", i1,"]]")
-arg.values <- paste0(arg.values, "l[[", i1, "]][[i", i1, "]]", ifelse(i1 == length(x), "", ", "))
+fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[i", i1,"]]")
+# fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[.(i", i1,")]]")
+fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[', i", i1,", ']]")
+arg.values <- paste0(arg.values, "val[[", i1, "]][[i", i1, "]]", ifelse(i1 == length(arg), "", ", "))
 }
 arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
+# fun.test2 <- paste0(fun, "(", fun.args2, ")")
+fun.test2 <- paste0("paste0('", fun, "(", fun.args2, ")')")
+print(fun.test2)
+print("caca1")
 # plot title for special plot functions
 if(plot.fun == TRUE){
 plot.kind <- "classic"
 if(fun %in% sp.plot.fun){
 plot.kind <- "special"
-if(any(x %in% "title")){ # this is for the special functions
+if(any(arg %in% "title")){ # this is for the special functions
 tempo.match <- regmatches(x = fun.test, m = regexpr(text = fun.test, pattern = "title = .+[,)]"))
 tempo.match <- substring(tempo.match , 1, nchar(tempo.match) - 1)
 fun.test <- sub(x = fun.test, pattern = tempo.match, replacement = paste0(tempo.match, "\ntempo.title"))
@@ -1425,14 +1434,15 @@ problem <- logical()
 res <- character()
 count <- 0
 plot.count <- 0
-data <- data.frame(t((vector("character", length(x)))), stringsAsFactors = FALSE)[-1, ]
-colnames(data) <- x
-code <- paste0(
+data <- data.frame(t((vector("character", length(arg)))), stringsAsFactors = FALSE)[-1, ]
+code <- paste(
 loop.string, '
 count <- count + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
-tempo.try.error <- fun_get_message(data = fun.test, kind = "error")
-tempo.try.warning <- fun_get_message(data = fun.test, kind = "warning")
+print("caca2")
+tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error")
+tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning")
+print("caca3")
 if( ! is.null(tempo.try.error)){
 kind <- c(kind, "ERROR")
 problem <- c(problem, TRUE)
@@ -1454,7 +1464,10 @@ if(plot.kind == "classic"){
 eval(parse(text = fun.test))
 tempo <- fun_post_plot(corner.text = tempo.title)
 }else if(plot.kind == "special"){
+print("caca4")
 eval(parse(text = fun.test))
+print("caca5")
+
 }else{
 tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR 1 IN ", function.name, ": CODE HAS TO BE MODIFIED\n\n============\n\n")
 stop(tempo.cat)
@@ -1464,9 +1477,10 @@ stop(tempo.cat)
 ', 
 end.loop.string
 )
-# print(code)
 suppressMessages(suppressWarnings(eval(parse(text = code))))
 # eval(parse(text = code))
+print("caca6")
+colnames(data) <- arg
 data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
 row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), 1:total.comp.nb))
 sys.info <- sessionInfo()
@@ -1483,7 +1497,6 @@ total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
 cat(paste0("\nfun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
 return(output)
 }
-
 
 ################ Object modification
 
@@ -8861,9 +8874,8 @@ write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 ######## fun_get_message() #### return messages of an expression (that can be exported)
 
 
-# make also fun_error
 # Check OK: clear to go Apollo
-fun_get_message <- function(data, kind = c("error", "warning", "message"), print.no = FALSE, text_fun = NULL){
+fun_get_message <- function(data, kind = "error", print.no = FALSE, text_fun = NULL){
 # AIM
 # evaluate an instruction written between "" and return the first of the error, or warning or standard (non error non warning) messages if ever exist
 # using argument print.no = FALSE, return NULL if no message, which is convenient in some cases
@@ -8880,10 +8892,13 @@ fun_get_message <- function(data, kind = c("error", "warning", "message"), print
 # the message or NULL if no message and print.no is FALSE
 # EXAMPLES
 # fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "error", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "warning", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "message", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "wilcox.test()", kind = "error", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "sum(1)", kind = "error", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "message('ahah')", kind = "error", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
 # DEBUGGING
 # data = "wilcox.test(c(1,1), 2:3)" ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
 # data = "sum(1)" ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
@@ -8924,14 +8939,14 @@ warn.options.ini <- options()$warn
 options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
 output <- NULL
 tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data)))), silent = TRUE) # get error message, not warning or messages
-if(exists("tempo.error", inherit = FALSE) == TRUE){
+if(exists("tempo.error", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
 if((length(tempo.error) > 0 & ! any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) | (length(tempo.error) == 0)){
 tempo.error <- NULL
 }
 }else{
 tempo.error <- NULL
 }
-if(kind == "error" & ! is.null(tempo.error)){ # inherit = FALSE avoid the portee lexical and thus the declared word
+if(kind == "error" & ! is.null(tempo.error)){ # 
 tempo.error[1] <- gsub(x = tempo.error[1], pattern = "^Error i|^error i|^ERROR I", replacement = "^I")
 output <- paste0("ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.error[1]) #
 }else if(kind == "error" & is.null(tempo.error) & print.no == TRUE){
@@ -8939,6 +8954,7 @@ output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " ")
 }else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
 output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
 }else if(is.null(tempo.error)){
+options(warn = 1)
 tempo.warning <- utils::capture.output({
 tempo <- suppressMessages(eval(parse(text = data)))
 }, type = "message") # recover warnings not messages and not errors
