@@ -23,58 +23,58 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis    2
-######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_info() #### recover object information 8
-######## fun_head() #### head of the left or right of big 2D objects    10
-######## fun_tail() #### tail of the left or right of big 2D objects    11
-######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 13
-######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   17
-######## fun_comp_list() #### comparison of two lists   23
-######## fun_test() #### test combinations of argument values of a function 25
-################ Object modification    28
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  28
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 29
-######## fun_merge() #### merge the columns of two 2D objects, by common rows   32
-######## fun_round() #### rounding number if decimal present    36
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    38
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    39
-######## fun_mat_op() #### assemble several matrices with operation 42
-######## fun_mat_inv() #### return the inverse of a square matrix   44
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  45
-######## fun_permut() #### progressively breaks a vector order  49
-################ Graphics management    59
-######## fun_width() #### window width depending on classes to plot 59
-######## fun_open() #### open a GUI or pdf graphic window   61
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    64
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 68
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   73
-######## fun_close() #### close specific graphic windows    84
-################ Standard graphics  85
-######## fun_empty_graph() #### text to display for empty graphs    86
-################ gg graphics    87
-######## fun_gg_palette() #### ggplot2 default color palette    87
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  89
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  91
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   94
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 130
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    165
-######## fun_gg_prop() #### ggplot2 proportion barplot  165
-######## fun_gg_strip() #### ggplot2 stripchart + mean/median   165
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 165
-######## fun_gg_violin() #### ggplot2 violins   165
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  165
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  168
-######## fun_gg_empty_graph() #### text to display for empty graphs 181
-################ Graphic extraction 183
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 183
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   191
-################ Import 223
-######## fun_pack() #### check if R packages are present and import into the working environment    223
-######## fun_python_pack() #### check if python packages are present    225
-################ Print / Exporting results (text & tables)  227
-######## fun_report() #### print string or data object into output file 227
-######## fun_get_message() #### return messages of an expression (that can be exported) 230
+################ Object analysis	2
+######## fun_check() #### check class, type, length, etc., of objects	2
+######## fun_info() #### recover object information	8
+######## fun_head() #### head of the left or right of big 2D objects	10
+######## fun_tail() #### tail of the left or right of big 2D objects	11
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables)	13
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)	17
+######## fun_comp_list() #### comparison of two lists	23
+######## fun_test() #### test combinations of argument values of a function	25
+################ Object modification	28
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector	28
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa	29
+######## fun_merge() #### merge the columns of two 2D objects, by common rows	32
+######## fun_round() #### rounding number if decimal present	36
+######## fun_mat_rotate() #### 90° clockwise matrix rotation	38
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix	39
+######## fun_mat_op() #### assemble several matrices with operation	42
+######## fun_mat_inv() #### return the inverse of a square matrix	44
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix	45
+######## fun_permut() #### progressively breaks a vector order	49
+################ Graphics management	59
+######## fun_width() #### window width depending on classes to plot	59
+######## fun_open() #### open a GUI or pdf graphic window	61
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)	64
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis	68
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)	73
+######## fun_close() #### close specific graphic windows	84
+################ Standard graphics	85
+######## fun_empty_graph() #### text to display for empty graphs	86
+################ gg graphics	87
+######## fun_gg_palette() #### ggplot2 default color palette	87
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle	89
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer	91
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)	94
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required	130
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required	165
+######## fun_gg_prop() #### ggplot2 proportion barplot	165
+######## fun_gg_strip() #### ggplot2 stripchart + mean/median	165
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median	165
+######## fun_gg_violin() #### ggplot2 violins	165
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars	165
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required	168
+######## fun_gg_empty_graph() #### text to display for empty graphs	181
+################ Graphic extraction	183
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs	183
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation	191
+################ Import	223
+######## fun_pack() #### check if R packages are present and import into the working environment	223
+######## fun_python_pack() #### check if python packages are present	225
+################ Print / Exporting results (text & tables)	227
+######## fun_report() #### print string or data object into output file	227
+######## fun_get_message() #### return messages of an expression (that can be exported)	230
 
 
 ################################ FUNCTIONS ################################
@@ -1258,21 +1258,24 @@ fun_test <- function(fun, x, l, thread.nb = NULL, plot.fun = FALSE, plot.path = 
 # fun_get_message()
 # fun_pack()
 # RETURN
-# a list containing
+# a list containing:
 # $fun: the tested function
-# $data: a data frame of all the combination tested
+# $data: a data frame of all the combination tested, containing the following columns:
+# the different values tested, named by arguments
 # $kind: a vector of character strings indicating the kind of test result: either "ERROR", or "WARNING", or "OK"
 # $problem: a logical vector indicating if error or not
-# $res: either NULL if $kind is always "OK", or a list of all the results, each compartment corresponding to each column of $data
-# $test.nb:  number of tests performed
+# $message: either NULL if $kind is always "OK", or a list of all the results, each compartment corresponding to each column of $data
 # $sys.info: system and packages info
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
 # EXAMPLES
 # fun_test(fun = "unique", x = c("x", "incomparables"), l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
 # fun_test(fun = "plot", x = c("x", "y"), l <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", x = c("data1", "y", "categ"), l = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
 # DEBUGGING
 # fun = "unique" ; x = c("x", "incomparables") ; l <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; plot.path = NULL ; lib.path = NULL # for function debugging
 # fun = "plot" ; x = c("x", "y") ; l <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; x = c("data1", "y", "categ") ; l = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -1368,6 +1371,9 @@ if( ! is.null(thread.nb)){
 fun_pack(req.package = c("parallel"), lib.path = lib.path)
 }
 # end package checking
+# declaration of special plot functions
+sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
+# end declaration of special plot functions
 # main code
 cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
@@ -1399,15 +1405,28 @@ arg.values <- paste0(arg.values, "l[[", i1, "]][[i", i1, "]]", ifelse(i1 == leng
 }
 arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
+# plot title for special plot functions
+if(plot.fun == TRUE){
+plot.kind <- "classic"
+if(fun %in% sp.plot.fun){
+plot.kind <- "special"
+if(any(x %in% "title")){ # this is for the special functions
+tempo.match <- regmatches(x = fun.test, m = regexpr(text = fun.test, pattern = "title = .+[,)]"))
+tempo.match <- substring(tempo.match , 1, nchar(tempo.match) - 1)
+fun.test <- sub(x = fun.test, pattern = tempo.match, replacement = paste0(tempo.match, "\ntempo.title"))
+}else{
+fun.test <- sub(x = fun.test, pattern = ")$", replacement = ", title = tempo.title)")
+}
+}
+}
+# end plot title for special plot functions
 kind <- character()
 problem <- logical()
 res <- character()
 count <- 0
+plot.count <- 0
 data <- data.frame(t((vector("character", length(x)))), stringsAsFactors = FALSE)[-1, ]
 colnames(data) <- x
-if(plot.fun == TRUE){
-plot.count <- 0
-}
 code <- paste0(
 loop.string, '
 count <- count + 1
@@ -1430,19 +1449,30 @@ res <- c(res, "")
 }
 if(plot.fun == TRUE){
 plot.count <- plot.count + 1
+tempo.title <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), count))
+if(plot.kind == "classic"){
 eval(parse(text = fun.test))
+tempo <- fun_post_plot(corner.text = tempo.title)
+}else if(plot.kind == "special"){
+eval(parse(text = fun.test))
+}else{
+tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR 1 IN ", function.name, ": CODE HAS TO BE MODIFIED\n\n============\n\n")
+stop(tempo.cat)
+}
 }
 }
 ', 
 end.loop.string
 )
-eval(parse(text = code))
+# print(code)
+suppressMessages(suppressWarnings(eval(parse(text = code))))
+# eval(parse(text = code))
 data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
-row.names(data) <- paste0("test.", sprintf(paste0("%0", nchar(count), "d"), 1:count))
+row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), 1:total.comp.nb))
 sys.info <- sessionInfo()
 invisible(dev.off(window.nb))
 # output
-output <- list(fun = fun, data = data, test.nb = total.comp.nb, sys.info = sys.info)
+output <- list(fun = fun, data = data, sys.info = sys.info)
 if(plot.fun == TRUE & plot.count == 0){
 warning("\nNO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n")
 file.remove( paste0(plot.path, "/plots_from_fun_test1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
