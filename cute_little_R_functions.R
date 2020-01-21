@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE LITTLE R FUNCTIONS v6.0.0                         ##
+##     CUTE FUNCTIONS v6.0.0                                  ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -87,7 +87,7 @@
 
 
 # Check OK: clear to go Apollo
-fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode = NULL, length = NULL, prop = NULL, double.as.integer.allowed = FALSE, options = NULL, all.options.in.data = FALSE, na.contain = FALSE, neg.values = TRUE, print = TRUE, fun.name = NULL){
+fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode = NULL, length = NULL, prop = NULL, double.as.integer.allowed = FALSE, options = NULL, all.options.in.data = FALSE, na.contain = FALSE, neg.values = TRUE, print = FALSE, fun.name = NULL){
 # AIM
 # check the class, type, mode and length of the data argument
 # mainly used to check the arguments of other functions
@@ -115,7 +115,7 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # a list containing:
 # $problem: logical. Is there any problem detected ?
 # $text: the problem detected
-# $param.name: name of the checked parameter
+# $fun.name: name of the checked parameter
 # EXAMPLES
 # test <- 1:3 ; fun_check(data = test, data.name = NULL, print = TRUE, options = NULL, all.options.in.data = FALSE, class = NULL, typeof = NULL, mode = NULL, prop = TRUE, double.as.integer.allowed = FALSE, length = NULL)
 # test <- 1:3 ; fun_check(data = test, print = TRUE, class = "numeric", typeof = NULL, double.as.integer.allowed = FALSE)
@@ -338,7 +338,7 @@ text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE NON NEGATIVE NUMERIC
 if(print == TRUE & problem == TRUE){
 cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
 }
-output <- list(problem = problem, text = text, param.name = data.name)
+output <- list(problem = problem, text = text, fun.name = data.name)
 return(output)
 }
 
@@ -490,7 +490,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -557,7 +557,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = n, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -1239,7 +1239,7 @@ return(output)
 ######## fun_test() #### test combinations of argument values of a function
 
 
-# problem: running the function od not work, bug debug with same arguments yes
+# problem: running the function do not work, but debug with same arguments yes
 fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, plot.path = NULL, lib.path = NULL){
 # AIM
 # test combinations of argument values of a function
@@ -1269,6 +1269,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, plot.pat
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
 # EXAMPLES
 # fun_test(fun = "unique", arg = c("x", "incomparables"), val <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
+# fun_test(fun = "fun_round", arg = c("data", "dec.nb", "after.lead.zero"), val <- list(y = list(c(1, 1.0002256, 1.23568), "a", NULL, NA), x = list(2, c(1,3), NA), incomparable = c(TRUE, FALSE, NA)))
 # fun_test(fun = "plot", arg = c("x", "y"), val <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\")
@@ -1297,7 +1298,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = fun, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 if(grepl(x = fun, pattern = "()$")){ # remove ()
@@ -1536,7 +1537,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data1, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = data2, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = added.string, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
@@ -1625,7 +1626,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = quanti.col.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = quali.col.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -1734,7 +1735,7 @@ stop(tempo.cat)
 # argument checking using fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo1 <- fun_check(data = data1, class = "matrix", print = FALSE)
 tempo2 <- fun_check(data = data1, class = "data.frame", print = FALSE)
 tempo3 <- fun_check(data = data1, class = "table", print = FALSE)
@@ -1922,14 +1923,15 @@ stop(tempo.cat)
 }
 # end argument checking without fun_check()
 # argument checking with fun_check()
-arg.check <- NULL # for function debbuging
+arg.check <- NULL #
+text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data, class = "vector", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = dec.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = after.lead.zero, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
-stop() # nothing else because print = TRUE by default in fun_check()
+stop(paste(text.check[arg.check], collapse = " ")) # nothing else because print = TRUE by default in fun_check()
 }
 # end argument checking with fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
@@ -1993,7 +1995,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data, class = "matrix", fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
@@ -2046,7 +2048,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = mat1, mode = "numeric", class = "matrix", na.contain = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = mat.hsv.h, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = notch, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
@@ -2180,7 +2182,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = mat.list, class = "list", fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = kind.of.operation, options = c("+", "-", "*"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -2273,7 +2275,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = mat, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop() # nothing else because print = TRUE by default in fun_check()
@@ -2354,7 +2356,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = mat, class = "matrix", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = empty.cell.string, class = "vector", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -2530,7 +2532,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data1, class = "vector", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data1) < 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A VECTOR OF MINIMUM LENGTH 2. HERE IT IS: ", length(data1),"\n\n================\n\n")
@@ -2884,7 +2886,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = class.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = inches.per.class.nb, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = ini.window.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
@@ -2952,7 +2954,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = pdf.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
@@ -3100,7 +3102,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = param.reinitial, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = xlog.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = ylog.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -3260,7 +3262,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & isTRUE(all.equal(n, 0))){ # isTRUE(all.equal(n, 0)) equivalent to n == 0 but deals with floats (approx ok)
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON NULL AND POSITIVE INTEGER\n\n================\n\n")
@@ -3507,7 +3509,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = x.side, options = c(0, 1, 3), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = x.log.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(x.categ)){
@@ -3801,7 +3803,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = kind, options = c("windows", "quartz", "x11", "X11", "pdf", "bmp", "png", "tiff"), fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.text, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -3893,7 +3895,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 if( ! is.null(text)){
 tempo <- fun_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
@@ -3973,7 +3975,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & isTRUE(all.equal(n, 0))){ # isTRUE(all.equal(n, 0))) is similar to n == 0 but deals with float
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": n ARGUMENT MUST BE A NON ZERO INTEGER. HERE IT IS: ", paste(n, collapse = " "), "\n\n================\n\n")
@@ -4034,7 +4036,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = angle, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = axis, options = c("x", "y"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -4165,7 +4167,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 if( ! is.null(data)){
 tempo <- fun_check(data = data, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
@@ -4599,7 +4601,7 @@ color[[i1]] <-tempo.color[color[[i1]]]
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 compart.null.color <- 0 # will be used to attribute a color when color is non NULL but a compartment of color is NULL
 data1.ini <- data1 # to report NA removal
 removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
@@ -5656,7 +5658,7 @@ reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.max", "dot.m
 warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(duplicated(names(data1)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "), "\n\n================\n\n")
@@ -6783,7 +6785,7 @@ stop(tempo.cat)
 warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 if(all(is.matrix(data1))){
 tempo <- fun_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }else if(all(is.data.frame(data1))){
@@ -7061,7 +7063,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 if( ! is.null(text)){
 tempo <- fun_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
@@ -7169,7 +7171,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 if( ! is.null(displayed.nb)){
 tempo <- fun_check(data = displayed.nb, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(displayed.nb < 2){
@@ -7472,7 +7474,7 @@ stop(tempo.cat)
 warning <- NULL
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data1) < 2){
 cat(paste0("\n\n============\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS\n\n============\n\n"))
@@ -8614,7 +8616,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = req.package, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = load, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
@@ -8694,7 +8696,7 @@ stop(tempo.cat)
 # argument checking
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = req.package, class = "character", fun.name = function.name) ; eval(ee)
 if( ! is.null(path.python.exec)){
 tempo <- fun_check(data = path.python.exec, class = "character", length = 1, fun.name = function.name) ; eval(ee)
@@ -8804,7 +8806,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = output, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & output == ""){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": output ARGUMENT AS \"\" DOES NOT CORRESPOND TO A VALID FILE NAME\n\n================\n\n")
@@ -8875,6 +8877,7 @@ write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 
 
 # Check OK: clear to go Apollo
+# not working for fun_gg_boxplot(): fun_gg_boxplot() must be solved
 fun_get_message <- function(data, kind = "error", print.no = FALSE, text_fun = NULL){
 # AIM
 # evaluate an instruction written between "" and return the first of the error, or warning or standard (non error non warning) messages if ever exist
@@ -8918,7 +8921,7 @@ stop(tempo.cat)
 # argument checking with fun_check()
 arg.check <- NULL # for function debbuging
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$param.name))
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = kind, options = c("error", "warning", "message"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = print.no, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -8954,7 +8957,6 @@ output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " ")
 }else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
 output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
 }else if(is.null(tempo.error)){
-options(warn = 1)
 tempo.warning <- utils::capture.output({
 tempo <- suppressMessages(eval(parse(text = data)))
 }, type = "message") # recover warnings not messages and not errors
