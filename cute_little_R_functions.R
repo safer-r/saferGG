@@ -2729,7 +2729,7 @@ tempo.cor.est <- abs(cor(x = data1[tempo.pos.est], y = data2, use = "pairwise.co
 cor.est[i6] <- tempo.cor.est
 tempo.cor.dec.per.loop <- (cor.est.ini - tempo.cor.est) / count.est # correlation decrease per loop
 if(is.na(tempo.cor.dec.per.loop) | ! is.finite(tempo.cor.dec.per.loop)){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\ncor.est.ini: ", cor.est.ini, "\ntempo.cor.est: ", tempo.cor.est, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\ncor.est.ini: ", cor.est.ini, "\ntempo.cor.est: ", tempo.cor.est, "\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 cor.dec.per.loop[i6] <- tempo.cor.dec.per.loop
@@ -2748,7 +2748,7 @@ loop.nb.est <- round((tempo.cor - cor.limit) / cor.dec.per.loop)
 # end estimation step
 # loop step
 if(is.na(loop.nb.est) | ! is.finite(loop.nb.est)){
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\nloop.nb.est: ", loop.nb.est, "\ncor.ini: ", cor.ini, "\ntempo.cor: ", tempo.cor, "\ncor.limit: ", cor.limit, "\ncor.dec.per.loop: ", cor.dec.per.loop, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\nloop.nb.est: ", loop.nb.est, "\ncor.ini: ", cor.ini, "\ntempo.cor: ", tempo.cor, "\ncor.limit: ", cor.limit, "\ncor.dec.per.loop: ", cor.dec.per.loop, "\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }else if(loop.nb.est > 1e4){ # below -> leave the while loop
 tempo.pos.secu <- tempo.pos
@@ -3285,7 +3285,7 @@ tempo <- fun_check(data = kind, options = c("approx", "strict", "strict.cl"), le
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path))
+tempo.cat <- paste0("ERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path)
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -4164,7 +4164,7 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 }else if(all(inactivate == TRUE)){
 function.name <- NULL
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN fun_gg_point_rast(): CODE INCONSISTENCY 1\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN fun_gg_point_rast(): CODE INCONSISTENCY 1\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end function name
@@ -4687,7 +4687,7 @@ arg.check <- c(arg.check, TRUE)
 }
 # na detection and removal (done now to be sure of the correct length of categ)
 if(x[[i1]] == "fake_x" & y[[i1]] == "fake_y"){ # because the code cannot accept to be both "fake_x" and "fake_y" at the same time
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\nTHE CODE CANNOT ACCEPT x AND y TO BE \"fake_x\" AND \"fake_y\" IN THE SAME DATA FRAME ", i1, " \n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\nTHE CODE CANNOT ACCEPT x AND y TO BE \"fake_x\" AND \"fake_y\" IN THE SAME DATA FRAME ", i1, " \n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(any(is.na(data1[[i1]][, c(if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]})]))){
@@ -6021,7 +6021,7 @@ tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = 
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -6278,7 +6278,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- (paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = "group", sort = FALSE) # send the factors of data1 into coord
@@ -6931,7 +6931,7 @@ tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = 
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8680,7 +8680,8 @@ lib.path <- .libPaths() # .libPaths(new = lib.path) # or .libPaths(new = c(.libP
 }
 for(i0 in 1:length(req.package)){
 if( ! req.package[i0] %in% rownames(utils::installed.packages(lib.loc = lib.path))){
-stop(paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n"))
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
 }else{
 if(load == TRUE){
 suppressWarnings(suppressPackageStartupMessages(library(req.package[i0], lib.loc = lib.path, quietly = TRUE, character.only = TRUE)))
@@ -8759,7 +8760,7 @@ arg.check <- c(arg.check, TRUE)
 if( ! is.null(R.lib.path)){
 tempo <- fun_check(data = R.lib.path, class = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(dir.exists(R.lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE R.lib.path PARAMETER DOES NOT EXISTS: ", R.lib.path, "\n\n============\n\n"))
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE R.lib.path PARAMETER DOES NOT EXISTS: ", R.lib.path, "\n\n============\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8796,10 +8797,11 @@ tempo.try[[i1]] <- suppressWarnings(try(reticulate::import_from_path(req.package
 }
 if(all(sapply(tempo.try, FUN = grepl, pattern = "[Ee]rror"))){
 print(tempo.try)
-stop(paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n"))
-}else{
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+} # else{
 # suppressWarnings(suppressPackageStartupMessages(assign(req.package[i0], reticulate::import(req.package[i0])))) # not required because try() already evaluates
-}
+# }
 }
 }
 
