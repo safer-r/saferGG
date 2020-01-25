@@ -8925,8 +8925,7 @@ write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 
 
 # Check OK: clear to go Apollo
-# not working for fun_gg_boxplot(): fun_gg_boxplot() must be solved
-fun_get_message <- function(data, kind = "error", print.no = FALSE, text_fun = NULL){
+fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALSE, text_fun = NULL){
 # AIM
 # evaluate an instruction written between "" and return the first of the error, or warning or standard (non error non warning) messages if ever exist
 # using argument print.no = FALSE, return NULL if no message, which is convenient in some cases
@@ -8937,8 +8936,9 @@ fun_get_message <- function(data, kind = "error", print.no = FALSE, text_fun = N
 # ARGUMENTS
 # data: character string to evaluate
 # kind: character string. Either "error" to get error messages, or "warning" to get warning messages, or "message" to get non error and non warning messages
+# header: logical. Add a header in the returned message?
 # print.no: logical. Print a message saying that no message reported?
-# text_fun: character string added to the output message (even if no message exists and print.no is TRUE)
+# text_fun: character string added to the output message (even if no message exists and print.no is TRUE). Inactivated if header is FALSE
 # RETURN
 # the message or NULL if no message and print.no is FALSE
 # EXAMPLES
@@ -8951,10 +8951,11 @@ fun_get_message <- function(data, kind = "error", print.no = FALSE, text_fun = N
 # fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
 # DEBUGGING
-# data = "wilcox.test(c(1,1), 2:3)" ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
-# data = "sum(1)" ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
-# data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; print.no = FALSE ; text_fun = NULL # for function debugging
-# data = "message('ahah')" ; kind = "error" ; print.no = TRUE ; text_fun = "IN A"
+# data = "wilcox.test(c(1,1), 2:3)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = "sum(1)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text_fun = "IN A"
+# data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -8974,6 +8975,7 @@ ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text
 tempo <- fun_check(data = data, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = kind, options = c("error", "warning", "message"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = print.no, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = header, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(text_fun)){
 tempo <- fun_check(data = text_fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
@@ -8991,6 +8993,9 @@ warn.options.ini <- options()$warn
 options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
 output <- NULL
 tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data)))), silent = TRUE) # get error message, not warning or messages
+if(any(class(tempo.error) %in% c("gg", "ggplot"))){
+tempo.error <- ggplot2::ggplot_build(tempo.error)
+}
 if(exists("tempo.error", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
 if((length(tempo.error) > 0 & ! any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) | (length(tempo.error) == 0)){
 tempo.error <- NULL
@@ -8999,8 +9004,12 @@ tempo.error <- NULL
 tempo.error <- NULL
 }
 if(kind == "error" & ! is.null(tempo.error)){ # 
+if(header == TRUE){
 tempo.error[1] <- gsub(x = tempo.error[1], pattern = "^Error i|^error i|^ERROR I", replacement = "^I")
 output <- paste0("ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.error[1]) #
+}else{
+output <- tempo.error[1] #
+}
 }else if(kind == "error" & is.null(tempo.error) & print.no == TRUE){
 output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
 }else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
@@ -9019,7 +9028,9 @@ tempo <- suppressWarnings(eval(parse(text = data)))
 }, type = "message") # recover messages not warnings and not errors
 if(kind == "warning" & exists("tempo.warn", inherit = FALSE) == TRUE){
 if(length(tempo.warn) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
-tempo.warn <- unique(apply(matrix(tempo.warn, ncol = 2, byrow = TRUE), 1, paste, collapse = "")) # the output of capture.output() is two strings per warning messages
+tempo.warn <- paste(unique(tempo.warn), collapse = "\n") # the output of capture.output() is two strings per warning messages
+# tempo.warn <- unique(apply(matrix(tempo.warn, ncol = 2, byrow = TRUE), 1, paste, collapse = "")) # the output of capture.output() is two strings per warning messages
+if(header == TRUE){
 if(any(grepl(x = tempo.warn, pattern = "(converted from warning)"))){# warning message converted to error
 tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "Error i", replacement = "I")
 tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "\\(converted from warning\\)| *\n *", replacement = "")
@@ -9028,6 +9039,9 @@ if(any(grepl(x = tempo.warn[[1]], pattern = "Warning i"))){
 tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "Warning i", replacement = "I")
 }
 output <- paste0("WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warn) #
+}else{
+output <- tempo.warn #
+}
 }else if(print.no == TRUE){
 output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
 }
@@ -9035,7 +9049,11 @@ output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " 
 output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
 }else if(kind == "message" & exists("tempo.message", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
 if(length(tempo.message) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
+if(header == TRUE){
 output <- paste0("STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.message) #
+}else{
+output <- tempo.message #
+}
 }else if(print.no == TRUE){
 output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
 }
