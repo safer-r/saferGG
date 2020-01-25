@@ -1401,7 +1401,6 @@ fun.test <- paste0(fun, "(", fun.args, ")")
 # fun.test2 <- paste0(fun, "(", fun.args2, ")")
 fun.test2 <- paste0("paste0('", fun, "(", fun.args2, ")')")
 print(fun.test2)
-print("caca1")
 # plot title for special plot functions
 if(plot.fun == TRUE){
 plot.kind <- "classic"
@@ -1427,10 +1426,8 @@ code <- paste(
 loop.string, '
 count <- count + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
-print("caca2")
-tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error")
-tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning")
-print("caca3")
+tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE)
+tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE)
 if( ! is.null(tempo.try.error)){
 kind <- c(kind, "ERROR")
 problem <- c(problem, TRUE)
@@ -1452,10 +1449,7 @@ if(plot.kind == "classic"){
 eval(parse(text = fun.test))
 tempo <- fun_post_plot(corner.text = tempo.title)
 }else if(plot.kind == "special"){
-print("caca4")
 eval(parse(text = fun.test))
-print("caca5")
-
 }else{
 tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR 1 IN ", function.name, ": CODE HAS TO BE MODIFIED\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
@@ -1467,7 +1461,6 @@ end.loop.string
 )
 suppressMessages(suppressWarnings(eval(parse(text = code))))
 # eval(parse(text = code))
-print("caca6")
 colnames(data) <- arg
 data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
 row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), 1:total.comp.nb))
