@@ -8942,16 +8942,16 @@ fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALS
 # RETURN
 # the message or NULL if no message and print.no is FALSE
 # EXAMPLES
-# fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "error", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "warning", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "wilcox.test(c(1,1), 2:3)", kind = "message", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "error", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "warning", print.no = TRUE, text_fun = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "message", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "wilcox.test()", kind = "error", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "sum(1)", kind = "error", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "message('ahah')", kind = "error", print.no = TRUE, text_fun = "IN A")
 # fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
 # DEBUGGING
-# data = "wilcox.test(c(1,1), 2:3)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
 # data = "sum(1)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
 # data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text_fun = "IN A"
@@ -8994,7 +8994,7 @@ options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as err
 output <- NULL
 tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data)))), silent = TRUE) # get error message, not warning or messages
 if(any(class(tempo.error) %in% c("gg", "ggplot"))){
-tempo.error <- ggplot2::ggplot_build(tempo.error)
+tempo.error <- try(suppressMessages(suppressWarnings(ggplot2::ggplot_build(tempo.error))), silent = TRUE)[1]
 }
 if(exists("tempo.error", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
 if((length(tempo.error) > 0 & ! any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) | (length(tempo.error) == 0)){
@@ -9028,8 +9028,11 @@ tempo <- suppressWarnings(eval(parse(text = data)))
 }, type = "message") # recover messages not warnings and not errors
 if(kind == "warning" & exists("tempo.warn", inherit = FALSE) == TRUE){
 if(length(tempo.warn) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
-tempo.warn <- paste(unique(tempo.warn), collapse = "\n") # the output of capture.output() is two strings per warning messages
-# tempo.warn <- unique(apply(matrix(tempo.warn, ncol = 2, byrow = TRUE), 1, paste, collapse = "")) # the output of capture.output() is two strings per warning messages
+if( ! any(sapply(tempo.warn, FUN = "grepl", pattern = "() FUNCTION:$"))){
+tempo.warn <- paste(unique(tempo.warn), collapse = "\n") # if FALSE, means that the tested data is a special function. If TRUE, means that the data is a standard function. In that case, the output of capture.output() is two strings per warning messages: if several warning messages -> identical first string, which is removed in next messages by unique()
+}else{
+tempo.warn <-  paste(tempo.warn, collapse = "\n")
+}
 if(header == TRUE){
 if(any(grepl(x = tempo.warn, pattern = "(converted from warning)"))){# warning message converted to error
 tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "Error i", replacement = "I")
