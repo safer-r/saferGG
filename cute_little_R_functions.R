@@ -1254,14 +1254,14 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, plot.pat
 # $sys.info: system and packages info
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
 # EXAMPLES
-# fun_test(fun = "unique", arg = c("x", "incomparables"), val <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
-# fun_test(fun = "fun_round", arg = c("data", "dec.nb", "after.lead.zero"), val <- list(y = list(c(1, 1.0002256, 1.23568), "a", NA), x = list(2, c(1,3), NA), incomparable = c(TRUE, FALSE, NA)))
-# fun_test(fun = "plot", arg = c("x", "y"), val <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
+# fun_test(fun = "unique", arg = c("x", "incomparables"), val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
+# fun_test(fun = "fun_round", arg = c("data", "dec.nb", "after.lead.zero"), val = list(L1 = list(c(1, 1.0002256, 1.23568), "a", NA), L2 = list(2, c(1,3), NA), L3 = c(TRUE, FALSE, NA)))
+# fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, plot.path = "C:\\Users\\Gael\\Desktop\\")
 # DEBUGGING
-# fun = "unique" ; arg = c("x", "incomparables") ; val <- list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; plot.path = NULL ; lib.path = NULL # for function debugging
-# fun = "plot" ; arg = c("x", "y") ; val <- list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; plot.path = NULL ; lib.path = NULL # for function debugging
+# fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; plot.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 
 # function name
@@ -1319,11 +1319,11 @@ arg.check <- c(arg.check, TRUE)
 val[[i1]] <- split(x = val[[i1]], f = 1:length(val[[i1]]))
 }
 }
-if(length(unique(sapply(val, FUN = "length"))) != 1 | (length(unique(sapply(val, FUN = "length"))) == 1 & length(sapply(val, FUN = "length")) != length(val))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": CONVERSION IN val ARGUMENT LEADS TO DIFFERENT NUMBER OF SUBCOMPARTMENTS: ", paste(sapply(val, FUN = "length"), collapse = " "), "\n", paste(val, collapse = "\n"))
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
+# if(length(unique(sapply(val, FUN = "length"))) != 1 | (length(unique(sapply(val, FUN = "length"))) == 1 & length(sapply(val, FUN = "length")) != length(val))){
+# tempo.cat <- paste0("ERROR IN ", function.name, ": CONVERSION IN val ARGUMENT LEADS TO DIFFERENT NUMBER OF SUBCOMPARTMENTS: ", paste(sapply(val, FUN = "length"), collapse = " "), "\n", paste(val, collapse = "\n"))
+# text.check <- c(text.check, tempo.cat)
+# arg.check <- c(arg.check, TRUE)
+# }
 }
 if( ! is.null(thread.nb)){
 tempo <- fun_check(data = thread.nb, typeof = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, length = 1, fun.name = "SLITHERINE") ; eval(ee)
@@ -1367,6 +1367,7 @@ sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
+attach(val)
 total.comp.nb <- prod(sapply(val, FUN = "length"))
 cat(paste0("\nTHE TOTAL NUMBER OF TESTS IS: ", total.comp.nb, "\n"))
 if( ! is.null(thread.nb)){
@@ -1400,6 +1401,7 @@ arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
 # fun.test2 <- paste0(fun, "(", fun.args2, ")")
 fun.test2 <- paste0("paste0('", fun, "(", fun.args2, ")')")
+print(fun.test)
 print(fun.test2)
 # plot title for special plot functions
 if(plot.fun == TRUE){
@@ -1415,6 +1417,8 @@ fun.test <- sub(x = fun.test, pattern = ")$", replacement = ", title = tempo.tit
 }
 }
 }
+print(fun.test)
+print(fun.test2)
 # end plot title for special plot functions
 kind <- character()
 problem <- logical()
@@ -1459,6 +1463,7 @@ stop(tempo.cat, call. = FALSE)
 ', 
 end.loop.string
 )
+print(code)
 suppressMessages(suppressWarnings(eval(parse(text = code))))
 # eval(parse(text = code))
 colnames(data) <- arg
