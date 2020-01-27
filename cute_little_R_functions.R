@@ -129,6 +129,10 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # data = expression(TEST) ; data.name = NULL ; class = "vector" ; typeof = NULL ; mode = NULL ; length = 1 ; prop = NULL ; double.as.integer.allowed = FALSE ; options = NULL ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; fun.name = NULL
 # function name: no used in this function for the error message, to avoid env colliding
 # argument checking
+if(is.null(data)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): TESTED OBJECT CANNOT BE NULL (data ARGUMENT OF fun_check() CANNOT BE NULL)\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
 if( ! is.null(data.name)){
 if( ! (length(data.name) == 1 & class(data.name) == "character")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
@@ -152,8 +156,8 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE neg.value
 stop(tempo.cat, call. = FALSE)
 }
 if( ! is.null(class)){
-if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval") & any(is.na(class)) != TRUE)){ # not length == 1 here because ordered factors are class "factor" "ordered" (length == 2)
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\" \n\n================\n\n")
+if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment") & any(is.na(class)) != TRUE)){ # not length == 1 here because ordered factors are class "factor" "ordered" (length == 2)
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(neg.values == FALSE & ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){
@@ -162,8 +166,8 @@ stop(tempo.cat, call. = FALSE)
 }
 }
 if( ! is.null(typeof)){
-if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\" \n\n================\n\n")
+if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin", "environment")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(neg.values == FALSE & ! typeof %in% c("double", "integer")){
@@ -172,8 +176,8 @@ stop(tempo.cat, call. = FALSE)
 }
 }
 if( ! is.null(mode)){
-if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\"\n\n================\n\n")
+if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(neg.values == FALSE & mode != "numeric"){
@@ -315,7 +319,8 @@ text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE DECIMAL VALUES BETWE
 if(all(class(data) %in% "expression")){
 data <- as.character(data) # to evaluate the presence of NA
 }
-if(na.contain == FALSE & any(is.na(data)) == TRUE){
+if(na.contain == FALSE & ! (class(data) %in% c("function", "environment"))){
+if(any(is.na(data)) == TRUE){ # not on the same line because when data is class envir or function , do not like that
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
@@ -323,6 +328,7 @@ text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name))
 text <- paste0(text, " AND ")
 }
 text <- paste0(text, "THE ", data.name, " PARAMETER CONTAINS NA WHILE NOT AUTHORIZED (na.contain ARGUMENT SET TO FALSE)")
+}
 }
 if(neg.values == FALSE){
 if(any(data < 0, na.rm = TRUE)){
@@ -1367,7 +1373,6 @@ sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
-attach(val)
 total.comp.nb <- prod(sapply(val, FUN = "length"))
 cat(paste0("\nTHE TOTAL NUMBER OF TESTS IS: ", total.comp.nb, "\n"))
 if( ! is.null(thread.nb)){
@@ -1383,10 +1388,19 @@ pdf(file = NULL) # send plots into a NULL file, no pdf file created
 }
 window.nb <- dev.cur()
 # end plot management
+# new environment
+env.name <- paste0("env", ini.time)
+if(exists(env.name, where = -1)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+assign(env.name, new.env())
+assign("var", var, envir = get(env.name))
+}
+# end new environment
 loop.string <- NULL
 end.loop.string <- NULL
 fun.args <- NULL
-# fun.args2 <- NULL
 fun.args2 <- NULL
 arg.values <- "list("
 for(i1 in 1:length(arg)){
@@ -1399,10 +1413,7 @@ arg.values <- paste0(arg.values, "val[[", i1, "]][[i", i1, "]]", ifelse(i1 == le
 }
 arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
-# fun.test2 <- paste0(fun, "(", fun.args2, ")")
 fun.test2 <- paste0("paste0('", fun, "(", fun.args2, ")')")
-print(fun.test)
-print(fun.test2)
 # plot title for special plot functions
 if(plot.fun == TRUE){
 plot.kind <- "classic"
@@ -1417,8 +1428,6 @@ fun.test <- sub(x = fun.test, pattern = ")$", replacement = ", title = tempo.tit
 }
 }
 }
-print(fun.test)
-print(fun.test2)
 # end plot title for special plot functions
 kind <- character()
 problem <- logical()
@@ -1430,8 +1439,8 @@ code <- paste(
 loop.string, '
 count <- count + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
-tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE)
-tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE)
+tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name))
+tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name))
 if( ! is.null(tempo.try.error)){
 kind <- c(kind, "ERROR")
 problem <- c(problem, TRUE)
@@ -1463,14 +1472,13 @@ stop(tempo.cat, call. = FALSE)
 ', 
 end.loop.string
 )
-print(code)
 suppressMessages(suppressWarnings(eval(parse(text = code))))
-# eval(parse(text = code))
 colnames(data) <- arg
 data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
 row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), 1:total.comp.nb))
 sys.info <- sessionInfo()
 invisible(dev.off(window.nb))
+rm(env.name) # optional, because should disappear at the end of the function execution
 # output
 output <- list(fun = fun, data = data, sys.info = sys.info)
 if(plot.fun == TRUE & plot.count == 0){
@@ -8923,7 +8931,7 @@ write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 
 
 # Check OK: clear to go Apollo
-fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALSE, text_fun = NULL){
+fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALSE, text = NULL, env = NULL){
 # AIM
 # evaluate an instruction written between "" and return the first of the error, or warning or standard (non error non warning) messages if ever exist
 # using argument print.no = FALSE, return NULL if no message, which is convenient in some cases
@@ -8936,24 +8944,25 @@ fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALS
 # kind: character string. Either "error" to get error messages, or "warning" to get warning messages, or "message" to get non error and non warning messages
 # header: logical. Add a header in the returned message?
 # print.no: logical. Print a message saying that no message reported?
-# text_fun: character string added to the output message (even if no message exists and print.no is TRUE). Inactivated if header is FALSE
+# text: character string added to the output message (even if no message exists and print.no is TRUE). Inactivated if header is FALSE
+# env: the name of an existing environment. NULL if not required
 # RETURN
 # the message or NULL if no message and print.no is FALSE
 # EXAMPLES
-# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "error", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "warning", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "message", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "wilcox.test()", kind = "error", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "sum(1)", kind = "error", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "message('ahah')", kind = "error", print.no = TRUE, text_fun = "IN A")
-# fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text_fun = "IN FUNCTION 1")
+# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "error", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "warning", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)", kind = "message", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "wilcox.test()", kind = "error", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "sum(1)", kind = "error", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "message('ahah')", kind = "error", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text = "IN FUNCTION 1")
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text = "IN FUNCTION 1")
 # DEBUGGING
-# data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
-# data = "sum(1)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
-# data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text_fun = "IN A"
-# data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text_fun = NULL # for function debugging
+# data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
+# data = "sum(1)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
+# data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text = "IN A"
+# data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -8974,8 +8983,11 @@ tempo <- fun_check(data = data, class = "character", length = 1, fun.name = func
 tempo <- fun_check(data = kind, options = c("error", "warning", "message"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = print.no, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = header, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(text_fun)){
-tempo <- fun_check(data = text_fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(text)){
+tempo <- fun_check(data = text, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+}
+if( ! is.null(env)){
+tempo <- fun_check(data = env, class = "environment", fun.name = function.name) ; eval(ee) #
 }
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
@@ -8990,7 +9002,7 @@ warn.options.ini <- options()$warn
 # last warning cannot be used because suppressWarnings() does not modify last.warning present in the base evironment (created at first warning in a new R session), or warnings() # to reset the warning history : unlockBinding("last.warning", baseenv()) ; assign("last.warning", NULL, envir = baseenv())
 options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
 output <- NULL
-tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data)))), silent = TRUE) # get error message, not warning or messages
+tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))), silent = TRUE) # get error message, not warning or messages
 if(any(class(tempo.error) %in% c("gg", "ggplot"))){
 tempo.error <- try(suppressMessages(suppressWarnings(ggplot2::ggplot_build(tempo.error))), silent = TRUE)[1]
 }
@@ -9004,24 +9016,24 @@ tempo.error <- NULL
 if(kind == "error" & ! is.null(tempo.error)){ # 
 if(header == TRUE){
 tempo.error[1] <- gsub(x = tempo.error[1], pattern = "^Error i|^error i|^ERROR I", replacement = "^I")
-output <- paste0("ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.error[1]) #
+output <- paste0("ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), text, ":\n", tempo.error[1]) #
 }else{
 output <- tempo.error[1] #
 }
 }else if(kind == "error" & is.null(tempo.error) & print.no == TRUE){
-output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
-output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }else if(is.null(tempo.error)){
 tempo.warn <- utils::capture.output({
-tempo <- suppressMessages(eval(parse(text = data)))
+tempo <- suppressMessages(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
 }, type = "message") # recover warnings not messages and not errors
 tempo.message <- utils::capture.output({
-tempo <- suppressMessages(suppressWarnings(eval(parse(text = data))))
+tempo <- suppressMessages(suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env})))
 if(any(class(tempo) %in% c("gg", "ggplot"))){
 tempo <- ggplot2::ggplot_build(tempo)
 }else{
-tempo <- suppressWarnings(eval(parse(text = data)))
+tempo <- suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
 }
 }, type = "message") # recover messages not warnings and not errors
 if(kind == "warning" & exists("tempo.warn", inherit = FALSE) == TRUE){
@@ -9039,27 +9051,27 @@ tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "\\(converted from warnin
 if(any(grepl(x = tempo.warn[[1]], pattern = "Warning i"))){
 tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "Warning i", replacement = "I")
 }
-output <- paste0("WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.warn) #
+output <- paste0("WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text, ":\n", tempo.warn) #
 }else{
 output <- tempo.warn #
 }
 }else if(print.no == TRUE){
-output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }
 }else if(kind == "warning" & exists("tempo.warn", inherit = FALSE) == FALSE & print.no == TRUE){
-output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }else if(kind == "message" & exists("tempo.message", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
 if(length(tempo.message) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
 if(header == TRUE){
-output <- paste0("STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun, ":\n", tempo.message) #
+output <- paste0("STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text), "", " "), text, ":\n", tempo.message) #
 }else{
 output <- tempo.message #
 }
 }else if(print.no == TRUE){
-output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }
 }else if(kind == "message" & exists("tempo.message", inherit = FALSE) == FALSE & print.no == TRUE){
-output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text_fun), "", " "), text_fun)
+output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }
 }
 invisible(dev.off(window.nb)) # end send plots into a NULL file
