@@ -92,7 +92,7 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # check the class, type, mode and length of the data argument
 # mainly used to check the arguments of other functions
 # check also other kind of data parameters, is it a proportion? Is it type double but numbers without decimal part?
-# if options = NULL, then at least class, type, mode or length must be non null
+# if options = NULL, then at least class or type or mode or length must be non null
 # if options is non null, then class, type and mode must be NULL, and length can be NULL or specified
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # none
@@ -129,17 +129,13 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # data = expression(TEST) ; data.name = NULL ; class = "vector" ; typeof = NULL ; mode = NULL ; length = 1 ; prop = NULL ; double.as.integer.allowed = FALSE ; options = NULL ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; fun.name = NULL
 # function name: no used in this function for the error message, to avoid env colliding
 # argument checking
-if(is.null(data)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): TESTED OBJECT CANNOT BE NULL (data ARGUMENT OF fun_check() CANNOT BE NULL)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
-}
 if( ! is.null(data.name)){
 if( ! (length(data.name) == 1 & class(data.name) == "character")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
-if(is.null(options) & is.null(class) & is.null(typeof) & is.null(mode) & is.null(prop) & is.null(length)){
+if(is.null(options) & is.null(class) & is.null(typeof) & is.null(mode) & prop == FALSE & is.null(length)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): AT LEAST ONE OF THE options, class, typeof, mode, prop, OR length ARGUMENT MUST BE SPECIFIED\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
