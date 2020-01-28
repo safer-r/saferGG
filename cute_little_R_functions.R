@@ -14,6 +14,8 @@
 # add print warning argument using warning(warnings)
 # update graphic examples with good comment, as in barplot
 #is there any interest to be able to source elsewhere ? If yes, but may be interesting to put it into a new environement just above .GlobalEnv environment. See https://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
+# Make a first round check for each function
+# Update all argument description, saying, character vector, etc.
 # Templates: https://prettydoc.statr.me/themes.html
 # # package: http://r-pkgs.had.co.nz/
 # https://pkgdown.r-lib.org/
