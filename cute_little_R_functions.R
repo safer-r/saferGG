@@ -14,8 +14,9 @@
 # add print warning argument using warning(warnings)
 # update graphic examples with good comment, as in barplot
 #is there any interest to be able to source elsewhere ? If yes, but may be interesting to put it into a new environement just above .GlobalEnv environment. See https://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
-# Make a first round check for each function
+# Make a first round check for each function if required
 # Update all argument description, saying, character vector, etc.
+# check all the functions using fun_test
 # Templates: https://prettydoc.statr.me/themes.html
 # # package: http://r-pkgs.had.co.nz/
 # https://pkgdown.r-lib.org/
@@ -1230,7 +1231,7 @@ return(output)
 
 
 # problem: running the function do not work, but debug with same arguments yes
-fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, res.path = NULL, lib.path = NULL){
+fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, export = FALSE, res.path = NULL, lib.path = NULL, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
 # AIM
 # test combinations of argument values of a function
 # ARGUMENTS
@@ -1239,16 +1240,19 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, res.path
 # val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
 # thread.nb: numeric value indicating the number of available threads. NULL if no parallelization wanted
 # plot.fun: logical. Plot the plotting function tested for each test?
+# export: logical. Export the results into a .RData file and into a .txt file? If FALSE, return a list into the console (see below). BEWARE: systematically TRUE if thread.nb is not NULL. This means that when using parallelization, the results are systematically exported, not returned into the console
 # res.path: character string indicating the absolute pathway of folder where the txt results and pdfs, containing all the plots, will be saved. Several txt and pdf, one per thread, if parallelization
 # lib.path: character string indicating the absolute path of the required packages, if not in the default folders. Not considered if thread.nb is NULL
+# cute.path: character string indicating the absolute path of the cute.R file. Will be remove when cute will be a package. Not considered if thread.nb is NULL
 # REQUIRED PACKAGES
+# lubridate
 # parallel if thread.nb argument is not NULL
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # fun_get_message()
 # fun_pack()
 # RETURN
-# a list containing:
+# if export is FALSE a list containing:
 # $fun: the tested function
 # $data: a data frame of all the combination tested, containing the following columns:
 # the different values tested, named by arguments
@@ -1256,6 +1260,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, res.path
 # $problem: a logical vector indicating if error or not
 # $message: either NULL if $kind is always "OK", or a list of all the results, each compartment corresponding to each column of $data
 # $sys.info: system and packages info
+# if export is TRUE the same list object into a .RData file, and also the $data data frame into a .txt file
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
 # EXAMPLES
 # fun_test(fun = "unique", arg = c("x", "incomparables"), val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
@@ -1264,7 +1269,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, res.path
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\")
 # DEBUGGING
-# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; res.path = NULL ; lib.path = NULL # for function debugging
+# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; export = TRUE ; res.path = NULL ; lib.path = NULL ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 
@@ -1284,7 +1289,7 @@ stop(tempo.cat)
 }
 }
 # end required function checking
-# argument checking
+# primary argument checking
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -1337,7 +1342,8 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = plot.fun, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if(plot.fun == TRUE){
+tempo <- fun_check(data = export, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(res.path)){
 tempo <- fun_check(data = res.path, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! dir.exists(res.path)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE res.path PARAMETER DOES NOT EXISTS:\n", res.path)
@@ -1345,7 +1351,7 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-if( ! is.null(thread.nb)){
+if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! dir.exists(lib.path)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS:\n", lib.path)
@@ -1353,13 +1359,37 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+if( ! is.null(thread.nb)){
+tempo <- fun_check(data = cute.path, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! file.exists(cute.path)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": FILE PATH INDICATED IN THE cute.path PARAMETER DOES NOT EXISTS:\n", cute.path)
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
+}
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end argument checking
-
+# end primary argument checking
+# second round of checking and data preparation
+if( ! is.null(thread.nb) & is.null(res.path)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": res.path ARGUMENT MUST BE SPECIFIED IF thread.nb ARGUMENT IS NOT NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
+if(is.null(res.path) & export == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": res.path ARGUMENT MUST BE SPECIFIED IF export ARGUMENT TRUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
+if( ! is.null(thread.nb) & export == FALSE){
+tempo.cat <- paste0("WARNING FROM ", function.name, ": export ARGUMENT CONVERTED TO TRUE BECAUSE thread.nb ARGUMENT IS NOT NULL")
+warning(paste0("\n", tempo.cat, "\n"), call. = FALSE)
+}
+# end second round of checking and data preparation
 # package checking
+fun_pack(req.package = c("lubridate"), lib.path = lib.path)
 if( ! is.null(thread.nb)){
 fun_pack(req.package = c("parallel"), lib.path = lib.path)
 }
@@ -1373,103 +1403,26 @@ ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
 total.comp.nb <- prod(sapply(val, FUN = "length"))
 cat(paste0("\nTHE TOTAL NUMBER OF TESTS IS: ", total.comp.nb, "\n"))
-
+# creation of the txt instruction that includes several loops
 loop.string <- NULL
 end.loop.string <- NULL
 fun.args <- NULL
 fun.args2 <- NULL
 arg.values <- "list("
 for(i1 in 1:length(arg)){
-loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
+loop.string <- if(is.null(thread.nb)){
+paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
+}else{
+paste0(loop.string, "for(i", i1, " in i.list[[", i1, "]][x[1]]:i.list[[", i1, "]][x[length(x)]]){")
+}
 end.loop.string <- paste0(end.loop.string, "}")
 fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[i", i1,"]]")
-# fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[.(i", i1,")]]")
 fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[', i", i1,", ']]")
 arg.values <- paste0(arg.values, "val[[", i1, "]][[i", i1, "]]", ifelse(i1 == length(arg), "", ", "))
 }
 arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
 fun.test2 <- paste0("paste0('", fun, "(", fun.args2, ")')")
-
-
-
-
-if( ! is.null(thread.nb)){
-
-
-tempo.cat <- paste0("PARALLELIZATION INITIATED AT: ", ini.date)
-cat(paste0("\n", tempo.cat, "\n"))
-tempo.thread.nb = parallel::detectCores(all.tests = FALSE, logical = TRUE) # detect the number of threads
-if(tempo.thread.nb < thread.nb){
-thread.nb <- tempo.thread.nb
-}
-tempo.cat <- paste0("NUMBER OF THREADS USED: ", thread.nb)
-cat(paste0("\n    ", tempo.cat, "\n"))
-Clust <- parallel::makeCluster(thread.nb, outfile = paste0(out.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows○)
-tempo.cat <- paste0("COLUMN NUMBER SPLIT FOR PARALLELISATION:")
-cat(paste0("\n    ", tempo.cat, "\n"))
-print(parallel::clusterSplit(Clust, 1:total.comp.nb))
-paral.output.list <- parallel::clusterApply( # paral.output.list is a list made of thread.nb compartments, each made of n / thread.nb (mat theo column number) compartment. Each compartment receive the corresponding results of fun_permut(), i.e., data (permuted mat1.perm), warning message, cor (final correlation) and count (number of permutations)
-cl = Clust,
-x = parallel::clusterSplit(Clust, 1:total.comp.nb), # split 1:ncol(mat1.perm) vector according to the number of cluster and put into x for each cpu. Allow to take only the column of mat1.perm with no NA corr
-fun = fun,
-plot.fun = plot.fun, 
-res.path = res.path, 
-lib.path = lib.path, 
-path.function1 = path.function1, 
-fun = function(x, mat1.perm, mat2.perm, rho1, count.print, path.function1, req.package.list, path.lib, req.python.package.list, path.python.lib){
-# check again: very important because another R
-source(path.function1, local = .GlobalEnv)
-fun_pack(req.package = req.package.list, path.lib = path.lib, load = TRUE) # load = TRUE to be sure that functions are present in the environment. And this prevent to use R.path.lib argument of fun_python_pack()
-# end check again: very important because another R
-output <- vector("list", length(x))
-names(output) <- as.character(x) # paste0("V", x)
-for(i0 in 1:length(x)){
-tempo.cor <- suppressWarnings(cor(mat1.perm[, x[i0]], mat2.perm[, x[i0]], use = "pairwise.complete.obs", method = "spearman"))
-if(length(table(mat1.perm[, x[i0]])) == 1){
-output[[i0]] <- list(data = mat1.perm[, x[i0]], warnings = paste0("NO PERMUTATION PERFORMED BECAUSE MAT1 MADE OF IDENTICAL ELEMENTS: ", names(table(mat1.perm[, x[i0]]))), cor = NA, count = 0)
-}else if(length(table(mat2.perm[, x[i0]])) == 1){
-output[[i0]] <- list(data = mat1.perm[, x[i0]], warnings = paste0("NO PERMUTATION PERFORMED BECAUSE MAT2 MADE OF IDENTICAL ELEMENTS: ", names(table(mat2.perm[, x[i0]]))), cor = NA, count = 0)
-}else if(tempo.cor <= rho1[x[i0]]){
-output[[i0]] <- list(data = mat1.perm[, x[i0]], warnings = paste0("NO PERMUTATION PERFORMED BECAUSE THE ABSOLUTE VALUE OF THE CORRELATION ", fun_round(tempo.cor), " BETWEEN MAT1 AND MAT2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", fun_round(rho1[x[i0]])), cor = tempo.cor, count = 0)
-}else{
-output[[i0]] <- fun_permut(data1 = mat1.perm[, x[i0]], data2 = mat2.perm[, x[i0]], seed = NULL, text.print = paste0("DIAG NB ", x[i0]), count.print = count.print, cor.method = "spearman", cor.limit = rho1[x[i0]]) # with seed = NULL, take the global random seed that already exist because set above
-}
-}
-return(output)
-}
-)
-parallel::stopCluster(Clust)
-
-
-
-
-
-
-
-
-
-
-
-}else{}
-# plot management
-if(plot.fun == TRUE){
-pdf(file = paste0(res.path, "/plots_from_fun_test1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
-}else{
-pdf(file = NULL) # send plots into a NULL file, no pdf file created
-}
-window.nb <- dev.cur()
-# end plot management
-# new environment
-env.name <- paste0("env", ini.time)
-if(exists(env.name, where = -1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
-}else{
-assign(env.name, new.env())
-assign("var", var, envir = get(env.name))
-}
-# end new environment
 # plot title for special plot functions
 if(plot.fun == TRUE){
 plot.kind <- "classic"
@@ -1489,11 +1442,13 @@ kind <- character()
 problem <- logical()
 res <- character()
 count <- 0
+count.print.loop <- 0
 plot.count <- 0
 data <- data.frame(t((vector("character", length(arg)))), stringsAsFactors = FALSE)[-1, ]
 code <- paste(
 loop.string, '
 count <- count + 1
+count.print.loop <- count.print.loop + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
 tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name))
 tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name))
@@ -1525,9 +1480,175 @@ stop(tempo.cat, call. = FALSE)
 }
 }
 }
+
+
+if(count.print.loop == 100){
+count.print.loop <- 0
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+final.loop <- (tempo.time - ini.time) / count * length(x) # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.exp <- as.POSIXct(final.loop, origin = ini.data)
+cat(paste0("\nLOOP ", format(i6, big.mark=","), " / ", format(length(x), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ', 
 end.loop.string
 )
+# end creation of the txt instruction that includes several loops
+
+
+
+if( ! is.null(thread.nb)){
+# list of i numbers that will be split
+i.list <- vector("list", length(val)) # positions to split in parallel jobs
+for(i1 in 1:length(arg)){
+if(i1 == 1){
+tempo.divisor <- total.comp.nb / length(val[[i1]])
+i.list[[i1]] <- rep(1:length(val[[i1]]), each = as.integer(tempo.divisor))
+tempo.multi <- length(val[[i1]])
+}else{
+tempo.divisor <- tempo.divisor / length(val[[i1]])
+i.list[[i1]] <- rep(rep(1:length(val[[i1]]), each = as.integer(tempo.divisor)), time = as.integer(tempo.multi))
+tempo.multi <- tempo.multi * length(val[[i1]])
+}
+}
+# end list of i numbers that will be split
+print(i.list)
+
+tempo.cat <- paste0("PARALLELIZATION INITIATED AT: ", ini.date)
+cat(paste0("\n", tempo.cat, "\n"))
+tempo.thread.nb = parallel::detectCores(all.tests = FALSE, logical = TRUE) # detect the number of threads
+if(tempo.thread.nb < thread.nb){
+# thread.nb <- tempo.thread.nb
+}
+tempo.cat <- paste0("NUMBER OF THREADS USED: ", thread.nb)
+cat(paste0("\n    ", tempo.cat, "\n"))
+Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows○)
+tempo.cat <- paste0("TEST NUMBER SPLIT FOR PARALLELISATION:")
+cat(paste0("\n    ", tempo.cat, "\n"))
+print(parallel::clusterSplit(Clust, 1:total.comp.nb))
+paral.output.list <- parallel::clusterApply( # paral.output.list is a list made of thread.nb compartments, each made of n / thread.nb (mat theo column number) compartment. Each compartment receive the corresponding results of fun_permut(), i.e., data (permuted mat1.perm), warning message, cor (final correlation) and count (number of permutations)
+cl = Clust,
+x = parallel::clusterSplit(Clust, 1:total.comp.nb), # split 1:ncol(mat1.perm) vector according to the number of cluster and put into x for each cpu. Allow to take only the column of mat1.perm with no NA corr
+total.comp.nb = total.comp.nb, 
+sp.plot.fun = sp.plot.fun,
+i.list = i.list, 
+fun.tested = fun,
+arg.values = arg.values,
+fun.test = fun.test,
+fun.test2 = fun.test2,
+kind = kind,
+problem = problem,
+res = res,
+count = count,
+plot.count = plot.count,
+data = data,
+code = code,
+plot.fun = plot.fun, 
+res.path = res.path, 
+lib.path = lib.path, 
+cute.path = cute.path, 
+fun = function(
+x, 
+total.comp.nb, 
+sp.plot.fun, 
+i.list, 
+fun.tested, 
+arg.values, 
+fun.test, 
+fun.test2, 
+kind, 
+problem, 
+res, 
+count, 
+plot.count, 
+data, 
+code, 
+plot.fun, 
+res.path, 
+lib.path, 
+cute.path
+){
+# check again: very important because another R
+source(cute.path, local = .GlobalEnv)
+fun_pack(req.package = "lubridate", lib.path = lib.path, load = TRUE) # load = TRUE to be sure that functions are present in the environment. And this prevent to use R.lib.path argument of fun_python_pack()
+# end check again: very important because another R
+# plot management
+if(plot.fun == TRUE){
+pdf(file = paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
+}else{
+pdf(file = NULL) # send plots into a NULL file, no pdf file created
+}
+window.nb <- dev.cur()
+# end plot management
+# new environment
+env.name <- paste0("env", ini.time)
+if(exists(env.name, where = -1)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+assign(env.name, new.env())
+assign("var", var, envir = get(env.name))
+}
+# end new environment
+ini.date <- Sys.time()
+ini.time <- as.numeric(ini.date) # time of process begin, converted into 
+count.print.loop <- 0
+# print(code)
+suppressMessages(suppressWarnings(eval(parse(text = code))))
+colnames(data) <- arg
+data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
+print(data)
+row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), x[1]:x[length(x)]))
+sys.info <- sessionInfo()
+invisible(dev.off(window.nb))
+rm(env.name) # optional, because should disappear at the end of the function execution
+# output
+output <- list(fun = fun, data = data, sys.info = sys.info)
+save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(length(x) == 1, ".RData", paste0("-", x[length(x)], ".RData"))))
+if(plot.fun == TRUE & plot.count == 0){
+warning("\nNO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n")
+file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
+}
+table.out <- as.matrix(output$data)
+table.out <- gsub(table.out, pattern = "\n", replacement = " ")
+write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(length(x) == 1, ".txt", paste0("-", x[length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+}
+)
+parallel::stopCluster(Clust)
+}else{
+# plot management
+if(plot.fun == TRUE){
+pdf(file = paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
+}else{
+pdf(file = NULL) # send plots into a NULL file, no pdf file created
+}
+window.nb <- dev.cur()
+# end plot management
+# new environment
+env.name <- paste0("env", ini.time)
+if(exists(env.name, where = -1)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+assign(env.name, new.env())
+assign("var", var, envir = get(env.name))
+}
+# end new environment
 suppressMessages(suppressWarnings(eval(parse(text = code))))
 colnames(data) <- arg
 data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
@@ -1539,13 +1660,21 @@ rm(env.name) # optional, because should disappear at the end of the function exe
 output <- list(fun = fun, data = data, sys.info = sys.info)
 if(plot.fun == TRUE & plot.count == 0){
 warning("\nNO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n")
-file.remove( paste0(res.path, "/plots_from_fun_test1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
+file.remove(paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
 }
 end.date <- Sys.time()
 end.time <- as.numeric(end.date)
 total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
 cat(paste0("\nfun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
+if(export == TRUE){
+save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
+table.out <- as.matrix(output$data)
+table.out <- gsub(table.out, pattern = "\n", replacement = " ")
+write.table(table.out, file = paste0(res.path, "/table_from_fun_test_1", ifelse(total.comp.nb == 1, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+}else{
 return(output)
+}
+}
 }
 
 ################ Object modification
@@ -2970,7 +3099,7 @@ return(window.width)
 
 
 # Check OK: clear to go Apollo
-fun_open <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = FALSE){
+fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = FALSE){
 # AIM
 # open a pdf or screen (GUI) graphic window
 # BEWARE: on Linux, use pdf.disp = TRUE, if (GUI) graphic window is not always available, meaning that X is not installed (clusters for instance). Use X11() in R to test if available
@@ -2985,7 +3114,7 @@ fun_open <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = 
 # fun_check()
 # ARGUMENTS:
 # pdf.disp: use pdf or not
-# path.fun: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default)
+# fun.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default)
 # pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function)
 # width.fun: width of the windows (in inches)
 # height.fun: height of the windows (in inches)
@@ -2998,10 +3127,10 @@ fun_open <- function(pdf.disp = TRUE, path.fun = "working.dir", pdf.name.file = 
 # $ini.par: initial par() parameters (to reset in a new graph)
 # $zone.ini: initial window spliting (to reset in a new graph)
 # EXAMPLES
-# fun_open(pdf.disp = FALSE, path.fun = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
+# fun_open(pdf.disp = FALSE, fun.path = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
 # DEBUGGING
-# pdf.disp = TRUE ; path.fun = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
-# pdf.disp = TRUE ; path.fun = "/pasteur/homes/gmillot/" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
+# pdf.disp = TRUE ; fun.path = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
+# pdf.disp = TRUE ; fun.path = "/pasteur/homes/gmillot/" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3017,11 +3146,11 @@ text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = pdf.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = fun.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = width.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = height.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = path.fun, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = fun.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data =no.pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -3031,14 +3160,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
-if(path.fun == "working.dir"){
-path.fun <- getwd()
+if(fun.path == "working.dir"){
+fun.path <- getwd()
 }else{
-if(grepl(x = path.fun, pattern = ".+/$")){
-path.fun <- substr(path.fun, 1, nchar(path.fun) - 1) # remove the last /
+if(grepl(x = fun.path, pattern = ".+/$")){
+fun.path <- substr(fun.path, 1, nchar(fun.path) - 1) # remove the last /
 }
-if(dir.exists(path.fun) == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": path.fun ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
+if(dir.exists(fun.path) == FALSE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": fun.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -3052,13 +3181,13 @@ invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
 if(pdf.disp == TRUE){
 tempo.code <- 0
-while(file.exists(paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf")) == TRUE){
+while(file.exists(paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf")) == TRUE){
 tempo.code <- tempo.code + 1
 }
-pdf(width = width.fun, height = height.fun, file=paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
+pdf(width = width.fun, height = height.fun, file=paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
 ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the pdf windows
-file.remove(paste0(path.fun, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
+file.remove(paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
 }else{
 # test if X11 can be opened
 if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
@@ -3085,7 +3214,7 @@ invisible(dev.off()) # close the new window
 # end par.ini recovery 
 zone.ini <- matrix(1, ncol=1) # to recover the initial parameters for next figure region when device region split into several figure regions
 if(pdf.disp == TRUE){
-pdf.loc <- paste0(path.fun, "/", pdf.name.file, ".pdf")
+pdf.loc <- paste0(fun.path, "/", pdf.name.file, ".pdf")
 if(file.exists(pdf.loc) == TRUE & no.pdf.overwrite == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": pdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO no.pdf.overwrite ARGUMENT SET TO TRUE: ", pdf.loc, "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
@@ -8757,14 +8886,14 @@ suppressWarnings(suppressPackageStartupMessages(library(req.package[i0], lib.loc
 
 
 # Check OK: clear to go Apollo
-fun_python_pack <- function(req.package, path.python.exec = NULL, lib.path = NULL, R.lib.path = NULL){
+fun_python_pack <- function(req.package, python.exec.path = NULL, lib.path = NULL, R.lib.path = NULL){
 # AIM
 # check if the specified python packages are present in the computer (no import)
 # WARNINGS
 # for python 3.7. Previous versions return an error "Error in sys$stdout$flush() : attempt to apply non-function"
 # ARGUMENTS
 # req.package: character vector of package names to import
-# path.python.exec: optional character vector specifying the absolute pathways of the executable python file to use (associated to the packages to use). If NULL, the reticulate::import_from_path() function used in fun_python_pack() seeks for an available version of python.exe, and then uses python_config(python_version, required_module, python_versions). But might not be the correct one for the lib.path parameter specified. Thus, it is recommanded to do not leave NULL, notably when using computing clusters
+# python.exec.path: optional character vector specifying the absolute pathways of the executable python file to use (associated to the packages to use). If NULL, the reticulate::import_from_path() function used in fun_python_pack() seeks for an available version of python.exe, and then uses python_config(python_version, required_module, python_versions). But might not be the correct one for the lib.path parameter specified. Thus, it is recommanded to do not leave NULL, notably when using computing clusters
 # lib.path: optional character vector specifying the absolute pathways of the directories containing some of the listed packages in the req.package argument
 # R.lib.path: absolute path of the reticulate packages, if not in the default folders
 # REQUIRED PACKAGES
@@ -8778,11 +8907,11 @@ fun_python_pack <- function(req.package, path.python.exec = NULL, lib.path = NUL
 # example of error message
 # fun_python_pack(req.package = "nopackage")
 # example without error message (require the installation of the python serpentine package from https://github.com/koszullab/serpentine
-# fun_python_pack(req.package = "serpentine", path.python.exec = "C:/ProgramData/Anaconda3/python.exe", lib.path = "c:/programdata/anaconda3/lib/site-packages/")
+# fun_python_pack(req.package = "serpentine", python.exec.path = "C:/ProgramData/Anaconda3/python.exe", lib.path = "c:/programdata/anaconda3/lib/site-packages/")
 # another example of error message
 # fun_python_pack(req.package = "serpentine", lib.path = "blablabla")
 # DEBUGGING
-# req.package = "serpentine" ; path.python.exec = "C:/ProgramData/Anaconda3/python.exe" ; lib.path = "c:/programdata/anaconda3/lib/site-packages/" ; R.lib.path = NULL
+# req.package = "serpentine" ; python.exec.path = "C:/ProgramData/Anaconda3/python.exe" ; lib.path = "c:/programdata/anaconda3/lib/site-packages/" ; R.lib.path = NULL
 # req.package = "bad" ; lib.path = NULL ; R.lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -8803,10 +8932,10 @@ text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = req.package, class = "character", fun.name = function.name) ; eval(ee)
-if( ! is.null(path.python.exec)){
-tempo <- fun_check(data = path.python.exec, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(file.exists(path.python.exec))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nFILE PATH INDICATED IN THE path.python.exec PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+if( ! is.null(python.exec.path)){
+tempo <- fun_check(data = python.exec.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & ! all(file.exists(python.exec.path))){
+tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nFILE PATH INDICATED IN THE python.exec.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8836,12 +8965,12 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 fun_pack(req.package = "reticulate", lib.path = R.lib.path)
 # end package checking
 # main code
-if(is.null(path.python.exec)){
-path.python.exec <- reticulate::py_run_string("
+if(is.null(python.exec.path)){
+python.exec.path <- reticulate::py_run_string("
 import sys ;
 path_lib = sys.path
 ") # python string
-path.python.exec <- path.python.exec$path_lib
+python.exec.path <- python.exec.path$path_lib
 }
 if(is.null(lib.path)){
 lib.path <- reticulate::py_run_string("
@@ -8850,7 +8979,7 @@ path_lib = sys.path
 ") # python string
 lib.path <- lib.path$path_lib
 }
-reticulate::use_python(Sys.which(path.python.exec), required = TRUE) # required to avoid the use of erratic python exec by reticulate::import_from_path()
+reticulate::use_python(Sys.which(python.exec.path), required = TRUE) # required to avoid the use of erratic python exec by reticulate::import_from_path()
 for(i0 in 1:length(req.package)){
 tempo.try <- vector("list", length = length(lib.path))
 for(i1 in 1:length(lib.path)){
