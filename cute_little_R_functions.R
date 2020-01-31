@@ -1230,8 +1230,8 @@ return(output)
 ######## fun_test() #### test combinations of argument values of a function
 
 
-# problem: running the function do not work, but debug with same arguments yes
-fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, export = FALSE, res.path = NULL, lib.path = NULL, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
+# Check OK: clear to go Apollo
+fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun = FALSE, export = FALSE, res.path = NULL, lib.path = NULL, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
 # AIM
 # test combinations of argument values of a function
 # ARGUMENTS
@@ -1239,6 +1239,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, export =
 # arg: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
 # val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
 # thread.nb: numeric value indicating the number of available threads. NULL if no parallelization wanted
+# print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
 # plot.fun: logical. Plot the plotting function tested for each test?
 # export: logical. Export the results into a .RData file and into a .txt file? If FALSE, return a list into the console (see below). BEWARE: systematically TRUE if thread.nb is not NULL. This means that when using parallelization, the results are systematically exported, not returned into the console
 # res.path: character string indicating the absolute pathway of folder where the txt results and pdfs, containing all the plots, will be saved. Several txt and pdf, one per thread, if parallelization
@@ -1247,6 +1248,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, export =
 # REQUIRED PACKAGES
 # lubridate
 # parallel if thread.nb argument is not NULL
+# if the tested function is in a package, this package must be imported first (no parallelization) or must be in the classical R package folder indicated by the lib.path argument (parallelization)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # fun_get_message()
@@ -1266,13 +1268,13 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, plot.fun = FALSE, export =
 # fun_test(fun = "unique", arg = c("x", "incomparables"), val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
 # fun_test(fun = "fun_round", arg = c("data", "dec.nb", "after.lead.zero"), val = list(L1 = list(c(1, 1.0002256, 1.23568), "a", NA), L2 = list(2, c(1,3), NA), L3 = c(TRUE, FALSE, NA)))
 # fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
+# fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = 4, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\")
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, thread.nb = 2, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
 # DEBUGGING
-# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; export = TRUE ; res.path = NULL ; lib.path = NULL ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
-# fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
-
+# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; export = TRUE ; res.path = NULL ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
+# fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -1327,11 +1329,6 @@ arg.check <- c(arg.check, TRUE)
 val[[i1]] <- split(x = val[[i1]], f = 1:length(val[[i1]]))
 }
 }
-# if(length(unique(sapply(val, FUN = "length"))) != 1 | (length(unique(sapply(val, FUN = "length"))) == 1 & length(sapply(val, FUN = "length")) != length(val))){
-# tempo.cat <- paste0("ERROR IN ", function.name, ": CONVERSION IN val ARGUMENT LEADS TO DIFFERENT NUMBER OF SUBCOMPARTMENTS: ", paste(sapply(val, FUN = "length"), collapse = " "), "\n", paste(val, collapse = "\n"))
-# text.check <- c(text.check, tempo.cat)
-# arg.check <- c(arg.check, TRUE)
-# }
 }
 if( ! is.null(thread.nb)){
 tempo <- fun_check(data = thread.nb, typeof = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, length = 1, fun.name = "SLITHERINE") ; eval(ee)
@@ -1341,6 +1338,7 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+tempo <- fun_check(data = print.count, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = plot.fun, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = export, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(res.path)){
@@ -1384,6 +1382,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": res.path ARGUMENT MUST BE SPE
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 if( ! is.null(thread.nb) & export == FALSE){
+export <- TRUE
 tempo.cat <- paste0("WARNING FROM ", function.name, ": export ARGUMENT CONVERTED TO TRUE BECAUSE thread.nb ARGUMENT IS NOT NULL")
 warning(paste0("\n", tempo.cat, "\n"), call. = FALSE)
 }
@@ -1401,6 +1400,15 @@ sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
+if(export == TRUE){
+res.path <- paste0(res.path, "/fun_test_res_", ini.time)
+if(dir.exists(res.path)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FOLDER ALREADY EXISTS\n", res.path, "\nPLEASE RERUN ONCE\n\n============\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+dir.create(res.path)
+}
+}
 total.comp.nb <- prod(sapply(val, FUN = "length"))
 cat(paste0("\nTHE TOTAL NUMBER OF TESTS IS: ", total.comp.nb, "\n"))
 # creation of the txt instruction that includes several loops
@@ -1410,15 +1418,17 @@ fun.args <- NULL
 fun.args2 <- NULL
 arg.values <- "list("
 for(i1 in 1:length(arg)){
-loop.string <- if(is.null(thread.nb)){
-paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
-}else{
-paste0(loop.string, "for(i", i1, " in i.list[[", i1, "]][x[1]]:i.list[[", i1, "]][x[length(x)]]){")
-}
+if(is.null(thread.nb)){
+loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
 end.loop.string <- paste0(end.loop.string, "}")
-fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[i", i1,"]]")
-fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[', i", i1,", ']]")
-arg.values <- paste0(arg.values, "val[[", i1, "]][[i", i1, "]]", ifelse(i1 == length(arg), "", ", "))
+}else{
+loop.string <- paste0("for(i in x){")
+end.loop.string <- "}"
+}
+
+fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[", ifelse(is.null(thread.nb), paste0("i", i1), paste0("i.list[[", i1, "]][i]")), "]]")
+fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[', ", ifelse(is.null(thread.nb), paste0("i", i1), paste0("i.list[[", i1, "]][i]")), ", ']]")
+arg.values <- paste0(arg.values, "val[[", i1, "]][[", ifelse(is.null(thread.nb), paste0("i", i1), paste0("i.list[[", i1, "]][i]")), "]]", ifelse(i1 == length(arg), "", ", "))
 }
 arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
@@ -1442,13 +1452,13 @@ kind <- character()
 problem <- logical()
 res <- character()
 count <- 0
-count.print.loop <- 0
+print.count.loop <- 0
 plot.count <- 0
 data <- data.frame(t((vector("character", length(arg)))), stringsAsFactors = FALSE)[-1, ]
 code <- paste(
 loop.string, '
 count <- count + 1
-count.print.loop <- count.print.loop + 1
+print.count.loop <- print.count.loop + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
 tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name))
 tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name))
@@ -1468,7 +1478,7 @@ res <- c(res, "")
 }
 if(plot.fun == TRUE){
 plot.count <- plot.count + 1
-tempo.title <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), count))
+tempo.title <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), ifelse(is.null(thread.nb), count, x[count])))
 if(plot.kind == "classic"){
 eval(parse(text = fun.test))
 tempo <- fun_post_plot(corner.text = tempo.title)
@@ -1480,38 +1490,21 @@ stop(tempo.cat, call. = FALSE)
 }
 }
 }
-
-
-if(count.print.loop == 100){
-count.print.loop <- 0
+if(print.count.loop == print.count){
+print.count.loop <- 0
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-final.loop <- (tempo.time - ini.time) / count * length(x) # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
-final.exp <- as.POSIXct(final.loop, origin = ini.data)
-cat(paste0("\nLOOP ", format(i6, big.mark=","), " / ", format(length(x), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+final.loop <- (tempo.time - ini.time) / count * ifelse(is.null(thread.nb), total.comp.nb, length(x)) # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.exp <- as.POSIXct(final.loop, origin = ini.date)
+cat(paste0(ifelse(is.null(thread.nb), "\n", paste0("\nIN PROCESS ", process.id, " | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if(count == ifelse(is.null(thread.nb), total.comp.nb, length(x)) & print.count.loop < count){
+cat("\n\n")
+}
 ', 
 end.loop.string
 )
 # end creation of the txt instruction that includes several loops
-
-
-
 if( ! is.null(thread.nb)){
 # list of i numbers that will be split
 i.list <- vector("list", length(val)) # positions to split in parallel jobs
@@ -1527,13 +1520,11 @@ tempo.multi <- tempo.multi * length(val[[i1]])
 }
 }
 # end list of i numbers that will be split
-print(i.list)
-
 tempo.cat <- paste0("PARALLELIZATION INITIATED AT: ", ini.date)
 cat(paste0("\n", tempo.cat, "\n"))
 tempo.thread.nb = parallel::detectCores(all.tests = FALSE, logical = TRUE) # detect the number of threads
 if(tempo.thread.nb < thread.nb){
-# thread.nb <- tempo.thread.nb
+thread.nb <- tempo.thread.nb
 }
 tempo.cat <- paste0("NUMBER OF THREADS USED: ", thread.nb)
 cat(paste0("\n    ", tempo.cat, "\n"))
@@ -1544,6 +1535,9 @@ print(parallel::clusterSplit(Clust, 1:total.comp.nb))
 paral.output.list <- parallel::clusterApply( # paral.output.list is a list made of thread.nb compartments, each made of n / thread.nb (mat theo column number) compartment. Each compartment receive the corresponding results of fun_permut(), i.e., data (permuted mat1.perm), warning message, cor (final correlation) and count (number of permutations)
 cl = Clust,
 x = parallel::clusterSplit(Clust, 1:total.comp.nb), # split 1:ncol(mat1.perm) vector according to the number of cluster and put into x for each cpu. Allow to take only the column of mat1.perm with no NA corr
+function.name = function.name, 
+thread.nb = thread.nb, 
+print.count = print.count, 
 total.comp.nb = total.comp.nb, 
 sp.plot.fun = sp.plot.fun,
 i.list = i.list, 
@@ -1564,6 +1558,9 @@ lib.path = lib.path,
 cute.path = cute.path, 
 fun = function(
 x, 
+function.name, 
+thread.nb, 
+print.count, 
 total.comp.nb, 
 sp.plot.fun, 
 i.list, 
@@ -1584,6 +1581,8 @@ lib.path,
 cute.path
 ){
 # check again: very important because another R
+process.id <- Sys.getpid()
+cat(paste0("\nPROCESS ID ", process.id, " -> TESTS ", x[1], " TO ", x[length(x)], "\n"))
 source(cute.path, local = .GlobalEnv)
 fun_pack(req.package = "lubridate", lib.path = lib.path, load = TRUE) # load = TRUE to be sure that functions are present in the environment. And this prevent to use R.lib.path argument of fun_python_pack()
 # end check again: very important because another R
@@ -1607,13 +1606,11 @@ assign("var", var, envir = get(env.name))
 # end new environment
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into 
-count.print.loop <- 0
-# print(code)
+print.count.loop <- 0
 suppressMessages(suppressWarnings(eval(parse(text = code))))
 colnames(data) <- arg
 data <- data.frame(data, kind = kind, problem = problem, message = res, stringsAsFactors = FALSE)
-print(data)
-row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), x[1]:x[length(x)]))
+row.names(data) <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), x))
 sys.info <- sessionInfo()
 invisible(dev.off(window.nb))
 rm(env.name) # optional, because should disappear at the end of the function execution
@@ -1621,7 +1618,7 @@ rm(env.name) # optional, because should disappear at the end of the function exe
 output <- list(fun = fun, data = data, sys.info = sys.info)
 save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(length(x) == 1, ".RData", paste0("-", x[length(x)], ".RData"))))
 if(plot.fun == TRUE & plot.count == 0){
-warning("\nNO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n")
+warning(paste0("\nWARNING FROM ", function.name, " IN PROCESS ", process.id, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n"), call. = FALSE)
 file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
 }
 table.out <- as.matrix(output$data)
@@ -1659,13 +1656,9 @@ rm(env.name) # optional, because should disappear at the end of the function exe
 # output
 output <- list(fun = fun, data = data, sys.info = sys.info)
 if(plot.fun == TRUE & plot.count == 0){
-warning("\nNO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n")
+warning(paste0("\nWARNING FROM ", function.name, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n"), call. = FALSE)
 file.remove(paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
 }
-end.date <- Sys.time()
-end.time <- as.numeric(end.date)
-total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
-cat(paste0("\nfun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
 if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
 table.out <- as.matrix(output$data)
@@ -1675,7 +1668,12 @@ write.table(table.out, file = paste0(res.path, "/table_from_fun_test_1", ifelse(
 return(output)
 }
 }
+end.date <- Sys.time()
+end.time <- as.numeric(end.date)
+total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
+cat(paste0("\nfun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
 }
+
 
 ################ Object modification
 
@@ -2650,7 +2648,7 @@ return(list(mat = mat, warn = warn))
 ######## fun_permut() #### progressively breaks a vector order
 
 
-fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, lib.path = NULL){
+fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, print.count = 10, text.print = "", cor.method = "spearman", cor.limit = 0.2, warn.print = FALSE, lib.path = NULL){
 # AIM
 # reorder the elements of the data1 vector by flipping 2 randomly selected  consecutive positions either:
 # 1) n times (when n is precised) or
@@ -2664,8 +2662,8 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print =
 # data2: a numeric vector of same length as data1
 # n: number of times "flipping 2 randomly selected consecutive positions". Ignored if data2 is specified
 # seed: integer number used by set.seed(). Write NULL if random result is required, an integer otherwise. BEWARE: if not NULL, fun_permut() will systematically return the same result when the other parameters keep the same settings
-# count.print: interger value. Print a working progress message every count.print during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
-# text.print: optional message to add to the working progress message every count.print loop
+# print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
+# text.print: optional message to add to the working progress message every print.count loop
 # cor.method: correlation method. Either "pearson", "kendall" or "spearman". Ignored if data2 is not specified
 # cor.limit: a correlation limit (between 0 and 1). Ignored if data2 is not specified. Compute the correlation between data1 and data2, permute the data1 values, and stop the permutation process when the correlation between data1 and data2 decreases down below the cor limit value (0.2 by default). If cor(data1, data2) is negative, then -cor.limit is used and the process stops until the correlation between data1 and data2 increases up over cor.limit (-0.2 by default). BEWARE: write a positive cor.limit even if cor(data1, data2) is known to be negative. The function will automatically uses -cor.limit. If the initial correlation is already below cor.limit (positive correlation) or over -cor.limit (negative correlation), then the data1 value positions are completely randomized (correlation between data1 and data2 is expected to be 0)
 # warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
@@ -2687,18 +2685,18 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, count.print =
 # ini.time <- as.numeric(Sys.time()) ; count <- 0 ; for(i0 in 1:1e9){count <- count + 1} ; tempo.time <- as.numeric(Sys.time()) ; tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time)) ; tempo.lapse
 # example (2) showing that for loop, used in fun_permut(), is faster than while loop
 # ini.time <- as.numeric(Sys.time()) ; count <- 0 ; while(count < 1e9){count <- count + 1} ; tempo.time <- as.numeric(Sys.time()) ; tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time)) ; tempo.lapse
-# fun_permut(data1 = LETTERS[1:5], data2 = NULL, n = 100, seed = 1, count.print = 10, text.print = "CPU NB 4")
-# fun_permut(data1 = 101:110, data2 = 21:30, seed = 1, count.print = 1e4, text.print = "", cor.method = "spearman", cor.limit = 0.2)
+# fun_permut(data1 = LETTERS[1:5], data2 = NULL, n = 100, seed = 1, print.count = 10, text.print = "CPU NB 4")
+# fun_permut(data1 = 101:110, data2 = 21:30, seed = 1, print.count = 1e4, text.print = "", cor.method = "spearman", cor.limit = 0.2)
 # a way to use the cor.limit argument just considering data1
-# obs1 <- 101:110 ; fun_permut(data1 = obs1, data2 = obs1, seed = 1, count.print = 10, cor.method = "spearman", cor.limit = 0.2)
-# fun_permut(data1 = 1:1e3, data2 = 1e3:1, seed = 1, count.print = 1e6, text.print = "", cor.method = "spearman", cor.limit = 0.7)
-# fun_permut(data1 = 1:1e2, data2 = 1e2:1, seed = 1, count.print = 1e3, cor.limit = 0.5)
-# fun_permut(data1 = c(0,0,0,0,0), n = 5, data2 = NULL, seed = 1, count.print = 1e3, cor.limit = 0.5)
+# obs1 <- 101:110 ; fun_permut(data1 = obs1, data2 = obs1, seed = 1, print.count = 10, cor.method = "spearman", cor.limit = 0.2)
+# fun_permut(data1 = 1:1e3, data2 = 1e3:1, seed = 1, print.count = 1e6, text.print = "", cor.method = "spearman", cor.limit = 0.7)
+# fun_permut(data1 = 1:1e2, data2 = 1e2:1, seed = 1, print.count = 1e3, cor.limit = 0.5)
+# fun_permut(data1 = c(0,0,0,0,0), n = 5, data2 = NULL, seed = 1, print.count = 1e3, cor.limit = 0.5)
 # DEBUGGING
-# data1 = LETTERS[1:5] ; data2 = NULL ; n = 1e6 ; seed = NULL ; count.print = 1e3 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; lib.path = NULL
-# data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; lib.path = NULL
-# data1 = 101:110 ; data2 = 21:30 ; n = 10 ; seed = 22 ; count.print = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; lib.path = NULL
-# data1 = 1:1e3 ; data2 = 1e3:1 ; n = 20 ; seed = 22 ; count.print = 1e6 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.5 ; warn.print = TRUE ; lib.path = NULL
+# data1 = LETTERS[1:5] ; data2 = NULL ; n = 1e6 ; seed = NULL ; print.count = 1e3 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; lib.path = NULL
+# data1 = LETTERS[1:5] ; data2 = NULL ; n = 10 ; seed = 22 ; print.count = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; lib.path = NULL
+# data1 = 101:110 ; data2 = 21:30 ; n = 10 ; seed = 22 ; print.count = 10 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.2 ; warn.print = TRUE ; lib.path = NULL
+# data1 = 1:1e3 ; data2 = 1e3:1 ; n = 20 ; seed = 22 ; print.count = 1e6 ; text.print = "" ; cor.method = "spearman" ; cor.limit = 0.5 ; warn.print = TRUE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -2751,7 +2749,7 @@ tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, d
 if( ! is.null(seed)){
 tempo <- fun_check(data = seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_check(data = count.print, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = print.count, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = text.print, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = cor.method, options = c("pearson", "kendall", "spearman"), length =1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = cor.limit, class = "vector", mode = "numeric", prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -2801,23 +2799,23 @@ if(length(table(data1)) == 1){
 tempo.warn <- paste0("NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 }else{
-if(count.print > n){
-count.print <- n
+if(print.count > n){
+print.count <- n
 }
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP OF ", n, " LOOPS INITIATED | LOOP COUNT: ", format(count, big.mark=",")))
-count.print.loop <- logical(length = count.print)
-count.print.loop[length(count.print.loop)] <- TRUE # not this to avoid long vector, but not forget to reset during printing: count.print.loop[(1:trunc(n / count.print) * count.print)] <- TRUE # counter to speedup
+print.count.loop <- logical(length = print.count)
+print.count.loop[length(print.count.loop)] <- TRUE # not this to avoid long vector, but not forget to reset during printing: print.count.loop[(1:trunc(n / print.count) * print.count)] <- TRUE # counter to speedup
 count.loop <- 0
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
 for(i3 in 1:n){
 count.loop <- count.loop + 1
 pos2 <- pos[count.loop] # selection of 1 position
 tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
-if(count.print.loop[count.loop]){
+if(print.count.loop[count.loop]){
 count.loop <- 0
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # BEWARE: never forget to resample here
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
 final.loop <- (tempo.time - tempo.time.loop) / i3 * n
@@ -2867,10 +2865,10 @@ smallest.cor.dec <- cor.ini - tempo.cor
 # going out of tempo.cor == cor.ini
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "CORRELATION DECREASE AFTER A SINGLE PERMUTATION: ", fun_round(smallest.cor.dec, 4)))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP STEP -> GOING OUT FROM EQUALITY | LOOP COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
-count.print.loop <- logical(length = count.print)
-count.print.loop[length(count.print.loop)] <- TRUE # counter to speedup
+print.count.loop <- logical(length = print.count)
+print.count.loop[length(print.count.loop)] <- TRUE # counter to speedup
 count.loop <- 0 # 
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
 while(tempo.cor == cor.ini){ # to be out of equality between tempo.cor and cor.ini at the beginning (only valid for very long vector)
@@ -2879,9 +2877,9 @@ count.loop <- count.loop + 1
 pos2 <- pos[count.loop]
 tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
 tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
-if(count.print.loop[count.loop]){
+if(print.count.loop[count.loop]){
 count.loop <- 0
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # BEWARE: never forget to resample here
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP STEP", format(count.loop, big.mark=","), " / ? | COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse))
@@ -2946,19 +2944,19 @@ tempo.pos.secu <- tempo.pos
 count.secu <- count
 tempo.cor.secu <- tempo.cor
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "INITIAL SETTINGS BEFORE ROUND: ", round, " | LOOP COUNT: ", format(count, big.mark=","), " | GO BACK: ", GOBACK, " | LOOP NUMBER ESTIMATION: ", format(loop.nb.est, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
-count.print.loop <- logical(length = count.print)
-count.print.loop[length(count.print.loop)] <- TRUE # not this to avoid long vector, but not forget to reset during printing: count.print.loop[(1:trunc(n / count.print) * count.print)] <- TRUE # counter to speedup
+print.count.loop <- logical(length = print.count)
+print.count.loop[length(print.count.loop)] <- TRUE # not this to avoid long vector, but not forget to reset during printing: print.count.loop[(1:trunc(n / print.count) * print.count)] <- TRUE # counter to speedup
 count.loop <- 0
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
 for(i6 in 1:loop.nb.est){
 count.loop <- count.loop + 1
 pos2 <- pos[count.loop] # selection of 1 position
 tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
-if(count.print.loop[count.loop]){
+if(print.count.loop[count.loop]){
 count.loop <- 0
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # BEWARE: never forget to resample here
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
 final.loop <- (tempo.time - tempo.time.loop) / i6 * loop.nb.est # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
@@ -2978,10 +2976,10 @@ GOBACK <- FALSE
 }
 }else{
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FINAL WHILE LOOP | LOOP COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4)))
-count.print.loop <- logical(length = count.print)
-count.print.loop[length(count.print.loop)] <- TRUE # counter to speedup
+print.count.loop <- logical(length = print.count)
+print.count.loop[length(print.count.loop)] <- TRUE # counter to speedup
 count.loop <- 0 # 
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # selection of random positions. BEWARE: n = pos.selec.seq.max because already - 1 (see above) but is connected to tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
 tempo.cor.loop <- tempo.cor
 tempo.date.loop <- Sys.time()
 tempo.time.loop <- as.numeric(tempo.date.loop)
@@ -2991,9 +2989,9 @@ count.loop <- count.loop + 1
 pos2 <- pos[count.loop]
 tempo.pos[c(pos2 + 1, pos2)] <- tempo.pos[c(pos2, pos2 + 1)]
 tempo.cor <- abs(cor(x = data1[tempo.pos], y = data2, use = "pairwise.complete.obs", method = cor.method))
-if(count.print.loop[count.loop]){
+if(print.count.loop[count.loop]){
 count.loop <- 0
-pos <- sample.int(n = pos.selec.seq.max , size = count.print, replace = TRUE) # BEWARE: never forget to resample here
+pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
 final.loop <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
