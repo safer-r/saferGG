@@ -1531,7 +1531,7 @@ cat(paste0("\n    ", tempo.cat, "\n"))
 Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows○)
 tempo.cat <- paste0("TEST NUMBER SPLIT FOR PARALLELISATION:")
 cat(paste0("\n    ", tempo.cat, "\n"))
-print(parallel::clusterSplit(Clust, 1:total.comp.nb))
+print(str(parallel::clusterSplit(Clust, 1:total.comp.nb)))
 paral.output.list <- parallel::clusterApply( # paral.output.list is a list made of thread.nb compartments, each made of n / thread.nb (mat theo column number) compartment. Each compartment receive the corresponding results of fun_permut(), i.e., data (permuted mat1.perm), warning message, cor (final correlation) and count (number of permutations)
 cl = Clust,
 x = parallel::clusterSplit(Clust, 1:total.comp.nb), # split 1:ncol(mat1.perm) vector according to the number of cluster and put into x for each cpu. Allow to take only the column of mat1.perm with no NA corr
