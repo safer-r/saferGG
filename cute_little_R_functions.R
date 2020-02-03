@@ -9208,9 +9208,32 @@ output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), te
 }else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
 output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }else if(is.null(tempo.error)){
-tempo.warn <- utils::capture.output({
-tempo <- suppressMessages(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
-}, type = "message") # recover warnings not messages and not errors
+tempo.fun <- function(expr){
+# return a list
+# $message: the warning message. NULL if no warning
+# $call: the called instruction
+W <- NULL
+w.handler <- function(w){ # warning handler
+W <<- w
+invokeRestart("muffleWarning")
+}
+output <- list(
+value = withCallingHandlers(tryCatch(expr, error = function(e){e}), warning = w.handler), 
+warning = W
+)
+return(output$warning)
+}
+tempo.warn <- tempo.fun(eval(parse(text = data)))
+
+
+
+
+
+
+
+# tempo.warn <- utils::capture.output({
+# tempo <- suppressMessages(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
+# }, type = "message") # recover warnings not messages and not errors
 tempo.message <- utils::capture.output({
 tempo <- suppressMessages(suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env})))
 if(any(class(tempo) %in% c("gg", "ggplot"))){
