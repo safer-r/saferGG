@@ -1270,7 +1270,8 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
 # fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = 4, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), plot.fun = TRUE, thread.nb = 2, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
+# library(ggplot2) ; fun_test(fun = "geom_histogram", arg = c("data", "mapping"), val = list(x = list(data.frame(X = "a")), y = list(ggplot2::aes(x = X))), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\") # BEWARE: ggplot2::geom_histogram does not work
 # DEBUGGING
 # fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; export = TRUE ; res.path = NULL ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
@@ -1301,21 +1302,17 @@ if(tempo$problem == FALSE){
 if(grepl(x = fun, pattern = "()$")){ # remove ()
 fun <- sub(x = fun, pattern = "()$", replacement = "")
 }
-if( ! all(class(get(fun)) == "function")){
+if( ! exists(fun)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": CHARACTER STRING IN fun ARGUMENT DOES NOT EXIST IN THE R WORKING ENVIRONMENT: ", paste(fun, collapse = "\n"))
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}else if( ! all(class(get(fun)) == "function")){
 tempo.cat <- paste0("ERROR IN ", function.name, ": fun ARGUMENT IS NOT CLASS \"function\" BUT: ", paste(class(get(fun)), collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = arg, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE){
-args <- names(formals(get(fun)))
-if( ! all(arg %in% args)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": SOME OF THE STRINGS IN arg ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN arg: ", paste(arg[ ! arg %in% args], collapse = " "))
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
-}
 tempo <- fun_check(data = val, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 for(i1 in 1:length(val)){
@@ -1373,6 +1370,12 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end primary argument checking
 # second round of checking and data preparation
+args <- names(formals(get(fun)))
+if( ! all(arg %in% args)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": SOME OF THE STRINGS IN arg ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN arg: ", paste(arg[ ! arg %in% args], collapse = " "))
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
 if( ! is.null(thread.nb) & is.null(res.path)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": res.path ARGUMENT MUST BE SPECIFIED IF thread.nb ARGUMENT IS NOT NULL")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
@@ -1460,8 +1463,8 @@ loop.string, '
 count <- count + 1
 print.count.loop <- print.count.loop + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
-tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name))
-tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name))
+tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name)) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
+tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name), print.no = TRUE) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
 if( ! is.null(tempo.try.error)){
 kind <- c(kind, "ERROR")
 problem <- c(problem, TRUE)
@@ -9141,10 +9144,11 @@ fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALS
 # fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text = "IN FUNCTION 1")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text = "IN FUNCTION 1")
 # DEBUGGING
-# data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
-# data = "sum(1)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
-# data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text = "IN A"
+# data = "wilcox.test(c(1,1,3), c(1, 2, 4), paired = TRUE)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL ; env = NULL # for function debugging
+# data = "sum(1)" ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL ; env = NULL  # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; data = 'fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1")' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL ; env = NULL  # for function debugging
+# data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text = "IN A" ; env = NULL 
+# data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "message" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
 # data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -9181,9 +9185,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # main code
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
 window.nb <- dev.cur()
-warn.options.ini <- options()$warn
 # last warning cannot be used because suppressWarnings() does not modify last.warning present in the base evironment (created at first warning in a new R session), or warnings() # to reset the warning history : unlockBinding("last.warning", baseenv()) ; assign("last.warning", NULL, envir = baseenv())
-options(warn = 1) # 1 print all the warnings, 2 put messages and warnings as error but print only the first one in some cases
 output <- NULL
 tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))), silent = TRUE) # get error message, not warning or messages
 if(any(class(tempo.error) %in% c("gg", "ggplot"))){
@@ -9198,7 +9200,7 @@ tempo.error <- NULL
 }
 if(kind == "error" & ! is.null(tempo.error)){ # 
 if(header == TRUE){
-tempo.error[1] <- gsub(x = tempo.error[1], pattern = "^Error i|^error i|^ERROR I", replacement = "^I")
+tempo.error[1] <- gsub(x = tempo.error[1], pattern = "^Error i|^error i|^ERROR I", replacement = "I")
 output <- paste0("ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), text, ":\n", tempo.error[1]) #
 }else{
 output <- tempo.error[1] #
@@ -9208,32 +9210,24 @@ output <- paste0("NO ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), te
 }else if(kind != "error" & ( ! is.null(tempo.error)) & print.no == TRUE){
 output <- paste0("NO ", ifelse(kind == "warning", "WARNING", "STANDARD (NON ERROR AND NON WARNING)"), " MESSAGE BECAUSE OF ERROR MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }else if(is.null(tempo.error)){
-tempo.fun <- function(expr){
-# return a list
-# $message: the warning message. NULL if no warning
-# $call: the called instruction
+fun.warning.capture <- function(expr){
+# from demo(error.catching) typed in the R console, coming from ?tryCatch
+# see also http://mazamascience.com/WorkingWithData/?p=912
+# return a character string or NULL
+# expr <- wilcox.test.default(c(1, 1, 3), c(1, 2, 4), paired = TRUE)
 W <- NULL
 w.handler <- function(w){ # warning handler
-W <<- w
-invokeRestart("muffleWarning")
+W <<- w # send to the above env, i.e., the inside of the fun.warning.capture function
+invokeRestart("muffleWarning") # here w.handler() muffles all the warnings. See http://romainfrancois.blog.free.fr/index.php?post/2009/05/20/Disable-specific-warnings to muffle specific warnings and print others
 }
 output <- list(
-value = withCallingHandlers(tryCatch(expr, error = function(e){e}), warning = w.handler), 
-warning = W
+value = withCallingHandlers(tryCatch(expr, error = function(e){e}), warning = w.handler), # BEWARE: w.handler is a function written without (), like in other functions with FUN argument
+warning = W # processed by w.handler()
 )
-return(output$warning)
+return(if(is.null(output$warning)){NULL}else{as.character(output$warning)})
 }
-tempo.warn <- tempo.fun(eval(parse(text = data)))
-
-
-
-
-
-
-
-# tempo.warn <- utils::capture.output({
-# tempo <- suppressMessages(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
-# }, type = "message") # recover warnings not messages and not errors
+tempo.warn <- fun.warning.capture(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
+# warn.options.ini <- options()$warn ; options(warn = 1) ; tempo.warn <- utils::capture.output({tempo <- suppressMessages(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))}, type = "message") ; options(warn = warn.options.ini) # this recover warnings not messages and not errors but does not work in all enviroments
 tempo.message <- utils::capture.output({
 tempo <- suppressMessages(suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env})))
 if(any(class(tempo) %in% c("gg", "ggplot"))){
@@ -9242,20 +9236,19 @@ tempo <- ggplot2::ggplot_build(tempo)
 tempo <- suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))
 }
 }, type = "message") # recover messages not warnings and not errors
-if(kind == "warning" & exists("tempo.warn", inherit = FALSE) == TRUE){
-if(length(tempo.warn) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
+if(kind == "warning" & ! is.null(tempo.warn)){
+if(length(tempo.warn) > 0){ # to avoid character(0)
 if( ! any(sapply(tempo.warn, FUN = "grepl", pattern = "() FUNCTION:$"))){
 tempo.warn <- paste(unique(tempo.warn), collapse = "\n") # if FALSE, means that the tested data is a special function. If TRUE, means that the data is a standard function. In that case, the output of capture.output() is two strings per warning messages: if several warning messages -> identical first string, which is removed in next messages by unique()
 }else{
 tempo.warn <-  paste(tempo.warn, collapse = "\n")
 }
 if(header == TRUE){
-if(any(grepl(x = tempo.warn, pattern = "(converted from warning)"))){# warning message converted to error
-tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "Error i", replacement = "I")
-tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "\\(converted from warning\\)| *\n *", replacement = "")
+if(any(grepl(x = tempo.warn[[1]], pattern = "^simpleWarning i"))){
+tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "^Warning i", replacement = "I")
 }
-if(any(grepl(x = tempo.warn[[1]], pattern = "Warning i"))){
-tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "Warning i", replacement = "I")
+if(any(grepl(x = tempo.warn[[1]], pattern = "^Warning i"))){
+tempo.warn[[1]] <- gsub(x = tempo.warn[[1]], pattern = "^Warning i", replacement = "I")
 }
 output <- paste0("WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text, ":\n", tempo.warn) #
 }else{
@@ -9264,7 +9257,7 @@ output <- tempo.warn #
 }else if(print.no == TRUE){
 output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }
-}else if(kind == "warning" & exists("tempo.warn", inherit = FALSE) == FALSE & print.no == TRUE){
+}else if(kind == "warning" & is.null(tempo.warn) & print.no == TRUE){
 output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
 }else if(kind == "message" & exists("tempo.message", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
 if(length(tempo.message) > 0){ # if something is returned by capture.ouptput() (only in this env) with a length more than 1
@@ -9281,7 +9274,6 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 }
 }
 invisible(dev.off(window.nb)) # end send plots into a NULL file
-options(warn = warn.options.ini) # restore initial setting
 return(output) # do not use cat() because the idea is to reuse the message
 }
 
