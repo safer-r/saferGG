@@ -1408,7 +1408,7 @@ cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
 if(export == TRUE){
-res.path <- paste0(res.path, "/fun_test_res_", ini.time)
+res.path <- paste0(res.path, "/fun_test_res_", trunc(ini.time))
 if(dir.exists(res.path)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FOLDER ALREADY EXISTS\n", res.path, "\nPLEASE RERUN ONCE\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
