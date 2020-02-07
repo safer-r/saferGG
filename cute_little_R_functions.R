@@ -22,6 +22,10 @@
 # https://pkgdown.r-lib.org/
 # https://rdrr.io/github/gastonstat/cointoss/
 # doc:https://www.sphinx-doc.org/en/master/man/sphinx-autogen.html considering that https://www.ericholscher.com/blog/2014/feb/11/sphinx-isnt-just-for-python/
+# https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
+# https://docs.gitlab.com/ee/user/project/pages/
+# also register into biotools
+
 
 ################################ OUTLINE ################################
 
@@ -287,7 +291,7 @@ problem <- TRUE ;
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE ") ;
 }else{
-text <- paste0(text, " AND "); 
+text <- paste0(text, " AND ") ; 
 }
 text <- paste0(text, toupper(arg.names[i2]), " ", get(arg.names[i2]))
 '
@@ -1273,7 +1277,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
 # library(ggplot2) ; fun_test(fun = "geom_histogram", arg = c("data", "mapping"), val = list(x = list(data.frame(X = "a")), y = list(ggplot2::aes(x = X))), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\") # BEWARE: ggplot2::geom_histogram does not work
 # DEBUGGING
-# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = NULL ; plot.fun = FALSE ; export = TRUE ; res.path = NULL ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
+# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = 2 ; plot.fun = FALSE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # function name
@@ -1538,7 +1542,7 @@ cat(paste0("\n    ", tempo.cat, "\n"))
 Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows○)
 tempo.cat <- paste0("TEST NUMBER SPLIT FOR PARALLELISATION:")
 cat(paste0("\n    ", tempo.cat, "\n"))
-print(str(parallel::clusterSplit(Clust, 1:total.comp.nb)))
+str(parallel::clusterSplit(Clust, 1:total.comp.nb)) # using print(str()) add a NULL below the result
 paral.output.list <- parallel::clusterApply( # paral.output.list is a list made of thread.nb compartments, each made of n / thread.nb (mat theo column number) compartment. Each compartment receive the corresponding results of fun_permut(), i.e., data (permuted mat1.perm), warning message, cor (final correlation) and count (number of permutations)
 cl = Clust,
 x = parallel::clusterSplit(Clust, 1:total.comp.nb), # split 1:ncol(mat1.perm) vector according to the number of cluster and put into x for each cpu. Allow to take only the column of mat1.perm with no NA corr
@@ -4332,7 +4336,7 @@ fun_gg_point_rast <- function(data = NULL, mapping = NULL, stat = "identity", po
 # can be long to generate the plot
 # use a square plot region. Otherwise, the dots will have ellipsoid shape
 # solve the transparency problems with some GUI
-# this function is derived from the geom_point_rast() function, created by VPetukhov, and present in the ggrastr package (https://rdrr.io/github/VPetukhov/ggrastr/src/R/geom-point-rast.R). Has been placed here to minimize package dependencies
+# this function is derived from the geom_point_rast() function, created by Viktor Petukhov , and present in the ggrastr package (https://rdrr.io/github/VPetukhov/ggrastr/src/R/geom-point-rast.R, MIT License, Copyright (c) 2017 Viktor Petukhov). Has been placed here to minimize package dependencies
 # ARGUMENTS
 # classical arguments of geom_point(), shown here https://rdrr.io/github/VPetukhov/ggrastr/man/geom_point_rast.html
 # raster.width : width of the result image (in inches). Default: deterined by the current device parameters
