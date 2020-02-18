@@ -9013,13 +9013,13 @@ stop(tempo.cat, call. = FALSE)
 
 
 # Check OK: clear to go Apollo
-fun_report <- function(data = NULL, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
+fun_report <- function(data, output = "results.txt", path = "C:/Users/Gael/Desktop/", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
 # AIM
 # log file function: print a character string or a data object into a same output file
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS
-# data: object to print in the output file. cannot be NULL
+# data: object to print in the output file. If NULL, nothing is done, with no warning
 # output: name of the output file
 # path: location of the output file
 # no.overwrite: (logical) if output file already exists, defines if the printing is appended (default TRUE) or if the output file content is erased before printing (FALSE)
@@ -9044,13 +9044,6 @@ stop(tempo.cat, call. = FALSE)
 }
 # end required function checking
 # argument checking
-# argument checking without fun_check()
-if(is.null(data)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT CANNOT BE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
-}
-# end argument checking without fun_check()
-# argument checking with fun_check()
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -9075,7 +9068,7 @@ tempo <- fun_check(data = sep, class = "vector", typeof = "integer", length = 1,
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# end argument checking with fun_check()
+# end argument checking
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # the 4 next lines are inactivated but kept because at a time, I might have a problem with data (solved with data = NULL). These 4 lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
 # arg.user.list <- as.list(match.call(expand.dots=FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
@@ -9087,6 +9080,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # }
 # end argument checking
 # main code
+if( ! is.null(data)){
 if(all(class(data) %in% c("matrix", "data.frame", "table"))){
 if(rownames.kept == FALSE & all(class(data) == "data.frame") & nrow(data) != 0 & nrow(data) <= 4){ # for data frames with nrows <= 4
 rownames.output.tables <- ""
@@ -9119,6 +9113,7 @@ utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrit
 sep.final <- paste0(rep("\n", sep), collapse = "")
 write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
 }
+}
 
 
 ######## fun_get_message() #### return messages of an expression (that can be exported)
@@ -9149,6 +9144,7 @@ fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALS
 # fun_get_message(data = "wilcox.test()", kind = "error", print.no = TRUE, text = "IN A")
 # fun_get_message(data = "sum(1)", kind = "error", print.no = TRUE, text = "IN A")
 # fun_get_message(data = "message('ahah')", kind = "error", print.no = TRUE, text = "IN A")
+# fun_get_message(data = "message('ahah')", kind = "message", print.no = TRUE, text = "IN A")
 # fun_get_message(data = "ggplot2::ggplot(data = data.frame(X = 1:10), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()", kind = "message", print.no = TRUE, text = "IN FUNCTION 1")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_get_message(data = 'fun_gg_boxplot(data = obs1, y = "Time", categ = "Group1")', kind = "message", print.no = TRUE, text = "IN FUNCTION 1")
 # DEBUGGING
@@ -9229,7 +9225,7 @@ W <<- w # send to the above env, i.e., the inside of the fun.warning.capture fun
 invokeRestart("muffleWarning") # here w.handler() muffles all the warnings. See http://romainfrancois.blog.free.fr/index.php?post/2009/05/20/Disable-specific-warnings to muffle specific warnings and print others
 }
 output <- list(
-value = withCallingHandlers(tryCatch(expr, error = function(e){e}), warning = w.handler), # BEWARE: w.handler is a function written without (), like in other functions with FUN argument
+value = suppressMessages(withCallingHandlers(tryCatch(expr, error = function(e){e}), warning = w.handler)), # BEWARE: w.handler is a function written without (), like in other functions with FUN argument
 warning = W # processed by w.handler()
 )
 return(if(is.null(output$warning)){NULL}else{as.character(output$warning)})
