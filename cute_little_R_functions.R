@@ -1264,7 +1264,8 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # the different values tested, named by arguments
 # $kind: a vector of character strings indicating the kind of test result: either "ERROR", or "WARNING", or "OK"
 # $problem: a logical vector indicating if error or not
-# $message: either NULL if $kind is always "OK", or a list of all the results, each compartment corresponding to each column of $data
+# $message: either NULL if $kind is always "OK", or the messages
+# $instruction: the initial instruction
 # $sys.info: system and packages info
 # if export is TRUE the same list object into a .RData file, and also the $data data frame into a .txt file
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
@@ -1282,6 +1283,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+instruction <- match.call()
 # end function name
 # required function checking
 req.function <- c(
@@ -1547,6 +1549,7 @@ paral.output.list <- parallel::clusterApply( # paral.output.list is a list made 
 cl = Clust,
 x = parallel::clusterSplit(Clust, 1:total.comp.nb), # split 1:ncol(mat1.perm) vector according to the number of cluster and put into x for each cpu. Allow to take only the column of mat1.perm with no NA corr
 function.name = function.name, 
+instruction = instruction, 
 thread.nb = thread.nb, 
 print.count = print.count, 
 total.comp.nb = total.comp.nb, 
@@ -1570,6 +1573,7 @@ cute.path = cute.path,
 fun = function(
 x, 
 function.name, 
+instruction, 
 thread.nb, 
 print.count, 
 total.comp.nb, 
@@ -1626,7 +1630,7 @@ sys.info <- sessionInfo()
 invisible(dev.off(window.nb))
 rm(env.name) # optional, because should disappear at the end of the function execution
 # output
-output <- list(fun = fun, data = data, sys.info = sys.info)
+output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
 save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(length(x) == 1, ".RData", paste0("-", x[length(x)], ".RData"))))
 if(plot.fun == TRUE & plot.count == 0){
 warning(paste0("\nWARNING FROM ", function.name, " IN PROCESS ", process.id, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n"), call. = FALSE)
@@ -1665,7 +1669,7 @@ sys.info <- sessionInfo()
 invisible(dev.off(window.nb))
 rm(env.name) # optional, because should disappear at the end of the function execution
 # output
-output <- list(fun = fun, data = data, sys.info = sys.info)
+output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
 if(plot.fun == TRUE & plot.count == 0){
 warning(paste0("\nWARNING FROM ", function.name, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n"), call. = FALSE)
 file.remove(paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
@@ -1673,7 +1677,7 @@ file.remove(paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1
 if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
 table.out <- as.matrix(output$data)
-table.out <- gsub(table.out, pattern = "\n", replacement = " ")
+table.out <- gsub(table.out, pattern = "\n", replacement = "  ")
 write.table(table.out, file = paste0(res.path, "/table_from_fun_test_1", ifelse(total.comp.nb == 1, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
 }else{
 return(output)
@@ -1704,7 +1708,7 @@ fun_name_change <- function(data1, data2, added.string = "_modif"){
 # added.string: string added at the end of the modified string in data1 if present in data2
 # RETURN
 # a list containing
-# $data: the modified or unmodified data1 (in the same order as in the initial data1)
+# $data: the modified data1 (in the same order as in the initial data1)
 # $ini: the initial elements before modification. NULL if no modification
 # $post: the modified elements in the same order as in ini. NULL if no modification
 # EXAMPLES
