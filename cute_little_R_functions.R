@@ -11,7 +11,6 @@
 
 # https://usethis.r-lib.org/ and usethat also
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
-# add print warning argument using warning(warnings)
 # update graphic examples with good comment, as in barplot
 #is there any interest to be able to source elsewhere ? If yes, but may be interesting to put it into a new environement just above .GlobalEnv environment. See https://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
 # Make a first round check for each function if required
@@ -1511,8 +1510,10 @@ final.loop <- (tempo.time - ini.time) / count * ifelse(is.null(thread.nb), total
 final.exp <- as.POSIXct(final.loop, origin = ini.date)
 cat(paste0(ifelse(is.null(thread.nb), "\n", paste0("\nIN PROCESS ", process.id, " | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
-if(count == ifelse(is.null(thread.nb), total.comp.nb, length(x)) & print.count.loop < count){
-cat("\n\n")
+if(count == ifelse(is.null(thread.nb), total.comp.nb, length(x))){
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+cat(paste0(ifelse(is.null(thread.nb), "\nLOOP PROCESS ENDED | ", paste0("\nPROCESS ", process.id, " ENDED | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, "\n\n"))
 }
 ', 
 end.loop.string
@@ -2066,7 +2067,7 @@ stop(tempo.cat, call. = FALSE)
 
 
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn)
+warning(warn, call. = FALSE)
 }
 # output <- list()
 return(output)
@@ -2601,6 +2602,7 @@ tempo.list.diag <- list.diag
 empty.sector <- NULL
 full.sector <- NULL
 warn <- NULL
+warn.count <- 0
 for(i0 in 1:length(sector)){
 tempo.list.diag <- list.diag
 for(i1 in 1:(nrow(mat) - 1)){
@@ -2613,7 +2615,8 @@ break
 if(i1 == nrow(mat) - 1){
 if(all(unlist(lapply(tempo.list.diag, FUN = function(x){if(is.na(empty.cell.string)){is.na(x)}else{x == empty.cell.string}})), na.rm = TRUE)){
 empty.sector <- c(empty.sector, sector[i0])
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": EMPTY SECTOR DETECTED ON THE ", toupper(sector[i0]), " CORNER, FULL OF ", empty.cell.string)
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": EMPTY SECTOR DETECTED ON THE ", toupper(sector[i0]), " CORNER, FULL OF ", empty.cell.string)
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE ", toupper(sector[i0]), " SECTOR, DETECTED AS EMPTY, IS NOT? DIFFERENT VALUES IN THIS SECTOR:\n", paste(names(table(unlist(tempo.list.diag), useNA = "ifany")), collapse = " "), "\n\n================\n\n")
@@ -2623,7 +2626,8 @@ stop(tempo.cat, call. = FALSE)
 }
 # end empty part detection
 if(length(empty.sector) == 0){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ACCORDING TO empty.cell.string ARGUMENT (", empty.cell.string, "), mat ARGUMENT MATRIX HAS ZERO EMPTY HALF PART")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ACCORDING TO empty.cell.string ARGUMENT (", empty.cell.string, "), mat ARGUMENT MATRIX HAS ZERO EMPTY HALF PART")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 if(length(empty.sector) > 1){
@@ -2636,7 +2640,8 @@ stop(tempo.cat, call. = FALSE)
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE FUNCTION HAS DETECTED MORE OR LESS SECTORS THAN 4:\nHALF SECTORS:", paste(empty.sector, collapse = " "), "\nFULL SECTORS:", paste(full.sector, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ", toupper(empty.sector), " SECTOR HAS BEEN COMPLETED TO BECOME SYMMETRICAL")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ", toupper(empty.sector), " SECTOR HAS BEEN COMPLETED TO BECOME SYMMETRICAL")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # matrix filling
@@ -2654,7 +2659,7 @@ eval(parse(text = paste0(diag.scan[4], " <- ", diag.scan[2])))
 # end matrix filling
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn)
+warning(warn, call. = FALSE)
 }
 return(list(mat = mat, warn = warn))
 }
@@ -2805,13 +2810,15 @@ tempo.pos <- ini.pos # positions of data1 that will be modified during loops
 # pos.selec.seq <- ini.pos[-length(data1)] # selection of 1 position in initial position, without the last because always up permutation (pos -> pos+1 & pos+1 -> pos)
 pos.selec.seq.max <- length(ini.pos) - 1 # max position (used by sample.int() function). See  below for - 1
 warn <- NULL
+warn.count <- 0
 count <- 0
 round <- 0
 BREAK <- FALSE
 tempo.cor <- 0
 if(is.null(data2)){
 if(length(table(data1)) == 1){
-tempo.warn <- paste0("NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 }else{
 if(print.count > n){
@@ -2844,11 +2851,13 @@ cat("\n\n")
 }
 }else{
 if(length(table(data1)) == 1){
-tempo.warn <- paste0("NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 tempo.cor <- 1
 }else if(length(table(data2)) == 1){
-tempo.warn <- paste0("NO PERMUTATION PERFORMED BECAUSE data2 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data2)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO PERMUTATION PERFORMED BECAUSE data2 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data2)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 tempo.cor <- 1
 }else{
@@ -2856,14 +2865,16 @@ cor.ini <- cor(x = data1, y = data2, use = "pairwise.complete.obs", method = cor
 tempo.cor <- cor.ini # correlation that will be modified during loops
 neg.cor <- FALSE
 if(tempo.cor < 0){
-tempo.warn <- paste0("INITIAL ", toupper(cor.method), " CORRELATION BETWEEN data1 AND data2 HAS BEEN DETECTED AS NEGATIVE: ", tempo.cor, ". THE LOOP STEPS WILL BE PERFORMED USING POSITIVE CORRELATIONS BUT THE FINAL CORRELATION WILL BE NEGATIVE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": INITIAL ", toupper(cor.method), " CORRELATION BETWEEN data1 AND data2 HAS BEEN DETECTED AS NEGATIVE: ", tempo.cor, ". THE LOOP STEPS WILL BE PERFORMED USING POSITIVE CORRELATIONS BUT THE FINAL CORRELATION WILL BE NEGATIVE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 neg.cor <- TRUE
 tempo.cor <- abs(tempo.cor)
 cor.ini <- abs(cor.ini)
 }
 if(tempo.cor < cor.limit){ # randomize directly all the position to be close to correlation zero
-tempo.warn <- paste0("INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 for(i4 in 1:5){ # done 5 times to be sure of the complete randomness
 tempo.pos <- sample(x = tempo.pos, size = length(tempo.pos), replace = FALSE)
@@ -2904,7 +2915,8 @@ tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP STEP END | LOOP COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TOTAL SPENT TIME: ", tempo.lapse))
 if(tempo.cor < cor.limit){
-tempo.warn <- paste0("THE FIRST FOR & WHILE LOOP STEPS HAVE BEEN TOO FAR AND SUBSEQUENT LOOP STEPS WILL NOT RUN")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE FIRST FOR & WHILE LOOP STEPS HAVE BEEN TOO FAR AND SUBSEQUENT LOOP STEPS WILL NOT RUN")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end going out of tempo.cor == cor.ini
@@ -3025,7 +3037,7 @@ tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 cat("\n\n")
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn)
+warning(warn, call. = FALSE)
 cat("\n\n")
 }
 output <- list(data = data1[tempo.pos], warn = warn, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
@@ -4668,6 +4680,7 @@ reserved.words <- c("fake_x", "fake_y", "fake_categ", "color")
 # end reserved words to avoid bugs (used in this function)
 # check list lengths (and names of data1 compartments if non name present)
 warn <- NULL
+warn.count <- 0
 if(all(class(data1) == "list")){
 if(length(data1) > 6){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A LIST OF 6 DATA FRAMES MAXIMUM (6 OVERLAYS MAX)\n\n================\n\n")
@@ -4675,7 +4688,8 @@ stop(tempo.cat, call. = FALSE)
 }
 if(is.null(names(data1))){
 names(data1) <- paste0("L", 1:length(data1))
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL NAME COMPARTMENT OF data1 LIST -> NAMES RESPECTIVELY ATTRIBUTED TO EACH COMPARTMENT:\n", paste(names(data1), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL NAME COMPARTMENT OF data1 LIST -> NAMES RESPECTIVELY ATTRIBUTED TO EACH COMPARTMENT:\n", paste(names(data1), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(x)){
@@ -4848,7 +4862,8 @@ arg.check <- c(arg.check, TRUE)
 x[[i1]] <- "fake_x"
 data1[[i1]] <- cbind(data1[[i1]], fake_x = NA)
 data1[[i1]][, "fake_x"] <- as.numeric(data1[[i1]][, "fake_x"])
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), " ARGUMENT ASSOCIATED TO ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT ", geom[[i1]], " -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_x\" FOR FINAL DRAWING")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL ", ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1)), " ARGUMENT ASSOCIATED TO ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT ", geom[[i1]], " -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_x\" FOR FINAL DRAWING")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
@@ -4868,7 +4883,8 @@ arg.check <- c(arg.check, TRUE)
 y[[i1]] <- "fake_y"
 data1[[i1]] <- cbind(data1[[i1]], fake_y = NA)
 data1[[i1]][, "fake_y"] <- as.numeric(data1[[i1]][, "fake_y"])
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1)), " ARGUMENT ASSOCIATED TO ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT ", geom[[i1]], " -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_y\" FOR FINAL DRAWING")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL ", ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1)), " ARGUMENT ASSOCIATED TO ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT ", geom[[i1]], " -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_y\" FOR FINAL DRAWING")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
@@ -4899,7 +4915,8 @@ tempo.removed.row.nb <- unlist(lapply(lapply(c(data1[[i1]][c(if(x[[i1]] == "fake
 removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], tempo.removed.row.nb)
 # report of removed rows will be performed at the very end
 data1[[i1]] <- data1[[i1]][-tempo.removed.row.nb, ]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NA DETECTED IN COLUMN ", if(x[[i1]] == "fake_x"){""}else{ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1))}, if(x[[i1]] != "fake_x" & y[[i1]] != "fake_y"){" AND "}, if(y[[i1]] == "fake_y"){""}else{ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1))}, " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ". CORRESPONDING ROWS HAVE BEEN REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NA DETECTED IN COLUMN ", if(x[[i1]] == "fake_x"){""}else{ifelse(length(x) == 1, "x", paste0("x NUMBER ", i1))}, if(x[[i1]] != "fake_x" & y[[i1]] != "fake_y"){" AND "}, if(y[[i1]] == "fake_y"){""}else{ifelse(length(y) == 1, "y", paste0("y NUMBER ", i1))}, " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ". CORRESPONDING ROWS HAVE BEEN REMOVED (SEE $removed.row.nb AND $removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end na detection and removal (done now to be sure of the correct length of categ)
@@ -4918,7 +4935,8 @@ tempo.removed.row.nb <- unlist(lapply(lapply(c(data1[[i1]][categ[[i1]]]), FUN = 
 removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], tempo.removed.row.nb)
 # report of removed rows will be performed at the very end
 data1[[i1]] <- data1[[i1]][-tempo.removed.row.nb, ]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE CATEGORY COLUMN:\n", paste(categ[[i1]], collapse = " "), "\nCONTAINS NA")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE CATEGORY COLUMN:\n", paste(categ[[i1]], collapse = " "), "\nCONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end na detection and removal (done now to be sure of the correct length of categ)
@@ -4930,7 +4948,8 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo1$problem == FALSE){
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 
 }
@@ -4943,7 +4962,8 @@ arg.check <- c(arg.check, TRUE)
 }
 }else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # if categ[[i1]] = NULL, fake_categ will be created. BEWARE: is.null(categ[[i1]]) means no legend display (see above), because categ has not been precised. This also means a single color for data1[[i1]]
 if(length(color[[i1]]) > 1){ # 0 means is.null(color[[i1]]) and 1 is ok -> single color for data1[[i1]]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 color[[i1]] <- NULL # will provide a single color below
 }
@@ -4955,7 +4975,8 @@ data1[[i1]] <- cbind(data1[[i1]], fake_categ = "")
 # }else{
 data1[[i1]][, "fake_categ"] <- data1[[i1]][, "fake_categ"] # as.numeric("") create a vector of NA but class numeric
 # }
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_categ\" FOR FINAL DRAWING")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " ARGUMENT -> FAKE COLUMN ADDED TO DATA FRAME ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", NAMED \"fake_categ\" FOR FINAL DRAWING")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(legend.name[[i1]])){
@@ -4966,7 +4987,8 @@ if( ! is.null(color)){ # if color is NULL, will be filled later on
 if(is.null(color[[i1]])){
 compart.null.color <- compart.null.color + 1
 color[[i1]] <- grey(compart.null.color / 8) # cannot be more than 7 overlays. Thus 7 different greys. 8/8 is excluded because white dots
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL COLOR IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", SINGLE COLOR ", paste(color[[i1]], collapse = " "), " HAS BEEN ATTRIBUTED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL COLOR IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", SINGLE COLOR ", paste(color[[i1]], collapse = " "), " HAS BEEN ATTRIBUTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 tempo1 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
@@ -4981,7 +5003,8 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if(any(is.na(color[[i1]]))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE COLORS:\n", paste(unique(color[[i1]]), collapse = " "), "\nCONTAINS NA")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE COLORS:\n", paste(unique(color[[i1]]), collapse = " "), "\nCONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end check the nature of color
@@ -4998,7 +5021,8 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(length(color[[i1]]) == length(unique(data1[[i1]][, categ[[i1]]]))){ # here length(color) is equal to the different number of categ
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE FOLLOWING COLORS:\n", paste(color[[i1]], collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", THE FOLLOWING COLORS:\n", paste(color[[i1]], collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(length(color[[i1]]) == length(data1[[i1]][, categ[[i1]]])){# here length(color) is equal to nrow(data1[[i1]]) -> Modif to have length(color) equal to the different number of categ (length(color) == length(levels(data1[[i1]][, categ[[i1]]])))
 data1[[i1]] <- cbind(data1[[i1]], color = color[[i1]])
@@ -5010,13 +5034,15 @@ arg.check <- c(arg.check, TRUE)
 }else{
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 color[[i1]] <- unique(color[[i1]][order(data1[[i1]][, categ[[i1]]])]) # Modif to have length(color) equal to the different number of categ (length(color) == length(levels(data1[[i1]][, categ[[i1]]])))
-tempo.warn <- paste0(ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), " COLUMN VALUES\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ AS:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\n", paste(color[[i1]], collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count, ") FROM FUNCTION ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), " COLUMN VALUES\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ AS:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\n", paste(color[[i1]], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else if(length(color[[i1]]) == 1){
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 color[[i1]] <- rep(color[[i1]], length(levels(data1[[i1]][, categ[[i1]]])))
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", COLOR HAS LENGTH 1 MEANING THAT ALL THE DIFFERENT CLASSES OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), "\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(color[[i1]], collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), ", COLOR HAS LENGTH 1 MEANING THAT ALL THE DIFFERENT CLASSES OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), "\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(color[[i1]], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i1)), " COLUMN VALUES, OR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN. HERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])))
@@ -5034,13 +5060,15 @@ tempo <- fun_check(data = alpha[[i1]], data.name = ifelse(length(color) == 1, "c
 }
 if(length(data1) > 1){
 if(length(unique(unlist(x))) > 1){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE x ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES:\n", paste(unlist(x), collapse = " "), "\nX-AXIS OVERLAYING DIFFERENT VARIABLES?")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE x ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES:\n", paste(unlist(x), collapse = " "), "\nX-AXIS OVERLAYING DIFFERENT VARIABLES?")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
 if(length(data1) > 1){
 if(length(unique(unlist(y))) > 1){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE y ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES:\n", paste(unlist(y), collapse = " "), "\nY-AXIS OVERLAYING DIFFERENT VARIABLES?")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE y ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES:\n", paste(unlist(y), collapse = " "), "\nY-AXIS OVERLAYING DIFFERENT VARIABLES?")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -5072,11 +5100,13 @@ tempo <- fun_check(data = xlab, class = "vector", mode = "character", length = 1
 }
 tempo <- fun_check(data = xlog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & xlog != "no"){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": xlog ARGUMENT SET TO ", xlog, ".\nVALUES FROM THE x ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(xlog), " TRANSFORMED, AS THE xlog ARGUMENT JUST MODIFIES THE AXIS SCALE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": xlog ARGUMENT SET TO ", xlog, ".\nVALUES FROM THE x ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(xlog), " TRANSFORMED, AS THE xlog ARGUMENT JUST MODIFIES THE AXIS SCALE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if( ! is.null(xlim)){
 if(any(xlim <= 0)){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": xlim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF xlog ARGUMENT IS SET TO ", xlog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": xlim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF xlog ARGUMENT IS SET TO ", xlog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(any( ! is.finite(if(xlog == "log10"){10^xlim}else{2^xlim}))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": xlim ARGUMENT RETURNS INF WITH THE xlog ARGUMENT SET TO ", xlog, "\nAS SCALE COMPUTATION IS ", ifelse(xlog == "log10", 10, 2), "^xlim:\n", paste(ifelse(xlog == "log10", 10, 2)^xlim, collapse = " "), "\nARE YOU SURE THAT xlim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(xlim, collapse = " "))
@@ -5120,11 +5150,13 @@ tempo <- fun_check(data = ylab, class = "vector", mode = "character", length = 1
 }
 tempo <- fun_check(data = ylog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no"){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(ylog), " TRANSFORMED, AS THE ylog ARGUMENT JUST MODIFIES THE AXIS SCALE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(ylog), " TRANSFORMED, AS THE ylog ARGUMENT JUST MODIFIES THE AXIS SCALE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if( ! is.null(ylim)){
 if(any(ylim <= 0)){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ylim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF ylog ARGUMENT IS SET TO ", ylog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ylim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF ylog ARGUMENT IS SET TO ", ylog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(any( ! is.finite(if(ylog == "log10"){10^ylim}else{2^ylim}))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": ylim ARGUMENT RETURNS INF WITH THE ylog ARGUMENT SET TO ", ylog, "\nAS SCALE COMPUTATION IS ", ifelse(ylog == "log10", 10, 2), "^ylim:\n", paste(ifelse(ylog == "log10", 10, 2)^ylim, collapse = " "), "\nARE YOU SURE THAT ylim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(ylim, collapse = " "))
@@ -5154,7 +5186,7 @@ tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.na
 tempo <- fun_check(data = xy.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 # inactivated because xlim and ylim already log transformed
 # if(tempo$problem == FALSE & ylog == TRUE & xy.include.zero == TRUE){
-#tempo.warn <- paste0("FROM FUNCTION ", function.name, ": BOTH ylog AND xy.include.zero ARGUMENTS SET TO TRUE -> xy.include.zero ARGUMENT RESET TO FALSE")
+# warn.count <- warn.count + 1 ; tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": BOTH ylog AND xy.include.zero ARGUMENTS SET TO TRUE -> xy.include.zero ARGUMENT RESET TO FALSE")
 # warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 # }
 tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
@@ -5207,7 +5239,8 @@ fun_pack(req.package = c("ggplot2"), lib.path = lib.path)
 # axes management
 if(is.null(xlim)){
 if(any(unlist(mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE x COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE x COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 xlim <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only. xlim added here. If NULL, ok if x argument has values
@@ -5236,7 +5269,8 @@ stop(tempo.cat, call. = FALSE)
 }
 if(is.null(ylim)){
 if(any(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE y COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE y COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 ylim <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only. ylim added here. If NULL, ok if y argument has values
@@ -5273,7 +5307,8 @@ if(geom[[i2]] == "geom_hline" | geom[[i2]] == "geom_vline"){
 data1[[i2]][, "fake_categ"] <- paste0("Line_", 1:nrow(data1[[i2]]))
 }
 }
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL categ ARGUMENT -> FAKE COLUMN ADDED TO EACH DATA FRAME IN data1, NAMED \"fake_categ\" AND FILLED WITH \"\"")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL categ ARGUMENT -> FAKE COLUMN ADDED TO EACH DATA FRAME IN data1, NAMED \"fake_categ\" AND FILLED WITH \"\"")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end create a fake categ if NULL to deal with legend display
@@ -5288,7 +5323,8 @@ tempo.count <- 0
 for(i3 in 1:length(data1)){
 color[[i3]] <- tempo.color[(1:length.categ.list[[i3]]) + tempo.count]
 tempo.count <- tempo.count + length.categ.list[[i3]]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i3)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i3)), ":\n", paste(unlist(color), collapse = " "), "\n", paste(names(data1), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", ifelse(length(categ) == 1, "categ", paste0("categ NUMBER ", i3)), " IN ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i3)), ":\n", paste(unlist(color), collapse = " "), "\n", paste(names(data1), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -5341,7 +5377,8 @@ if(is.null(vectorial.limit)){
 if(raster == TRUE){
 scatter.kind[] <- "fun_gg_point_rast" # not important to fill everything: will be only used when geom == "geom_point"
 fix.ratio <- TRUE
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": RASTER PLOT GENERATED -> ASPECT RATIO OF THE PLOT REGION SET TO 1/1 TO AVOID A BUG OF ELLIPSOID DOT DRAWING")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": RASTER PLOT GENERATED -> ASPECT RATIO OF THE PLOT REGION SET TO 1/1 TO AVOID A BUG OF ELLIPSOID DOT DRAWING")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 scatter.kind[] <- "ggplot2::geom_point"
@@ -5354,13 +5391,15 @@ scatter.kind[[i2]] <- "ggplot2::geom_point"
 }else{
 scatter.kind[[i2]] <- "fun_gg_point_rast"
 fix.ratio <- TRUE
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i2)), " LAYER AS RASTER (NOT VECTORIAL)")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ", ifelse(length(data1) == 1, "data1", paste0("data1 NUMBER ", i2)), " LAYER AS RASTER (NOT VECTORIAL)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
 }
 if(any(unlist(scatter.kind) == "fun_gg_point_rast")){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": RASTER PLOT GENERATED -> ASPECT RATIO OF THE PLOT REGION SET TO 1/1 TO AVOID A BUG OF ELLIPSOID DOT DRAWING")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": RASTER PLOT GENERATED -> ASPECT RATIO OF THE PLOT REGION SET TO 1/1 TO AVOID A BUG OF ELLIPSOID DOT DRAWING")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -5375,7 +5414,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggt
 add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
 if(grepl(pattern = "ggplot2::theme", add) == TRUE){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER.
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER.
 \nIT IS RECOMMENDED TO USE \"+ theme(aspect.ratio = 1)\" IF RASTER MODE IS ACTIVATED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 add.check <- FALSE
@@ -5616,11 +5656,13 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 if(plot == TRUE){
 suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "),if(is.null(add)){NULL}else{add})))))
 }else{
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn)
+warning(warn, call. = FALSE)
+cat("\n\n")
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -5878,6 +5920,7 @@ reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.max", "dot.m
 # end reserved words to avoid bugs (used in this function)
 # argument checking (and modification for proper color management)
 warn <- NULL
+warn.count <- 0
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -5918,16 +5961,19 @@ for(i3 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
 names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
 if(any(y == tempo.output$ini[i3])){
 y[y == tempo.output$ini[i3]] <- tempo.output$post[i3]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(any(categ == tempo.output$ini[i3])){
 categ[categ == tempo.output$ini[i3]] <- tempo.output$post[i3]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": REGARDING COLUMN NAMES REPLACEMENT, THE NAMES\n", paste(tempo.output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": REGARDING COLUMN NAMES REPLACEMENT, THE NAMES\n", paste(tempo.output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", paste(tempo.output$post, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end reserved word checking
@@ -5936,7 +5982,8 @@ if(any(is.na(data1[, c(y, categ)]))){
 removed.row.nb <- unlist(lapply(lapply(c(data1[c(y, categ)]), FUN = is.na), FUN = which))
 removed.rows <- data1[removed.row.nb, ]
 data1 <- data1[-removed.row.nb, ]
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NA DETECTED IN COLUMN ", paste(c(y, categ), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NA DETECTED IN COLUMN ", paste(c(y, categ), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 removed.row.nb <- NULL
@@ -5945,7 +5992,8 @@ removed.rows <- NULL
 # end na detection and removal (done now to be sure of the correct length of categ)
 for(i1 in 1:length(categ)){
 if(any(is.na(data1[, categ[i1]]))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CATEGORY COLUMN ", categ[i1], " CONTAINS NA")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CATEGORY COLUMN ", categ[i1], " CONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 tempo1 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, print = FALSE)
@@ -5955,7 +6003,8 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": ", paste0("categ NUMBER ", i1
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo1$problem == FALSE){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
@@ -5969,7 +6018,8 @@ arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE){
 for(i3 in 1:length(categ.class.order)){
 if(is.null(categ.class.order[[i3]])){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE categ.class.order COMPARTMENT ", i3, " IS NULL. ALPHABETICAL ORDER WILL BE APPLIED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE categ.class.order COMPARTMENT ", i3, " IS NULL. ALPHABETICAL ORDER WILL BE APPLIED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 data1[, categ[i3]] <- factor(as.character(data1[, categ[i3]])) # if already a factor, change nothing, if characters, levels according to alphabetical order
 }else if(any(duplicated(categ.class.order[[i3]]))){
@@ -6014,7 +6064,8 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if(any(is.na(categ.color))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": categ.color ARGUMENT CONTAINS NA")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT CONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end check the nature of color
@@ -6025,7 +6076,8 @@ if(length(categ.color) == length(unique(data1[, categ[i0]]))){ # here length(cat
 data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
 levels(data1$categ.color) <- categ.color
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(length(categ.color) == length(data1[, categ[i0]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
 data1 <- data.frame(data1, categ.color = categ.color)
@@ -6037,14 +6089,16 @@ arg.check <- c(arg.check, TRUE)
 }else{
 data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 categ.color <- unique(categ.color[order(data1[, categ[i0]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else if(length(categ.color) == 1){
 data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 data1 <- data.frame(data1, categ.color = categ.color)
 categ.color <- rep(categ.color, length(levels(data1[, categ[i0]])))
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
@@ -6057,7 +6111,8 @@ data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change n
 categ.color <- fun_gg_palette(length(levels(data1[, categ[i0]])))
 data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
 levels(data1$categ.color) <- categ.color
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 tempo <- fun_check(data = bar.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -6083,7 +6138,8 @@ dot.color <- fun_gg_palette(max(dot.color, na.rm = TRUE))
 }
 if(all(dot.color == "same") & length(dot.color) == 1){
 dot.color <- categ.color # same color of the dots as the corresponding bar color
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS BEEN SET TO \"SAME\"\nTHUS, DOT COLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(levels(factor(dot.color)), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS BEEN SET TO \"SAME\"\nTHUS, DOT COLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(levels(factor(dot.color)), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if( ! (all(dot.color %in% colors() | grepl(pattern = "^#", dot.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGERS, OR THE STRING\"same\"\nHERE IT IS: ", paste(unique(dot.color), collapse = " "))
@@ -6091,7 +6147,8 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if(any(is.na(dot.color))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": dot.color ARGUMENT CONTAINS NA")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT CONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end check the nature of color
@@ -6102,7 +6159,8 @@ if(length(dot.color) == length(unique(data1[, categ[i0]]))){ # here length(dot.c
 data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 data1 <- data.frame(data1, dot.color = data1[, categ[i0]])
 levels(data1$dot.color) <- dot.color
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(length(dot.color) == length(data1[, categ[i0]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[i0]])))
 data1 <- data.frame(data1, dot.color = dot.color)
@@ -6110,7 +6168,8 @@ data1 <- data.frame(data1, dot.color = dot.color)
 data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 data1 <- data.frame(data1, dot.color = dot.color)
 dot.color <- rep(dot.color, length(levels(data1[, categ[i0]])))
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
@@ -6135,11 +6194,13 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = ylog, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no"){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(ylog), " TRANSFORMED, AS THE ylog ARGUMENT JUST MODIFIES THE AXIS SCALE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ylog ARGUMENT SET TO ", ylog, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(ylog), " TRANSFORMED, AS THE ylog ARGUMENT JUST MODIFIES THE AXIS SCALE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if( ! is.null(ylim)){
 if(any(ylim <= 0)){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": ylim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF ylog ARGUMENT IS SET TO ", ylog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ylim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF ylog ARGUMENT IS SET TO ", ylog, " BECAUSE THIS LATTER ARGUMENT DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(any( ! is.finite(if(ylog == "log10"){10^ylim}else{2^ylim}))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": ylim ARGUMENT RETURNS INF WITH THE ylog ARGUMENT SET TO ", ylog, "\nAS SCALE COMPUTATION IS ", ifelse(ylog == "log10", 10, 2), "^ylim:\n", paste(ifelse(ylog == "log10", 10, 2)^ylim, collapse = " "), "\nARE YOU SURE THAT ylim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(ylim, collapse = " "))
@@ -6194,7 +6255,8 @@ tempo <- fun_check(data = ylab, class = "vector", mode = "character", length = 1
 tempo <- fun_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ylog != "no" & vertical == FALSE){
 vertical <- TRUE
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BARS HORIZONTALLY WITH A YLOG SCALE -> vertical ARGUMENT RESET TO TRUE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BARS HORIZONTALLY WITH A YLOG SCALE -> vertical ARGUMENT RESET TO TRUE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
@@ -6338,20 +6400,23 @@ if(is.null(ylim)){
 if(is.null(dot.color)){ # no dots plotted
 if( ! is.null(error.disp)){
 if(any(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]) %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ERROR.INF OR ERROR.SUP COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ERROR.INF OR ERROR.SUP COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 ylim <- range(c(data2[, "ERROR.INF"], data2[, "ERROR.SUP"]), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }else{
 if(any(data2[, y] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 ylim <- range(data2[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 }else{
 if(any(data1[, y] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 ylim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
@@ -6400,7 +6465,8 @@ tempo.just <- fun_gg_just(angle = text.angle, axis = ifelse(vertical == TRUE, "x
 add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
 if(grepl(pattern = "ggplot2::theme", add) == TRUE){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 add.check <- FALSE
 }
@@ -6726,12 +6792,14 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 if(plot == TRUE){
 suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add})))))
 }else{
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end barplot
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn)
+warning(warn, call. = FALSE)
+cat("\n\n")
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -7007,6 +7075,7 @@ stop(tempo.cat, call. = FALSE)
 # no reserved words required for this function
 # argument checking
 warn <- NULL
+warn.count <- 0
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -7157,11 +7226,13 @@ data1[, 1] <- rev(data1[, 1])
 }
 if(is.null(limit1)){
 if(any(data1[, 3] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 limit1 <- range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(limit1), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(limit1), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if(suppressWarnings(any(limit1 %in% c(Inf, -Inf)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
@@ -7170,10 +7241,12 @@ stop(tempo.cat, call. = FALSE)
 }
 if(is.null(midpoint1)){
 midpoint1 <- mean(limit1, na.rm = TRUE)
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(midpoint1), collapse = " "))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(midpoint1), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(fun_round(midpoint1, 9) != fun_round(mean(limit1), 9)){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT (", fun_round(mean(midpoint1), 9), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", fun_round(mean(limit1), 9), "). COLOR SCALE IS NOT LINEAR")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT (", fun_round(mean(midpoint1), 9), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", fun_round(mean(limit1), 9), "). COLOR SCALE IS NOT LINEAR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2)){
@@ -7201,7 +7274,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggt
 add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
 if(grepl(pattern = "ggplot2::theme", add) == TRUE){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 add.check <- FALSE
 }
@@ -7223,11 +7297,12 @@ if(plot == TRUE){
 print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}))))
 # )
 }else{
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn)
+warning(warn, call. = FALSE)
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -7687,7 +7762,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; fun_segmentation(data1 = data1, x1 = names(data1)[1], y1 = names(data1)[2], x.range.split = 20, x.step.factor = 10, y.range.split = NULL, y.step.factor = 10, error = 0, data2 = data2, x2 = names(data2)[1], y2 = names(data2)[2], data2.pb.dot = "unknown", xy.cross.kind = "&", plot = TRUE, graph.in.file = FALSE, raster = FALSE, lib.path = NULL)
 # DEBUGGING
 # set.seed(1) ; data1 = data.frame(x = rnorm(50), y = rnorm(50)) ; data1[5:7, 2] <- NA ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 5 ; x.step.factor = 10 ; y.range.split = 5 ; y.step.factor = 10 ; error = 0 ; data2 = data.frame(x = rnorm(50, 0, 2), y = rnorm(50, 0, 2)) ; set.seed(NULL) ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; lib.path = NULL
-# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = NULL ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; lib.path = NULL
+# set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 20 ; x.step.factor = 10 ; y.range.split = 23 ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "not.signif" ; xy.cross.kind = "|" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; lib.path = NULL
 # set.seed(1) ; data1 = data.frame(x = rnorm(500), y = rnorm(500)) ; data2 = data.frame(x = rnorm(500, 0, 2), y = rnorm(500, 0, 2)) ; set.seed(NULL) ; x1 = names(data1)[1] ; y1 = names(data1)[2] ; x.range.split = 20 ; x.step.factor = 10 ; y.range.split = NULL ; y.step.factor = 10 ; error = 0 ; x2 = names(data2)[1] ; y2 = names(data2)[2] ; data2.pb.dot = "unknown" ; xy.cross.kind = "&" ; plot = TRUE ; graph.in.file = FALSE ; raster = FALSE ; warn.print = TRUE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -7700,6 +7775,7 @@ stop(tempo.cat, call. = FALSE)
 # end required function checking
 # argument checking
 warn <- NULL
+warn.count <- 0
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -7809,7 +7885,8 @@ tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \ngraph.i
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & graph.in.file == TRUE & ! is.null(dev.list())){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": GRAPHS PRINTED IN THE CURRENT DEVICE (TYPE ", toupper(names(dev.cur())), ")")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": GRAPHS PRINTED IN THE CURRENT DEVICE (TYPE ", toupper(names(dev.cur())), ")")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(lib.path)){
@@ -7883,10 +7960,12 @@ if(nrow(data1) == 0){
 tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $data1.removed.row.nb AND $data1.removed.rows)")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $data1.removed.row.nb AND $data1.removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1. NO ROW REMOVED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1. NO ROW REMOVED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2)){
@@ -7908,11 +7987,14 @@ if(nrow(data2) == 0){
 tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2 AND CORRESPONDING ROWS REMOVED (SEE $data2.removed.row.nb AND $data2.removed.rows)")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2 AND CORRESPONDING ROWS REMOVED (SEE $data2.removed.row.nb AND $data2.removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2. NO ROW REMOVED")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2. NO ROW REMOVED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+print(warn)
 }
 }
 # end na and Inf detection and removal (done now to be sure of the correct length of categ)
@@ -7937,7 +8019,8 @@ y.data1.top.limit.l <- NULL # upper limit of the data1 cloud for left step line
 y.data1.down.limit.r <- NULL # lower limit of the data1 cloud for right step line
 y.data1.top.limit.r <- NULL # upper limit of the data1 cloud for left step line
 if(any(data1[, x1] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 x.range <- range(data1[, x1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
@@ -7946,7 +8029,8 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUT
 stop(tempo.cat, call. = FALSE)
 }
 if(any(data1[, y1] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 y.range <- range(data1[, y1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
@@ -7958,12 +8042,14 @@ x.range.plot <- range(data1[, x1], na.rm = TRUE, finite = TRUE) # finite = TRUE 
 y.range.plot <- range(data1[, y1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if( ! is.null(data2)){
 if(any(data2[, x2] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 x.range.plot <- range(data1[, x1], data2[, x2], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if(any(data2[, y2] %in% c(Inf, -Inf))){
-tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 y.range.plot <- range(data1[, y1], data2[, y2], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
@@ -8054,7 +8140,7 @@ y.unknown.data2.dot.nb <- unique(y.unknown.data2.dot.nb)
 
 
 # tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE [", round(min.pos, 3), " ; ", round(max.pos, 3), "] INTERVAL DOES NOT CONTAIN data1 X VALUES BUT CONTAINS data2 X VALUES WHICH CANNOT BE EVALUATED.\nTHE CONCERNED data2 ROW NUMBERS ARE:\n", paste(which(x.data1.dot.here == FALSE & x.data2.dot.here == TRUE), collapse = "\n"))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+# warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
 # end recover the data2 dots outside the frame
@@ -8169,7 +8255,7 @@ x.unknown.data2.dot.nb <- unique(x.unknown.data2.dot.nb)
 
 
 # tempo.warn <- paste0("FROM FUNCTION ", function.name, ": THE [", round(min.pos, 3), " ; ", round(max.pos, 3), "] INTERVAL DOES NOT CONTAIN data1 Y VALUES BUT CONTAINS data2 Y VALUES WHICH CANNOT BE EVALUATED.\nTHE CONCERNED data2 ROW NUMBERS ARE:\n", paste(which(y.data1.dot.here == FALSE & y.data2.dot.here == TRUE), collapse = "\n"))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+# warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
 # end recover the data2 dots outside the frame
@@ -8813,7 +8899,8 @@ fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size 
 }
 # end plot
 if(warn.print == TRUE & ! is.null(warn)){
-warn(warn)
+warning(warn, call. = FALSE)
+cat("\n\n")
 }
 tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, axes = axes, warn = warn)
 return(tempo.list)
@@ -9249,7 +9336,7 @@ if(length(tempo.warn) > 0){ # to avoid character(0)
 if( ! any(sapply(tempo.warn, FUN = "grepl", pattern = "() FUNCTION:$"))){
 tempo.warn <- paste(unique(tempo.warn), collapse = "\n") # if FALSE, means that the tested data is a special function. If TRUE, means that the data is a standard function. In that case, the output of capture.output() is two strings per warning messages: if several warning messages -> identical first string, which is removed in next messages by unique()
 }else{
-tempo.warn <-  paste(tempo.warn, collapse = "\n")
+tempo.warn <- paste(tempo.warn, collapse = "\n")
 }
 if(header == TRUE){
 if(any(grepl(x = tempo.warn[[1]], pattern = "^simpleWarning i"))){
