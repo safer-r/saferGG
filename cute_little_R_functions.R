@@ -1543,7 +1543,7 @@ thread.nb <- tempo.thread.nb
 tempo.cat <- paste0("NUMBER OF THREADS USED: ", thread.nb)
 cat(paste0("\n    ", tempo.cat, "\n"))
 Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows○)
-tempo.cat <- paste0("TEST NUMBER SPLIT FOR PARALLELISATION:")
+tempo.cat <- paste0("SPLIT OF TEST NUMBERS IN PARALLELISATION:")
 cat(paste0("\n    ", tempo.cat, "\n"))
 str(parallel::clusterSplit(Clust, 1:total.comp.nb)) # using print(str()) add a NULL below the result
 paral.output.list <- parallel::clusterApply( # paral.output.list is a list made of thread.nb compartments, each made of n / thread.nb (mat theo column number) compartment. Each compartment receive the corresponding results of fun_permut(), i.e., data (permuted mat1.perm), warning message, cor (final correlation) and count (number of permutations)
