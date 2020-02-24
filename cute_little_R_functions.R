@@ -1319,15 +1319,15 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = arg, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = val, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
-for(i1 in 1:length(val)){
-tempo1 <- fun_check(data = val[[i1]], class = "vector", na.contain = TRUE, fun.name = function.name, print = FALSE)
-tempo2 <- fun_check(data = val[[i1]], class = "list", na.contain = TRUE, fun.name = function.name, print = FALSE)
+for(i2 in 1:length(val)){
+tempo1 <- fun_check(data = val[[i2]], class = "vector", na.contain = TRUE, fun.name = function.name, print = FALSE)
+tempo2 <- fun_check(data = val[[i2]], class = "list", na.contain = TRUE, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ": COMPARTMENT ", i1, " OF val ARGUMENT MUST BE A VECTOR OR A LIST")
+tempo.cat <- paste0("ERROR IN ", function.name, ": COMPARTMENT ", i2, " OF val ARGUMENT MUST BE A VECTOR OR A LIST")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo1$problem == FALSE){ # vector split into list compartments
-val[[i1]] <- split(x = val[[i1]], f = 1:length(val[[i1]]))
+val[[i2]] <- split(x = val[[i2]], f = 1:length(val[[i2]]))
 }
 }
 }
@@ -1521,15 +1521,15 @@ end.loop.string
 if( ! is.null(thread.nb)){
 # list of i numbers that will be split
 i.list <- vector("list", length(val)) # positions to split in parallel jobs
-for(i1 in 1:length(arg)){
-if(i1 == 1){
-tempo.divisor <- total.comp.nb / length(val[[i1]])
-i.list[[i1]] <- rep(1:length(val[[i1]]), each = as.integer(tempo.divisor))
-tempo.multi <- length(val[[i1]])
+for(i2 in 1:length(arg)){
+if(i2 == 1){
+tempo.divisor <- total.comp.nb / length(val[[i2]])
+i.list[[i2]] <- rep(1:length(val[[i2]]), each = as.integer(tempo.divisor))
+tempo.multi <- length(val[[i2]])
 }else{
-tempo.divisor <- tempo.divisor / length(val[[i1]])
-i.list[[i1]] <- rep(rep(1:length(val[[i1]]), each = as.integer(tempo.divisor)), time = as.integer(tempo.multi))
-tempo.multi <- tempo.multi * length(val[[i1]])
+tempo.divisor <- tempo.divisor / length(val[[i2]])
+i.list[[i2]] <- rep(rep(1:length(val[[i2]]), each = as.integer(tempo.divisor)), time = as.integer(tempo.multi))
+tempo.multi <- tempo.multi * length(val[[i2]])
 }
 }
 # end list of i numbers that will be split
@@ -1745,17 +1745,17 @@ if(any(data1 %in% data2)){
 tempo.names <- data1[data1 %in% data2]
 ini <- NULL
 post <- NULL
-for(i3 in 1:length(tempo.names)){
+for(i2 in 1:length(tempo.names)){
 count <- 0
-tempo <- tempo.names[i3]
+tempo <- tempo.names[i2]
 while(any(tempo %in% data2) | any(tempo %in% data1)){
 count <- count + 1
-tempo <- paste0(tempo.names[i3], "_modif", count)
+tempo <- paste0(tempo.names[i2], "_modif", count)
 }
-data1[data1 %in% tempo.names[i3]] <- paste0(tempo.names[i3], "_modif", count)
+data1[data1 %in% tempo.names[i2]] <- paste0(tempo.names[i2], "_modif", count)
 if(count != 0){
-ini <- c(ini, tempo.names[i3])
-post <- c(post, paste0(tempo.names[i3], "_modif", count))
+ini <- c(ini, tempo.names[i2])
+post <- c(post, paste0(tempo.names[i2], "_modif", count))
 }
 }
 data <- data1
@@ -2392,19 +2392,19 @@ if(length(mat.list) < 2){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat.list ARGUMENT MUST BE A LIST CONTAINING AT LEAST 2 MATRICES\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-for(i0 in 1:length(mat.list)){
-tempo <- fun_check(data = mat.list[[i0]], class = "matrix", mode = "numeric", na.contain = TRUE)
+for(i1 in 1:length(mat.list)){
+tempo <- fun_check(data = mat.list[[i1]], class = "matrix", mode = "numeric", na.contain = TRUE)
 if(tempo$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ELEMENT ", i0, " OF mat.list ARGUMENT MUST BE A NUMERIC MATRIX\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ELEMENT ", i1, " OF mat.list ARGUMENT MUST BE A NUMERIC MATRIX\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
 ident.row.names <- TRUE
 ident.col.names <- TRUE
-for(i0 in 2:length(mat.list)){
-tempo <- fun_comp_2d(data1 = mat.list[[1]], data2 = mat.list[[i0]])
+for(i1 in 2:length(mat.list)){
+tempo <- fun_comp_2d(data1 = mat.list[[1]], data2 = mat.list[[i1]])
 if(tempo$same.dim == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX ", i0, " OF mat.list ARGUMENT MUST HAVE THE SAME DIMENSION (", paste(dim(mat.list[[i0]]), collapse = " "), ") THAN THE MATRIX 1 IN mat.list (", paste(dim(mat.list[[1]]), collapse = " "), ")\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX ", i1, " OF mat.list ARGUMENT MUST HAVE THE SAME DIMENSION (", paste(dim(mat.list[[i1]]), collapse = " "), ") THAN THE MATRIX 1 IN mat.list (", paste(dim(mat.list[[1]]), collapse = " "), ")\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if( ! is.null(tempo$same.row.name)){
@@ -2423,8 +2423,8 @@ ident.col.names <- FALSE
 # end argument checking
 # main code
 output <- mat.list[[1]]
-for(i0 in 2:length(mat.list)){
-output <- get(kind.of.operation)(output, mat.list[[i0]])
+for(i1 in 2:length(mat.list)){
+output <- get(kind.of.operation)(output, mat.list[[i1]])
 }
 dimnames(output) <- NULL
 if(ident.row.names == TRUE){
@@ -2586,15 +2586,15 @@ stop(tempo.cat, call. = FALSE)
 # end argument checking
 # main code
 list.diag <- vector("list", length = nrow(mat) - 1)
-for(i0 in 1:(nrow(mat) - 1)){
-list.diag[[i0]] <- numeric(length = nrow(mat) - i0)
+for(i1 in 1:(nrow(mat) - 1)){
+list.diag[[i1]] <- numeric(length = nrow(mat) - i1)
 }
 sector <- c("topleft", "topright", "bottomright", "bottomleft")
 diag.scan <-c( # same order as sector. Recover each diag from center to corner
-"mat[as.matrix(as.data.frame(list(1:(nrow(mat) - i1), (ncol(mat) -i1):1)))]", # topleft part
-"mat[as.matrix(as.data.frame(list(1:(nrow(mat) - i1), (1:ncol(mat))[-(1:i1)])))]", # topright part
-"mat[as.matrix(as.data.frame(list((1 + i1):nrow(mat), ncol(mat):(1 + i1))))]", # bottomright part
-"mat[as.matrix(as.data.frame(list((1 + i1):nrow(mat), 1:(ncol(mat) -i1))))]" # bottomleft part
+"mat[as.matrix(as.data.frame(list(1:(nrow(mat) - i2), (ncol(mat) -i2):1)))]", # topleft part
+"mat[as.matrix(as.data.frame(list(1:(nrow(mat) - i2), (1:ncol(mat))[-(1:i2)])))]", # topright part
+"mat[as.matrix(as.data.frame(list((1 + i2):nrow(mat), ncol(mat):(1 + i2))))]", # bottomright part
+"mat[as.matrix(as.data.frame(list((1 + i2):nrow(mat), 1:(ncol(mat) -i2))))]" # bottomleft part
 )
 # empty part detection
 tempo.list.diag <- list.diag
@@ -2602,23 +2602,23 @@ empty.sector <- NULL
 full.sector <- NULL
 warn <- NULL
 warn.count <- 0
-for(i0 in 1:length(sector)){
+for(i1 in 1:length(sector)){
 tempo.list.diag <- list.diag
-for(i1 in 1:(nrow(mat) - 1)){
-tempo.list.diag[[i1]] <- eval(parse(text = diag.scan[i0]))
-if(ifelse(is.na(empty.cell.string), ! all(is.na(tempo.list.diag[[i1]])), ! (all(tempo.list.diag[[i1]] == empty.cell.string, na.rm = TRUE) & ! (is.na(all(tempo.list.diag[[i1]] == empty.cell.string, na.rm = FALSE)))))){ # I had to add this ! (is.na(all(tempo.list.diag[[i1]] == empty.cell.string, na.rm = FALSE))) because all(tempo.list.diag[[i1]] == empty.cell.string, na.rm = FALSE) gives NA and not FALSE if one NA in tempo.list.diag[[i1]] -> not good for if()
-full.sector <- c(full.sector, sector[i0])
+for(i2 in 1:(nrow(mat) - 1)){
+tempo.list.diag[[i2]] <- eval(parse(text = diag.scan[i1]))
+if(ifelse(is.na(empty.cell.string), ! all(is.na(tempo.list.diag[[i2]])), ! (all(tempo.list.diag[[i2]] == empty.cell.string, na.rm = TRUE) & ! (is.na(all(tempo.list.diag[[i2]] == empty.cell.string, na.rm = FALSE)))))){ # I had to add this ! (is.na(all(tempo.list.diag[[i2]] == empty.cell.string, na.rm = FALSE))) because all(tempo.list.diag[[i2]] == empty.cell.string, na.rm = FALSE) gives NA and not FALSE if one NA in tempo.list.diag[[i2]] -> not good for if()
+full.sector <- c(full.sector, sector[i1])
 break
 }
 }
 if(i1 == nrow(mat) - 1){
 if(all(unlist(lapply(tempo.list.diag, FUN = function(x){if(is.na(empty.cell.string)){is.na(x)}else{x == empty.cell.string}})), na.rm = TRUE)){
-empty.sector <- c(empty.sector, sector[i0])
+empty.sector <- c(empty.sector, sector[i1])
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": EMPTY SECTOR DETECTED ON THE ", toupper(sector[i0]), " CORNER, FULL OF ", empty.cell.string)
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": EMPTY SECTOR DETECTED ON THE ", toupper(sector[i1]), " CORNER, FULL OF ", empty.cell.string)
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE ", toupper(sector[i0]), " SECTOR, DETECTED AS EMPTY, IS NOT? DIFFERENT VALUES IN THIS SECTOR:\n", paste(names(table(unlist(tempo.list.diag), useNA = "ifany")), collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE ", toupper(sector[i1]), " SECTOR, DETECTED AS EMPTY, IS NOT? DIFFERENT VALUES IN THIS SECTOR:\n", paste(names(table(unlist(tempo.list.diag), useNA = "ifany")), collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -4756,18 +4756,18 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo.output <- fun_name_change(names(data1), reserved.words)
-for(i3 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
-names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
-if(any(y == tempo.output$ini[i3])){
-y[y == tempo.output$ini[i3]] <- tempo.output$post[i3]
+for(i2 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
+names(data1)[names(data1) == tempo.output$ini[i2]] <- tempo.output$post[i2]
+if(any(y == tempo.output$ini[i2])){
+y[y == tempo.output$ini[i2]] <- tempo.output$post[i2]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
-if(any(categ == tempo.output$ini[i3])){
-categ[categ == tempo.output$ini[i3]] <- tempo.output$post[i3]
+if(any(categ == tempo.output$ini[i2])){
+categ[categ == tempo.output$ini[i2]] <- tempo.output$post[i2]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -4870,48 +4870,48 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # end check the nature of color
 # check the length of color
 # No problem of NA management by ggplot2 because already removed
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-if(length(categ.color) == length(unique(data1[, categ[i0]]))){ # here length(categ.color) is equal to the different number of categ
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
+categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
+if(length(categ.color) == length(unique(data1[, categ[categ.len]]))){ # here length(categ.color) is equal to the different number of categ
+data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]])
 levels(data1$categ.color) <- categ.color
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}else if(length(categ.color) == length(data1[, categ[i0]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
+}else if(length(categ.color) == length(data1[, categ[categ.len]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, categ.color = categ.color)
-tempo.check <- unique(data1[ , c(categ[i0], "categ.color")])
-if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[i0]])))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[i0]], data1[ ,"categ.color"])), collapse = "\n"))
+tempo.check <- unique(data1[ , c(categ[categ.len], "categ.color")])
+if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[categ.len]])))){
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[categ.len]], data1[ ,"categ.color"])), collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else{
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-categ.color <- unique(categ.color[order(data1[, categ[i0]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
+data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+categ.color <- unique(categ.color[order(data1[, categ[categ.len]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], " AS:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else if(length(categ.color) == 1){
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 data1 <- data.frame(data1, categ.color = categ.color)
-categ.color <- rep(categ.color, length(levels(data1[, categ[i0]])))
+categ.color <- rep(categ.color, length(levels(data1[, categ[categ.len]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }else{
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-categ.color <- fun_gg_palette(length(levels(data1[, categ[i0]])))
-data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
+categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
+data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+categ.color <- fun_gg_palette(length(levels(data1[, categ[categ.len]])))
+data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]])
 levels(data1$categ.color) <- categ.color
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[categ.len], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[categ.len]]), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 tempo <- fun_check(data = bar.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -4938,7 +4938,7 @@ dot.color <- fun_gg_palette(max(dot.color, na.rm = TRUE))
 if(all(dot.color == "same") & length(dot.color) == 1){
 dot.color <- categ.color # same color of the dots as the corresponding bar color
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS BEEN SET TO \"SAME\"\nTHUS, DOT COLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(levels(factor(dot.color)), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS BEEN SET TO \"SAME\"\nTHUS, DOT COLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], " AS:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\n", paste(levels(factor(dot.color)), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if( ! (all(dot.color %in% colors() | grepl(pattern = "^#", dot.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGERS, OR THE STRING\"same\"\nHERE IT IS: ", paste(unique(dot.color), collapse = " "))
@@ -4953,25 +4953,25 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # end check the nature of color
 # check the length of color
 # No problem of NA management by ggplot2 because already removed
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-if(length(dot.color) == length(unique(data1[, categ[i0]]))){ # here length(dot.color) is equal to the different number of categ
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-data1 <- data.frame(data1, dot.color = data1[, categ[i0]])
+categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
+if(length(dot.color) == length(unique(data1[, categ[categ.len]]))){ # here length(dot.color) is equal to the different number of categ
+data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+data1 <- data.frame(data1, dot.color = data1[, categ[categ.len]])
 levels(data1$dot.color) <- dot.color
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}else if(length(dot.color) == length(data1[, categ[i0]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[i0]])))
+}else if(length(dot.color) == length(data1[, categ[categ.len]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, dot.color = dot.color)
 }else if(length(dot.color) == 1 & ! all(dot.color == "same")){
-data1[, categ[i0]] <- factor(data1[, categ[i0]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 data1 <- data.frame(data1, dot.color = dot.color)
-dot.color <- rep(dot.color, length(levels(data1[, categ[i0]])))
+dot.color <- rep(dot.color, length(levels(data1[, categ[categ.len]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA COULD BE THE PROBLEM\n\n================\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -5611,10 +5611,6 @@ return(output)
 ######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required
 
 
-# https://ggplot2-book.org/scales.html
-
-
-
 fun_gg_boxplot <- function(
 data1, 
 y, 
@@ -5636,7 +5632,7 @@ dot.categ = NULL,
 dot.categ.class.order = NULL, 
 dot.categ.legend.name = NULL, 
 dot.tidy = TRUE, 
-dot.tidy.bin.nb = 30, 
+dot.tidy.bin.nb = 50, 
 dot.jitter = 0.5, 
 dot.size = 3, 
 dot.alpha = 0.5, 
@@ -5699,7 +5695,7 @@ lib.path = NULL
 # dot.categ.class.order: optional vector of character strings indicating the order of the classes of categ3. If dot.categ is non NULL and dot.categ.class.order is NULL, classes are displayed in the legend according to the alphabetical order. Ignored if dot.categ is NULL
 # dot.categ.legend.name: optional character string of the legend title for categ3. If categ.legend.name = NULL, categ3 value is used (name of the column in data1). Write "" if no legend required. Ignored if dot.categ is NULL
 # dot.tidy: logical. Nice dot spreading? If TRUE, use the geom_dotplot() function for a nice representation. If FALSE, dots are randomly spread, using the dot.jitter argument (see below)
-# dot.tidy.bin.nb: positive integer indicating the number of bins (i.e., nb of separations) of the y.lim range. Each dot will then be put in one of the bin, with the size the width of the bin. Not considered if dot.tidy is FALSE
+# dot.tidy.bin.nb: positive integer indicating the number of bins (i.e., nb of separations) of the y.lim range. Each dot will then be put in one of the bin, with the size the width of the bin. In other words, increase the number to have smaller dots. Not considered if dot.tidy is FALSE
 # dot.jitter: numeric value (from 0 to 1) of random dot horizontal dispersion, with 0 meaning no dispersion and 1 meaning a dispersion in the corresponding box width interval. Not considered if dot.tidy is TRUE
 # dot.size: numeric value of dot size (in mm). Not considered if dot.tidy is TRUE
 # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
@@ -5972,27 +5968,27 @@ reserved.words <- c(reserved.words, paste0(dot.categ, "_DOT")) # paste0(dot.cate
 }
 }
 tempo.output <- fun_name_change(names(data1), reserved.words)
-for(i3 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
-names(data1)[names(data1) == tempo.output$ini[i3]] <- tempo.output$post[i3]
-if(any(y == tempo.output$ini[i3])){
-y[y == tempo.output$ini[i3]] <- tempo.output$post[i3]
+for(i2 in 1:length(tempo.output$ini)){ # a loop to be sure to take the good ones
+names(data1)[names(data1) == tempo.output$ini[i2]] <- tempo.output$post[i2]
+if(any(y == tempo.output$ini[i2])){
+y[y == tempo.output$ini[i2]] <- tempo.output$post[i2]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+tempo.warn <- paste0("(", warn.count,") IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # BEWARE: names of y argument potentially replaced
-if(any(categ == tempo.output$ini[i3])){
-categ[categ == tempo.output$ini[i3]] <- tempo.output$post[i3]
+if(any(categ == tempo.output$ini[i2])){
+categ[categ == tempo.output$ini[i2]] <- tempo.output$post[i2]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+tempo.warn <- paste0("(", warn.count,") IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # BEWARE: names of categ argument potentially replaced
 if( ! is.null(dot.categ)){
-if(any(dot.categ == tempo.output$ini[i3])){
-dot.categ[dot.categ == tempo.output$ini[i3]] <- tempo.output$post[i3]
+if(any(dot.categ == tempo.output$ini[i2])){
+dot.categ[dot.categ == tempo.output$ini[i2]] <- tempo.output$post[i2]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN dot.categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i3], " HAS BEEN REPLACED BY ", tempo.output$post[i3], "\nBECAUSE RISK OF BUG AS SOME NAMES IN dot.categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
+tempo.warn <- paste0("(", warn.count,") IN dot.categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN dot.categ ARGUMENT ARE RESERVED WORD USED BY THE ", function.name, " FUNCTION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -6047,13 +6043,15 @@ data1[, categ[i3]] <- factor(data1[, categ[i3]], levels = categ.class.order[[i3]
 }
 }
 }else{
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") THE categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR ", paste(categ, collapse = " "))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 categ.class.order <- vector("list", length = length(categ))
+tempo.categ.class.order <- NULL
 for(i2 in 1:length(categ.class.order)){
 categ.class.order[[i2]] <- levels(data1[, categ[i2]])
+tempo.categ.class.order <- c(tempo.categ.class.order, ifelse(i2 != 1, "\n", ""), categ.class.order[[i2]])
 }
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") THE categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR BOX ORDERING:\n", paste(tempo.categ.class.order, collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # categ.class.order not NULL anymore
 if(is.null(categ.legend.name)){
@@ -6084,46 +6082,46 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 # end check the nature of color
 # check the length of color
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-if(length(categ.color) == length(levels(data1[, categ[i0]]))){ # here length(categ.color) is equal to the different number of categ
-# data1[, categ[i0]] <- factor(data1[, categ[i0]]) # not required because sure that is is a factor
-data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
+categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
+if(length(categ.color) == length(levels(data1[, categ[categ.len]]))){ # here length(categ.color) is equal to the different number of categ
+# data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
+data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]])
 data1$categ.color <- factor(data1$categ.color, labels = categ.color)
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}else if(length(categ.color) == length(data1[, categ[i0]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
+}else if(length(categ.color) == length(data1[, categ[categ.len]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, categ.color = categ.color)
-tempo.check <- unique(data1[ , c(categ[i0], "categ.color")])
-if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[i0]])))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[i0]], data1[ ,"categ.color"])), collapse = "\n"))
+tempo.check <- unique(data1[ , c(categ[categ.len], "categ.color")])
+if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[categ.len]])))){
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[categ.len]], data1[ ,"categ.color"])), collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }else{
-# data1[, categ[i0]] <- factor(data1[, categ[i0]]) # not required because sure that is is a factor
-categ.color <- unique(data1$categ.color[order(data1[, categ[i0]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[i0]])))
+# data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
+categ.color <- unique(data1$categ.color[order(data1[, categ[categ.len]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[i0], " AS:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], " AS:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else if(length(categ.color) == 1){
-# data1[, categ[i0]] <- factor(data1[, categ[i0]]) # not required because sure that is is a factor
+# data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 data1 <- data.frame(data1, categ.color = categ.color)
-categ.color <- rep(categ.color, length(levels(data1[, categ[i0]])))
+categ.color <- rep(categ.color, length(levels(data1[, categ[categ.len]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM")
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA COULD BE THE PROBLEM")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }else{
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-# data1[, categ[i0]] <- factor(data1[, categ[i0]]) # not required because sure that is is a factor
-categ.color <- fun_gg_palette(length(levels(data1[, categ[i0]])))
-data1 <- data.frame(data1, categ.color = data1[, categ[i0]])
+categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
+# data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
+categ.color <- fun_gg_palette(length(levels(data1[, categ[categ.len]])))
+data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]])
 data1$categ.color <- factor(data1$categ.color, labels = categ.color)
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[i0], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[i0]]), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[categ.len], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[categ.len]]), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # categ.color not NULL anymore
@@ -6164,16 +6162,25 @@ if(any(duplicated(dot.categ.class.order))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(dot.categ.class.order, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }else if( ! (all(dot.categ.class.order %in% levels(data1[, dot.categ])) & all(levels(data1[, dot.categ]) %in% dot.categ.class.order))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": dot.categ.class.order ARGUMENT MUST BE CLASSES OF dot.categ ARGUMENT\nHERE IT IS:\n", paste(dot.categ.class.order, collapse = " "), "\nFOR dot.categ.class.order AND IT IS:\n", paste(levels(data1[, dot.categ]), collapse = " "), "\nFOR dot.categ COLUMN (", dot.categ, ") OF data1")
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.categ.class.order ARGUMENT MUST BE CLASSES OF dot.categ ARGUMENT\nHERE IT IS:\n", paste(dot.categ.class.order, collapse = " "), "\nFOR dot.categ.class.order AND IT IS:\n", paste(levels(data1[, dot.categ]), collapse = " "), "\nFOR dot.categ COLUMN (", ini.dot.categ, ") OF data1")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }else{
 data1[, dot.categ] <- factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
 }
 }else{
-dot.categ.class.order <- levels(data1[, dot.categ])
+if(all(dot.color == "same") & length(dot.color) == 1){
+dot.categ.class.order <- unlist(categ.class.order[length(categ)])
+data1[, dot.categ] <- factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") THE dot.categ.class.order SETTING IS NULL AND dot.color IS \"same\". ORDER OF categ.class.order WILL BE APPLIED FOR LEGEND DISPLAY: ", paste(dot.categ.class.order, collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}else{
+dot.categ.class.order <- sort(levels(data1[, dot.categ]))
+data1[, dot.categ] <- factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") THE dot.categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR LEGEND DISPLAY: ", paste(dot.categ.class.order, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }
 # dot.categ.class.order not NULL anymore
 if(all(dot.color == "same") & length(dot.color) == 1){
@@ -6185,15 +6192,17 @@ tempo.cat <- paste0("ERROR IN ", function.name, ":WHEN dot.color ARGUMENT IS \"s
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
-if(identical(categ, ini.dot.categ) & ! identical(unlist(categ.class.order), dot.categ.class.order) & identical(sort(unlist(categ.class.order)), sort(dot.categ.class.order))){
+for(i3 in 1:length(categ)){
+if(identical(categ[i3], ini.dot.categ) & ! identical(unlist(categ.class.order[i3]), dot.categ.class.order) & identical(sort(unlist(categ.class.order[i3])), sort(dot.categ.class.order))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") THE categ AND dot.categ ARGUMENT ARE IDENTICAL, BUT ORDER OF THE CLASSES IS NOT THE SAME:\ncateg.class.order: ", paste(unlist(categ.class.order), collapse = " "), "\ndot.categ.class.order: ", paste(dot.categ.class.order, collapse = " "), "\nNOTE THAT ORDER OF categ.class.order IS THE ONE USED FOR THE AXIS REPRESENTATION")
+tempo.warn <- paste0("(", warn.count,") THE dot.categ ARGUMENT SETTING IS PRESENT IN THE categ ARGUMENT SETTING, BUT ORDER OF THE CLASSES IS NOT THE SAME:\ncateg.class.order: ", paste(unlist(categ.class.order[i3]), collapse = " "), "\ndot.categ.class.order: ", paste(dot.categ.class.order, collapse = " "), "\nNOTE THAT ORDER OF categ.class.order IS THE ONE USED FOR THE AXIS REPRESENTATION")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }
 if(is.null(dot.categ.legend.name)){
 dot.categ.legend.name <- if(ini.dot.categ %in% categ[length(categ)]){dot.categ}else{ini.dot.categ} #
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") THE dot.categ.legend.name SETTING IS NULL. THIS NAME WILL BE USED: ", dot.categ.legend.name)
+tempo.warn <- paste0("(", warn.count,") THE dot.categ.legend.name SETTING IS NULL -> ", dot.categ.legend.name, " WILL BE USED AS LEGEND TITLE OF DOTS")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # dot.categ.legend.name not NULL anymore
@@ -6249,32 +6258,32 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT IS INCORRE
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }else{
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN dot.categ ARGUMENT (", ini.dot.categ, "), THE FOLLOWING COLORS Of DOTS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(data1[, dot.categ]), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") IN dot.categ ARGUMENT (", ini.dot.categ, "), THE FOLLOWING COLORS OF DOTS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(data1[, dot.categ]), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # dot.color is a character string representing the diff classes of dot.categ
 # data1$dot.color is a factor with order of levels -> dot.categ
 # end optional legend of dot colors
 }else{
-i0 <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
-if(length(dot.color) == length(levels(data1[, categ[i0]]))){ # here length(dot.color) is equal to the different number of categ
-# data1[, categ[i0]] <- factor(data1[, categ[i0]]) # not required because sure that is is a factor
-data1 <- data.frame(data1, dot.color = data1[, categ[i0]])
+categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
+if(length(dot.color) == length(levels(data1[, categ[categ.len]]))){ # here length(dot.color) is equal to the different number of categ
+# data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
+data1 <- data.frame(data1, dot.color = data1[, categ[categ.len]])
 data1$dot.color <- factor(data1$dot.color, labels = dot.color)
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN ", categ[i0], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}else if(length(dot.color) == length(data1[, categ[i0]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[i0]])))
+}else if(length(dot.color) == length(data1[, categ[categ.len]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, dot.color = dot.color)
 }else if(length(dot.color) == 1 & ! all(dot.color == "same")){
-# data1[, categ[i0]] <- factor(data1[, categ[i0]]) # not required because sure that is is a factor
+# data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 data1 <- data.frame(data1, dot.color = dot.color)
-dot.color <- rep(dot.color, length(levels(data1[, categ[i0]])))
+dot.color <- rep(dot.color, length(levels(data1[, categ[categ.len]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[i0], "\n", paste(levels(factor(data1[, categ[i0]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[i0], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[i0]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[i0]])), "\nPRESENCE OF NA COULD BE THE PROBLEM")
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA COULD BE THE PROBLEM")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end check the length of color
@@ -6757,21 +6766,21 @@ stop(tempo.cat)
 coord.names <- NULL
 # creation of the data frame for (main box + legend) and data frame for means
 if(box.notch == FALSE){
-for(i2 in 1:length(categ)){
-if(i2 == 1){
-tempo.polygon <- data.frame(GROUPX = c(t(stat[, c(categ[i2], categ[i2], categ[i2], categ[i2], categ[i2])])), stringsAsFactors = TRUE)
+for(i3 in 1:length(categ)){
+if(i3 == 1){
+tempo.polygon <- data.frame(GROUPX = c(t(stat[, c(categ[i3], categ[i3], categ[i3], categ[i3], categ[i3])])), stringsAsFactors = TRUE)
 }else{
-tempo.polygon <- cbind(tempo.polygon, c(t(stat[, c(categ[i2], categ[i2], categ[i2], categ[i2], categ[i2])])), stringsAsFactors = TRUE)
+tempo.polygon <- cbind(tempo.polygon, c(t(stat[, c(categ[i3], categ[i3], categ[i3], categ[i3], categ[i3])])), stringsAsFactors = TRUE)
 }
 }
 names(tempo.polygon) <- categ
 tempo.polygon <- data.frame(X = c(t(stat[, c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = c(t(stat[, c("QUART1", "QUART1", "QUART3", "QUART3", "QUART1")])), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = as.character(c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
 }else{
-for(i2 in 1:length(categ)){
-if(i2 == 1){
-tempo.polygon <- data.frame(GROUPX = c(t(stat[, c(categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2])])), stringsAsFactors = TRUE)
+for(i3 in 1:length(categ)){
+if(i3 == 1){
+tempo.polygon <- data.frame(GROUPX = c(t(stat[, c(categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3])])), stringsAsFactors = TRUE)
 }else{
-tempo.polygon <- cbind(tempo.polygon, c(t(stat[, c(categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2], categ[i2])])), stringsAsFactors = TRUE)
+tempo.polygon <- cbind(tempo.polygon, c(t(stat[, c(categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3], categ[i3])])), stringsAsFactors = TRUE)
 }
 }
 names(tempo.polygon) <- categ
@@ -6779,8 +6788,8 @@ tempo.polygon <- data.frame(X = c(t(stat[, c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SU
 }
 tempo.polygon$COLOR <- factor(tempo.polygon$COLOR, levels = unique(categ.color))
 if( ! is.null(categ.class.order)){
-for(i2 in 1:length(categ)){
-tempo.polygon[, categ[i2]] <- factor(tempo.polygon[, categ[i2]], levels = categ.class.order[[i2]])
+for(i3 in 1:length(categ)){
+tempo.polygon[, categ[i3]] <- factor(tempo.polygon[, categ[i3]], levels = categ.class.order[[i3]])
 }
 }
 tempo.diamon.mean <- data.frame(X = c(t(stat[, c("X", "X_NOTCH_INF", "X", "X_NOTCH_SUP", "X")])), Y = c(t(cbind(stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] + (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio))), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), GROUP = c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX")])), stringsAsFactors = TRUE)
@@ -9349,13 +9358,13 @@ lib.path <- .libPaths() # .libPaths(new = lib.path) # or .libPaths(new = c(.libP
 }else{
 .libPaths(new = sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
 }
-for(i0 in 1:length(req.package)){
-if( ! req.package[i0] %in% rownames(utils::installed.packages(lib.loc = lib.path))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
+for(i1 in 1:length(req.package)){
+if( ! req.package[i1] %in% rownames(utils::installed.packages(lib.loc = lib.path))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i1], " MUST BE INSTALLED IN:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 if(load == TRUE){
-suppressWarnings(suppressPackageStartupMessages(library(req.package[i0], lib.loc = lib.path, quietly = TRUE, character.only = TRUE)))
+suppressWarnings(suppressPackageStartupMessages(library(req.package[i1], lib.loc = lib.path, quietly = TRUE, character.only = TRUE)))
 }
 }
 }
@@ -9460,18 +9469,18 @@ path_lib = sys.path
 lib.path <- lib.path$path_lib
 }
 reticulate::use_python(Sys.which(python.exec.path), required = TRUE) # required to avoid the use of erratic python exec by reticulate::import_from_path()
-for(i0 in 1:length(req.package)){
+for(i1 in 1:length(req.package)){
 tempo.try <- vector("list", length = length(lib.path))
-for(i1 in 1:length(lib.path)){
-tempo.try[[i1]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i0], path = lib.path[i1]), silent = TRUE))
-tempo.try[[i1]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i0], path = lib.path[i1]), silent = TRUE)) # done twice to avoid the error message  about flushing present the first time but not the second time. see https://stackoverflow.com/questions/57357001/reticulate-1-13-error-in-sysstdoutflush-attempt-to-apply-non-function
+for(i2 in 1:length(lib.path)){
+tempo.try[[i2]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i1], path = lib.path[i2]), silent = TRUE))
+tempo.try[[i2]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i1], path = lib.path[i2]), silent = TRUE)) # done twice to avoid the error message  about flushing present the first time but not the second time. see https://stackoverflow.com/questions/57357001/reticulate-1-13-error-in-sysstdoutflush-attempt-to-apply-non-function
 }
 if(all(sapply(tempo.try, FUN = grepl, pattern = "[Ee]rror"))){
 print(tempo.try)
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i0], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i1], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 } # else{
-# suppressWarnings(suppressPackageStartupMessages(assign(req.package[i0], reticulate::import(req.package[i0])))) # not required because try() already evaluates
+# suppressWarnings(suppressPackageStartupMessages(assign(req.package[i1], reticulate::import(req.package[i1])))) # not required because try() already evaluates
 # }
 }
 }
