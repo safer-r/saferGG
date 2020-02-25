@@ -307,7 +307,7 @@ eval(parse(text = tempo.script)) # execute tempo.script
 }
 }
 if(prop == TRUE){
-if(any(data < 0 | data > 1, na.rm = TRUE)){
+if(is.null(data) | any(data < 0 | data > 1, na.rm = TRUE)){
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
@@ -328,7 +328,7 @@ text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name))
 }else{
 text <- paste0(text, " AND ")
 }
-text <- paste0(text, "THE ", data.name, " PARAMETER CONTAINS NA WHILE NOT AUTHORIZED (na.contain ARGUMENT SET TO FALSE)")
+text <- paste0(text, "THE ", data.name, " PARAMETER CONTAINS NA WHILE NOT AUTHORIZED")
 }
 }
 if(neg.values == FALSE){
@@ -1236,6 +1236,8 @@ return(output)
 fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun = FALSE, export = FALSE, res.path = NULL, lib.path = NULL, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
 # AIM
 # test combinations of argument values of a function
+# WARNING
+# Limited to 43 arguments with at least 2 values each. The total number of arguments tested can be more if the additional arguments have a single value. The limit is due to nested "for" loops (https://stat.ethz.ch/pipermail/r-help/2008-March/157341.html), but it should not be a problem since the number of tests would be 2^43 > 8e12
 # ARGUMENTS
 # fun: character string indicating the name of the function tested
 # arg: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
@@ -1276,9 +1278,9 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
 # library(ggplot2) ; fun_test(fun = "geom_histogram", arg = c("data", "mapping"), val = list(x = list(data.frame(X = "a")), y = list(ggplot2::aes(x = X))), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\") # BEWARE: ggplot2::geom_histogram does not work
 # DEBUGGING
-# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = 2 ; plot.fun = FALSE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
-# fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = 2 ; plot.fun = FALSE ; print.count = 10 ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
+# fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; print.count = 10 ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; print.count = 10 ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 instruction <- match.call()
@@ -1296,7 +1298,7 @@ stop(tempo.cat)
 }
 }
 # end required function checking
-# primary argument checking
+# argument primary checking
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -1343,19 +1345,23 @@ tempo <- fun_check(data = print.count, class = "vector", typeof = "integer", len
 tempo <- fun_check(data = plot.fun, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = export, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(res.path)){
-tempo <- fun_check(data = res.path, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! dir.exists(res.path)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE res.path PARAMETER DOES NOT EXISTS:\n", res.path)
+tempo <- fun_check(data = res.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(res.path))){ # separation to avoid the problem of tempo$problem == FALSE and res.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE res.path ARGUMENT DOES NOT EXISTS:\n", paste(res.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if( ! is.null(lib.path)){
-tempo <- fun_check(data = lib.path, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! dir.exists(lib.path)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS:\n", lib.path)
+tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if( ! is.null(thread.nb)){
@@ -1372,7 +1378,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end primary argument checking
+# end argument primary checking
 # second round of checking and data preparation
 if(length(arg) != length(val)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF arg ARGUMENT MUST BE IDENTICAL TO LENGTH OF arg ARGUMENT:\nHERE IT IS: ", length(arg), " VERSUS ", length(val))
@@ -1381,6 +1387,11 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 args <- names(formals(get(fun)))
 if( ! all(arg %in% args)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": SOME OF THE STRINGS IN arg ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN arg: ", paste(arg[ ! arg %in% args], collapse = " "))
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+if(sum(sapply(val, FUN = length) > 1) > 43){
+tempo.cat <- paste0("ERROR IN ", function.name, ": CANNOT TEST MORE THAN 43 ARGUMENTS IF THEY ALL HAVE AT LEAST 2 VALUES EACH\nHERE THE NUMBER IS: ", sum(sapply(val, FUN = length) > 1))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -1430,16 +1441,65 @@ fun.args2 <- NULL
 arg.values <- "list("
 for(i1 in 1:length(arg)){
 if(is.null(thread.nb)){
+if(length(val[[i1]]) > 1){ # loop only if more than one value in length(val[[i1]])
 loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
 end.loop.string <- paste0(end.loop.string, "}")
+}
 }else{
-loop.string <- paste0("for(i in x){")
+loop.string <- "for(i in x){"
 end.loop.string <- "}"
 }
-
-fun.args <- paste0(fun.args, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[", ifelse(is.null(thread.nb), paste0("i", i1), paste0("i.list[[", i1, "]][i]")), "]]")
-fun.args2 <- paste0(fun.args2, ifelse(i1 == 1, "", ", "), arg[i1], " = val[[", i1, "]][[', ", ifelse(is.null(thread.nb), paste0("i", i1), paste0("i.list[[", i1, "]][i]")), ", ']]")
-arg.values <- paste0(arg.values, "val[[", i1, "]][[", ifelse(is.null(thread.nb), paste0("i", i1), paste0("i.list[[", i1, "]][i]")), "]]", ifelse(i1 == length(arg), "", ", "))
+fun.args <- paste0(
+fun.args, 
+ifelse(i1 == 1, "", ", "), 
+arg[i1], 
+" = val[[", 
+i1, 
+"]][[", 
+if(is.null(thread.nb)){
+if(length(val[[i1]]) > 1){
+paste0("i", i1)
+}else{
+"1" # a unique element in val[[i1]]
+}
+}else{
+paste0("i.list[[", i1, "]][i]")
+}, 
+"]]"
+)
+fun.args2 <- paste0(
+fun.args2, 
+ifelse(i1 == 1, "", ", "), 
+arg[i1], 
+" = val[[", 
+i1, 
+"]][[', ", 
+if(is.null(thread.nb)){
+if(length(val[[i1]]) > 1){
+paste0("i", i1)
+}else{
+"1" # a unique element in val[[i1]]
+}
+}else{
+paste0("i.list[[", i1, "]][i]")
+}, 
+", ']]"
+)
+arg.values <- paste0(
+arg.values, 
+"val[[", i1, "]][[", 
+if(is.null(thread.nb)){
+if(length(val[[i1]]) > 1){
+paste0("i", i1)
+}else{
+"1" # a unique element in val[[i1]]
+}
+}else{
+paste0("i.list[[", i1, "]][i]")
+}, 
+"]]", 
+ifelse(i1 == length(arg), "", ", ")
+)
 }
 arg.values <- paste0(arg.values, ")")
 fun.test <- paste0(fun, "(", fun.args, ")")
@@ -2774,11 +2834,13 @@ tempo <- fun_check(data = cor.method, options = c("pearson", "kendall", "spearma
 tempo <- fun_check(data = cor.limit, class = "vector", mode = "numeric", prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
-tempo <- fun_check(data = lib.path, class = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path)
+tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -3137,13 +3199,13 @@ fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = 
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS:
-# pdf.disp: use pdf or not
-# fun.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default)
-# pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function)
+# pdf.disp: logical. Use pdf display?
+# fun.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default). Ignored if pdf.disp == FALSE
+# pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function). Ignored if pdf.disp == FALSE
 # width.fun: width of the windows (in inches)
 # height.fun: height of the windows (in inches)
-# paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that width.fun and height.fun specify the paper size
-# no.pdf.overwrite: existing pdf can be overwritten ? Only used if pdf.disp = TRUE
+# paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that width.fun and height.fun specify the paper size. Ignored if pdf.disp == FALSE
+# no.pdf.overwrite: logical. Existing pdf can be overwritten? . Ignored if pdf.disp == FALSE
 # return.output: return output ? If TRUE but function not assigned, the output list is displayed
 # RETURN
 # a list containing:
@@ -3170,11 +3232,13 @@ text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = pdf.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(fun.path)){
+tempo <- fun_check(data = fun.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+}
 tempo <- fun_check(data = fun.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = width.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = height.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = fun.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data =no.pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -3499,10 +3563,12 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = kind, options = c("approx", "strict", "strict.cl"), length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -4418,10 +4484,12 @@ tempo <- fun_check(data = raster.dpi, class = "integer", length = 1, double.as.i
 tempo <- fun_check(data = inactivate, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -5085,10 +5153,12 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -5723,7 +5793,7 @@ lib.path = NULL
 # grid: logical. draw horizontal lines in the background to better read the box values? Not considered if classic = FALSE
 # return: logical. Return the graph parameters?
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
-# add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
+# add: character string allowing to add more ggplot2 features (dots, lines, themes, etc.). Ignored if NULL. BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
 # warn.print: logical. Print warnings at the end of the execution? No print if no warning messages. some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
 # lib.path: character string indicating the absolute path of the required packages, if not in the default folders
 # REQUIRED PACKAGES
@@ -5777,7 +5847,7 @@ stop(tempo.cat)
 # reserved words to avoid bugs (used in this function)
 reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.categ", "dot.max", "dot.min", "group", "group.check", "MEAN", "tempo.categ1", "tempo.categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax")
 # end reserved words to avoid bugs (used in this function)
-# primary argument checking
+# argument primary checking
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -5925,17 +5995,19 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
 tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end primary argument checking
+# end argument primary checking
 # second round of checking and data preparation
 warn <- NULL
 warn.count <- 0
@@ -7592,10 +7664,12 @@ arg.check <- c(arg.check, TRUE)
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -8279,11 +8353,13 @@ tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": GRAPH
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(lib.path)){
-tempo <- fun_check(data = lib.path, class = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 }
@@ -9340,11 +9416,13 @@ ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text
 tempo <- fun_check(data = req.package, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = load, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
-tempo <- fun_check(data = lib.path, class = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -9423,26 +9501,32 @@ ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text
 tempo <- fun_check(data = req.package, class = "character", fun.name = function.name) ; eval(ee)
 if( ! is.null(python.exec.path)){
 tempo <- fun_check(data = python.exec.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(file.exists(python.exec.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nFILE PATH INDICATED IN THE python.exec.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(python.exec.path))){ # separation to avoid the problem of tempo$problem == FALSE and python.exec.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE python.exec.path ARGUMENT DOES NOT EXISTS:\n", paste(python.exec.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if( ! is.null(lib.path)){
-tempo <- fun_check(data = lib.path, class = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE lib.path PARAMETER DOES NOT EXISTS: ", lib.path, "\n\n============\n\n")
+tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if( ! is.null(R.lib.path)){
 tempo <- fun_check(data = R.lib.path, class = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! all(dir.exists(R.lib.path))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \nDIRECTORY PATH INDICATED IN THE R.lib.path PARAMETER DOES NOT EXISTS: ", R.lib.path, "\n\n============\n\n")
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(R.lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and R.lib.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE R.lib.path ARGUMENT DOES NOT EXISTS:\n", paste(R.lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 }
 if(any(arg.check) == TRUE){
@@ -9534,11 +9618,13 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": outpu
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_check(data = path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & dir.exists(path) == FALSE){
+tempo <- fun_check(data = path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! all(dir.exists(path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", paste(path, collapse = "\n"),"\n\n================\n\n")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
 }
 tempo <- fun_check(data = no.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = rownames.kept, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
