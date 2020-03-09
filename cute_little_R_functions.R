@@ -1604,7 +1604,7 @@ thread.nb <- tempo.thread.nb
 }
 tempo.cat <- paste0("NUMBER OF THREADS USED: ", thread.nb)
 cat(paste0("\n    ", tempo.cat, "\n"))
-Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows○)
+Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_test_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows)
 tempo.cat <- paste0("SPLIT OF TEST NUMBERS IN PARALLELISATION:")
 cat(paste0("\n    ", tempo.cat, "\n"))
 cluster.list <- parallel::clusterSplit(Clust, 1:total.comp.nb) # split according to the number of cluster
@@ -3205,10 +3205,8 @@ return(window.width)
 ######## fun_open() #### open a GUI or pdf graphic window
 
 
-# simplify with pdf(file = FALSE)
-
 # Check OK: clear to go Apollo
-fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, no.read.only.par = TRUE, return.output = FALSE){
+fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, remove.read.only = TRUE, return.output = FALSE){
 # AIM
 # open a pdf or screen (GUI) graphic window
 # BEWARE: on Linux, use pdf.disp = TRUE, if (GUI) graphic window is not always available, meaning that X is not installed (clusters for instance). Use X11() in R to test if available
@@ -3225,22 +3223,22 @@ fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = 
 # pdf.disp: logical. Use pdf display?
 # fun.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default). Ignored if pdf.disp == FALSE
 # pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function). Ignored if pdf.disp == FALSE
-# width.fun: width of the windows (in inches)
-# height.fun: height of the windows (in inches)
-# paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that width.fun and height.fun specify the paper size. Ignored if pdf.disp == FALSE
+# width.fun: width of the window (in inches)
+# height.fun: height of the window (in inches)
+# paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that the paper dimension will be width.fun and height.fun. With another paper format, if width.fun or height.fun is over the size  of the paper, width.fun or height.fun will be modified such that the plot is adjusted to the paper dimension (see $dim in the returned list below to see the modified dimensions). Ignored if pdf.disp == FALSE
 # no.pdf.overwrite: logical. Existing pdf can be overwritten? . Ignored if pdf.disp == FALSE
-# no.read.only.par: logical. do not recover the read only (R.O.) graphical parameters? If TRUE, the graphical parameters returned without the R.O. parameters. This returned $ini.par list can be used to set the par() of a new graphical device. If FALSE, graphical parameters are returned with the R.O. parameters, which provides information like device dimension (see ?par() ). The returned $ini.par list can be used to set the par() of a new graphical device, but generate a warning message. Ignored if return.output == FALSE. 
+# remove.read.only: logical. rmove the read only (R.O.) graphical parameters? If TRUE, the graphical parameters are  returned without the R.O. parameters. The returned $ini.par list can be used to set the par() of a new graphical device. If FALSE, graphical parameters are returned with the R.O. parameters, which provides information like text dimension (see ?par() ). The returned $ini.par list can be used to set the par() of a new graphical device, but generate a warning message. Ignored if return.output == FALSE. 
 # return.output: logical. Return output ? If TRUE but function not assigned, the output list is displayed
 # RETURN
 # a list containing:
 # $pdf.loc: path of the pdf created
-# $ini.par: initial par() parameters (to reset in a new graph)
-# $zone.ini: initial window spliting (to reset in a new graph)
+# $ini.par: initial par() parameters
+# $zone.ini: initial window spliting
+# $dim: dimension of the graphical device (in inches)
 # EXAMPLES
 # fun_open(pdf.disp = FALSE, fun.path = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
 # DEBUGGING
-# pdf.disp = TRUE ; fun.path = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
-# pdf.disp = TRUE ; fun.path = "/pasteur/homes/gmillot/" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; return.output = TRUE # for function debugging
+# pdf.disp = TRUE ; fun.path = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3265,6 +3263,7 @@ tempo <- fun_check(data = width.fun, class = "vector", mode = "numeric", length 
 tempo <- fun_check(data = height.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data =no.pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = remove.read.only, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
@@ -3288,7 +3287,7 @@ stop(tempo.cat, call. = FALSE)
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
 open.fail <- NULL
 windows()
-ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
+ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
 if(pdf.disp == TRUE){
@@ -3297,8 +3296,8 @@ while(file.exists(paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf")) == T
 tempo.code <- tempo.code + 1
 }
 pdf(width = width.fun, height = height.fun, file=paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
-ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
-invisible(dev.off()) # close the pdf windows
+ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
+invisible(dev.off()) # close the pdf window
 file.remove(paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
 }else{
 # test if X11 can be opened
@@ -3308,7 +3307,7 @@ stop(tempo.cat, call. = FALSE)
 }else{
 open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
 if(is.null(open.fail)){
-ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
+ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
@@ -3320,7 +3319,7 @@ stop(tempo.cat, call. = FALSE)
 }else{
 open.fail <- NULL
 quartz()
-ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
+ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }
 # end par.ini recovery 
@@ -3349,7 +3348,7 @@ quartz(width = width.fun, height = height.fun)
 }
 }
 if(return.output == TRUE){
-output <- list(pdf.loc = pdf.loc, ini.par = ini.par, zone.ini = zone.ini)
+output <- list(pdf.loc = pdf.loc, ini.par = ini.par, zone.ini = zone.ini, dim = dev.size())
 return(output)
 }
 }
@@ -3473,7 +3472,7 @@ ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameter
 invisible(dev.off()) # close the new window
 }
 if( ! all(names(dev.cur()) == "null device")){
-dev.set(active.wind.nb) # go back to the active windows if exists
+dev.set(active.wind.nb) # go back to the active window if exists
 par(ini.par) # apply the initial par to current window
 }
 }
@@ -6599,7 +6598,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # if a second data frame is provided, corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() defines the dots of this data frame, outside of the frame of the first data frame
 # WARNINGS
 # if dots from data2 look significant on the graph (outside the frame) but are not (not black on the last figure), this is probably because the frame is flat on the zero coordinate (no volume inside the frame at this position). Thus, no way to conclude that data2 dots here are significant. These dots are refered to as "unknown". The pb.dot argument deals with such dots
-# dots that are sometimes inside and outside the frame, depending on the sliding windows, are treated differently: they are removed. Such dots are neither classified as "signif", "non signif" or "unknown", but as "inconsistent"
+# dots that are sometimes inside and outside the frame, depending on the sliding window, are treated differently: they are removed. Such dots are neither classified as "signif", "non signif" or "unknown", but as "inconsistent"
 # unknown dots are treated as finally significant, not significant, or unknown (data2.pb.dot argument) for each x-axis and y-axis separately. Then, the union or intersection of significant dots is performed (argument xy.cross.kind). See the example section
 # ARGUMENTS
 # data1: a dataframe containing a column of x-axis values and a column of y-axis values
@@ -7028,7 +7027,7 @@ y.outside.data2.dot.nb <- c(y.outside.data2.dot.nb, data2$DOT_NB[y.data2.dot.sig
 y.outside.data2.dot.nb <- unique(y.outside.data2.dot.nb)
 y.inside.data2.dot.nb <- c(y.inside.data2.dot.nb, data2$DOT_NB[y.data2.dot.not.signif])
 y.inside.data2.dot.nb <- unique(y.inside.data2.dot.nb)
-}else if(any(x.data1.dot.here == FALSE) & any(x.data2.dot.here == TRUE)){ # problem: data2 dots in the the windows but no data1 dots to generates the quantiles
+}else if(any(x.data1.dot.here == FALSE) & any(x.data2.dot.here == TRUE)){ # problem: data2 dots in the the window but no data1 dots to generates the quantiles
 y.unknown.data2.dot.nb <- c(y.unknown.data2.dot.nb, data2$DOT_NB[x.data2.dot.here])
 y.unknown.data2.dot.nb <- unique(y.unknown.data2.dot.nb)
 #tempo.warn & indicate the interval
@@ -7091,7 +7090,7 @@ step <- y.win.size / y.step.factor
 loop.nb <- ceiling((diff(y.range) - y.win.size) / step) # y.win.size + n * step covers the y range if y.win.size + n * step >= diff(y.range), thus if n >= (diff(y.range) - y.win.size) / step 
 x.outside.data1.dot.nb <- integer() # vector that will contain the selected rows numbers of data1 that are upper or lower than the frame
 x.inside.data1.dot.nb <- integer() # vector that will contain the selected rows numbers of data1 that are not upper or lower than the frame
-x.data1.median <- median(data1[, x1], na.rm = TRUE) # will be used for sliding windows without data1 in it
+x.data1.median <- median(data1[, x1], na.rm = TRUE) # will be used for sliding window without data1 in it
 if( ! is.null(data2)){
 x.outside.data2.dot.nb <- integer() # vector that will contain the selected 1D coordinates (i.e., dots) of data2 that are upper or lower than the data1 frame
 x.inside.data2.dot.nb <- integer() # vector that will contain the 1D coordinates (i.e., dots) of data2 that are not upper or lower than the data1 frame
