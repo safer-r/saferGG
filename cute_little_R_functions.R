@@ -1710,6 +1710,7 @@ warning(paste0("\nWARNING FROM ", function.name, " IN PROCESS ", process.id, ": 
 file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
 }
 table.out <- as.matrix(output$data)
+# table.out[table.out == ""] <- " " # does not work # because otherwise read.table() converts "" into NA
 table.out <- gsub(table.out, pattern = "\n", replacement = " ")
 write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(length(x) == 1, ".txt", paste0("-", x[length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
 }
@@ -1719,7 +1720,7 @@ parallel::stopCluster(Clust)
 if(length(cluster.list) > 1){
 for(i2 in 1:length(cluster.list)){
 tempo.name <- paste0(res.path, "/table_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(length(cluster.list[[i2]]) == 1, ".txt", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".txt")))
-tempo <- read.table(file = tempo.name, header = TRUE, stringsAsFactors = FALSE, sep = "\t", row.names = 1, comment.char = "") #  row.names = 1 (1st column) because now read.table() adds a NA in the header if the header starts by a tabulation, comment.char = "" because colors with # 
+tempo <- read.table(file = tempo.name, header = TRUE, stringsAsFactors = FALSE, sep = "\t", row.names = 1, comment.char = "", colClasses = "character") #  row.names = 1 (1st column) because now read.table() adds a NA in the header if the header starts by a tabulation, comment.char = "" because colors with #, colClasses = "character" otherwise convert "" (from NULL) into NA
 file.remove(tempo.name)
 if(i2 == 1){
 final.file <- tempo
