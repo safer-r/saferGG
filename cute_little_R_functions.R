@@ -113,9 +113,9 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # prop: logical. Are the numeric values between 0 and 1 (proportion)? If TRUE, can be used alone, without considering class, etc.
 # double.as.integer.allowed: logical. If TRUE, no error is reported if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers have a zero as modulo (remainder of a division). This means that i <- 1 , which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE
 # options: a vector of character strings indicating all the possible option values for data
-# all.options.in.data: logical. If TRUE, all of the options must be present at least once in data, and nothing else. If FALSE, some of the options must be present in data, and nothing else
+# all.options.in.data: logical. If TRUE, all of the options must be present at least once in data, and nothing else. If FALSE, some or all of the options must be present in data, and nothing else. Ignored if options is NULL
 # na.contain: logical. Can data contain NA?
-# neg.values: logical. Are negative numeric values authorized? BEWARE: only considered if set to FALSE, to check for non negative values when class is set to "numeric", "matrix", "array", "data.frame", "table", or typeof is set to "double", "integer", or mode is set to "numeric"
+# neg.values: logical. Are negative numeric values authorized? BEWARE: only considered if set to FALSE, to check for non negative values when class is set to "vector", "numeric", "matrix", "array", "data.frame", "table", or typeof is set to "double", "integer", or mode is set to "numeric". Ignored in other cases, notably with prop argument
 # print: logical. Print the error message if $problem is TRUE? See the example section
 # fun.name: character string indicating the name of the function when fun_check() is used to check its argument. If non NULL, name will be added into the error message returned by fun_check()
 # RETURN
@@ -136,22 +136,32 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # data = expression(TEST) ; data.name = NULL ; class = "vector" ; typeof = NULL ; mode = NULL ; length = 1 ; prop = FALSE ; double.as.integer.allowed = FALSE ; options = NULL ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; fun.name = NULL
 # function name: no used in this function for the error message, to avoid env colliding
 # argument checking
+# arg with no default values
+if(missing(data)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): ARGUMENT data HAS NO DEFAULT VALUE AND REQUIRES ONE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end arg with no default values
 # dealing with NA
 if(any(is.na(data.name)) | any(is.na(class)) | any(is.na(typeof)) | any(is.na(mode)) | any(is.na(length)) | any(is.na(prop)) | any(is.na(double.as.integer.allowed)) | any(is.na(all.options.in.data)) | any(is.na(na.contain)) | any(is.na(neg.values)) | any(is.na(print)) | any(is.na(fun.name))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(print)), any(is.na(fun.name)))], collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NA
 # dealing with NULL
+if(is.null(prop) | is.null(double.as.integer.allowed) | is.null(all.options.in.data) | is.null(na.contain) | is.null(neg.values) | is.null(print)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THESE ARGUMENTS prop, double.as.integer.allowed, all.options.in.data, na.contain, neg.values AND print CANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print")[c(is.null(prop), is.null(double.as.integer.allowed), is.null(all.options.in.data), is.null(na.contain), is.null(neg.values), is.null(print))], collapse = " "), "\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NULL
+# dealing with logical
+# tested below
+# end dealing with logical
 if( ! is.null(data.name)){
 if( ! (length(data.name) == 1 & class(data.name) == "character")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-}
-if(is.null(prop) | is.null(double.as.integer.allowed) | is.null(all.options.in.data) | is.null(na.contain) | is.null(neg.values) | is.null(print)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THESE ARGUMENTS prop, double.as.integer.allowed, all.options.in.data, na.contain, neg.values AND print CANNOT BE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
 }
 if(is.null(options) & is.null(class) & is.null(typeof) & is.null(mode) &  prop == FALSE & is.null(length)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): AT LEAST ONE OF THE options, class, typeof, mode, prop, OR length ARGUMENT MUST BE SPECIFIED (I.E, TRUE FOR prop)\n\n================\n\n")
@@ -161,7 +171,6 @@ if( ! is.null(options) & ( ! is.null(class) | ! is.null(typeof) | ! is.null(mode
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE class, typeof, mode ARGUMENTS MUST BE NULL, AND prop FALSE, IF THE options ARGUMENT IS SPECIFIED\nTHE options ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-# end dealing with NULL
 if( ! (all(class(neg.values) == "logical") & length(neg.values) == 1 & any(is.na(neg.values)) != TRUE)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
@@ -206,25 +215,25 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): length ARGUME
 stop(tempo.cat, call. = FALSE)
 }
 }
-if( ! (is.logical(prop) | length(prop) == 1 & any(is.na(prop)) != TRUE)){
+if( ! (is.logical(prop) | (length(prop) == 1 & any(is.na(prop)) != TRUE))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): prop ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else if(prop == TRUE){
 if( ! is.null(class)){
-if( ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
+if( ! any(class %in% c("vector", "numeric", "matrix", "array", "data.frame", "table"))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): class ARGUMENT CANNOT BE OTHER THAN NULL, \"vector\", \"numeric\", \"matrix\", \"array\", \"data.frame\", \"table\" IF prop ARGUMENT IS TRUE\n\n================\n\n") # not integer because prop
 stop(tempo.cat, call. = FALSE)
 }
 }
 if( ! is.null(mode)){
 if(mode != "numeric"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): mode ARGUMENT CANNOT BE OTHER THAN NULL OR \"numeric\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
 if( ! is.null(typeof)){
 if(typeof != "double"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT CANNOT BE OTHER THAN \"double\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): typeof ARGUMENT CANNOT BE OTHER THAN NULL OR \"double\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -263,26 +272,18 @@ if( ! is.null(options)){
 text <- ""
 if( ! all(data %in% options)){
 problem <- TRUE
-text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF ", data.name, " ARE: ", paste(unique(data[ ! (data %in% options)]), collapse = " "))
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF data ARE: ", paste(unique(data[ ! (data %in% options)]), collapse = " "))
 }
 if(all.options.in.data == TRUE){
 if( ! all(options %in% data)){
 problem <- TRUE
-if(text == ""){
-text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF ", data.name, " ARE: ", unique(data[ ! (data %in% options)]))
-}else{
-text <- paste0(text, "\n", ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF ", data.name, " ARE: ", unique(data[ ! (data %in% options)]))
-}
+text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE MADE OF ALL THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE MISSING ELEMENTS OF THE options ARGUMENT ARE: ",  paste(unique(options[ ! (options %in% data)]), collapse = " "))
 }
 }
 if( ! is.null(length)){
 if(length(data) != length){
 problem <- TRUE
-if(text == ""){
-text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE LENGTH OF ", data.name, " MUST BE ", length, " AND NOT ", length(data))
-}else{
-text <- paste0(text, "\n", ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE LENGTH OF ", data.name, " MUST BE ", length, " AND NOT ", length(data))
-}
+text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE LENGTH OF ", data.name, " MUST BE ", length, " AND NOT ", length(data))
 }
 }
 if(text == ""){
@@ -1251,15 +1252,15 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # WARNING
 # Limited to 43 arguments with at least 2 values each. The total number of arguments tested can be more if the additional arguments have a single value. The limit is due to nested "for" loops (https://stat.ethz.ch/pipermail/r-help/2008-March/157341.html), but it should not be a problem since the number of tests would be 2^43 > 8e12
 # ARGUMENTS
-# fun: character string indicating the name of the function tested
-# arg: vector of character string of arguments. At least arguments that do not have default values must be present in this vector
+# fun: character string indicating the name of the function tested (without brackets)
+# arg: vector of character strings of arguments of fun. At least arguments that do not have default values must be present in this vector
 # val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
-# thread.nb: numeric value indicating the number of available threads. NULL if no parallelization wanted
+# thread.nb: numeric value indicating the number of available threads. Write NULL if no parallelization wanted
 # print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
 # plot.fun: logical. Plot the plotting function tested for each test?
-# export: logical. Export the results into a .RData file and into a .txt file? If FALSE, return a list into the console (see below). BEWARE: systematically TRUE if thread.nb is not NULL. This means that when using parallelization, the results are systematically exported, not returned into the console
-# res.path: character string indicating the absolute pathway of folder where the txt results and pdfs, containing all the plots, will be saved. Several txt and pdf, one per thread, if parallelization
-# lib.path: character string indicating the absolute path of the required packages, if not in the default folders. Not considered if thread.nb is NULL
+# export: logical. Export the results into a .RData file and into a .txt file? If FALSE, return a list into the console (see below). BEWARE: will be automatically set to TRUE if thread.nb is not NULL. This means that when using parallelization, the results are systematically exported, not returned into the console
+# res.path: character string indicating the absolute pathway of folder where the txt results and pdfs, containing all the plots, will be saved. Several txt and pdf, one per thread, if parallelization. Ignored if export is FALSE. Must be specified if thread.nb is not NULL or if export is TRUE
+# lib.path: character string indicating the absolute path of the required packages, if not in the default folders
 # cute.path: character string indicating the absolute path of the cute.R file. Will be remove when cute will be a package. Not considered if thread.nb is NULL
 # REQUIRED PACKAGES
 # lubridate
@@ -1290,6 +1291,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
 # library(ggplot2) ; fun_test(fun = "geom_histogram", arg = c("data", "mapping"), val = list(x = list(data.frame(X = "a")), y = list(ggplot2::aes(x = X))), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\") # BEWARE: ggplot2::geom_histogram does not work
 # DEBUGGING
+# fun = "unique" ; arg = "x" ; val = list(x = list(1:10, c(1,1,2,8), NA)) ; thread.nb = NULL ; plot.fun = FALSE ; export = FALSE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 1 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; thread.nb = 2 ; plot.fun = FALSE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; print.count = 10 ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; print.count = 10 ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
@@ -1311,6 +1313,25 @@ stop(tempo.cat)
 }
 # end required function checking
 # argument primary checking
+# arg with no default values
+if(any(missing(fun) | missing(arg) | missing(val))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS fun, arg AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end arg with no default values
+# dealing with NA
+if(any(is.na(fun)) | any(is.na(arg)) | any(is.na(thread.nb)) | any(is.na(print.count)) | any(is.na(plot.fun)) | any(is.na(export)) | any(is.na(res.path)) | any(is.na(lib.path))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT val CAN HAVE NA VALUES\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NA
+# dealing with NULL
+if(is.null(fun) | is.null(arg) | is.null(val) | is.null(print.count) | is.null(plot.fun) | is.null(export)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS fun, arg, val, print.count, plot.fun AND export CANNOT BE NULL\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NULL
+# using fun_check()
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -1331,6 +1352,11 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = arg, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & length(arg) == 0){
+tempo.cat <- paste0("ERROR IN ", function.name, ": arg ARGUMENT CANNOT BE LENGTH 0")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
 tempo <- fun_check(data = val, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 for(i2 in 1:length(val)){
@@ -1389,6 +1415,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
+# end using fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
@@ -1535,7 +1562,11 @@ res <- character()
 count <- 0
 print.count.loop <- 0
 plot.count <- 0
-data <- data.frame(t((vector("character", length(arg)))), stringsAsFactors = FALSE)[-1, ]
+if(length(arg) == 1){
+data <- data.frame()
+}else{ # length(arg) == 0 already tested above
+data <- data.frame(t(vector("character", length(arg))), stringsAsFactors = FALSE)[-1, ] # -1 to remove the single row created and to have an empty data frame with length(arg) columns
+}
 code <- paste(
 loop.string, '
 count <- count + 1
