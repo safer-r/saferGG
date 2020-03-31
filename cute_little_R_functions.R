@@ -31,55 +31,55 @@
 
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_info() #### recover object information 8
-######## fun_head() #### head of the left or right of big 2D objects    10
-######## fun_tail() #### tail of the left or right of big 2D objects    11
+######## fun_info() #### recover object information 9
+######## fun_head() #### head of the left or right of big 2D objects    11
+######## fun_tail() #### tail of the left or right of big 2D objects    12
 ######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 13
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   17
-######## fun_comp_list() #### comparison of two lists   23
-######## fun_test() #### test combinations of argument values of a function 25
-################ Object modification    35
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  35
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 37
-######## fun_merge() #### merge the columns of two 2D objects, by common rows   40
-######## fun_round() #### rounding number if decimal present    44
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    46
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    47
-######## fun_mat_op() #### assemble several matrices with operation 50
-######## fun_mat_inv() #### return the inverse of a square matrix   52
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  53
-######## fun_permut() #### progressively breaks a vector order  57
-################ Graphics management    67
-######## fun_width() #### window width depending on classes to plot 67
-######## fun_open() #### open a GUI or pdf graphic window   69
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    72
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 76
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   81
-######## fun_close() #### close specific graphic windows    92
-################ Standard graphics  94
-######## fun_empty_graph() #### text to display for empty graphs    94
-################ gg graphics    96
-######## fun_gg_palette() #### ggplot2 default color palette    96
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  97
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  100
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   103
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 139
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    174
-######## fun_gg_prop() #### ggplot2 proportion barplot  223
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 223
-######## fun_gg_violin() #### ggplot2 violins   223
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  223
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  226
-######## fun_gg_empty_graph() #### text to display for empty graphs 239
-################ Graphic extraction 241
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 241
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   249
-################ Import 282
-######## fun_pack() #### check if R packages are present and import into the working environment    282
-######## fun_python_pack() #### check if python packages are present    283
-################ Print / Exporting results (text & tables)  286
-######## fun_report() #### print string or data object into output file 286
-######## fun_get_message() #### return messages of an expression (that can be exported) 288
+######## fun_comp_list() #### comparison of two lists   24
+######## fun_test() #### test combinations of argument values of a function 26
+################ Object modification    38
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  38
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 40
+######## fun_merge() #### merge the columns of two 2D objects, by common rows   43
+######## fun_round() #### rounding number if decimal present    47
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    49
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    50
+######## fun_mat_op() #### assemble several matrices with operation 53
+######## fun_mat_inv() #### return the inverse of a square matrix   55
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  56
+######## fun_permut() #### progressively breaks a vector order  60
+################ Graphics management    70
+######## fun_width() #### window width depending on classes to plot 71
+######## fun_open() #### open a GUI or pdf graphic window   72
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    76
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 80
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   85
+######## fun_close() #### close specific graphic windows    96
+################ Standard graphics  98
+######## fun_empty_graph() #### text to display for empty graphs    98
+################ gg graphics    99
+######## fun_gg_palette() #### ggplot2 default color palette    99
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  101
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  104
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   107
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 107
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    142
+######## fun_gg_prop() #### ggplot2 proportion barplot  190
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 191
+######## fun_gg_violin() #### ggplot2 violins   191
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  191
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  193
+######## fun_gg_empty_graph() #### text to display for empty graphs 207
+################ Graphic extraction 208
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 209
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   217
+################ Import 249
+######## fun_pack() #### check if R packages are present and import into the working environment    249
+######## fun_python_pack() #### check if python packages are present    251
+################ Print / Exporting results (text & tables)  254
+######## fun_report() #### print string or data object into output file 254
+######## fun_get_message() #### return messages of an expression (that can be exported) 256
 
 
 ################################ FUNCTIONS ################################
@@ -5751,9 +5751,6 @@ return(output)
 ######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required
 
 
-# Error message with empty classes. Test: obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; obs1[obs1$Group2 == "A", "Time"] <- NA, and the example below
-# In classic mode, no bar for box legend
-
 fun_gg_boxplot <- function(
 data1, 
 y, 
@@ -5872,8 +5869,8 @@ lib.path = NULL
 # grid: logical. Draw horizontal lines in the background to better read the box values? Not considered if article == FALSE
 # return: logical. Return the graph parameters?
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
-# add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL.
-# BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed between the two characters), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
+# add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
+# BEWARE: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
 # If the character string contains the "ggplot2::theme" string, then the article argument of fun_gg_boxplot() (see above) is ignored with a warning
 # Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
 # warn.print: logical. Print warnings at the end of the execution? No print if no warning messages. some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
@@ -6074,15 +6071,15 @@ tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = func
 tempo <- fun_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
 tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
+if(tempo$problem == FALSE & ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & ! grepl(pattern = "ggplot2::", add)){ #
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE & ! grepl(pattern = ")$", add)){ # check that the add string  finished by )
+}else if(tempo$problem == FALSE & ! grepl(pattern = ")\\s*$", add)){ # check that the add string  finished by )
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -6177,7 +6174,8 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 facet.categ <- NULL
 if( ! is.null(add)){
 facet.check <- TRUE
-tempo <- unlist(strsplit(x = add, split = "\\+")) #
+tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*ggplot2\\s*::")) #
+tempo <- sub(x = tempo, pattern = "^", replacement = "ggplot2::")
 if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap"))){
 tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap")])))
 facet.categ <- names(tempo1$params$facets)
