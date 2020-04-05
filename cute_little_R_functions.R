@@ -12,7 +12,7 @@
 # https://usethis.r-lib.org/ and usethat also
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
 # update graphic examples with good comment, as in barplot
-#is there any interest to be able to source elsewhere ? If yes, but may be interesting to put it into a new environement just above .GlobalEnv environment. See https://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
+#is there any interest to be able to source the cute file elsewhere than in global env? If yes, but may be interesting to put it into a new environement just above .GlobalEnv environment. See https://stackoverflow.com/questions/9002544/how-to-add-functions-in-an-existing-environment
 # Make a first round check for each function if required
 # Update all argument description, saying, character vector, etc.
 # check all the functions using fun_test
@@ -199,8 +199,8 @@ stop(tempo.cat, call. = FALSE)
 }
 }
 if( ! is.null(typeof)){
-if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin", "environment")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\"\n\n================\n\n")
+if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin", "environment", "S4")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(neg.values == FALSE & ! typeof %in% c("double", "integer")){
@@ -209,8 +209,8 @@ stop(tempo.cat, call. = FALSE)
 }
 }
 if( ! is.null(mode)){
-if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\"\n\n================\n\n")
+if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(neg.values == FALSE & mode != "numeric"){
@@ -335,7 +335,7 @@ text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE DECIMAL VALUES BETWE
 if(all(class(data) %in% "expression")){
 data <- as.character(data) # to evaluate the presence of NA
 }
-if(na.contain == FALSE & ! (class(data) %in% c("function", "environment"))){
+if(na.contain == FALSE & (mode(data) %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol"))){ # before it was ! (class(data) %in% c("function", "environment"))
 if(any(is.na(data)) == TRUE){ # not on the same line because when data is class envir or function , do not like that
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
@@ -5751,6 +5751,10 @@ return(output)
 ######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required
 
 
+# No need to change for log.
+# change article mode with and without article when facet are present
+
+
 fun_gg_boxplot <- function(
 data1, 
 y, 
@@ -9767,6 +9771,8 @@ stop(tempo.cat, call. = FALSE)
 fun_report <- function(data, output = "results.txt", path = "C:/Users/Gael/Desktop/", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = TRUE, sep = 2){
 # AIM
 # log file function: print a character string or a data object into a same output file
+# REQUIRED PACKAGES
+# utils
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS
@@ -9856,12 +9862,14 @@ cat(noquote(data), file= paste0(path, "/", output), append = no.overwrite)
 }else{
 cat(data, file= paste0(path, "/", output), append = no.overwrite)
 }
-}else{ # other (array, list, factor or vector with vector.cat = FALSE)
+}else if(all(mode(data) == "character")){ # characters (array, list, factor or vector with vector.cat = FALSE)
 if(noquote == TRUE){
 utils::capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
 }else{
 utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
 }
+}else{ # other object (S4 for instance, which do not like noquote()
+utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
 }
 sep.final <- paste0(rep("\n", sep), collapse = "")
 write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
@@ -9950,7 +9958,7 @@ if(any(class(tempo.error) %in% c("gg", "ggplot"))){
 tempo.error <- try(suppressMessages(suppressWarnings(ggplot2::ggplot_build(tempo.error))), silent = TRUE)[1]
 }
 if(exists("tempo.error", inherit = FALSE) == TRUE){ # inherit = FALSE avoid the portee lexical and thus the declared word
-if( ! (all(class(tempo.error) == "try-error") & any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR")))){ # deal with NULL. Old code : if((length(tempo.error) > 0 & ! any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) | (length(tempo.error) == 0) ){ but problem when tempo.error is a list but added this did not work: | ! all(class(tempo.error) == "character")
+if( ! all(class(tempo.error) == "try-error")){ # deal with NULL and S4 objects. Old code:  ! (all(class(tempo.error) == "try-error") & any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) but problem with S4 objects. Old code : if((length(tempo.error) > 0 & ! any(grepl(x = tempo.error, pattern = "^Error|^error|^ERROR"))) | (length(tempo.error) == 0) ){ but problem when tempo.error is a list but added this did not work: | ! all(class(tempo.error) == "character")
 tempo.error <- NULL
 }
 }else{
