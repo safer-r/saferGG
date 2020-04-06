@@ -1250,7 +1250,7 @@ return(output)
 # add traceback https://stackoverflow.com/questions/47414119/how-to-read-a-traceback-in-r
 
 # Check OK: clear to go Apollo
-fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun = FALSE, export = FALSE, res.path = NULL, lib.path = NULL, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
+fun_test <- function(fun, arg, val, expect.error = NULL, thread.nb = NULL, print.count = 10, plot.fun = FALSE, export = FALSE, res.path = NULL, lib.path = NULL, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
 # AIM
 # test combinations of argument values of a function
 # WARNING
@@ -1259,6 +1259,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # fun: character string indicating the name of the function tested (without brackets)
 # arg: vector of character strings of arguments of fun. At least arguments that do not have default values must be present in this vector
 # val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
+# expect.error: list of exactly the same structure as val argument, but containing FALSE or TRUE, depending on whether error is expected (TRUE) or not (FALSE) of each corresponding value of val. Ignored if NULL
 # thread.nb: numeric value indicating the number of available threads. Write NULL if no parallelization wanted
 # print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
 # plot.fun: logical. Plot the plotting function tested for each test?
@@ -1281,6 +1282,7 @@ fun_test <- function(fun, arg, val, thread.nb = NULL, print.count = 10, plot.fun
 # the different values tested, named by arguments
 # $kind: a vector of character strings indicating the kind of test result: either "ERROR", or "WARNING", or "OK"
 # $problem: a logical vector indicating if error or not
+# $expect.error: optional logical vector indicating the expected error specified in the expect.error argument
 # $message: either NULL if $kind is always "OK", or the messages
 # $instruction: the initial instruction
 # $sys.info: system and packages info
@@ -3662,7 +3664,11 @@ inv = "identity",
 n = n
 ), 
 limits = lim
-))$layout$panel_params[[1]]$y.major_source # pretty() alone is not appropriate: tempo.pret <-  pretty(seq(lim[1] ,lim[2], length.out = n)) ; tempo.pret[tempo.pret > = lim[1] & tempo.pret < = lim[2]]
+))$layout$panel_params[[1]]$y$breaks # pretty() alone is not appropriate: tempo.pret <-  pretty(seq(lim[1] ,lim[2], length.out = n)) ; tempo.pret[tempo.pret > = lim[1] & tempo.pret < = lim[2]]. # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks
+if( ! is.null(attributes(output))){ # layout$panel_params[[1]]$y$breaks can be characters (labels of the axis). In that case, it has attributes that corresponds to positions
+output <- unlist(attributes(output))
+}
+output <- output[ ! is.na(output)]
 }else if(kind == "strict"){
 output <- fun_round(seq(lim[1] ,lim[2], length.out = n), 2)
 }else if(kind == "strict.cl"){
@@ -4629,7 +4635,8 @@ raster.dpi = raster.dpi,
 
 # No need to change for log.
 # change article mode with and without article when facet are present
-
+# https://cran.r-project.org/web/packages/lemon/vignettes/facet-rep-labels.html
+# facet title in bold
 
 fun_gg_boxplot <- function(
 data1, 
@@ -4681,7 +4688,7 @@ grid = FALSE,
 return = FALSE, 
 plot = TRUE, 
 add = NULL, 
-warn.print = TRUE, 
+warn.print = FALSE, 
 lib.path = NULL
 ){
 # AIM
@@ -4955,8 +4962,8 @@ if(tempo$problem == FALSE & ! grepl(pattern = "^\\s*\\+", add)){ # check that th
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE & ! grepl(pattern = "ggplot2::", add)){ #
-tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+}else if(tempo$problem == FALSE & ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & ! grepl(pattern = ")\\s*$", add)){ # check that the add string  finished by )
@@ -5054,17 +5061,19 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 facet.categ <- NULL
 if( ! is.null(add)){
 facet.check <- TRUE
-tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*ggplot2\\s*::")) #
-tempo <- sub(x = tempo, pattern = "^", replacement = "ggplot2::")
-if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap"))){
-tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap")])))
+tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
+tempo <- sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
+tempo <- sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
+tempo <- sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
+if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"))){
+tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
 facet.categ <- names(tempo1$params$facets)
-tempo.text <- "facet_wrap"
+tempo.text <- "facet_wrap OR facet_rep_wrap"
 facet.check <- FALSE
-}else if(grepl(x = add, pattern = "ggplot2::facet_grid")){
-tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_grid")])))
+}else if(grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
+tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
 facet.categ <- c(names(tempo1$params$rows), names(tempo1$params$cols))
-tempo.text <- "facet_grid"
+tempo.text <- "facet_grid OR facet_rep_grid"
 facet.check <- FALSE
 }
 if(facet.check == FALSE & ! all(facet.categ %in% names(data1))){ # BEWARE: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
@@ -5663,7 +5672,7 @@ stop(tempo.cat)
 # constant part
 tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::ggplot()", if(is.null(add)){""}else{add})))) # add is directly put here to deal ith additional variable of data, like when using fact_grid. No problem if add is a theme, will be dealt below
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::ggplot()", if(is.null(add)){""}else{add})))) # add is directly put here to deal with additional variable of data, like when using facet_grid. No problem if add is a theme, will be dealt below
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xlab(if(is.null(x.lab)){categ[1]}else{x.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(y.lab)){y}else{y.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
@@ -6214,7 +6223,8 @@ tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.nam
 if(is.null(y.tick.nb) & y.log != "no"){ # integer main ticks for log2 and log10
 tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim, na.rm = TRUE)) + 1)
 }else{
-tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo.coord$y.major_source), y.tick.nb))
+tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
+tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks
 }
 # for the ggplot2 bug with y.log, this does not work: eval(parse(text = ifelse(vertical == FALSE & y.log == "log10", "ggplot2::scale_x_continuous", "ggplot2::scale_y_continuous")))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
@@ -6263,7 +6273,7 @@ coord.names <- c(coord.names, "y.second.tick.positions")
 }else if(( ! is.null(y.inter.tick.nb)) & y.log == "no"){
 # if(y.inter.tick.nb > 0){ #inactivated because already checked before
 if(vertical == TRUE){
-ticks.pos <- suppressWarnings(as.numeric(tempo.coord$y.labels)) # too difficult to predict the behavior of tempo.coord$x.major_source depending on y.lim neg or not, inv or not
+ticks.pos <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))} # layout$panel_params[[1]]$y$breaks can be characters (labels of the axis). In that case, it has attributes that corresponds to positions # code before ggplot2 3.3.0: suppressWarnings(as.numeric(tempo.coord$y.labels)) # too difficult to predict the behavior of tempo.coord$x.major_source depending on y.lim neg or not, inv or not
 if(any(is.na(ticks.pos))){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": CODE INCONSISTENCY 12\n\n============\n\n")
 stop(tempo.cat)
@@ -6274,7 +6284,7 @@ minor.tick.pos <- seq(ticks.pos[1] - tick.dist, ticks.pos[length(ticks.pos)] + t
 minor.tick.pos <- minor.tick.pos[minor.tick.pos >= min(y.lim) & minor.tick.pos <= max(y.lim)]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", y = minor.tick.pos, yend = minor.tick.pos, x = tempo.coord$x.range[1], xend = tempo.coord$x.range[1] + diff(tempo.coord$x.range) / 80))
 }else{
-ticks.pos  <- suppressWarnings(as.numeric(tempo.coord$x.labels))# too difficult to predict the behavior of tempo.coord$x.major_source depending on y.lim neg or not, inv or not
+ticks.pos  <- if(is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{unlist(attributes(tempo.coord$x$breaks))} # layout$panel_params[[1]]$y$breaks can be characters (labels of the axis). In that case, it has attributes that corresponds to positions # code before ggplot2 3.3.0: suppressWarnings(as.numeric(tempo.coord$x.labels))# too difficult to predict the behavior of tempo.coord$x.major_source depending on y.lim neg or not, inv or not
 if(any(is.na(ticks.pos))){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": CODE INCONSISTENCY 13\n\n============\n\n")
 stop(tempo.cat)
@@ -6340,7 +6350,24 @@ stop(tempo.cat)
 }else{
 names(output$data) <- coord.names
 }
-output <- list(data = data1, stat = stat, removed.row.nb = removed.row.nb, removed.rows = removed.rows, plot = c(output$data, y.second.tick.values = list(y.second.tick.values)), panel = facet.categ, axes = output$layout$panel_params[[1]], warn = paste0("\n", warn, "\n\n"))
+tempo <- output$layout$panel_params[[1]]
+output <- list(
+data = data1, 
+stat = stat, 
+removed.row.nb = removed.row.nb, 
+removed.rows = removed.rows, 
+plot = c(output$data, y.second.tick.values = list(y.second.tick.values)), 
+panel = facet.categ, 
+axes = list(
+x.range = tempo$x.range, 
+x.labels = tempo$x$scale$get_labels(), 
+x.positions = if(is.null(attributes(tempo$x$breaks))){tempo$x$breaks}else{unlist(attributes(tempo$x$breaks))}, 
+y.range = tempo$y.range, 
+y.labels = tempo$y$scale$get_labels(), 
+y.positions = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{unlist(attributes(tempo$y$breaks))}
+), 
+warn = paste0("\n", warn, "\n\n")
+)
 return(output)
 }
 # end outputs
@@ -8432,6 +8459,7 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
+
 
 
 
