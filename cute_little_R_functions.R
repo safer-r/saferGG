@@ -6972,16 +6972,10 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
-
-# add legend width. Ok with facet ?
+# add legend width from scatter. Ok with facet ?
 # add modif of warn from scatter (remove all FROM and put it at the begining)
 # transfert the 2nd tick part to scatter
-# #  problem of y-axis label disappearance with y.lim decreasing (indicated in blue)
+# may be add a new arg return.ggplot = TRUE
 
 
 fun_gg_boxplot <- function(
@@ -8574,20 +8568,18 @@ stop(tempo.cat)
 
 
 # y scale management (cannot be before dot plot management)
-if(vertical == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) # inactivated because trans = ifelse(diff(y.lim) < 0, "reverse", "identity") is the same # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
-}else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
-
-}
 # secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
-tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
+tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::ylim(y.lim)}else{ggplot2::coord_flip(ylim = y.lim)}'))))$layout$panel_params[[1]]
 # y.inter.tick.positions: coordinates of secondary ticks (only if y.inter.tick.nb argument is non NULL or if y.log argument is different from "no")
 if(y.log != "no"){ # integer main ticks for log2 and log10
 tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim, na.rm = TRUE)) + 1)
 }else{
 tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
-tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks
+if(all(is.na(tempo))){
+tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": ONLY NA IN tempo.coord$y$breaks\n\n============\n\n")
+stop(tempo.cat)
+}
+tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks. If fact: n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) replaced by n = ifelse(is.null(y.tick.nb), 4, y.tick.nb))
 }
 y.inter.tick.values <- NULL
 y.inter.tick.pos <- NULL
@@ -8622,16 +8614,22 @@ breaks = tempo.scale,
 minor_breaks = y.inter.tick.pos, 
 labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat)}, 
 expand = c(0, 0), # remove space after after axis limits
-limits = NULL, # indicate that limits must correspond to data limits
-trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() # create the problem of y-axis label disappearance with y.lim decreasing
+limits = sort(y.lim) # NA indicate that limits must correspond to data limits but ylim() already used
+# trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
 ))
+if(vertical == TRUE){
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(y.lim)) # coord_cartesian(ylim = y.lim)) not used because bug -> y-axis label disappearance with y.lim decreasing # clip = "off" to have secondary ticks outside plot region does not work
+}else{
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
+
+}
 # end y scale  management (cannot be before dot plot management)
 
 
 
 
 # drawing
-fin.plot <- eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))
+fin.plot <- suppressMessages(suppressWarnings(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
 if(plot == TRUE){
 # following lines inactivated because of problem in warn.recov and message.recov
 # assign("env_fun_get_message", new.env())
@@ -8693,16 +8691,13 @@ y.labels = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{tempo$y$s
 y.positions = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{unlist(attributes(tempo$y$breaks))}
 ), 
 warn = paste0("\n", warn, "\n\n"), 
-ggplot = fin.plot
+ggplot = fin.plot # fin.plot plots the graph if return == TRUE
 )
-return(output)
+return(tempo <- output)
 }
 # end outputs
 # end main code
 }
-
-
-
 
 
 
