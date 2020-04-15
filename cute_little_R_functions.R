@@ -6978,19 +6978,11 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
-
-
-
-
-
 # add legend width. Ok with facet ?
 # add modif of warn from scatter (remove all FROM and put it at the begining)
 # transfert the 2nd tick part to scatter
+# #  problem of y-axis label disappearance with y.lim decreasing (indicated in blue)
+
 
 fun_gg_boxplot <- function(
 data1, 
@@ -7152,6 +7144,7 @@ lib.path = NULL
 # $panel: the variable names used for the panels (NULL if no panels). BEWARE: NA can be present according to ggplot2 upgrade to v3.3.0
 # $axes: the x-axis and y-axis info
 # $warn: the warning messages. Use cat() for proper display. NULL if no warning. BEWARE: some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
+# $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...)
 # EXAMPLE
 # obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"),box.fill = FALSE, box.width = 0.5, box.space = 0.1, box.line.size = 0.5, box.notch = FALSE, box.alpha = 1, box.mean = TRUE, box.whisker.kind = "std", box.whisker.width = 0, dot.color = "black", dot.categ = NULL, dot.categ.class.order = NULL, dot.categ.legend.name = NULL, dot.tidy = TRUE, dot.tidy.bin.nb = 50, dot.jitter = 0.5, dot.size = 3, dot.alpha = 0.5, dot.border.size = 0.5, dot.border.color = NULL, x.lab = NULL, y.lab = NULL, y.lim = NULL, y.log = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0.05, stat.disp = NULL, stat.disp.mean = FALSE, stat.size = 4, stat.dist = 2, vertical = TRUE, text.size = 12, text.angle = 0, title = "", title.text.size = 8, article = TRUE, grid = FALSE, return = FALSE, plot = TRUE, add = NULL, warn.print = TRUE, lib.path = NULL)
 # DEBUGGING
@@ -8582,14 +8575,15 @@ stop(tempo.cat)
 
 # y scale management (cannot be before dot plot management)
 if(vertical == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) # inactivated because trans = ifelse(diff(y.lim) < 0, "reverse", "identity") is the same # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
 }else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
+
 }
 # secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
 # y.inter.tick.positions: coordinates of secondary ticks (only if y.inter.tick.nb argument is non NULL or if y.log argument is different from "no")
-if(is.null(y.tick.nb) & y.log != "no"){ # integer main ticks for log2 and log10
+if(y.log != "no"){ # integer main ticks for log2 and log10
 tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim, na.rm = TRUE)) + 1)
 }else{
 tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
@@ -8628,8 +8622,8 @@ breaks = tempo.scale,
 minor_breaks = y.inter.tick.pos, 
 labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat)}, 
 expand = c(0, 0), # remove space after after axis limits
-limits = NA, # indicate that limits must correspond to data limits
-trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse()
+limits = NULL, # indicate that limits must correspond to data limits
+trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() # create the problem of y-axis label disappearance with y.lim decreasing
 ))
 # end y scale  management (cannot be before dot plot management)
 
@@ -8674,21 +8668,21 @@ if(warn.print == TRUE & ! is.null(warn)){
 warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
 if(return == TRUE){
-output <- ggplot2::ggplot_build(fin.plot)
-output$data <- output$data[-1] # remove the first data because corresponds to the initial empty boxplot
-if(length(output$data) != length(coord.names)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, ": length(output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
+tempo.output <- ggplot2::ggplot_build(fin.plot)
+tempo.output$data <- tempo.output$data[-1] # remove the first data because corresponds to the initial empty boxplot
+if(length(tempo.output$data) != length(coord.names)){
+tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, ": length(tempo.output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }else{
-names(output$data) <- coord.names
+names(tempo.output$data) <- coord.names
 }
-tempo <- output$layout$panel_params[[1]]
+tempo <- tempo.output$layout$panel_params[[1]]
 output <- list(
 data = data1, 
 stat = stat, 
 removed.row.nb = removed.row.nb, 
 removed.rows = removed.rows, 
-plot = c(output$data, y.inter.tick.values = list(y.inter.tick.values)), 
+plot = c(tempo.output$data, y.inter.tick.values = list(y.inter.tick.values)), 
 panel = facet.categ, 
 axes = list(
 x.range = tempo$x.range, 
@@ -8698,13 +8692,17 @@ y.range = tempo$y.range,
 y.labels = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{tempo$y$scale$get_labels()}, 
 y.positions = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{unlist(attributes(tempo$y$breaks))}
 ), 
-warn = paste0("\n", warn, "\n\n")
+warn = paste0("\n", warn, "\n\n"), 
+ggplot = fin.plot
 )
 return(output)
 }
 # end outputs
 # end main code
 }
+
+
+
 
 
 
