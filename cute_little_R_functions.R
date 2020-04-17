@@ -6972,6 +6972,19 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 # add legend width from scatter. Ok with facet ?
 # add modif of warn from scatter (remove all FROM and put it at the begining)
 # transfert the 2nd tick part to scatter
@@ -7343,6 +7356,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y ARGUMENT MUST BE A COLUMN N
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }else{
 tempo <- fun_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+if(tempo$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": y ARGUMENT MUST BE NUMERIC COLUMN IN data1")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
 }
 if(length(categ) > 2){
 tempo.cat <- paste0("ERROR IN ", function.name, ": categ ARGUMENT CANNOT HAVE MORE THAN 2 COLUMN NAMES OF data1")
@@ -8568,7 +8585,11 @@ stop(tempo.cat)
 
 
 # y scale management (cannot be before dot plot management)
-# secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
+# the rescaling aspect is complicated and not intuitive. See:
+# explaination: https://github.com/tidyverse/ggplot2/issues/3948
+# the oob argument of scale_y_continuous() https://ggplot2.tidyverse.org/reference/scale_continuous.html
+# see also https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
+# secondary ticks
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::ylim(y.lim)}else{ggplot2::coord_flip(ylim = y.lim)}'))))$layout$panel_params[[1]]
 # y.inter.tick.positions: coordinates of secondary ticks (only if y.inter.tick.nb argument is non NULL or if y.log argument is different from "no")
 if(y.log != "no"){ # integer main ticks for log2 and log10
@@ -8607,7 +8628,7 @@ xend = if(vertical == TRUE){tempo.coord$x.range[1] + diff(tempo.coord$x.range) /
 ))
 coord.names <- c(coord.names, "y.inter.tick.positions")
 }
-# end secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
+# end secondary ticks
 # for the ggplot2 bug with y.log, this does not work: eval(parse(text = ifelse(vertical == FALSE & y.log == "log10", "ggplot2::scale_x_continuous", "ggplot2::scale_y_continuous")))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
