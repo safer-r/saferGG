@@ -6981,14 +6981,6 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
-
-
-
 # add legend width from scatter. Ok with facet ?
 # transfert the 2nd tick part to scatter
 
@@ -7989,7 +7981,9 @@ if( ! identical(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ]$BOX, uniqu
 tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\n(tempo.mean$BOX, tempo.mean$PANEL) AND (dot.coord$group, dot.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
 stop(tempo.cat)
 }else{
-tempo.mean <- data.frame(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ], unique(dot.coord[order(dot.coord$group, dot.coord$PANEL), c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ}), drop = FALSE]))
+tempo <- unique(dot.coord[order(dot.coord$group, dot.coord$PANEL), c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ}), drop = FALSE])
+# names(tempo) <- paste0(names(tempo), ".mean")
+tempo.mean <- data.frame(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ], tempo)
 }
 }
 # at that stage, categ color and dot color are correctly attributed in data1, box.coord and dot.coord
@@ -8145,6 +8139,10 @@ if( ! identical(tempo.mean$BOX, box.coord$group)){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\ntempo.mean$BOX AND box.coord$group DO NOT HAVE THE SAME VALUE ORDER\n\n============\n\n")
 stop(tempo.cat)
 }else{
+tempo <- c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ})
+for(i3 in tempo){
+names(tempo.mean)[names(tempo.mean) == i3] <- paste0(i3, ".mean")
+}
 box.coord <- data.frame(box.coord, tempo.mean)
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") MEAN VALUES INSTEAD OF MEDIAN VALUES DISPLAYED")
@@ -8558,45 +8556,32 @@ stop(tempo.cat)
 }
 # end stat coordinates
 # stat display
-if(is.null(dot.color)){ # text just above boxs
 # performed twice: first for y values >=0, then y values < 0, because only a single value allowed for hjust anf vjust
+if(stat.disp.mean == FALSE){
+tempo.log.high <- if(diff(y.lim) > 0){box.coord$middle >= 0}else{box.coord$middle < 0}
+tempo.log.low <- if(diff(y.lim) > 0){box.coord$middle < 0}else{box.coord$middle >= 0}
+}else{
+tempo.log.high <- if(diff(y.lim) > 0){box.coord$MEAN >= 0}else{box.coord$MEAN < 0}
+tempo.log.low <- if(diff(y.lim) > 0){box.coord$MEAN < 0}else{box.coord$MEAN >= 0}
+}
+if(any(tempo.log.high) == TRUE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
 geom = "text", 
-x = box.coord$x[box.coord$middle >= 0], 
-y = box.coord$middle[box.coord$middle >= 0], 
-label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[box.coord$middle >= 0]}else{fun_round(box.coord$MEAN, 2)[box.coord$MEAN >= 0]}, 
+x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.high], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxs or dots
+y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.high, if(is.null(dot.color)){"middle"}else{"text.max.pos"}], 
+label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[tempo.log.high]}else{fun_round(box.coord$MEAN, 2)[tempo.log.high]}, 
 size = stat.size, 
 color = "black", 
 hjust = ifelse(vertical == TRUE, 0.5, 0.5 - stat.dist), 
 vjust = ifelse(vertical == TRUE, 0.5 - stat.dist, 0.5)
 )) # beware: no need of order() for labels because box.coord$x set the order
+}
+if(any(tempo.log.low) == TRUE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
 geom = "text", 
-x = box.coord$x[box.coord$middle < 0], 
-y = box.coord$middle[box.coord$middle < 0], 
-label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[box.coord$middle < 0]}else{fun_round(box.coord$MEAN, 2)[box.coord$MEAN < 0]}, 
-size = stat.size, 
-color = "black", 
-hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
-vjust = ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5)
-)) # beware: no need of order() for labels because box.coord$x set the order
-}else{ # text just above error boxs or dots
-# I checked that text.coord and box.coord have the same x and group column content. Thus, ok to use them together
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
-geom = "text", 
-x = text.coord$x[box.coord$middle >= 0], 
-y = text.coord$text.max.pos[box.coord$middle >= 0], 
-label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[box.coord$middle >= 0]}else{fun_round(box.coord$MEAN, 2)[box.coord$MEAN >= 0]}, 
-size = stat.size, 
-color = "black", 
-hjust = ifelse(vertical == TRUE, 0.5, 0.5 - stat.dist), 
-vjust = ifelse(vertical == TRUE, 0.5 - stat.dist, 0.5)
-)) # beware: no need of order() for labels because box.coord$x set the order
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
-geom = "text", 
-x = text.coord$x[box.coord$middle < 0], 
-y = text.coord$text.min.pos[box.coord$middle < 0], 
-label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[box.coord$middle < 0]}else{fun_round(box.coord$MEAN, 2)[box.coord$MEAN < 0]}, 
+x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.low], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxs or dots
+y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.low, if(is.null(dot.color)){"middle"}else{"text.min.pos"}], 
+label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[tempo.log.low]}else{fun_round(box.coord$MEAN, 2)[tempo.log.low]}, 
 size = stat.size, 
 color = "black", 
 hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
