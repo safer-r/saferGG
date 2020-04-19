@@ -6981,6 +6981,16 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+
+
+
+
+
+
+
+
+
 # add legend width from scatter. Ok with facet ?
 # transfert the 2nd tick part to scatter
 
@@ -7915,9 +7925,9 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2\n\n============\n\n")
 stop(tempo.cat)
 }
-tempo <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
-dot.coord <- tempo$data[[1]]
-ini.box.coord <- tempo$data[[2]]
+tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+dot.coord <- tempo.graph.info.ini$data[[1]]
+ini.box.coord <- tempo.graph.info.ini$data[[2]]
 tempo.mean <- aggregate(x = dot.coord$y, by = list(dot.coord$group, dot.coord$PANEL), FUN = mean, na.rm = TRUE)
 names(tempo.mean)[names(tempo.mean) == "x"] <- "MEAN"
 names(tempo.mean)[names(tempo.mean) == "Group.1"] <- "BOX"
@@ -8605,7 +8615,7 @@ stop(tempo.cat)
 # the oob argument of scale_y_continuous() https://ggplot2.tidyverse.org/reference/scale_continuous.html
 # see also https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
 # secondary ticks
-tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::ylim(y.lim)}else{ggplot2::coord_flip(ylim = y.lim)}'))))$layout$panel_params[[1]]
+tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::coord_cartesian(ylim = if(diff(y.lim) < 0){rev(y.lim)}else{y.lim})}else{ggplot2::coord_flip(ylim = y.lim)}'))))$layout$panel_params[[1]]
 # y.inter.tick.positions: coordinates of secondary ticks (only if y.inter.tick.nb argument is non NULL or if y.log argument is different from "no")
 if(y.log != "no"){ # integer main ticks for log2 and log10
 tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim, na.rm = TRUE)) + 1)
@@ -8650,11 +8660,12 @@ breaks = tempo.scale,
 minor_breaks = y.inter.tick.pos, 
 labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity",  scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat)}, 
 expand = c(0, 0), # remove space after after axis limits
-limits = sort(y.lim) # NA indicate that limits must correspond to data limits but ylim() already used
-# trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
+limits = sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
+oob = scales::rescale_none, 
+trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
 ))
 if(vertical == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(y.lim)) # coord_cartesian(ylim = y.lim)) not used because bug -> y-axis label disappearance with y.lim decreasing # clip = "off" to have secondary ticks outside plot region does not work
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) #problem of ggplot2::ylim() is taht it redraw new breaks # coord_cartesian(ylim = y.lim)) not used because bug -> y-axis label disappearance with y.lim decreasing # clip = "off" to have secondary ticks outside plot region does not work
 }else{
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
 
@@ -8735,6 +8746,7 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
+
 
 
 
