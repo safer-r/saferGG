@@ -409,15 +409,21 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
-match.list <- vector("list", length = length(search()))
-names(match.list) <- search()
-for(i0 in 2:length(search())){ # 2 to avoid global env
-if(any(ls(pos = i0, all.names = TRUE) %in% ls(name = parent.frame(n = pos), all.names = TRUE))){
-match.list[i0] <- list(ls(pos = i0, all.names = TRUE)[ls(pos = i0, all.names = TRUE) %in% ls(name = parent.frame(n = pos), all.names = TRUE)])
+# match.list <- vector("list", length = (length(sys.calls()) - 1 + length(search()) + ifelse(length(sys.calls()) == 1, -1, 0))) # match.list is a list of all the environment tested (local of functions and R envs), length(sys.calls()) - 1 to remove the level of the fun_secu() function, sys.calls() giving all the names of the imbricated functions, including fun_secu, ifelse(length(sys.calls()) == 1, -1, 0) to remove Global env if this one is tested
+match.list <- vector("list", length = length(sys.calls()) + length(search())) # match.list is a list of all the environment tested (local of functions and R envs), length(sys.calls()) - 1 to remove the level of the fun_secu() function, sys.calls() giving all the names of the imbricated functions, including fun_secu, ifelse(length(sys.calls()) == 1, -1, 0) to remove Global env if this one is tested
+ls.names <- c(rev(as.character(unlist(sys.calls()))), search()) # names of the functions + names of the search() environments
+ls.input <- c(rev(sys.frames()), as.list(search())) # environements of the functions + names of the search() environments
+names(match.list) <- ls.names # search()[-1] to remove Global env if this one is tested (length(sys.calls()) == 1 means only fun_secu() then R envs)
+match.list <- match.list[-c(1:(pos + 1))] # because we check only above
+ls.tested <- ls.input[[pos + 1]]
+ls.input <- ls.input[-c(1:(pos + 1))]
+for(i1 in 1:length(match.list)){
+if(any(ls(name = ls.input[[i1]], all.names = TRUE) %in% ls(name = ls.tested, all.names = TRUE))){
+match.list[i1] <- list(ls(name = ls.input[[i1]], all.names = TRUE)[ls(name = ls.input[[i1]], all.names = TRUE) %in% ls(name = ls.tested, all.names = TRUE)])
 }
 }
 if( ! all(sapply(match.list, FUN = is.null))){
-output <- paste0("SOME VARIABLES ", ifelse(is.null(name), "OF THE CHECKED ENVIRONMENT", paste0("OF ", name)), " ARE ALSO PRESENT IN PACKAGES:\n", paste0(names(match.list[ ! sapply(match.list, FUN = is.null)]), ": ", sapply(match.list[ ! sapply(match.list, FUN = is.null)], FUN = paste0, collapse = " "), collapse = "\n"))
+output <- paste0("SOME VARIABLES ", ifelse(is.null(name), "OF THE CHECKED ENVIRONMENT", paste0("OF ", name)), " ARE ALSO PRESENT IN :\n", paste0(names(match.list[ ! sapply(match.list, FUN = is.null)]), ": ", sapply(match.list[ ! sapply(match.list, FUN = is.null)], FUN = paste0, collapse = " "), collapse = "\n"))
 }else{
 output <- NULL
 }
@@ -7026,6 +7032,9 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
+
+
+
 
 
 
