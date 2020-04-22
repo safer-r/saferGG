@@ -31,55 +31,56 @@
 
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_info() #### recover object information 9
-######## fun_head() #### head of the left or right of big 2D objects    11
-######## fun_tail() #### tail of the left or right of big 2D objects    12
-######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 13
-######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   17
-######## fun_comp_list() #### comparison of two lists   24
-######## fun_test() #### test combinations of argument values of a function 26
-################ Object modification    40
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  40
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 42
-######## fun_merge() #### merge the columns of two 2D objects, by common rows   45
-######## fun_round() #### rounding number if decimal present    49
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    51
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    52
-######## fun_mat_op() #### assemble several matrices with operation 55
-######## fun_mat_inv() #### return the inverse of a square matrix   57
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  58
-######## fun_permut() #### progressively breaks a vector order  62
-################ Graphics management    72
-######## fun_width() #### window width depending on classes to plot 73
-######## fun_open() #### open a GUI or pdf graphic window   74
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    78
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 82
-######## fun_inter_ticks() #### define coordinates of secondary ticks for log scales    87
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   89
-######## fun_close() #### close specific graphic windows    101
-################ Standard graphics  102
-######## fun_empty_graph() #### text to display for empty graphs    102
-################ gg graphics    104
-######## fun_gg_palette() #### ggplot2 default color palette    104
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  106
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  108
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   112
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 112
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    112
-######## fun_gg_prop() #### ggplot2 proportion barplot  112
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 112
-######## fun_gg_violin() #### ggplot2 violins   112
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  112
-######## fun_gg_empty_graph() #### text to display for empty graphs 112
-################ Graphic extraction 114
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 114
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   122
-################ Import 155
-######## fun_pack() #### check if R packages are present and import into the working environment    155
-######## fun_python_pack() #### check if python packages are present    156
-################ Print / Exporting results (text & tables)  159
-######## fun_report() #### print string or data object into output file 159
-######## fun_get_message() #### return messages of an expression (that can be exported) 162
+######## fun_secu() #### verif that local variables are not present in envs 9
+######## fun_info() #### recover object information 11
+######## fun_head() #### head of the left or right of big 2D objects    12
+######## fun_tail() #### tail of the left or right of big 2D objects    14
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 15
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   19
+######## fun_comp_list() #### comparison of two lists   25
+######## fun_test() #### test combinations of argument values of a function 27
+################ Object modification    42
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  42
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 43
+######## fun_merge() #### merge the columns of two 2D objects, by common rows   46
+######## fun_round() #### rounding number if decimal present    50
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    52
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    53
+######## fun_mat_op() #### assemble several matrices with operation 56
+######## fun_mat_inv() #### return the inverse of a square matrix   58
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  60
+######## fun_permut() #### progressively breaks a vector order  63
+################ Graphics management    74
+######## fun_width() #### window width depending on classes to plot 74
+######## fun_open() #### open a GUI or pdf graphic window   75
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    79
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 83
+######## fun_inter_ticks() #### define coordinates of secondary ticks   88
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   91
+######## fun_close() #### close specific graphic windows    103
+################ Standard graphics  105
+######## fun_empty_graph() #### text to display for empty graphs    105
+################ gg graphics    106
+######## fun_gg_palette() #### ggplot2 default color palette    107
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  108
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  111
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   114
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 114
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    114
+######## fun_gg_prop() #### ggplot2 proportion barplot  114
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 114
+######## fun_gg_violin() #### ggplot2 violins   114
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  114
+######## fun_gg_empty_graph() #### text to display for empty graphs 114
+################ Graphic extraction 116
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 116
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   124
+################ Import 157
+######## fun_pack() #### check if R packages are present and import into the working environment    157
+######## fun_python_pack() #### check if python packages are present    159
+################ Print / Exporting results (text & tables)  161
+######## fun_report() #### print string or data object into output file 161
+######## fun_get_message() #### return messages of an expression (that can be exported) 164
 
 
 ################################ FUNCTIONS ################################
@@ -361,6 +362,65 @@ if(print == TRUE & problem == TRUE){
 cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
 }
 output <- list(problem = problem, text = text, fun.name = data.name)
+return(output)
+}
+
+######## fun_secu() #### verif that local variables are not present in envs
+
+
+fun_secu <- function(pos = 1, name = NULL){
+# AIM
+# verif that local variables are not present in other environments, in order to avoid scope preference usage. The fun_secu() function checks by default the parent environment. This means that when used inside a function, it checks the local environment of this function. When used in the Global environment, it would check this environment
+# REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
+# fun_check()
+# ARGUMENTS
+# pos: single integer indicating the position of the environment checked (argument n of parent.frame())
+# name: single character string indicating the name of the function checked
+# RETURN
+# a character string of the local variables that match variables in the different environments of the R scope, or NULL if no match
+# EXAMPLES
+# fun_secu()
+# fun_secu(pos = 2)
+# mean <- 0 ; fun1 <- function(){sd <- 1 ; fun_secu(name = as.character(sys.calls()[[length(sys.calls())]]))} ; fun2 <- function(){cor <- 2 ; fun1()} ; fun1() ; fun2() ; rm(mean) # sys.calls() gives the the function name at top stack of the imbricated functions, sys.calls()[[length(sys.calls())]] the name of the just above function. This can also been used for the above function: as.character(sys.call(1))
+# test.pos <- 2 ; mean <- 0 ; fun1 <- function(){sd <- 1 ; fun_secu(pos = test.pos, name = if(length(sys.calls()) >= test.pos){as.character(sys.calls()[[length(sys.calls()) + 1 - test.pos]])}else{search()[ (1:length(search()))[test.pos - length(sys.calls())]]})} ; fun2 <- function(){cor <- 2 ; fun1()} ; fun1() ; fun2() ; rm(mean) # for argument name, here is a way to have the name of the tested environment according to test.pos value
+# DEBUGGING
+# pos = 1 ; name = NULL # for function debugging
+# function name
+function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(utils::find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end required function checking
+# argument checking
+arg.check <- NULL #
+text.check <- NULL #
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
+tempo <- fun_check(data = pos, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(name)){
+tempo <- fun_check(data = name, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
+}
+if(any(arg.check) == TRUE){
+stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument checking
+# main code
+match.list <- vector("list", length = length(search()))
+names(match.list) <- search()
+for(i0 in 2:length(search())){ # 2 to avoid global env
+if(any(ls(pos = i0, all.names = TRUE) %in% ls(name = parent.frame(n = pos), all.names = TRUE))){
+match.list[i0] <- list(ls(pos = i0, all.names = TRUE)[ls(pos = i0, all.names = TRUE) %in% ls(name = parent.frame(n = pos), all.names = TRUE)])
+}
+}
+if( ! all(sapply(match.list, FUN = is.null))){
+output <- paste0("SOME VARIABLES ", ifelse(is.null(name), "OF THE CHECKED ENVIRONMENT", paste0("OF ", name)), " ARE ALSO PRESENT IN PACKAGES:\n", paste0(names(match.list[ ! sapply(match.list, FUN = is.null)]), ": ", sapply(match.list[ ! sapply(match.list, FUN = is.null)], FUN = paste0, collapse = " "), collapse = "\n"))
+}else{
+output <- NULL
+}
 return(output)
 }
 
@@ -6499,7 +6559,7 @@ fun_pack <- function(req.package, load = FALSE, lib.path = NULL){
 # check if the specified R packages are present in the computer and import them into the working environment
 # ARGUMENTS
 # req.package: character vector of package names to import
-# req.package: logical. Load the package into the environement (using library())?
+# load: logical. Load the package into the environement (using library())? Interesting if packages are not in default folders or for checking the functions names of packages using search()
 # lib.path: optional character vector specifying the absolute pathways of the directories containing some of the listed packages
 # REQUIRED PACKAGES
 # none
@@ -6985,15 +7045,9 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
-
 # add legend width from scatter. Ok with facet ?
 # transfert the 2nd tick part to scatter
-
+# improve grid -> put secondary grids
 
 fun_gg_boxplot <- function(
 data1, 
@@ -8746,7 +8800,6 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
-
 
 
 
