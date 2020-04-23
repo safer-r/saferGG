@@ -410,11 +410,23 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking
 # main code
 # match.list <- vector("list", length = (length(sys.calls()) - 1 + length(search()) + ifelse(length(sys.calls()) == 1, -1, 0))) # match.list is a list of all the environment tested (local of functions and R envs), length(sys.calls()) - 1 to remove the level of the fun_secu() function, sys.calls() giving all the names of the imbricated functions, including fun_secu, ifelse(length(sys.calls()) == 1, -1, 0) to remove Global env if this one is tested
-match.list <- vector("list", length = length(sys.calls()) + length(search())) # match.list is a list of all the environment tested (local of functions and R envs), length(sys.calls()) - 1 to remove the level of the fun_secu() function, sys.calls() giving all the names of the imbricated functions, including fun_secu, ifelse(length(sys.calls()) == 1, -1, 0) to remove Global env if this one is tested
-ls.names <- c(rev(as.character(unlist(sys.calls()))), search()) # names of the functions + names of the search() environments
-ls.input <- c(rev(sys.frames()), as.list(search())) # environements of the functions + names of the search() environments
-names(match.list) <- ls.names # search()[-1] to remove Global env if this one is tested (length(sys.calls()) == 1 means only fun_secu() then R envs)
-match.list <- match.list[-c(1:(pos + 1))] # because we check only above
+tempo.name <- rev(as.character(unlist(sys.calls()))) # get names of frames (i.e., enclosed env)
+tempo.frame <- rev(sys.frames())  # get frames (i.e., enclosed env)
+# dealing with source()
+# source() used in the Global env creates three frames above the Global env, which should be removed because not very interesting for variable duplications. Add a <<-(sys.frames()) in this code and source anova_contrasts code to see this. With ls(a[[4]]), we can see the content of each env, which are probably elements of source()
+if(any(sapply(tempo.frame, FUN = environmentName) %in% "R_GlobalEnv")){
+global.pos <- which(sapply(tempo.frame, FUN = environmentName) %in% "R_GlobalEnv")
+# remove the global env (because already in search(), and all the oabove env
+tempo.name <- tempo.name[-c(global.pos:length(tempo.frame))]
+tempo.frame <- tempo.frame[-c(global.pos:length(tempo.frame))]
+}
+# end dealing with source()
+# might have a problem if(length(tempo.name) == 0){
+match.list <- vector("list", length = length(tempo.name) + length(search())) # match.list is a list of all the environment tested (local of functions and R envs), length(sys.calls()) - 1 to remove the level of the fun_secu() function, sys.calls() giving all the names of the imbricated functions, including fun_secu, ifelse(length(sys.calls()) == 1, -1, 0) to remove Global env if this one is tested
+ls.names <- c(tempo.name, search()) # names of the functions + names of the search() environments
+ls.input <- c(tempo.frame, as.list(search())) # environements of the functions + names of the search() environments
+names(match.list) <- ls.names # 
+match.list <- match.list[-c(1:(pos + 1))] # because we check only above pos
 ls.tested <- ls.input[[pos + 1]]
 ls.input <- ls.input[-c(1:(pos + 1))]
 for(i1 in 1:length(match.list)){
@@ -1704,7 +1716,7 @@ problem <- c(problem, FALSE)
 res <- c(res, "")
 }
 if(plot.fun == TRUE){
-dev.set(window.nb)
+invisible(dev.set(window.nb))
 plot.count <- plot.count + 1
 tempo.title <- paste0("test_", sprintf(paste0("%0", nchar(total.comp.nb), "d"), ifelse(is.null(thread.nb), count, x[count])))
 if(plot.kind == "classic"){
@@ -1827,7 +1839,7 @@ pdf(file = paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
 }
 window.nb <- dev.cur()
-dev.set(window.nb)
+invisible(dev.set(window.nb))
 # end plot management
 # new environment
 env.name <- paste0("env", ini.time)
@@ -1836,7 +1848,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIR
 stop(tempo.cat, call. = FALSE)
 }else{
 assign(env.name, new.env())
-assign("var", var, envir = get(env.name))
+assign("val", val, envir = get(env.name)) # var replaced by val
 }
 # end new environment
 ini.date <- Sys.time()
@@ -1900,7 +1912,7 @@ pdf(file = paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1,
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
 }
 window.nb <- dev.cur()
-dev.set(window.nb)
+invisible(dev.set(window.nb))
 # end plot management
 # new environment
 env.name <- paste0("env", ini.time)
@@ -1909,7 +1921,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIR
 stop(tempo.cat, call. = FALSE)
 }else{
 assign(env.name, new.env())
-assign("var", var, envir = get(env.name))
+assign("val", val, envir = get(env.name)) # var replaced by val
 }
 # end new environment
 suppressMessages(suppressWarnings(eval(parse(text = code))))
@@ -3664,7 +3676,7 @@ ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameter
 invisible(dev.off()) # close the new window
 }
 if( ! all(names(dev.cur()) == "null device")){
-dev.set(active.wind.nb) # go back to the active window if exists
+invisible(dev.set(active.wind.nb)) # go back to the active window if exists
 par(ini.par) # apply the initial par to current window
 }
 }
@@ -4905,8 +4917,8 @@ grid::grid.points(x = p$x, y = p$y, pch = p$pch, size = p$size,
 name = p$name, gp = p$gp, vp = p$vp, draw = T)
 grid::popViewport()
 cap <- grid::grid.cap()
-dev.off(dev_id)
-dev.set(prev_dev_id)
+invisible(dev.off(dev_id))
+invisible(dev.set(prev_dev_id))
 grid::rasterGrob(cap, x = 0, y = 0, width = 1, height = 1, default.units = "native", just = c("left","bottom"))
 }
 # end additional functions
@@ -6905,6 +6917,7 @@ fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALS
 # data = "message('ahah')" ; kind = "error" ; header = TRUE ; print.no = TRUE ; text = "IN A" ; env = NULL 
 # data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "message" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
 # data = 'ggplot2::ggplot(data = data.frame(X = "a"), mapping = ggplot2::aes(x = X)) + ggplot2::geom_histogram()' ; kind = "warning" ; header = TRUE ; print.no = FALSE ; text = NULL # for function debugging
+# data = "emmeans::emmeans(object = emm.rg, specs = contrast.var)" ; kind = "message" ; header = TRUE ; print.no = FALSE ; text = NULL ; env = NULL # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -6940,7 +6953,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # main code
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
 window.nb <- dev.cur()
-dev.set(window.nb)
+invisible(dev.set(window.nb))
 # last warning cannot be used because suppressWarnings() does not modify last.warning present in the base evironment (created at first warning in a new R session), or warnings() # to reset the warning history : unlockBinding("last.warning", baseenv()) ; assign("last.warning", NULL, envir = baseenv())
 output <- NULL
 tempo.error <- try(suppressMessages(suppressWarnings(eval(parse(text = data), envir = if(is.null(env)){parent.frame()}else{env}))), silent = TRUE) # get error message, not warning or messages
@@ -7010,8 +7023,10 @@ output <- paste0("WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), tex
 }else{
 output <- tempo.warn #
 }
-}else if(print.no == TRUE){
+}else{
+if(print.no == TRUE){
 output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
+} # no need else{} here because output is already NULL at first
 }
 }else if(kind == "warning" & is.null(tempo.warn) & print.no == TRUE){
 output <- paste0("NO WARNING MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
@@ -7022,30 +7037,18 @@ output <- paste0("STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse
 }else{
 output <- tempo.message #
 }
-}else if(print.no == TRUE){
+}else{
+if(print.no == TRUE){
 output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
+} # no need else{} here because output is already NULL at first
 }
 }else if(kind == "message" & exists("tempo.message", inherit = FALSE) == FALSE & print.no == TRUE){
 output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ifelse(is.null(text), "", " "), text)
-}
-}
+} # no need else{} here because output is already NULL at first
+} # no need else{} here because output is already NULL at first
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
