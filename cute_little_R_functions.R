@@ -4,7 +4,6 @@
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
-##     Compatible with R v3.6.1                               ##
 ##                                                            ##
 ################################################################
 
@@ -112,7 +111,7 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # mode: character string. Either one of the mode() result (for non vector object) or NULL
 # length: numeric value indicating the length of the object. Not considered if NULL
 # prop: logical. Are the numeric values between 0 and 1 (proportion)? If TRUE, can be used alone, without considering class, etc.
-# double.as.integer.allowed: logical. If TRUE, no error is reported if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers have a zero as modulo (remainder of a division). This means that i <- 1 , which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE
+# double.as.integer.allowed: logical. If TRUE, no error is reported if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers strictly have zero as modulo (remainder of a division). This means that i <- 1 , which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE. WARNING: data%%1 == 0 but not isTRUE(is.equal(data%%1, 0)) is used here because the argument checks for integers stored as double (does not check for decimal numbers that are approximate integers)
 # options: a vector of character strings indicating all the possible option values for data
 # all.options.in.data: logical. If TRUE, all of the options must be present at least once in data, and nothing else. If FALSE, some or all of the options must be present in data, and nothing else. Ignored if options is NULL
 # na.contain: logical. Can data contain NA?
@@ -676,7 +675,7 @@ return(data1[row, col])
 # Check OK: clear to go Apollo
 fun_comp_1d <- function(data1, data2){
 # AIM
-# compare two 1D datasets (vector or factor or 1D table) of the same class or not. Check and report in a list if the 2 datasets have:
+# compare two 1D datasets (vector or factor or 1D table, or 1D matrix or 1D array) of the same class or not. Check and report in a list if the 2 datasets have:
 # same class
 # common elements
 # common element names (except factors)
@@ -684,8 +683,8 @@ fun_comp_1d <- function(data1, data2){
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # none
 # ARGUMENTS
-# data1: vector or factor or 1D table
-# data2: vector or factor or 1D table
+# data1: vector or factor or 1D table, or 1D matrix or 1D array
+# data2: vector or factor or 1D table, or 1D matrix or 1D array
 # RETURN
 # a list containing:
 # $same.class: logical. Are class identical?
@@ -4989,7 +4988,7 @@ suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.
 fun_trim <- function(data, displayed.nb = NULL, single.value.display = FALSE, trim.method = "", trim.cutoffs = c(0.05, 0.975), interval.scale.disp = TRUE, down.space = 0.75, left.space = 0.75, up.space = 0.3, right.space = 0.25, orient = 1, dist.legend = 0.37, box.type = "l", amplif.label = 1.25, amplif.axis = 1.25, std.x.range = TRUE, std.y.range = TRUE, cex.pt = 0.2, col.box = hsv(0.55, 0.8, 0.8), x.nb.inter.tick = 4, y.nb.inter.tick = 0, tick.length = 1, sec.tick.length = 0.75, corner.text = "", amplif.legend = 1, corner.text.size = 0.75, trim.return = FALSE){
 # AIM
 # trim and display values from a numeric vector or matrix
-# plot 4 graphs: stripchart of values, stripchart of rank of values, hitogramme and normal QQPlot
+# plot 4 graphs: stripchart of values, stripchart of rank of values, histogram and normal QQPlot
 # different kinds of intervals are displayed on the top of graphes to facilitate the analysis of the variable and a trimming setting
 # the trimming interval chosen is displayed on top of graphs
 # both trimmed and not trimmed values are returned in a list
@@ -5242,7 +5241,7 @@ legend(x = (par("usr")[1] - ((par("usr")[2] - par("usr")[1]) / (par("plt")[2] - 
 }
 }
 par(xpd = FALSE, xaxs = ifelse(std.x.range, "i", "r"), yaxs = ifelse(std.y.range, "i", "r"))
-hist(as.vector(data), main = "", breaks = seq(min(as.vector(data), na.rm = TRUE), max(as.vector(data), na.rm = TRUE), length.out = length(as.vector(data)) / 10), xlim = graph.xlim, xlab = "Value", ylab="Density", col = grey(0.25))
+hist(as.vector(data), main = "", xlim = graph.xlim, xlab = "Value", ylab="Density", col = grey(0.25)) # removed: breaks = seq(min(as.vector(data), na.rm = TRUE), max(as.vector(data), na.rm = TRUE), length.out = length(as.vector(data)) / 10)
 abline(h = par()$usr[3])
 fun.rug()
 if(interval.scale.disp == TRUE){
@@ -6973,6 +6972,18 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -8763,9 +8774,24 @@ return(tempo <- output)
 
 
 
+
+
+
+
+
+
+
+
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
+# inter.tick x and y do not work: see labbook CL
+# change the rule of categ
+# add dot.size and line.size as list except if one value, idem color and geom and alpha
+# http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
+# geom_step. Add "hv" or "vh", see also https://stackoverflow.com/questions/42633374/how-to-get-a-step-plot-using-geom-step-with-different-colors-for-the-segments
+# ERROR IN fun_scale(): lim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES) : remove this error if xlim is not NULL range -> draw a line of dots
+
 
 fun_gg_scatter <- function(
 data1, 
@@ -8824,7 +8850,7 @@ lib.path = NULL
 # categ: character string of the data1 column name for categories. If categ == NULL, no categories -> no legend displayed. If data1 is a list, then categ must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL, and other not
 # legend.name: character string of the legend title. If legend.name == NULL and categ != NULL, then legend.name <- categ. If data1 is a list, then legend.name must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL, and other not # add with other legends below
 # color: vector of character string of the colors of categ arguments. If color == NULL, default colors of ggplot2. If non null, it can be either: (1) a single color string (all the dots of the corresponding data1 will have this color, whatever categ NULL or not), (2) if categ non null, a vector of string colors, one for each class of categ (each color will be associated according to the alphabetical order of categ classes), (3) if categ non null, a vector or factor of string colors, like if it was one of the column of data1 data frame (beware: a single color per class of categ and a single class of categ per color must be respected). Integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by fun_gg_palette() using the max integer value among all the integers in color. If data1 is a list, then color must be a list of character strings or integers, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the compartments can be NULL. In that case, a different grey color will be used for each NULL compartment
-# geom: character string of the kind of plot. Either "geom_point" (scatterplot), "geom_line" (coordinates plotted then line connection from the lowest to highest coordinates), "geom_path" (line connection respecting the order in data1), "geom_hline" (horizontal line) or "geom_vline" (vertical line). BEWARE: for "geom_hline" or "geom_vline", (1) x or y argument must be NULL, respectively, (2) x.lim or y.lim argument must NOT be NULL, respectively, if only these kind of lines are drawn (if other geom present, then x.lim = NULL and y.lim = NULL will generate x.lim and y.lim defined by these other geom, which is not possible with "geom_hline" or "geom_vline"), (3) the function will draw n lines for n values in the x argument column name of the data1 data frame. If several colors required, the categ argument must be specified and the corresponding categ column name must exist in the data1 data frame with a different class name for each row. If data1 is a list, then geom must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc.
+# geom: character string of the kind of plot. Either "geom_point" (scatterplot), "geom_line" (coordinates plotted then line connection from the lowest to highest coordinates), "geom_path" (line connection respecting the order in data1), "geom_step" line connection respecting the order in data1 but drawn in steps), "geom_hline" (horizontal line) or "geom_vline" (vertical line). BEWARE: for "geom_hline" or "geom_vline", (1) x or y argument must be NULL, respectively, (2) x.lim or y.lim argument must NOT be NULL, respectively, if only these kind of lines are drawn (if other geom present, then x.lim = NULL and y.lim = NULL will generate x.lim and y.lim defined by these other geom, which is not possible with "geom_hline" or "geom_vline"), (3) the function will draw n lines for n values in the x argument column name of the data1 data frame. If several colors required, the categ argument must be specified and the corresponding categ column name must exist in the data1 data frame with a different class name for each row. If data1 is a list, then geom must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc.
 # alpha: numeric value (from 0 to 1) of transparency. If data1 is a list, then alpha must be a list of numeric value, of same size as data1, with compartment 1 related to compartment 1 of data1, etc.
 # dot.size: numeric value of point size
 # line.size: numeric value of line size
@@ -9288,7 +9314,7 @@ stop(tempo.cat, call. = FALSE)
 }
 # end reserved word checking
 # check of geom now because required for y argument
-tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_hline", "geom_vline"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_step", "geom_hline", "geom_vline"), length = 1, fun.name = function.name) ; eval(ee)
 # end check of geom now because required for y argument
 if(is.null(x[[i1]])){
 if(all(geom[[i1]] != "geom_hline")){
@@ -10154,6 +10180,15 @@ return(output)
 # end outputs
 # end main code
 }
+
+
+
+
+
+
+
+
+
 
 
 
