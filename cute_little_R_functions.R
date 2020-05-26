@@ -5142,9 +5142,9 @@ abline(v = qnorm(trim.cutoffs.f, mean(data.f, na.rm = TRUE), sd(data.f, na.rm = 
 segments(qnorm(trim.cutoffs.f[1], mean(data.f, na.rm = TRUE), sd(data.f, na.rm = TRUE)), par()$usr[4] * 0.75, qnorm(trim.cutoffs.f[2], mean(data.f, na.rm = TRUE), sd(data.f, na.rm = TRUE)), par()$usr[4] * 0.75, col = color.cut.f)
 }
 if(trim.method.f == "quantile"){
-real.trim.cutoffs.f <- quantile(data.f, probs = trim.cutoffs.f, type = 7)
-abline(v = quantile(data.f, probs = trim.cutoffs.f, type = 7), col = color.cut.f)
-segments(quantile(data.f, probs = trim.cutoffs.f[1], type = 7), par()$usr[4] * 0.75, quantile(data.f, probs = trim.cutoffs.f[2], type = 7), par()$usr[4] * 0.75, col = color.cut.f)
+real.trim.cutoffs.f <- quantile(data.f, probs = trim.cutoffs.f, type = 7, na.rm = TRUE)
+abline(v = quantile(data.f, probs = trim.cutoffs.f, type = 7, na.rm = TRUE), col = color.cut.f)
+segments(quantile(data.f, probs = trim.cutoffs.f[1], type = 7, na.rm = TRUE), par()$usr[4] * 0.75, quantile(data.f, probs = trim.cutoffs.f[2], type = 7, na.rm = TRUE), par()$usr[4] * 0.75, col = color.cut.f)
 }
 par(par.ini)
 if(return.f == TRUE){
@@ -5166,7 +5166,7 @@ par.ini <- par()[c("mgp", "xpd")]
 par(mgp = c(0.25, 0.25, 0), xpd = NA)
 axis(side = 3, at = c(par()$usr[1], par()$usr[2]), labels = rep("", 2), col = col.quantile.f, lwd.ticks = 0)
 par(xpd = FALSE)
-axis(side = 3, at = quantile(as.vector(data.f), probs = quantiles.selection.f, type = 7), labels = quantiles.selection.f, col.axis = col.quantile.f, col = col.quantile.f)
+axis(side = 3, at = quantile(as.vector(data.f), probs = quantiles.selection.f, type = 7, na.rm = TRUE), labels = quantiles.selection.f, col.axis = col.quantile.f, col = col.quantile.f)
 par(mgp = c(1.75, 1.75, 1.5), xpd = NA)
 axis(side = 3, at = c(par()$usr[1], par()$usr[2]), labels = rep("", 2), col = col.mean.f, lwd.ticks = 0)
 par(xpd = FALSE)
@@ -6979,18 +6979,6 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # add legend width from scatter. Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
@@ -8771,17 +8759,6 @@ return(tempo <- output)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -10180,13 +10157,6 @@ return(output)
 # end outputs
 # end main code
 }
-
-
-
-
-
-
-
 
 
 
