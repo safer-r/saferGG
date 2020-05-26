@@ -15,6 +15,7 @@
 # Make a "first round" check for each function if required
 # Update all argument description, saying, character vector, etc.
 # check all the functions using fun_test
+# check all(, na.rm = TRUE) and any(, na.rm = TRUE)
 # Templates: https://prettydoc.statr.me/themes.html
 # # package: http://r-pkgs.had.co.nz/
 # https://pkgdown.r-lib.org/
@@ -273,12 +274,12 @@ problem <- FALSE
 text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER")
 if( ! is.null(options)){
 text <- ""
-if( ! all(data %in% options)){
+if( ! all(data %in% options, na.rm = TRUE)){
 problem <- TRUE
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF data ARE: ", paste(unique(data[ ! (data %in% options)]), collapse = " "))
 }
 if(all.options.in.data == TRUE){
-if( ! all(options %in% data)){
+if( ! all(options %in% data)){ # no need of na.rm = TRUE for all because %in% does not output NA
 problem <- TRUE
 text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE MADE OF ALL THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE MISSING ELEMENTS OF THE options ARGUMENT ARE: ",  paste(unique(options[ ! (options %in% data)]), collapse = " "))
 }
@@ -309,12 +310,12 @@ text <- paste0(text, toupper(arg.names[i2]), " ", get(arg.names[i2]))
 '
 # end script to execute
 if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & get(arg.names[i2]) == "integer") | (arg.names[i2] == "typeof" & get(arg.names[i2]) == "integer"))){
-if( ! all(data%%1 == 0)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result
+if( ! all(data %% 1 == 0, na.rm = TRUE)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result
 eval(parse(text = tempo.script)) # execute tempo.script
 }
-}else if( ! any(get(arg.names[i2]) %in% c("vector", "ggplot2")) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2]))){
+}else if( ! any(get(arg.names[i2]) %in% c("vector", "ggplot2")) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2]))){  # no need of na.rm = TRUE for all because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & get(arg.names[i2]) == "vector" & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){
+}else if(arg.names[i2] == "class" & get(arg.names[i2]) == "vector" & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){  # no need of na.rm = TRUE for all because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
 }else if(arg.names[i2] == "class" & get(arg.names[i2]) == "ggplot2" & ! all(class(data) %in% c("gg", "ggplot"))){
 eval(parse(text = tempo.script)) # execute tempo.script
@@ -333,7 +334,7 @@ text <- paste0(text, " AND ")
 text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
 }
 }
-if(all(class(data) %in% "expression")){
+if(all(class(data) %in% "expression")){  # no need of na.rm = TRUE for all because %in% does not output NA
 data <- as.character(data) # to evaluate the presence of NA
 }
 if(na.contain == FALSE & (mode(data) %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol"))){ # before it was ! (class(data) %in% c("function", "environment"))
