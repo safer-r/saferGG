@@ -31,10 +31,10 @@
 
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_secu() #### verif that local variables are not present in other envs   9
+######## fun_secu() #### verif that local variables are not present in other envs   10
 ######## fun_info() #### recover object information 12
 ######## fun_head() #### head of the left or right of big 2D objects    13
-######## fun_tail() #### tail of the left or right of big 2D objects    14
+######## fun_tail() #### tail of the left or right of big 2D objects    15
 ######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 16
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   20
 ######## fun_comp_list() #### comparison of two lists   26
@@ -49,37 +49,39 @@
 ######## fun_mat_inv() #### return the inverse of a square matrix   55
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  57
 ######## fun_permut() #### progressively breaks a vector order  60
-################ Graphics management    70
-######## fun_width() #### window width depending on classes to plot 71
-######## fun_open() #### open a GUI or pdf graphic window   72
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    76
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 80
-######## fun_inter_ticks() #### define coordinates of secondary ticks   85
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   88
-######## fun_close() #### close specific graphic windows    100
-################ Standard graphics  102
-######## fun_empty_graph() #### text to display for empty graphs    102
-################ gg graphics    103
-######## fun_gg_palette() #### ggplot2 default color palette    103
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  105
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  108
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   111
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 111
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    111
-######## fun_gg_prop() #### ggplot2 proportion barplot  111
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 111
-######## fun_gg_violin() #### ggplot2 violins   111
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  111
-######## fun_gg_empty_graph() #### text to display for empty graphs 111
-################ Graphic extraction 113
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 113
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   121
-################ Import 154
-######## fun_pack() #### check if R packages are present and import into the working environment    154
-######## fun_python_pack() #### check if python packages are present    156
-################ Print / Exporting results (text & tables)  158
-######## fun_report() #### print string or data object into output file 158
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 161
+######## fun_slide() #### return a computation made on a vector using a sliding window  71
+################ Graphics management    74
+######## fun_width() #### window width depending on classes to plot 74
+######## fun_open() #### open a GUI or pdf graphic window   75
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    79
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 83
+######## fun_inter_ticks() #### define coordinates of secondary ticks   88
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   92
+######## fun_close() #### close specific graphic windows    103
+################ Standard graphics  105
+######## fun_empty_graph() #### text to display for empty graphs    105
+################ gg graphics    106
+######## fun_gg_palette() #### ggplot2 default color palette    107
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  108
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  111
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  113
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   116
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 116
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    116
+######## fun_gg_prop() #### ggplot2 proportion barplot  116
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 116
+######## fun_gg_violin() #### ggplot2 violins   117
+######## fun_gg_line() #### ggplot2 lines + background dots and error bars  117
+######## fun_gg_empty_graph() #### text to display for empty graphs 117
+################ Graphic extraction 118
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 119
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   127
+################ Import 160
+######## fun_pack() #### check if R packages are present and import into the working environment    160
+######## fun_python_pack() #### check if python packages are present    161
+################ Print / Exporting results (text & tables)  164
+######## fun_report() #### print string or data object into output file 164
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 167
 
 
 ################################ FUNCTIONS ################################
@@ -3147,13 +3149,15 @@ return(output)
 ######## fun_slide() #### return a computation made on a vector using a sliding window
 
 
-fun_slide <- function(data, window.size, step, fun, args = NULL, boundary = "left", lib.path = NULL){
+fun_slide <- function(data, window.size, step, min = NULL, max = NULL, fun, args = NULL, boundary = "left", lib.path = NULL){
 # AIM
 # return a computation made on a vector using a sliding window
 # ARGUMENTS
 # data: vector, matrix, table or array of numeric values (mode must be numeric). Inf not allowed. NA will be removed before computation
 # window.size: single numeric value indicating the width of the window sliding across data (in the same unit as data value)
 # step: single numeric value indicating the step between each window (in the same unit as data value). Cannot be larger than window.size
+# min: value of the left boundary of the first sliding window. If NULL, min(data) is used
+# max: value of the left boundary of the last sliding window. If NULL, max(data) is used
 # fun: function or character string (without brackets) indicating the name of the function to apply in each window. Example: fun = "mean", or fun = mean
 # arg: character string of additional arguments of fun (separated by a comma between the quotes). Example args = "na.rm = TRUE" for fun = mean. Ignored if NULL
 # boundary: either "left" or "right". Indicates if the sliding window includes values equal to left boundary and exclude values equal to right boundary ("left") or the opposite ("right")
@@ -3171,7 +3175,7 @@ fun_slide <- function(data, window.size, step, fun, args = NULL, boundary = "lef
 # EXAMPLES
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left")
 # DEBUGGING
-# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL
+# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; min = NULL ; max = NULL ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 instruction <- match.call()
@@ -3202,6 +3206,12 @@ ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text
 tempo <- fun_check(data = data, mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = window.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = step, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(min)){
+tempo <- fun_check(data = min, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+}
+if( ! is.null(max)){
+tempo <- fun_check(data = max, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+}
 tempo1 <- fun_check(data = fun, class = "vector", mode = "character", length = 1, fun.name = function.name, print = FALSE)
 tempo2 <- fun_check(data = fun, class = "function", length = 1, fun.name = function.name, print = FALSE)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
@@ -3224,7 +3234,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument primary checking
 # second round of checking and data preparation
 # dealing with NA
-if(any(is.na(window.size)) | any(is.na(step)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(lib.path))){
+if(any(is.na(window.size)) | any(is.na(step)) | any(is.na(min)) | any(is.na(max)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(lib.path))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT data CAN HAVE NA VALUES\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
@@ -3255,7 +3265,7 @@ arg.check <- c(arg.check, TRUE)
 fun <- match.fun(fun) # make fun <- get(fun) is fun is a function name written as character string of length 1
 data <- as.vector(data)
 data <- sort(data, na.last = NA) # NA removed
-wind <- data.frame(left = seq(from = min(data, na.rm = TRUE), to = max(data, na.rm = TRUE), by = step))
+wind <- data.frame(left = seq(from = if(is.null(min)){min(data, na.rm = TRUE)}else{min}, to = if(is.null(max)){max(data, na.rm = TRUE)}else{max}, by = step))
 wind <- data.frame(wind, right = wind$left + window.size)
 wind <- data.frame(wind, center = (wind$left + wind$right) / 2)
 if(any(wind$center > max(data, na.rm = TRUE))){
@@ -7138,8 +7148,6 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
 # add legend width from scatter. Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
@@ -8920,7 +8928,6 @@ return(tempo <- output)
 
 
 
-
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -10321,7 +10328,6 @@ return(output)
 # end outputs
 # end main code
 }
-
 
 
 
