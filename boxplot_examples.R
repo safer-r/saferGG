@@ -84,9 +84,9 @@ obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times =
 ### tick number. Example (4) using a log10 scale: the reverse y-axis correctly deal with log10 scale
 obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10", y.tick.nb = 10, y.lim = c(4, 1))
 ### secondary tick number. Example (1)
-obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.inter.tick.nb = 2)
+obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.second.tick.nb = 2)
 ### secondary ticks. Example (2) not for log2 and log10 scales (see below warning message with the return argument)
-obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10", y.inter.tick.nb = 2)
+obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10", y.second.tick.nb = 2)
 ### include zero in the y-axis
 obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.include.zero = TRUE)
 ### extra margins. To avoid dot cuts
@@ -96,7 +96,7 @@ obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 
 ### mean diplay. Example (2) above boxs
 obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.top.extra.margin = 0.1, stat.disp = "above", stat.size = 4, stat.dist = 2)
 ### box orientation.  Example (1) without log scale, showing that the other arguments are still operational
-obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10, y.inter.tick.nb = 2, y.include.zero = TRUE, vertical = FALSE)
+obs1 <- data.frame(Time = (1:20), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10, y.second.tick.nb = 2, y.include.zero = TRUE, vertical = FALSE)
 ### box orientation. Example (2) with log scale. Horizontal orientation is blocked with log2 and log10 scales because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
 obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10", vertical = FALSE)
 ### classic representation (use grid = TRUE to display the background lines of the y axis ticks)
@@ -108,7 +108,7 @@ obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times =
 ### add ggplot2 functions
 obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
 ### all the arguments
-obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), box.width = 0.25, box.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.tidy.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, y.lim = c(0, 25), y.log = "no", y.tick.nb = NULL, y.inter.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, x.lab = "GROUP", y.lab = "VALUE", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, article = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, lib.path = NULL)
+obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), box.width = 0.25, box.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.tidy.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, y.lim = c(0, 25), y.log = "no", y.tick.nb = NULL, y.second.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, x.lab = "GROUP", y.lab = "VALUE", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, article = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, lib.path = NULL)
 
 ### errors
 obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200)) ; a <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.tidy.bin.nb = 100, return = TRUE, dot.categ = "Group2", dot.categ.class.order=c("B", "D", "E", "A", "C")) # error with dot.categ.class.order
