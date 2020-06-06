@@ -114,7 +114,7 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # mode: character string. Either one of the mode() result (for non vector object) or NULL
 # length: numeric value indicating the length of the object. Not considered if NULL
 # prop: logical. Are the numeric values between 0 and 1 (proportion)? If TRUE, can be used alone, without considering class, etc.
-# double.as.integer.allowed: logical. If TRUE, no error is reported if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers strictly have zero as modulo (remainder of a division). This means that i <- 1 , which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE. WARNING: data%%1 == 0 but not isTRUE(is.equal(data%%1, 0)) is used here because the argument checks for integers stored as double (does not check for decimal numbers that are approximate integers)
+# double.as.integer.allowed: logical. If TRUE, no error is reported if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers strictly have zero as modulo (remainder of a division). This means that i <- 1 , which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE. WARNING: data%%1 == 0 but not isTRUE(all.equal(data%%1, 0)) is used here because the argument checks for integers stored as double (does not check for decimal numbers that are approximate integers)
 # options: a vector of character strings indicating all the possible option values for data
 # all.options.in.data: logical. If TRUE, all of the options must be present at least once in data, and nothing else. If FALSE, some or all of the options must be present in data, and nothing else. Ignored if options is NULL
 # na.contain: logical. Can data contain NA?
@@ -7147,12 +7147,12 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
 # add legend width from scatter. Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
 # replace .categ.legend.name by box.legend.name
 # replace dot.categ.legend.name by dot.legend.name
+# facet in bold and with variable name https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
 
 fun_gg_boxplot <- function(
 data1, 
@@ -8928,6 +8928,7 @@ return(tempo <- output)
 
 
 
+
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -8936,9 +8937,11 @@ return(tempo <- output)
 # add dot.size and line.size as list except if one value, idem color and geom and alpha
 # http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
 # geom_step. Add "hv" or "vh", see also https://stackoverflow.com/questions/42633374/how-to-get-a-step-plot-using-geom-step-with-different-colors-for-the-segments
-# ERROR IN fun_scale(): lim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES) : remove this error if xlim is not NULL range -> draw a line of dots
+# ERROR IN fun_scale(): lim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES) : remove this error if x.lim is not NULL range -> draw a line of dots
 # add categ.order
 # check that x and y are numeric ?
+# legend error with a <- data.frame(x = 1:10, y = 20, z = rep(c("B", "A"), each = 5)) ; a$y[c(1, 4:6, 9:10)] <- 10 ; a$z <- factor(a$z, levels = c("B", "A")) ; names(a) <- c("a", "b", "group")
+
 
 
 fun_gg_scatter <- function(
@@ -10026,7 +10029,7 @@ tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = as.character(color[[i1]]), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of fill. order determines the order in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = as.character(color[[i1]]), guide = ggplot2::guide_legend(override.aes = list(colour = rev(color[[i1]]), linetype = 0)))) # values are the values of fill, rev() because of the loop i5, order argument of guide_legend determines the order of the different aesthetics in the legend (not order of classes)
 }
 if(point.count == 2){
 fin.lg.disp[[2]] <- legend.disp[[point.count + line.count]]
@@ -10039,7 +10042,7 @@ tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(19, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of shape
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(19, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = rev(color[[i1]]), linetype = 0)))) # values are the values of shape, rev() because of the loop i5
 }
 if(point.count == 3){
 fin.lg.disp[[3]] <- legend.disp[[point.count + line.count]]
@@ -10052,7 +10055,7 @@ tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(0.5, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of stroke
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(0.5, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = rev(color[[i1]]), linetype = 0)))) # values are the values of stroke, rev() because of the loop i5
 }
 }else{
 line.count <- line.count + 1
@@ -10074,7 +10077,7 @@ tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], linetype = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round", alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(1, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(1, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = rev(color[[i1]]), shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, rev() because of the loop i5
 }
 if(line.count == 2){
 fin.lg.disp[[5]] <- legend.disp[[point.count + line.count]]
@@ -10094,7 +10097,7 @@ tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], alpha = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round")) # beware: a single color allowed for color argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = rev(color[[i1]]), shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, rev() because of the loop i5
 }
 if(line.count == 3){
 fin.lg.disp[[6]] <- legend.disp[[point.count + line.count]]
@@ -10114,7 +10117,7 @@ tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], size = categ[[i1]]), color = color[[i1]][i5], alpha = alpha[[i1]], lineend = "round")) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size, length(color[[i1]])), guide = ggplot2::guide_legend(override.aes = list(colour = rev(color[[i1]]), shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, rev() because of the loop i5
 }
 }
 }
@@ -10124,13 +10127,13 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 
 
 # legend display
-tempo.legend.final <- 'ggplot2::guides(fill = if(fin.lg.disp[[1]] == TRUE){ggplot2::guide_legend(order = lg.order[[1]], override.aes = list(alpha = lg.alpha[[1]], color = lg.color[[1]]))}else{FALSE}, shape = if(fin.lg.disp[[2]] == TRUE){ggplot2::guide_legend(order = lg.order[[2]], override.aes = list(alpha = lg.alpha[[2]], color = lg.color[[2]]))}else{FALSE}, stroke = if(fin.lg.disp[[3]] == TRUE){ggplot2::guide_legend(order = lg.order[[3]], override.aes = list(alpha = lg.alpha[[2]], color = lg.color[[3]]))}else{FALSE}, linetype = if(fin.lg.disp[[4]] == TRUE){ggplot2::guide_legend(order = lg.order[[4]], override.aes = list(alpha = lg.alpha[[4]], color = lg.color[[4]]))}else{FALSE}, alpha = if(fin.lg.disp[[5]] == TRUE){ggplot2::guide_legend(order = lg.order[[5]], override.aes = list(alpha = lg.alpha[[5]], color = lg.color[[5]]))}else{FALSE}, size = if(fin.lg.disp[[6]] == TRUE){ggplot2::guide_legend(order = lg.order[[6]], override.aes = list(alpha = lg.alpha[[6]], color = lg.color[[6]]))}else{FALSE})' # clip = "off" to have secondary ticks outside plot region does not work
+tempo.legend.final <- 'ggplot2::guides(fill = if(fin.lg.disp[[1]] == TRUE){ggplot2::guide_legend(order = lg.order[[1]], override.aes = list(alpha = lg.alpha[[1]], color = rev(lg.color[[1]])))}else{FALSE}, shape = if(fin.lg.disp[[2]] == TRUE){ggplot2::guide_legend(order = lg.order[[2]], override.aes = list(alpha = lg.alpha[[2]], color = rev(lg.color[[2]])))}else{FALSE}, stroke = if(fin.lg.disp[[3]] == TRUE){ggplot2::guide_legend(order = lg.order[[3]], override.aes = list(alpha = lg.alpha[[2]], color = rev(lg.color[[3]])))}else{FALSE}, linetype = if(fin.lg.disp[[4]] == TRUE){ggplot2::guide_legend(order = lg.order[[4]], override.aes = list(alpha = lg.alpha[[4]], color = rev(lg.color[[4]])))}else{FALSE}, alpha = if(fin.lg.disp[[5]] == TRUE){ggplot2::guide_legend(order = lg.order[[5]], override.aes = list(alpha = lg.alpha[[5]], color = rev(lg.color[[5]])))}else{FALSE}, size = if(fin.lg.disp[[6]] == TRUE){ggplot2::guide_legend(order = lg.order[[6]], override.aes = list(alpha = lg.alpha[[6]], color = rev(lg.color[[6]])))}else{FALSE})' # rev() because of the loop i5 in the making of the graph above (see for(i5 in 1:length(color[[i1]]))), clip = "off" to have secondary ticks outside plot region does not work
 if( ! is.null(legend.width)){
 if(any(unlist(legend.disp))){ # means some TRUE
 tempo.graph.info <- ggplot2::ggplot_build(eval(parse(text = paste0(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ', tempo.legend.final)))) # will be recovered later again, when ylim will be considered
 legend.final <- fun_gg_get_legend(ggplot_built = tempo.graph.info, fun.name = function.name) # get legend
-fin.lg.disp[] <- FALSE # remove all the legends because now in legend.final
-if(is.null(legend.final)){ # even if any(unlist(legend.disp)) id TRUE
+fin.lg.disp[] <- FALSE  # remove all the legends. Must be done even if fin.lg.disp is not appearing in the code thenafter. Otherwise twice the legend
+if(is.null(legend.final)){ # even if any(unlist(legend.disp)) is TRUE
 legend.final <- fun_gg_empty_graph() # empty graph instead of legend
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (NON NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend.width ARGUMENT\n")
@@ -10144,7 +10147,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 }
 if( ! any(unlist(legend.disp))){
-fin.lg.disp[] <- FALSE # remove all the legends
+fin.lg.disp[] <- FALSE # remove all the legends. Must be done even if fin.lg.disp is not appearing in the code thenafter. Otherwise twice the legend
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = tempo.legend.final)))
 # end legend display
@@ -10328,8 +10331,6 @@ return(output)
 # end outputs
 # end main code
 }
-
-
 
 
 
