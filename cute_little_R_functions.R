@@ -7167,6 +7167,10 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+
+
+
 # add legend width from scatter. Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
@@ -8945,10 +8949,6 @@ return(tempo <- output)
 }
 
 
-
-
-
-
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -10183,8 +10183,15 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(t
 # scale management
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(xlim = x.lim, ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
+# x-axis ticks and inv
+if(is.null(x.tick.nb) & x.log != "no"){ # integer main ticks for log2 and log10
+tempo.scale <- (as.integer(min(x.lim, na.rm = TRUE)) - 1):(as.integer(max(x.lim, na.rm = TRUE)) + 1)
+}else{
+tempo <- if(is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{unlist(attributes(tempo.coord$x$breaks))}
+tempo.scale <- fun_scale(lim = x.lim, n = ifelse(is.null(x.tick.nb), length(tempo[ ! is.na(tempo)]), x.tick.nb)) # in ggplot 3.3.0, tempo.coord$x.major_source replaced by tempo.coord$x$breaks
+}
+# end x-axis ticks and inv
 # x-axis secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
-# tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
 x.second.tick.values <- NULL
 x.tempo.tick.pos <- NULL
 if(x.log != "no"){
@@ -10207,14 +10214,6 @@ yend = tempo.coord$y.range[1] + abs(diff(tempo.coord$y.range)) / 80
 ))
 coord.names <- c(coord.names, "x.second.tick.positions")
 }
-# end x-axis secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
-# x-axis ticks and inv
-if(is.null(x.tick.nb) & x.log != "no"){ # integer main ticks for log2 and log10
-tempo.scale <- (as.integer(min(x.lim, na.rm = TRUE)) - 1):(as.integer(max(x.lim, na.rm = TRUE)) + 1)
-}else{
-tempo <- if(is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{unlist(attributes(tempo.coord$x$breaks))}
-tempo.scale <- fun_scale(lim = x.lim, n = ifelse(is.null(x.tick.nb), length(tempo[ ! is.na(tempo)]), x.tick.nb)) # in ggplot 3.3.0, tempo.coord$x.major_source replaced by tempo.coord$x$breaks
-}
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
 breaks = tempo.scale, 
 minor_breaks = x.tempo.tick.pos, # add the grid of the minor ticks
@@ -10231,9 +10230,16 @@ expand = c(0, 0), # remove space after after axis limits
 limits = NA, # indicate that limits must correspond to data limits
 trans = ifelse(diff(x.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_x_reverse()
 ))
-# end x-axis ticks and inv
+# end x-axis secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
+# y-axis ticks and inv
+if(is.null(y.tick.nb) & y.log != "no"){ # integer main ticks for log2 and log10
+tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim, na.rm = TRUE)) + 1)
+}else{
+tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
+tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks
+}
+# end y-axis ticks and inv
 # y-axis secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
-# tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
 y.second.tick.values <- NULL
 y.tempo.tick.pos <- NULL
 if(y.log != "no"){
@@ -10257,14 +10263,6 @@ xend = tempo.coord$x.range[1] + abs(diff(tempo.coord$x.range)) / 80
 coord.names <- c(coord.names, "y.second.tick.positions")
 }
 # end y-axis secondary ticks (after ggplot2::coord_cartesian() or ggplot2::coord_flip())
-# y-axis ticks and inv
-# tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$layout$panel_params[[1]]
-if(is.null(y.tick.nb) & y.log != "no"){ # integer main ticks for log2 and log10
-tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim, na.rm = TRUE)) + 1)
-}else{
-tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
-tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks
-}
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 minor_breaks = y.tempo.tick.pos, # add the grid of the minor ticks
@@ -10281,7 +10279,6 @@ expand = c(0, 0), # remove space after after axis limits
 limits = NA, # indicate that limits must correspond to data limits
 trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse()
 ))
-# end y-axis ticks and inv
 # end scale management
 
 
@@ -10349,6 +10346,13 @@ return(output)
 # end outputs
 # end main code
 }
+
+
+
+
+
+
+
 
 
 
