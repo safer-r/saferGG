@@ -52,36 +52,36 @@
 ######## fun_slide() #### return a computation made on a vector using a sliding window  71
 ################ Graphics management    74
 ######## fun_width() #### window width depending on classes to plot 74
-######## fun_open() #### open a GUI or pdf graphic window   75
+######## fun_open() #### open a GUI or pdf graphic window   76
 ######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    79
 ######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 83
 ######## fun_inter_ticks() #### define coordinates of secondary ticks   88
 ######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   92
-######## fun_close() #### close specific graphic windows    103
+######## fun_close() #### close specific graphic windows    104
 ################ Standard graphics  105
 ######## fun_empty_graph() #### text to display for empty graphs    105
-################ gg graphics    106
+################ gg graphics    107
 ######## fun_gg_palette() #### ggplot2 default color palette    107
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  108
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  111
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  113
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   116
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 116
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    116
-######## fun_gg_prop() #### ggplot2 proportion barplot  116
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 116
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  109
+######## fun_gg_get_legend() #### get the legend of ggplot objects  111
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  114
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   117
+######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 117
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    117
+######## fun_gg_prop() #### ggplot2 proportion barplot  117
+######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 117
 ######## fun_gg_violin() #### ggplot2 violins   117
 ######## fun_gg_line() #### ggplot2 lines + background dots and error bars  117
-######## fun_gg_empty_graph() #### text to display for empty graphs 117
-################ Graphic extraction 118
+######## fun_gg_empty_graph() #### text to display for empty graphs 118
+################ Graphic extraction 119
 ######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 119
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   127
-################ Import 160
-######## fun_pack() #### check if R packages are present and import into the working environment    160
-######## fun_python_pack() #### check if python packages are present    161
-################ Print / Exporting results (text & tables)  164
-######## fun_report() #### print string or data object into output file 164
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 167
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   128
+################ Import 161
+######## fun_pack() #### check if R packages are present and import into the working environment    161
+######## fun_python_pack() #### check if python packages are present    162
+################ Print / Exporting results (text & tables)  165
+######## fun_report() #### print string or data object into output file 165
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 168
 
 
 ################################ FUNCTIONS ################################
@@ -4774,7 +4774,7 @@ return(output)
 }
 
 
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle
+######## fun_gg_get_legend() #### get the legend of ggplot objects
 
 
  
@@ -7159,24 +7159,28 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # add legend width from scatter. Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
 # replace .categ.legend.name by box.legend.name
 # replace dot.categ.legend.name by dot.legend.name
 # facet in bold and with variable name https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
+# still errors to solve for these examples:
+### errors
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200))
+# a <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.tidy.bin.nb = 100, return = TRUE, dot.categ = "Group2", dot.categ.class.order=c("B", "D", "E", "A", "C")) # error with dot.categ.class.order
+
+# obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200))
+# a <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.tidy.bin.nb = 100, return = TRUE, dot.categ = "Group2", dot.categ.class.order=c("A", "B", "C", "D", "E")) # error with dot.categ.class.order
+
+# set.seed(1)
+# obs1 <- data.frame(Time = c(sort(rnorm(10)), sort(rnorm(10)) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), Group3 = rep(c("I", "J", "K", "L"), time = 5))
+# set.seed(NULL)
+# obs1
+# obs1$Time[1:10] <- NA ; 
+# a <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = 1:4, dot.tidy = FALSE, dot.tidy.bin.nb = 100, return = TRUE, dot.categ = "Group3") # error with dot.categ.class.order
+
+
 
 fun_gg_boxplot <- function(
 data1, 
@@ -8949,6 +8953,15 @@ return(tempo <- output)
 }
 
 
+
+
+
+
+
+
+
+
+
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -10346,13 +10359,6 @@ return(output)
 # end outputs
 # end main code
 }
-
-
-
-
-
-
-
 
 
 
