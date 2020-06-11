@@ -9291,7 +9291,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coo
 
 # legend management
 if( ! is.null(legend.width)){
-legend.final <- fun_gg_get_legend(ggplot_built = final.plot, fun.name = function.name, lib.path = lib.path) # get legend
+legend.final <- NULL # fun_gg_get_legend(ggplot_built = final.plot, fun.name = function.name, lib.path = lib.path) # get legend
 }
 # end legend management
 
@@ -9372,8 +9372,6 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
-
-
 
 
 
@@ -10586,13 +10584,13 @@ if(any(unlist(legend.disp))){ # means some TRUE
 tempo.graph.info <- ggplot2::ggplot_build(eval(parse(text = paste0(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ', tempo.legend.final)))) # will be recovered later again, when ylim will be considered
 legend.final <- fun_gg_get_legend(ggplot_built = tempo.graph.info, fun.name = function.name) # get legend
 fin.lg.disp[] <- FALSE  # remove all the legends. Must be done even if fin.lg.disp is not appearing in the code thenafter. Otherwise twice the legend
-if(is.null(legend.final)){ # even if any(unlist(legend.disp)) is TRUE
+if(is.null(legend.final) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
 legend.final <- fun_gg_empty_graph() # empty graph instead of legend
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (NON NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend.width ARGUMENT\n")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
-}else{ # means all FALSE
+}else if(plot == TRUE){ # means all FALSE
 legend.final <- fun_gg_empty_graph() # empty graph instead of legend
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (NON NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend.width ARGUMENT\n")
@@ -10775,7 +10773,6 @@ return(output)
 # end outputs
 # end main code
 }
-
 
 
 
