@@ -16,6 +16,7 @@
 # Update all argument description, saying, character vector, etc.
 # check all the functions using fun_test
 # check all(, na.rm = TRUE) and any(, na.rm = TRUE)
+# fun_mat_fill does not recognize half matrix anymore
 # Templates: https://prettydoc.statr.me/themes.html
 # # package: http://r-pkgs.had.co.nz/
 # https://pkgdown.r-lib.org/
@@ -31,7 +32,7 @@
 
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_secu() #### verif that local variables are not present in other envs   10
+######## fun_secu() #### verif that local variables are not present in other envs   9
 ######## fun_info() #### recover object information 12
 ######## fun_head() #### head of the left or right of big 2D objects    13
 ######## fun_tail() #### tail of the left or right of big 2D objects    15
@@ -65,23 +66,19 @@
 ######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  109
 ######## fun_gg_get_legend() #### get the legend of ggplot objects  111
 ######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  114
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   117
-######## fun_gg_bar() #### ggplot2 mean barplot + overlaid dots if required 117
 ######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    117
-######## fun_gg_prop() #### ggplot2 proportion barplot  117
-######## fun_gg_dot() #### ggplot2 categorial dotplot + mean/median 117
-######## fun_gg_violin() #### ggplot2 violins   117
-######## fun_gg_line() #### ggplot2 lines + background dots and error bars  117
-######## fun_gg_empty_graph() #### text to display for empty graphs 118
-################ Graphic extraction 119
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 119
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   128
-################ Import 161
-######## fun_pack() #### check if R packages are present and import into the working environment    161
-######## fun_python_pack() #### check if python packages are present    162
-################ Print / Exporting results (text & tables)  165
-######## fun_report() #### print string or data object into output file 165
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 168
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   117
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  117
+######## fun_gg_empty_graph() #### text to display for empty graphs 131
+################ Graphic extraction 132
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 133
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   141
+################ Import 174
+######## fun_pack() #### check if R packages are present and import into the working environment    174
+######## fun_python_pack() #### check if python packages are present    175
+################ Print / Exporting results (text & tables)  178
+######## fun_report() #### print string or data object into output file 178
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 181
 
 
 ################################ FUNCTIONS ################################
@@ -3157,7 +3154,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # window.size: single numeric value indicating the width of the window sliding across data (in the same unit as data value)
 # step: single numeric value indicating the step between each window (in the same unit as data value). Cannot be larger than window.size
 # from: value of the left boundary of the first sliding window. If NULL, min(data) is used. The first window will strictly have from or min(data) as left boundary
-# to: value of the left boundary of the last sliding window. If NULL, max(data) is used. Warning: (1) the final last window will not necessary have to or max(data) as left boundary but from|min(data) + n * step <= to|max(data); (2) if to argument is not specified, then the left boundary will be set according to the center of the last window such that [(from|min(data) + n * step + window.size) + (max(data) + n * step + window.size)] /2 <= max(data)
+# to: value of the right boundary of the last sliding window. If NULL, max(data) is used. Warning: (1) the final last window will not necessary have to|max(data) as right boundary. In fact the last window will be the one that contains to|max(data) for the first time, i.e., min[from|min(data) + window.size + n * step >= to|max(data)]; (2) In fact, the >= in min[from|min(data) + window.size + n * step >= to|max(data)] depends on the boundary argument (>= for "right" and > for "left"); (3) to have the rule (1) but for the center of the last window, to argument has to be computed by hand such that min[(from|min(data) + n * step) + (from|min(data) + n * step + window.size)] /2 >= max(data)]
 # fun: function or character string (without brackets) indicating the name of the function to apply in each window. Example: fun = "mean", or fun = mean
 # arg: character string of additional arguments of fun (separated by a comma between the quotes). Example args = "na.rm = TRUE" for fun = mean. Ignored if NULL
 # boundary: either "left" or "right". Indicates if the sliding window includes values equal to left boundary and exclude values equal to right boundary ("left") or the opposite ("right")
@@ -3174,6 +3171,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 #$value : the computed value by the fun argument in each window)
 # EXAMPLES
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left")
+# fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right")
 # DEBUGGING
 # data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL
 # function name
@@ -3263,25 +3261,35 @@ arg.check <- c(arg.check, TRUE)
 # end second round of checking and data preparation
 # main code
 fun <- match.fun(fun) # make fun <- get(fun) is fun is a function name written as character string of length 1
+if(boundary == "left"){
+left <- ">="
+right <- "<"
+right.last.wind <- ">"
+}else if(boundary == "right"){
+left <- ">"
+right <- "<="
+right.last.wind <- ">="
+}else{
+tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1\n\n============\n\n")
+stop(tempo.cat)
+}
 data <- as.vector(data)
 data <- sort(data, na.last = NA) # NA removed
 wind <- data.frame(left = seq(from = if(is.null(from)){min(data, na.rm = TRUE)}else{from}, to = if(is.null(to)){max(data, na.rm = TRUE)}else{to}, by = step))
 wind <- data.frame(wind, right = wind$left + window.size)
 wind <- data.frame(wind, center = (wind$left + wind$right) / 2)
-if(is.null(to)){
-if(any(wind$center > max(data, na.rm = TRUE))){
-wind <- wind[ ! wind$center > max(data, na.rm = TRUE),]
-}
-}
-if(boundary == "left"){
-left <- ">="
-right <- "<"
-}else if(boundary == "right"){
-left <- ">"
-right <- "<="
-}else{
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1\n\n============\n\n")
+if(all(wind$right < if(is.null(to)){max(data, na.rm = TRUE)}else{to})){
+tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2\n\n============\n\n")
 stop(tempo.cat)
+}
+# The 3 next lines is for the rule of to argument with center (see to argument description)
+# if(any(wind$center > max(data, na.rm = TRUE))){
+# wind <- wind[ ! wind$center > max(data, na.rm = TRUE),]
+# }
+if(sum(get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = TRUE)}else{to}), na.rm = TRUE) > 1){
+tempo.log <- get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = TRUE)}else{to})
+tempo.log[min(which(tempo.log), na.rm = TRUE)] <- FALSE # convert the first left boundary that goes above max(data, na.rm = TRUE) to FALSE to keep it (the next ones will be removed)
+wind <- wind[ ! tempo.log,]
 }
 left.log <- lapply(X = wind$left, Y = data, FUN = function(X, Y){
 res <- get(left)(Y, X)
@@ -7578,14 +7586,15 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-# add legend width from scatter. Ok with facet?
+
+
+# add legend width from scatter (empty legend space notably). Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
 # replace .categ.legend.name by box.legend.name
 # replace dot.categ.legend.name by dot.legend.name
 # facet in bold and with variable name https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
 # still errors to solve for these examples:
-### errors
 # obs1 <- data.frame(Time = 1:1000, Group1 = rep(c("G", "H"), times = 500), Group2 = rep(LETTERS[1:5], each = 200))
 # a <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = "same", dot.tidy = TRUE, dot.tidy.bin.nb = 100, return = TRUE, dot.categ = "Group2", dot.categ.class.order=c("B", "D", "E", "A", "C")) # error with dot.categ.class.order
 
@@ -9291,7 +9300,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coo
 
 # legend management
 if( ! is.null(legend.width)){
-legend.final <- NULL # fun_gg_get_legend(ggplot_built = final.plot, fun.name = function.name, lib.path = lib.path) # get legend
+legend.final <- fun_gg_get_legend(ggplot_built = final.plot, fun.name = function.name, lib.path = lib.path) # get legend
 }
 # end legend management
 
@@ -9372,6 +9381,7 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
+
 
 
 
