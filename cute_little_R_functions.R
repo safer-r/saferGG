@@ -3154,7 +3154,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # window.size: single numeric value indicating the width of the window sliding across data (in the same unit as data value)
 # step: single numeric value indicating the step between each window (in the same unit as data value). Cannot be larger than window.size
 # from: value of the left boundary of the first sliding window. If NULL, min(data) is used. The first window will strictly have from or min(data) as left boundary
-# to: value of the right boundary of the last sliding window. If NULL, max(data) is used. Warning: (1) the final last window will not necessary have to|max(data) as right boundary. In fact the last window will be the one that contains to|max(data) for the first time, i.e., min[from|min(data) + window.size + n * step >= to|max(data)]; (2) In fact, the >= in min[from|min(data) + window.size + n * step >= to|max(data)] depends on the boundary argument (>= for "right" and > for "left"); (3) to have the rule (1) but for the center of the last window, to argument has to be computed by hand such that min[(from|min(data) + n * step) + (from|min(data) + n * step + window.size)] /2 >= max(data)]
+# to: value of the right boundary of the last sliding window. If NULL, max(data) is used. Warning: (1) the final last window will not necessary have to|max(data) as right boundary. In fact the last window will be the one that contains to|max(data) for the first time, i.e., min[from|min(data) + window.size + n * step >= to|max(data)]; (2) In fact, the >= in min[from|min(data) + window.size + n * step >= to|max(data)] depends on the boundary argument (>= for "right" and > for "left"); (3) to have the rule (1) but for the center of the last window, use to argument as to = to|max(data) + window.size / 2
 # fun: function or character string (without brackets) indicating the name of the function to apply in each window. Example: fun = "mean", or fun = mean
 # arg: character string of additional arguments of fun (separated by a comma between the quotes). Example args = "na.rm = TRUE" for fun = mean. Ignored if NULL
 # boundary: either "left" or "right". Indicates if the sliding window includes values equal to left boundary and exclude values equal to right boundary ("left") or the opposite ("right")
@@ -3390,7 +3390,7 @@ return(window.width)
 
 
 # Check OK: clear to go Apollo
-fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, remove.read.only = TRUE, return.output = FALSE){
+fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name.file = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, remove.read.only = TRUE, return.output = FALSE){
 # AIM
 # open a pdf or screen (GUI) graphic window and return initial graphic parameters
 # this order can be used:
@@ -3401,19 +3401,19 @@ fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = 
 # fun_post_plot() if fun_prior_plot() has been used # not for ggplot2
 # fun_close()
 #WARNING
-# On Linux, use pdf.disp = TRUE, if (GUI) graphic window is not always available, meaning that X is not installed (clusters for instance). Use X11() in R to test if available
+# On Linux, use pdf = TRUE, if (GUI) graphic window is not always available, meaning that X is not installed (clusters for instance). Use X11() in R to test if available
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS:
-# pdf.disp: logical. Use pdf display?
-# fun.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default). Ignored if pdf.disp == FALSE
-# pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function). Ignored if pdf.disp == FALSE
-# width.fun: width of the window (in inches)
-# height.fun: height of the window (in inches)
-# paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that the paper dimension will be width.fun and height.fun. With another paper format, if width.fun or height.fun is over the size of the paper, width.fun or height.fun will be modified such that the plot is adjusted to the paper dimension (see $dim in the returned list below to see the modified dimensions). Ignored if pdf.disp == FALSE
-# no.pdf.overwrite: logical. Existing pdf can be overwritten? . Ignored if pdf.disp == FALSE
-# remove.read.only: logical. remove the read only (R.O.) graphical parameters? If TRUE, the graphical parameters are  returned without the R.O. parameters. The returned $ini.par list can be used to set the par() of a new graphical device. If FALSE, graphical parameters are returned with the R.O. parameters, which provides information like text dimension (see ?par() ). The returned $ini.par list can be used to set the par() of a new graphical device, but generate a warning message. Ignored if return.output == FALSE. 
-# return.output: logical. Return output ? If TRUE but function not assigned, the output list is displayed
+# pdf: logical. Use pdf display?
+# pdf.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default). Ignored if pdf == FALSE
+# pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function). Ignored if pdf == FALSE
+# width: width of the window (in inches)
+# height: height of the window (in inches)
+# paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that the paper dimension will be width and height. With another paper format, if width or height is over the size of the paper, width or height will be modified such that the plot is adjusted to the paper dimension (see $dim in the returned list below to see the modified dimensions). Ignored if pdf == FALSE
+# pdf.overwrite: logical. Existing pdf can be overwritten? . Ignored if pdf == FALSE
+# remove.read.only: logical. remove the read only (R.O.) graphical parameters? If TRUE, the graphical parameters are returned without the R.O. parameters. The returned $ini.par list can be used to set the par() of a new graphical device. If FALSE, graphical parameters are returned with the R.O. parameters, which provides information like text dimension (see ?par() ). The returned $ini.par list can be used to set the par() of a new graphical device, but generate a warning message. Ignored if return.output == FALSE. 
+# return.output: logical. Return output ? If TRUE the output list is displayed
 # RETURN
 # a list containing:
 # $pdf.loc: path of the pdf created
@@ -3421,9 +3421,9 @@ fun_open <- function(pdf.disp = TRUE, fun.path = "working.dir", pdf.name.file = 
 # $zone.ini: initial window spliting
 # $dim: dimension of the graphical device (in inches)
 # EXAMPLES
-# fun_open(pdf.disp = FALSE, fun.path = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width.fun = 7, height.fun = 7, paper = "special", no.pdf.overwrite = TRUE, return.output = TRUE)
+# fun_open(pdf = FALSE, pdf.path = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, return.output = TRUE)
 # DEBUGGING
-# pdf.disp = TRUE ; fun.path = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width.fun = 7 ; height.fun = 7 ; paper = "special" ; no.pdf.overwrite = TRUE ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
+# pdf = TRUE ; pdf.path = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width = 7 ; height = 7 ; paper = "special" ; pdf.overwrite = FALSE ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3438,16 +3438,16 @@ arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
-tempo <- fun_check(data = pdf.disp, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(fun.path)){
-tempo <- fun_check(data = fun.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = pdf, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(pdf.path)){
+tempo <- fun_check(data = pdf.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 }
-tempo <- fun_check(data = fun.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = pdf.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = width.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = height.fun, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data =no.pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data =pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = remove.read.only, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -3456,14 +3456,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
-if(fun.path == "working.dir"){
-fun.path <- getwd()
+if(pdf.path == "working.dir"){
+pdf.path <- getwd()
 }else{
-if(grepl(x = fun.path, pattern = ".+/$")){
-fun.path <- substr(fun.path, 1, nchar(fun.path) - 1) # remove the last /
+if(grepl(x = pdf.path, pattern = ".+/$")){
+pdf.path <- substr(pdf.path, 1, nchar(pdf.path) - 1) # remove the last /
 }
-if(dir.exists(fun.path) == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": fun.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
+if(dir.exists(pdf.path) == FALSE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": pdf.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -3475,15 +3475,15 @@ windows()
 ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
-if(pdf.disp == TRUE){
+if(pdf == TRUE){
 tempo.code <- 0
-while(file.exists(paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf")) == TRUE){
+while(file.exists(paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf")) == TRUE){
 tempo.code <- tempo.code + 1
 }
-pdf(width = width.fun, height = height.fun, file=paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
+pdf(width = width, height = height, file=paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
 ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the pdf window
-file.remove(paste0(fun.path, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
+file.remove(paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
 }else{
 # test if X11 can be opened
 if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
@@ -3496,7 +3496,7 @@ ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphica
 invisible(dev.off()) # close the new window
 }else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
-tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -3509,27 +3509,27 @@ invisible(dev.off()) # close the new window
 }
 # end par.ini recovery 
 zone.ini <- matrix(1, ncol=1) # to recover the initial parameters for next figure region when device region split into several figure regions
-if(pdf.disp == TRUE){
-pdf.loc <- paste0(fun.path, "/", pdf.name.file, ".pdf")
-if(file.exists(pdf.loc) == TRUE & no.pdf.overwrite == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": pdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO no.pdf.overwrite ARGUMENT SET TO TRUE: ", pdf.loc, "\n\n================\n\n")
+if(pdf == TRUE){
+pdf.loc <- paste0(pdf.path, "/", pdf.name.file, ".pdf")
+if(file.exists(pdf.loc) == TRUE & pdf.overwrite == FALSE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": pdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO pdf.overwrite ARGUMENT SET TO TRUE: ", pdf.loc, "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
-pdf(width = width.fun, height = height.fun, file=pdf.loc, paper = paper)
+pdf(width = width, height = height, file=pdf.loc, paper = paper)
 }
-}else if(pdf.disp == FALSE){
+}else if(pdf == FALSE){
 pdf.loc <- NULL
 if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
-windows(width = width.fun, height = height.fun, rescale="fixed")
+windows(width = width, height = height, rescale="fixed")
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! is.null(open.fail)){
-tempo.cat <- "\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf.disp ARGUMENT TO TRUE AND RERUN\n\n================\n\n"
+tempo.cat <- "\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n"
 stop(tempo.cat, call. = FALSE)
 }else{
-X11(width = width.fun, height = height.fun)
+X11(width = width, height = height)
 }
 }else{
-quartz(width = width.fun, height = height.fun)
+quartz(width = width, height = height)
 }
 }
 if(return.output == TRUE){
@@ -4425,7 +4425,7 @@ text(x = y.mid.plot.region, y = x.mid.left.fig.region, y.lab, adj=c(0.5, 0.5), c
 }
 par(xpd=FALSE)
 if(par.reset == TRUE){
-tempo.par <- fun_open(pdf.disp = FALSE, return.output = TRUE)
+tempo.par <- fun_open(pdf = FALSE, return.output = TRUE)
 invisible(dev.off()) # close the new window
 if( ! is.null(custom.par)){
 if( ! names(custom.par) %in% names(tempo.par$ini.par)){
@@ -6817,7 +6817,7 @@ assign(tempo.df.name[i2], data.frame(get(tempo.df.name[i2]), kind = tempo.class.
 # end add a categ for plot legend
 if(( ! is.null(x.range.split)) & ( ! is.null(y.range.split))){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe), x = list(x1, "x", "x"), y = list(y1, "y", "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6825,7 +6825,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.signif.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6833,13 +6833,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.incon.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6847,13 +6847,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1\nINCONSISTENT DOTS", text.size = 8, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe , vframe), x = list(x1, x2, "x", "x"), y = list(y1, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6861,7 +6861,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6869,13 +6869,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6883,13 +6883,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nINCONSISTENT DOTS", text.size = 8, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 
@@ -6898,14 +6898,14 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size = 12, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(( ! is.null(x.range.split)) & is.null(y.range.split)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe), x = list(x1, "x"), y = list(y1, "y"), categ = list("kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6913,7 +6913,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6921,13 +6921,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6935,13 +6935,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1\nINCONSISTENT DOTS", text.size = 8, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6949,7 +6949,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6957,13 +6957,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6971,13 +6971,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nINCONSISTENT DOTS", text.size = 8, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -6985,14 +6985,14 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size = 8, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
 }
 }else if(is.null(x.range.split) & ( ! is.null(y.range.split))){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe), x = list(x1, "x"), y = list(y1, "y"), categ = list("kind", "kind"), legend.name = list("DATASET", "VERT FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7000,7 +7000,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "VERT FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7008,13 +7008,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA1 SIGNIFICANT DOTS")
 }
 if( ! is.null(data1.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "VERT FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7022,13 +7022,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA1\nINCONSISTENT DOTS", text.size = 8, title = "DATA1 + DATA1 INCONSISTENT DOTS")
 }
 if( ! is.null(data2)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, vframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7036,7 +7036,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7044,13 +7044,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2 DOTS\nOUTSIDE THE FRAMES", text.size = 8, title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS")
 }
 if( ! is.null(data2.incon.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7058,13 +7058,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nINCONSISTENT DOTS", text.size = 8, title = "DATA2 + DATA2 INCONSISTENT DOTS")
 }
 if( ! is.null(data2.unknown.dot)){
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
@@ -7072,7 +7072,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.
 }
 }else{
 if(graph.in.file == FALSE){
-fun_open(pdf.disp = FALSE)
+fun_open(pdf = FALSE)
 }
 fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size = 8, title = "DATA2 + DATA2 UNKNOWN DOTS")
 }
@@ -7573,14 +7573,6 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -9381,6 +9373,7 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
+
 
 
 
