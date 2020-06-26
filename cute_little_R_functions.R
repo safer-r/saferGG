@@ -7908,7 +7908,7 @@ arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(y.second.tick.nb)){
 tempo <- fun_check(data = y.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & y.second.tick.nb < 0){
+if(tempo$problem == FALSE & y.second.tick.nb <= 0){
 tempo.cat <- paste0("y.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -9377,8 +9377,6 @@ return(tempo <- output)
 
 
 
-
-
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -9648,7 +9646,7 @@ arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(x.second.tick.nb)){
 tempo <- fun_check(data = x.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & x.second.tick.nb < 0){
+if(tempo$problem == FALSE & x.second.tick.nb <= 0){
 tempo.cat <- paste0("ERROR IN ", function.name, ": x.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -9684,7 +9682,7 @@ arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(y.second.tick.nb)){
 tempo <- fun_check(data = y.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & y.second.tick.nb < 0){
+if(tempo$problem == FALSE & y.second.tick.nb <= 0){
 tempo.cat <- paste0("ERROR IN ", function.name, ": y.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -10776,6 +10774,7 @@ return(output)
 # end outputs
 # end main code
 }
+
 
 
 
