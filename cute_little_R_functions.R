@@ -3390,7 +3390,7 @@ return(window.width)
 
 
 # Check OK: clear to go Apollo
-fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name.file = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, remove.read.only = TRUE, return.output = FALSE){
+fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, remove.read.only = TRUE, return.output = FALSE){
 # AIM
 # open a pdf or screen (GUI) graphic window and return initial graphic parameters
 # this order can be used:
@@ -3407,7 +3407,7 @@ fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name.file = "grap
 # ARGUMENTS:
 # pdf: logical. Use pdf display?
 # pdf.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default). Ignored if pdf == FALSE
-# pdf.name.file: name of the pdf file containing the graphs (the .pdf extension is added by the function). Ignored if pdf == FALSE
+# pdf.name: name of the pdf file containing the graphs (the .pdf extension is added by the function, if not detected in the name end). Ignored if pdf == FALSE
 # width: width of the window (in inches)
 # height: height of the window (in inches)
 # paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that the paper dimension will be width and height. With another paper format, if width or height is over the size of the paper, width or height will be modified such that the plot is adjusted to the paper dimension (see $dim in the returned list below to see the modified dimensions). Ignored if pdf == FALSE
@@ -3421,9 +3421,9 @@ fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name.file = "grap
 # $zone.ini: initial window spliting
 # $dim: dimension of the graphical device (in inches)
 # EXAMPLES
-# fun_open(pdf = FALSE, pdf.path = "C:/Users/Gael/Desktop", pdf.name.file = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, return.output = TRUE)
+# fun_open(pdf = FALSE, pdf.path = "C:/Users/Gael/Desktop", pdf.name = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, return.output = TRUE)
 # DEBUGGING
-# pdf = TRUE ; pdf.path = "C:/Users/Gael/Desktop" ; pdf.name.file = "graphs" ; width = 7 ; height = 7 ; paper = "special" ; pdf.overwrite = FALSE ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
+# pdf = TRUE ; pdf.path = "C:/Users/Gael/Desktop" ; pdf.name = "graphs" ; width = 7 ; height = 7 ; paper = "special" ; pdf.overwrite = FALSE ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -3439,11 +3439,8 @@ text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = pdf, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(pdf.path)){
-tempo <- fun_check(data = pdf.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-}
 tempo <- fun_check(data = pdf.path, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = pdf.name.file, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = pdf.name, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
@@ -3460,10 +3457,12 @@ if(pdf.path == "working.dir"){
 pdf.path <- getwd()
 }else{
 if(grepl(x = pdf.path, pattern = ".+/$")){
-pdf.path <- substr(pdf.path, 1, nchar(pdf.path) - 1) # remove the last /
+pdf.path <- sub(x = pdf.path, pattern = "/$", replacement = "") # remove the last /
+}else if(grepl(x = pdf.path, pattern = ".+[\\]$")){ # or ".+\\\\$" # cannot be ".+\$" because \$ does not exist contrary to \n
+pdf.path <- sub(x = pdf.path, pattern = "[\\]$", replacement = "") # remove the last /
 }
 if(dir.exists(pdf.path) == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": pdf.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\npdf.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", pdf.path, "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -3487,7 +3486,7 @@ file.remove(paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf")) # remove t
 }else{
 # test if X11 can be opened
 if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THIS FUNCTION CANNOT BE USED ON LINUX IF A Rplots.pdf FILE ALREADY EXISTS HERE: ", getwd(), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nTHIS FUNCTION CANNOT BE USED ON LINUX IF A Rplots.pdf FILE ALREADY EXISTS HERE\n", getwd(), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
@@ -3496,7 +3495,7 @@ ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphica
 invisible(dev.off()) # close the new window
 }else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
-tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
+tempo.cat <- ("\n\n================\n\nERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -3510,9 +3509,12 @@ invisible(dev.off()) # close the new window
 # end par.ini recovery 
 zone.ini <- matrix(1, ncol=1) # to recover the initial parameters for next figure region when device region split into several figure regions
 if(pdf == TRUE){
-pdf.loc <- paste0(pdf.path, "/", pdf.name.file, ".pdf")
+if(grepl(x = pdf.name, pattern = "\\.pdf$")){
+pdf.name <- sub(x = pdf.name, pattern = "\\.pdf$", replacement = "") # remove the last .pdf
+}
+pdf.loc <- paste0(pdf.path, "/", pdf.name, ".pdf")
 if(file.exists(pdf.loc) == TRUE & pdf.overwrite == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": pdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO pdf.overwrite ARGUMENT SET TO TRUE: ", pdf.loc, "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\npdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO pdf.overwrite ARGUMENT SET TO TRUE\n", pdf.loc, "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 pdf(width = width, height = height, file=pdf.loc, paper = paper)
@@ -3523,7 +3525,7 @@ if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" f
 windows(width = width, height = height, rescale="fixed")
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! is.null(open.fail)){
-tempo.cat <- "\n\n================\n\nPROBLEM IN fun_open(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n"
+tempo.cat <- "\n\n================\n\nERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n"
 stop(tempo.cat, call. = FALSE)
 }else{
 X11(width = width, height = height)
@@ -3647,7 +3649,7 @@ ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameter
 invisible(dev.off()) # close the new window
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
 }else{
-tempo.cat <- ("\n\n================\n\nPROBLEM IN fun_prior_plot(): THIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET).\nTO OVERCOME THIS, PLEASE USE PDF GRAPHIC INTERFACES AND RERUN\n\n================\n\n")
+tempo.cat <- ("\n\n================\n\nERROR IN fun_prior_plot()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE USE PDF GRAPHIC INTERFACES AND RERUN\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -4930,7 +4932,7 @@ fun_gg_point_rast <- function(data = NULL, mapping = NULL, stat = "identity", po
 # a raster scatter plot
 # EXAMPLES
 # Two pdf in the current directory
-# set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(10000)) ; fun_open(pdf.name.file = "Raster") ; ggplot2::ggplot() + fun_gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; fun_open(pdf.name.file = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off() ; dev.off()
+# set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(10000)) ; fun_open(pdf.name = "Raster") ; ggplot2::ggplot() + fun_gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; fun_open(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off() ; dev.off()
 # DEBUGGING
 # 
 # function name
@@ -7580,6 +7582,16 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+
+
+
+
+
+
+
+
+
 # add legend width from scatter (empty legend space notably). Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
@@ -9377,6 +9389,21 @@ return(tempo <- output)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
 # error to fix: 1) accept integers as color, 2) fun_scale but xhuld be ok when importing the job from boxplot
@@ -10774,7 +10801,6 @@ return(output)
 # end outputs
 # end main code
 }
-
 
 
 
