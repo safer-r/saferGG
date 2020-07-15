@@ -3428,18 +3428,24 @@ fun_pack(req.package = "lubridate", lib.path = lib.path, load = TRUE) # load = T
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into 
 output <- NULL
+print.count.loop <- 0
 for(i4 in 1:length(x)){
+print.count.loop <- print.count.loop + 1
 log <- get(left)(data, wind$left[x[i4]]) & get(right)(data, wind$right[x[i4]])
 output <- c(output, eval(parse(text = paste0("FUN(data[log]", if( ! is.null(args)){paste0(", ", args)}, ")"))))
 if(verbose == TRUE){
-if(any(i4 == seq(0, length(x), print.count))){
-date.tempo <- Sys.time()
-time.tempo <- as.numeric(date.tempo)
-lapse.tempo <- round((time.tempo - ini.time) / i4 * (length(x) - i4)) #
-lapse.finalend.tempo <- round((time.tempo - ini.time) / (i4 + length(x)) * (length(x) - i4)) #
-time.final.exp <- as.POSIXct(lapse.tempo, origin = date.tempo)
-time.finalend.exp <- as.POSIXct(lapse.finalend.tempo, origin = date.tempo)
-print(paste0("Loop ", i4, " among ", length(x), "   (", trunc(i4/ length(x) * 100), "% done)   Time: ", Sys.time(), " Expected end: ", time.final.exp, " Final end: ", time.finalend.exp)) # do not display the correct time
+if(print.count.loop == print.count){
+print.count.loop <- 0
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+final.loop <- (tempo.time - ini.time) / i4 * length(x) # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.exp <- as.POSIXct(final.loop, origin = ini.date)
+cat(paste0("\nIN PROCESS ", process.id, " | LOOP ", format(i4, big.mark=","), " / ", format(length(x), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+}
+if(i4 == length(x)){
+tempo.time <- as.numeric(Sys.time())
+tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
+cat(paste0("\nPROCESS ", process.id, " ENDED | LOOP ", format(i4, big.mark=","), " / ", format(length(x), big.mark=","), " | TIME SPENT: ", tempo.lapse, "\n\n"))
 }
 }
 }
@@ -7745,6 +7751,11 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+
+
+
+
 # add legend width from scatter (empty legend space notably). Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
@@ -9538,6 +9549,10 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
+
+
+
+
 
 
 
