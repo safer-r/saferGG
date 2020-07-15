@@ -1461,7 +1461,7 @@ expect.error[[i3]] <- split(x = expect.error[[i3]], f = 1:length(expect.error[[i
 }
 }
 if( ! is.null(thread.nb)){
-tempo <- fun_check(data = thread.nb, typeof = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, length = 1, fun.name = "SLITHERINE") ; eval(ee)
+tempo <- fun_check(data = thread.nb, typeof = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & thread.nb < 1){
 tempo.cat <- paste0("ERROR IN ", function.name, ": thread.nb PARAMETER MUST EQUAL OR GREATER THAN 1: ", thread.nb)
 text.check <- c(text.check, tempo.cat)
@@ -3146,9 +3146,11 @@ return(output)
 ######## fun_slide() #### return a computation made on a vector using a sliding window
 
 
-fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args = NULL, boundary = "left", lib.path = NULL){
+fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args = NULL, boundary = "left", thread.nb = NULL, print.count = 100, res.path = NULL, lib.path = NULL, verbose = TRUE, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
 # AIM
 # return a computation made on a vector using a sliding window
+# WARNING
+# The function uses two strategies, depending on the amout of memory required which depends on the data, window.size and step arguments. The first one uses lapply(), is fast but requires lots of memory. The second one uses a parallelized loop. The choice between the two strategies is automatic
 # ARGUMENTS
 # data: vector, matrix, table or array of numeric values (mode must be numeric). Inf not allowed. NA will be removed before computation
 # window.size: single numeric value indicating the width of the window sliding across data (in the same unit as data value)
@@ -3156,13 +3158,20 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # from: value of the left boundary of the first sliding window. If NULL, min(data) is used. The first window will strictly have from or min(data) as left boundary
 # to: value of the right boundary of the last sliding window. If NULL, max(data) is used. Warning: (1) the final last window will not necessary have to|max(data) as right boundary. In fact the last window will be the one that contains to|max(data) for the first time, i.e., min[from|min(data) + window.size + n * step >= to|max(data)]; (2) In fact, the >= in min[from|min(data) + window.size + n * step >= to|max(data)] depends on the boundary argument (>= for "right" and > for "left"); (3) to have the rule (1) but for the center of the last window, use to argument as to = to|max(data) + window.size / 2
 # fun: function or character string (without brackets) indicating the name of the function to apply in each window. Example: fun = "mean", or fun = mean
-# arg: character string of additional arguments of fun (separated by a comma between the quotes). Example args = "na.rm = TRUE" for fun = mean. Ignored if NULL
+# args: character string of additional arguments of fun (separated by a comma between the quotes). Example args = "na.rm = TRUE" for fun = mean. Ignored if NULL
 # boundary: either "left" or "right". Indicates if the sliding window includes values equal to left boundary and exclude values equal to right boundary ("left") or the opposite ("right")
+# thread.nb: numeric value indicating the number of threads to use if ever parallelization is required. If NULL, all the available threads will be used
+# print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
+# res.path: character string indicating the absolute pathway where the parallelization log file will be created if parallelization is used. If NULL, will be created in the R current directory
 # lib.path: character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL
+# verbose: logical. Display messages?
+# cute.path: character string indicating the absolute path of the cute.R file. Will be remove when cute will be a package. Not considered if thread.nb is NULL
 # REQUIRED PACKAGES
-# none
+# lubridate
+# parallel if parallelization is used
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
+# fun_pack()
 # RETURN
 # a data frame containing
 #$left : the left boundary of each window (in the unit of the data argument)
@@ -3173,7 +3182,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left")
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right")
 # DEBUGGING
-# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL
+# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL ; thread.nb = NULL ; print.count = 10 ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 instruction <- match.call()
@@ -3192,7 +3201,7 @@ stop(tempo.cat)
 # argument primary checking
 # arg with no default values
 if(any(missing(data) | missing(window.size) | missing(step) | missing(fun))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS fun, arg AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS fun, args AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end arg with no default values
@@ -3221,9 +3230,25 @@ if( ! is.null(args)){
 tempo <- fun_check(data = args, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 tempo <- fun_check(data = boundary, options = c("left", "right"), length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(thread.nb)){
+tempo <- fun_check(data = thread.nb, typeof = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+}
+tempo <- fun_check(data = print.count, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+if( ! is.null(res.path)){
+tempo <- fun_check(data = res.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+}
 if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 }
+tempo <- fun_check(data = cute.path, class = "vector", typeof = "character", length = 1, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE){
+if( ! file.exists(cute.path)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": FILE PATH INDICATED IN THE cute.path PARAMETER DOES NOT EXISTS:\n", cute.path)
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
+tempo <- fun_check(data = verbose, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
@@ -3232,14 +3257,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument primary checking
 # second round of checking and data preparation
 # dealing with NA
-if(any(is.na(window.size)) | any(is.na(step)) | any(is.na(from)) | any(is.na(to)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(lib.path))){
+if(any(is.na(window.size)) | any(is.na(step)) | any(is.na(from)) | any(is.na(to)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(thread.nb)) | any(is.na(print.count)) | any(is.na(res.path)) | any(is.na(lib.path)) | any(is.na(verbose))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT data CAN HAVE NA VALUES\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NA
 # dealing with NULL
-if(is.null(data) | is.null(window.size) | is.null(step) | is.null(fun) | is.null(boundary)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS data, window.size, step, fun AND boundary CANNOT BE NULL\n\n================\n\n")
+if(is.null(data) | is.null(window.size) | is.null(step) | is.null(fun) | is.null(boundary) | is.null(print.count) | is.null(verbose)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS data, window.size, step, fun, boundary, print.count AND verbose CANNOT BE NULL\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NULL
@@ -3251,15 +3276,37 @@ if(step > window.size){
 tempo.cat <- paste0("ERROR IN ", function.name, ": step ARGUMENT MUST BE LOWER THAN window.size ARGUMENT\nstep: ", paste(step, collapse = " "), "\nwindow.size: ", paste(window.size, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
+if( ! is.null(thread.nb)){
+if(thread.nb < 1){
+tempo.cat <- paste0("ERROR IN ", function.name, ": thread.nb PARAMETER MUST EQUAL OR GREATER THAN 1: ", thread.nb)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
+}
+if( ! is.null(res.path)){
+if( ! all(dir.exists(res.path))){ # separation to avoid the problem of tempo$problem == FALSE and res.path == NA
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE res.path ARGUMENT DOES NOT EXISTS:\n", paste(res.path, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
+}else{
+res.path <- getwd() # working directory
+}
 if( ! is.null(lib.path)){
 if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
 tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
 # end second round of checking and data preparation
+# package checking
+fun_pack(req.package = c("lubridate"), lib.path = lib.path)
+fun_pack(req.package = c("parallel"), lib.path = lib.path)
+# end package checking
 # main code
+if(verbose == TRUE){
+cat("\nfun_slide JOB IGNITION\n")
+}
+ini.date <- Sys.time()
+ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
 fun <- match.fun(fun) # make fun <- get(fun) is fun is a function name written as character string of length 1
 if(boundary == "left"){
 left <- ">="
@@ -3291,6 +3338,10 @@ tempo.log <- get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = 
 tempo.log[min(which(tempo.log), na.rm = TRUE)] <- FALSE # convert the first left boundary that goes above max(data, na.rm = TRUE) to FALSE to keep it (the next ones will be removed)
 wind <- wind[ ! tempo.log,]
 }
+# test if lapply can be used
+tempo <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})")
+# end test if lapply can be used
+if( ! any(grepl(x = tempo, pattern = "ERROR.*"))){
 left.log <- lapply(X = wind$left, Y = data, FUN = function(X, Y){
 res <- get(left)(Y, X)
 return(res)
@@ -3300,14 +3351,129 @@ res <- get(right)(Y, X)
 return(res)
 })
 log <- mapply(FUN = "&", left.log, right.log, SIMPLIFY = FALSE)
-output <- eval(parse(text = paste0("sapply(lapply(log, FUN = function(X){(data[X])}), FUN = fun", if( ! is.null(args)){paste0(", ", args)}, ")")))
+output <- eval(parse(text = paste0("sapply(lapply(log, FUN = function(X){(data[X])}), FUN = fun", if( ! is.null(args)){paste0(", ", args)}, ")"))) # take the values of the data vector according to log (list of logical, each compartment of length(data)) and apply fun with args of fun
 if(length(output) != nrow(wind)){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2\n\n============\n\n")
+tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 3\n\n============\n\n")
+stop(tempo.cat)
+}else{
+output <- data.frame(wind, value = output)
+}
+}else{
+if(verbose == TRUE){
+tempo.cat <- paste0("PARALLELIZATION INITIATED AT: ", ini.date)
+cat(paste0("\n", tempo.cat, "\n"))
+}
+tempo.thread.nb = parallel::detectCores(all.tests = FALSE, logical = TRUE) # detect the number of threads
+if( ! is.null(thread.nb)){
+if(tempo.thread.nb < thread.nb){
+thread.nb <- tempo.thread.nb
+if(verbose == TRUE){
+tempo.cat <- paste0("ONLY: ", tempo.thread.nb, " THREADS AVAILABLE")
+cat(paste0("\n", tempo.cat, "\n"))
+}
+}
+}else{
+thread.nb <- tempo.thread.nb
+}
+if(verbose == TRUE){
+tempo.cat <- paste0("NUMBER OF THREADS USED: ", thread.nb)
+cat(paste0("\n    ", tempo.cat, "\n"))
+}
+Clust <- parallel::makeCluster(thread.nb, outfile = paste0(res.path, "/fun_slide_parall_log.txt")) # outfile to print or cat during parallelization (only possible in a file, outfile = "" do not work on windows)
+cluster.list <- parallel::clusterSplit(Clust, 1:nrow(wind)) # split according to the number of cluster
+if(verbose == TRUE){
+tempo.cat <- paste0("SPLIT OF TEST NUMBERS IN PARALLELISATION:")
+cat(paste0("\n    ", tempo.cat, "\n"))
+str(cluster.list) # using print(str()) add a NULL below the result
+cat("\n")
+}
+paral.output.list <- parallel::clusterApply( #
+cl = Clust,
+x = cluster.list,
+function.name = function.name, 
+data = data, 
+FUN = fun, # because fun argument of clusterApply
+args = args, 
+thread.nb = thread.nb, 
+print.count = print.count, 
+wind = wind, 
+left = left, 
+right = right, 
+res.path = res.path, 
+lib.path = lib.path, 
+verbose = verbose, 
+cute.path = cute.path, 
+fun = function(
+x, 
+function.name, 
+data, 
+FUN, 
+args, 
+thread.nb, 
+print.count, 
+wind, 
+left, 
+right, 
+res.path, 
+lib.path, 
+verbose, 
+cute.path
+){
+# check again: very important because another R
+process.id <- Sys.getpid()
+cat(paste0("\nPROCESS ID ", process.id, " -> TESTS ", x[1], " TO ", x[length(x)], "\n"))
+source(cute.path, local = .GlobalEnv)
+fun_pack(req.package = "lubridate", lib.path = lib.path, load = TRUE) # load = TRUE to be sure that functions are present in the environment. And this prevent to use R.lib.path argument of fun_python_pack()
+# end check again: very important because another R
+ini.date <- Sys.time()
+ini.time <- as.numeric(ini.date) # time of process begin, converted into 
+output <- NULL
+for(i4 in 1:length(x)){
+log <- get(left)(data, wind$left[x[i4]]) & get(right)(data, wind$right[x[i4]])
+output <- c(output, eval(parse(text = paste0("FUN(data[log]", if( ! is.null(args)){paste0(", ", args)}, ")"))))
+if(verbose == TRUE){
+if(any(i4 == seq(0, length(x), print.count))){
+date.tempo <- Sys.time()
+time.tempo <- as.numeric(date.tempo)
+lapse.tempo <- round((time.tempo - ini.time) / i4 * (length(x) - i4)) #
+lapse.finalend.tempo <- round((time.tempo - ini.time) / (i4 + length(x)) * (length(x) - i4)) #
+time.final.exp <- as.POSIXct(lapse.tempo, origin = date.tempo)
+time.finalend.exp <- as.POSIXct(lapse.finalend.tempo, origin = date.tempo)
+print(paste0("Loop ", i4, " among ", length(x), "   (", trunc(i4/ length(x) * 100), "% done)   Time: ", Sys.time(), " Expected end: ", time.final.exp, " Final end: ", time.finalend.exp)) # do not display the correct time
+}
+}
+}
+wind <- wind[x, ]
+if(length(output) != nrow(wind)){
+tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4\n\n============\n\n")
 stop(tempo.cat)
 }else{
 output <- data.frame(wind, value = output)
 return(output)
 }
+}
+)
+parallel::stopCluster(Clust)
+# result assembly
+output <- data.frame()
+for(i2 in 1:length(paral.output.list)){ # compartment relatives to each parallelization
+output <- rbind(output, paral.output.list[[i2]])
+}
+# end result assembly
+if(nrow(output) != nrow(wind)){
+tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 5\nlength(output): ", length(output), "\nnrow(wind): ", nrow(wind), "\n\n============\n\n")
+stop(tempo.cat)
+}else{
+output <- output[order(output$left), ]
+}
+}
+if(verbose == TRUE){
+end.date <- Sys.time()
+end.time <- as.numeric(end.date)
+total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
+cat(paste0("fun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
+}
+return(output)
 }
 
 
@@ -5385,7 +5551,7 @@ fun_pack(req.package = c("reshape2", "ggplot2"), lib.path = lib.path)
 # end package checking
 # main code
 if(all(is.matrix(data1))){
-data1 <- reshape2::melt(data1) # transform a matrix into a dataframe with 2 coordinates columns and the third intensity column
+data1 <- reshape2::melt(data1) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
 }
 if(rotate == TRUE){
 data1[, 1] <- rev(data1[, 1])
@@ -5417,7 +5583,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 if( ! is.null(data2)){
 if(all(is.matrix(data2))){
-data2 <- reshape2::melt(data2) # transform a matrix into a dataframe with 2 coordinates columns and the third intensity column
+data2 <- reshape2::melt(data2) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
 }
 if(rotate == TRUE){
 data2[, 1] <- rev(data2[, 1])
@@ -5889,7 +6055,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # dots that are sometimes inside and outside the frame, depending on the sliding window, are treated differently: they are removed. Such dots are neither classified as "signif", "non signif" or "unknown", but as "inconsistent"
 # unknown dots are treated as finally significant, not significant, or unknown (data2.pb.dot argument) for each x-axis and y-axis separately. Then, the union or intersection of significant dots is performed (argument xy.cross.kind). See the example section
 # ARGUMENTS
-# data1: a dataframe containing a column of x-axis values and a column of y-axis values
+# data1: a data frame containing a column of x-axis values and a column of y-axis values
 # x1: character string of the data1 column name for x-axis (first column of data1 by default)
 # y1: character string of the data1 column name for y-axis (second column of data1 by default)
 # x.range.split: positive non null numeric value giving the number of interval on the x value range. if x.range is the range of the dots on the x-axis, then abs(diff(x.range) / x.range.split) gives the window size. Window size decreases when range.split increases. In unit of x-axis. Write NULL if not required. At least one of the x.range.split and y.range.split must be non NULL
@@ -5897,7 +6063,7 @@ fun_segmentation <- function(data1, x1, y1, x.range.split = NULL, x.step.factor 
 # y.range.split: same as x.range.split for the y-axis. At least one of the x.range.split and y.range.split must be non NULL
 # y.step.factor: same as x.step.factor for the y-axis
 # error: proportion (from 0 to 1) of false positives (i.e., proportion of dots from data1 outside of the frame). 0.05 means 5% of the dots from data1 outside of the frame
-# data2: a dataframe containing a column of x-axis values and a column of y-axis values, for which outside dots of the data1 cloud has to be determined. Write NULL if not required
+# data2: a data frame containing a column of x-axis values and a column of y-axis values, for which outside dots of the data1 cloud has to be determined. Write NULL if not required
 # x2: character string of the data1 column name for x-axis (first column of data1 by default)
 # y2: character string of the data1 column name for y-axis (second column of data1 by default)
 # data2.pb.dot: unknown dots are explain in the warning section above. If "signif", then the unknown dots are finally considered as significant (outside the frame). If "not.signif", then the unknown dots are finally considered as non significant (inside the frame). If "unknown", no conclusion are drawn from these dots. See the examples below
@@ -7575,19 +7741,6 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -9385,22 +9538,6 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
