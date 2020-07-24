@@ -7751,11 +7751,6 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
-
-
-
 # add legend width from scatter (empty legend space notably). Ok with facet?
 # transfert the 2nd tick part to scatter
 # improve grid -> put secondary grids. Then trasfert to scatter
@@ -7777,6 +7772,9 @@ return(output) # do not use cat() because the idea is to reuse the message
 # a <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), dot.color = 1:4, dot.tidy = FALSE, dot.tidy.bin.nb = 100, return = TRUE, dot.categ = "Group3") # error with dot.categ.class.order
 # obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
 # fun_gg_boxplot(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), box.width = 0.25, box.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.tidy.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, y.lim = c(0, 25), y.log = "no", y.tick.nb = NULL, y.second.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, x.lab = "GROUP", y.lab = "VALUE", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, article = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, lib.path = NULL)
+# add warning message when Nan or Inf values
+# return = TRUE is not working
+#in fact, using log10 and log2 -> convert the values. It is more logical because we want the y-axis modified but not the values in fact
 #For heatmap: see https://bioinfo-fr.net/creer-des-heatmaps-a-partir-de-grosses-matrices-en-r
 
 
@@ -7882,10 +7880,10 @@ lib.path = NULL
 # x.lab: a character string or expression for x-axis legend. If NULL, character string of categ1
 # y.lab: a character string or expression for y-axis legend. If NULL, character string of the y argument
 # y.lim: 2 numeric values indicating the range of the y-axis
-# y.log: either "no" (values in the y argument column of the data1 data frame are not log), "log2" (values in the y argument column of the data1 data frame are log2 transformed) or "log10" (values in the y argument column of the data1 data frame are log10 transformed). BEWARE: do not transform the data, but just display ticks in a log scale manner. Thus, negative or zero values allowed in the y argument when y.log is "log2" or "log10". BEWARE: not possible to have horizontal boxs with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
+# y.log: either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log2 scaled). BEWARE: not possible to have horizontal boxs with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # y.tick.nb: approximate number of desired label values (i.e., main ticks) on the y-axis (n argument of the the cute::fun_scale() function). BEWARE: provide this number even if y.log is "log2" or "log10", which can be difficult to read (e.g., ..., 2^2, 2^2.5, 2^3, ...). If NULL and if y.log is "no", then the number of label values is set by ggplot2. If NULL and if y.log is "log2" or "log10", then the number of label values correspond to integer units between y.lim (e.g., ..., 2^1, 2^2, 2^3, ...)
 # y.second.tick.nb: number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks
-# y.include.zero: logical. Does y.lim range include 0? Ok even if y.log == TRUE because y.lim must already be log transformed values
+# y.include.zero: logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10"
 # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis * y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis
 # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
 # stat.disp: add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the figure region) or "above" (above each box)
@@ -8571,27 +8569,21 @@ dot.border.color <- fun_gg_palette(max(dot.border.color, na.rm = TRUE))[dot.bord
 }
 # end integer colors into gg_palette
 }
-if(y.log != "no"){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, ".\nVALUES FROM THE y ARGUMENT COLUMN OF THE data1 DATA FRAME MUST BE ALREADY ", toupper(y.log), " TRANSFORMED, AS THE y.log ARGUMENT JUST MODIFIES THE AXIS SCALE")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-if( ! is.null(y.lim)){
+if(y.log != "no" & ! is.null(y.lim)){
 if(any(y.lim <= 0)){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") y.lim ARGUMENT CAN SPAN ZERO OR NEGATIVE VALUES IF y.log ARGUMENT IS SET TO ", y.log, " BECAUSE y.log DOES NOT TRANSFORM DATA, JUST MODIFIES THE AXIS SCALE")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }else if(any( ! is.finite(if(y.log == "log10"){10^y.lim}else{2^y.lim}))){
-tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", 10, 2), "^y.lim:\n", paste(ifelse(y.log == "log10", 10, 2)^y.lim, collapse = " "), "\nARE YOU SURE THAT y.lim ARGUMENT HAS BEEN SPECIFIED WITH VALUES ALREADY IN LOG SCALE?\n", paste(y.lim, collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", 10, 2), "^y.lim:\n", paste(ifelse(y.log == "log10", 10, 2)^y.lim, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
+if(y.log != "no" & y.include.zero == TRUE){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE 0 VALUE DOES NOT EXIST IN LOG SCALE")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+y.include.zero <- FALSE
 }
-# inactivated because y must already be log transformed data
-# if(y.log != "no" & y.include.zero == TRUE){
-# warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE NO 0 ALLOWED IN LOG SCALE")
-# warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-# }
 if(y.log != "no" & vertical == FALSE){
 vertical <- TRUE
 warn.count <- warn.count + 1
@@ -8818,7 +8810,14 @@ stat <- data.frame(stat[c("MIN", "QUART1", "MEDIAN")], MEAN = tempo.mean$MEAN, s
 
 
 
-
+# data1 log conversion
+if(y.log != "no"){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, " -> DATA FROM y COLUMN CONVERTED FOR LOG SCALE REPRESENTATION")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))
+}
+# end data1 log conversion
 
 
 
@@ -8831,6 +8830,10 @@ tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf 
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 y.lim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+}else{
+if(y.log != "no"){
+y.lim <- suppressWarnings(get(y.log)(y.lim))
+}
 }
 if(suppressWarnings(all(y.lim %in% c(Inf, -Inf)))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED y.lim CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
@@ -8849,7 +8852,6 @@ tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name
 stop(tempo.cat)
 }
 # end ylim range
-
 
 
 
@@ -9549,10 +9551,6 @@ return(tempo <- output)
 # end outputs
 # end main code
 }
-
-
-
-
 
 
 
