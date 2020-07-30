@@ -25,6 +25,7 @@
 # https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
 # https://docs.gitlab.com/ee/user/project/pages/
 # also register into biotools
+# For heatmap: see https://bioinfo-fr.net/creer-des-heatmaps-a-partir-de-grosses-matrices-en-r
 
 
 ################################ OUTLINE ################################
@@ -7773,9 +7774,7 @@ return(output) # do not use cat() because the idea is to reuse the message
 # obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
 # fun_gg_boxplot(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"), box.width = 0.25, box.whisker.width = 0.8, dot.color = "grey", dot.tidy = FALSE, dot.tidy.bin.nb = 30, dot.jitter = 1, dot.size = 4, dot.border.size = 0, dot.alpha = 1, y.lim = c(0, 25), y.log = "no", y.tick.nb = NULL, y.second.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0, stat.disp = "above", stat.size = 4, stat.dist = 2, x.lab = "GROUP", y.lab = "VALUE", vertical = FALSE, text.size = 12, title = "", title.text.size = 8, text.angle = 45, article = TRUE, grid = TRUE, return = TRUE, plot = TRUE, add = NULL, warn.print = TRUE, lib.path = NULL)
 # add warning message when Nan or Inf values
-# return = TRUE is not working
-#in fact, using log10 and log2 -> convert the values. It is more logical because we want the y-axis modified but not the values in fact
-#For heatmap: see https://bioinfo-fr.net/creer-des-heatmaps-a-partir-de-grosses-matrices-en-r
+# double legends with suppressMessages(suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=c(1, legend.width))))
 
 
 
@@ -7901,7 +7900,7 @@ lib.path = NULL
 # article: logical. If TRUE, use a article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (add = "+ggplot2::theme_classic()" for the exact classic ggplot theme
 # grid: logical. Draw horizontal lines in the background to better read the box values? Not considered if article == FALSE
 # return: logical. Return the graph parameters?
-# return.ggplot: logical. Return the ggplot object in the output list? Ignored if return is FALSE. See $ggplot in the RETURN section below for more details
+# return.ggplot: logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the fun_gg_boxplot() function (e.g., a <- fun_gg_boxplot()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
 # BEWARE: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
@@ -7926,7 +7925,7 @@ lib.path = NULL
 # RETURN
 # a boxplot if plot argument is TRUE
 # a list of the graph info if return argument is TRUE:
-# $data: the initial data
+# $data: the initial data with graphic information added. WARNING: if the y.log argument is not "no", y values are log2 or log10 converted in $data
 # $stat: the graphic statistics
 # $removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
 # $removed.rows: removed rows containing NA (NULL if no row removed)
@@ -7946,7 +7945,7 @@ lib.path = NULL
 # $panel: the variable names used for the panels (NULL if no panels). BEWARE: NA can be present according to ggplot2 upgrade to v3.3.0
 # $axes: the x-axis and y-axis info
 # $warn: the warning messages. Use cat() for proper display. NULL if no warning. BEWARE: some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
-# $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Indeed, a non NULL $ggplot in the output list is sometimes annoying as the manipulation of the list print the plot
+# $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
 # EXAMPLE
 # obs1 <- data.frame(x = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10)) ; fun_gg_boxplot(data1 = obs1, y = "x", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "", categ.color = c("red", "blue"),box.fill = FALSE, box.width = 0.5, box.space = 0.1, box.line.size = 0.5, box.notch = FALSE, box.alpha = 1, box.mean = TRUE, box.whisker.kind = "std", box.whisker.width = 0, dot.color = "black", dot.categ = NULL, dot.categ.class.order = NULL, dot.categ.legend.name = NULL, dot.tidy = TRUE, dot.tidy.bin.nb = 50, dot.jitter = 0.5, dot.size = 3, dot.alpha = 0.5, dot.border.size = 0.5, dot.border.color = NULL, x.lab = NULL, y.lab = NULL, y.lim = NULL, y.log = "no", y.tick.nb = NULL, y.second.tick.nb = NULL, y.include.zero = FALSE, y.top.extra.margin = 0.05, y.bottom.extra.margin = 0.05, stat.disp = NULL, stat.disp.mean = FALSE, stat.size = 4, stat.dist = 2, vertical = TRUE, text.size = 12, text.angle = 0, title = "", title.text.size = 8, legend.width = 0.5, article = TRUE, grid = FALSE, return = FALSE, return.ggplot = FALSE, plot = TRUE, add = NULL, warn.print = TRUE, lib.path = NULL)
 # DEBUGGING
@@ -9487,11 +9486,12 @@ if(plot == TRUE){
 # two next line: for the moment, I cannot prevent the warning printing
 # warn.recov <- fun_get_message(paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}), kind = "warning", header = FALSE, print.no = FALSE, env = env_fun_get_message) # for recovering warnings printed by ggplot() functions
 # message.recov <- fun_get_message('print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}))))', kind = "message", header = FALSE, print.no = FALSE, env = env_fun_get_message) # for recovering messages printed by ggplot() functions
-# reactivate the 4 next lines to incorporate legend.width
-# if(is.null(legend.width)){
+# if( ! (return == TRUE & return.ggplot == TRUE)){ # because return() plots when return.ggplot is TRUE # finally not used -> see return.ggplot description
+if(is.null(legend.width)){
 suppressMessages(suppressWarnings(print(fin.plot)))
-# }else{
-# suppressMessages(suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=c(1, legend.width))))
+}else{
+suppressMessages(suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=c(1, legend.width))))
+}
 # }
 # suppressMessages(suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}))))))
 }else{
@@ -9547,11 +9547,13 @@ y.positions = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{unlist
 warn = paste0("\n", warn, "\n\n"), 
 ggplot = if(return.ggplot == TRUE){fin.plot}else{NULL} # fin.plot plots the graph if return == TRUE
 )
-return(tempo <- output)
+return(output) # this plots the graph if return.ggplot is TRUE and if no assignment
 }
 # end outputs
 # end main code
 }
+
+
 
 
 
