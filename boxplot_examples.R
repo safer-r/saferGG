@@ -166,5 +166,5 @@ cat(warn$warnings)
 ### add ggplot2 functions
 obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
-
+fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1", add = "+ggplot2::facet_wrap(facets = 'Group2')")
 
