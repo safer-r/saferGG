@@ -1,12 +1,12 @@
 # EXAMPLES
 ### nice representation (1)
 obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), categ.legend.name = "LEGEND", categ.color = NULL, box.width = 0.3, box.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, y.lim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, x.lab = "GROUP", y.lab = "VALUE", text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 0, article = TRUE, grid = TRUE)
+fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A")), box.legend.name = "LEGEND", categ.color = NULL, box.width = 0.3, box.whisker.width = 0.8, dot.color = "same", dot.jitter = 0.5, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, y.lim = c(10, 25), y.include.zero = TRUE, stat.disp = "above", stat.size = 4, x.lab = "GROUP", y.lab = "VALUE", text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 0, article = TRUE, grid = TRUE)
 ### nice representation (2)
 set.seed(1)
 obs1 <- data.frame(Time = c(rnorm(24, 0), rnorm(24, -10), rnorm(24, 10), rnorm(24, 20)), Group1 = rep(c("CAT", "DOG"), times = 48), Group2 = rep(c("A", "B", "C", "D"), each = 24))
 set.seed(NULL)
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), categ.legend.name = "LEGEND", categ.color = NULL, box.width = 0.8, dot.color = "same", dot.tidy = TRUE, dot.tidy.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, y.lim= c(-20, 30), stat.disp = "above", stat.size = 4, stat.dist = 1, x.lab = "GROUP", y.lab = "VALUE", vertical = FALSE, text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 45, article = FALSE)
+fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), categ.class.order = list(NULL, c("B", "A", "D", "C")), box.legend.name = "LEGEND", categ.color = NULL, box.width = 0.8, dot.color = "same", dot.tidy = TRUE, dot.tidy.bin.nb = 60, dot.size = 3.5, dot.border.size = 0.2, dot.alpha = 0.5, y.lim= c(-20, 30), stat.disp = "above", stat.size = 4, stat.dist = 1, x.lab = "GROUP", y.lab = "VALUE", vertical = FALSE, text.size = 12, title = "GRAPH1", title.text.size = 8, text.angle = 45, article = FALSE)
 ### separate boxes. Simple example
 set.seed(1)
 obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10))
@@ -166,5 +166,6 @@ cat(warn$warnings)
 ### add ggplot2 functions
 obs1 <- data.frame(Time = log10((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), add = "+ggplot2::theme_classic()")
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1", add = "+ggplot2::facet_wrap(facets = 'Group2')")
+fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Group1", article = FALSE, add = "+ggplot2::facet_wrap(facets = 'Group2', labeller = 'label_both') + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'grey', size = 0.5), strip.text = ggplot2::element_text(size = 10, face = 'bold'), panel.spacing = ggplot2::unit(0.5, 'lines'))")  # or ggplot2::vars(Group2) instead of 'Group2'. See https://ggplot2.tidyverse.org/reference/labeller.html
+
 
