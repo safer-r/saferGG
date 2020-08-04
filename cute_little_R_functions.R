@@ -7763,6 +7763,8 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+# http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
+
 
 
 fun_gg_boxplot <- function(
@@ -7826,11 +7828,12 @@ lib.path = NULL
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 # WARNINGS
 # Rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
-# Hinges are not computed like in the classical boxplot() function of R
+# Hinges are not computed like in the classical boxplot() function of R. But 
 # To have a single box, create a factor column with a single class and specify the name of this column in the categ argument. For a single set of grouped boxs, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1, knowing that categ2 must also be specified in this situation). See categ below
 # With separated boxs (categ argument with only one element), box.width argument defines each box width. The box.width argument also defines the space between boxs by using (1 - box.width). In addition, xmin and xmax of the fun_gg_boxplot() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each box)
 # With grouped boxs (categ argument with two elements), box.width argument defines each set of grouped box width. The box.width argument also defines the space between set of grouped boxs by using (1 - box.width). In addition, xmin and xmax of the fun_gg_boxplot() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped box)
 # The dot.alpha argument can alter the display of the color boxes when using pdf output
+# Size arguments (box.line.size, dot.size, dot.border.size, stat.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
 # ARGUMENTS
 # data1: dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below). Duplicated column names are not allowed
 # y: character string of the data1 column name for y-axis (column containing numeric values). Numeric values will be split according to the classes of the column names indicated in the categ argument to generate the boxs and will also be used to plot the dots
@@ -7844,7 +7847,7 @@ lib.path = NULL
 # box.fill: logical. Fill the box? If TRUE, the categ.color argument will be used to generate filled boxplot (the box frames being black) as well as filled outlier dots (the dot border being controled by the dot.border.color argument) and if all the dots are plotted (argument dot.color other than NULL), they will be over the boxes. If FALSE, the categ.color argument will be used to color the box frames and the outlier dot borders, and if all the dots are plotted, they will be beneath the boxes
 # box.width: numeric value (from 0 to 1) of the box or set of grouped box width (see warnings above)
 # box.space: numeric value (from 0 to 1) indicating the box separation in grouped boxes. 0 means no space and 1 means boxes shrinked to a vertical line. Ignored if no grouped boxes
-# box.line.size: numeric value of line size of boxes and whiskers (in mm)
+# box.line.size: numeric value of line width of boxes and whiskers in mm
 # box.notch: logical. Notched boxplot? It TRUE, display notched boxplot, the notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences
 # box.alpha: numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). BEWARE: work only for the fill of boxplots, not for the frame. See https://github.com/tidyverse/ggplot2/issues/252
 # box.mean: logical. Add mean value? It TRUE, a losange dot, additional to the solid median bar and corresponding to the mean value, is incorporated into each boxplot
@@ -7860,9 +7863,9 @@ lib.path = NULL
 # dot.tidy: logical. Nice dot spreading? If TRUE, use the geom_dotplot() function for a nice representation. BEWARE: change the true coordinates of dots that are aligned. Thus the gain in aestheticism is associated with a loss in precision that can be very important. If FALSE, dots are randomly spread, using the dot.jitter argument (see below) keeping the true dot coordinates
 # dot.tidy.bin.nb: positive integer indicating the number of bins (i.e., nb of separations) of the y.lim range. Each dot will then be put in one of the bin, with the size the width of the bin. In other words, increase the number to have smaller dots. Not considered if dot.tidy is FALSE
 # dot.jitter: numeric value (from 0 to 1) of random dot horizontal dispersion, with 0 meaning no dispersion and 1 meaning a dispersion in the corresponding box width interval. Not considered if dot.tidy is TRUE
-# dot.size: numeric value of dot size (in mm). Not considered if dot.tidy is TRUE
+# dot.size: numeric value of dot diameter in mm. Not considered if dot.tidy is TRUE
 # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
-# dot.border.size: numeric value of border dot size (in mm). Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border. Another one leave the border without size control (geom_doplot() feature)
+# dot.border.size: numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature)
 # dot.border.color: single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by fun_gg_palette()
 # x.lab: a character string or expression for x-axis legend. If NULL, character string of categ1
 # y.lab: a character string or expression for y-axis legend. If NULL, character string of the y argument
@@ -7875,13 +7878,13 @@ lib.path = NULL
 # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
 # stat.disp: add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the figure region) or "above" (above each box)
 # stat.disp.mean: logical. Diplay means instead of medians ?
-# stat.size: numeric value of the stat size (in points). Increase the value to increase text size
+# stat.size: numeric value of the stat font size in mm
 # stat.dist: numeric value of the stat distance. Increase the value to increase the distance from the box plot
 # vertical: logical. Vertical boxs? BEWARE: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxs with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
-# text.size: numeric value of the size of the (1) axis numbers and axis legends, (2) texts in the graphic legend, (3) stats above boxs (in points)
+# text.size: numeric value of the font size of the (1) axis numbers and axis legends, (2) texts in the graphic legend, (3) stats above boxs (in mm)
 # text.angle: integer value of the text angle for the x-axis labels. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # title: character string of the graph title
-# title.text.size: numeric value of the title size (in points)
+# title.text.size: numeric value of the title font size in mm
 # legend.show: logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend, excepted if legend.width argument is non NULL. In that specific case (categ is NULL, legend.show is TRUE and legend.width is non NULL), an empty legend space is created. This can be useful when desiring graphs of exactly the same width, whatever they have legends or not
 # legend.width: single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend
 # article: logical. If TRUE, use a article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (add = "+ggplot2::theme_classic()" for the exact classic ggplot theme
@@ -7941,6 +7944,7 @@ lib.path = NULL
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10)) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ;  dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; text.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+arg.user.setting <- as.list(match.call(expand.dots=FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
 # end function name
 # required function checking
 req.function <- c(
@@ -7965,6 +7969,12 @@ stop(tempo.cat)
 reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.categ", "dot.max", "dot.min", "group", "PANEL", "group.check", "MEAN", "tempo.categ1", "tempo.categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax", "tidy_group")
 # end reserved words to avoid bugs (used in this function)
 # argument primary checking
+# arg with no default values
+if(any(missing(data1) | missing(y) | missing(categ))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS data1, y AND categ HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end arg with no default values
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -8131,6 +8141,74 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
+# dealing with NA
+tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
+if(any(tempo) == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NA
+# dealing with NULL
+null.count <- NULL
+for(i1 in c(
+"data1", 
+"y", 
+"categ", 
+"box.fill", 
+"box.width", 
+"box.space", 
+"categ", 
+"categ", 
+"categ", 
+"categ", 
+"categ", 
+"categ", 
+"categ", 
+"categ", 
+"categ", 
+"box.line.size", 
+"box.notch", 
+"box.alpha", 
+"box.mean", 
+"box.whisker.kind", 
+"box.whisker.width", 
+"dot.color", 
+"dot.tidy", 
+"dot.tidy.bin.nb", 
+"dot.jitter", 
+"dot.size", 
+"dot.alpha", 
+"dot.border.size", 
+"y.log", 
+"y.include.zero", 
+"y.top.extra.margin", 
+"y.bottom.extra.margin", 
+"stat.disp.mean", 
+"stat.size", 
+"stat.dist", 
+"vertical", 
+"text.size", 
+"text.angle", 
+"title", 
+"title.text.size", 
+"legend.show", 
+"legend.width", 
+"article", 
+"grid", 
+"return", 
+"return.ggplot", 
+"plot", 
+"warn.print"
+)){
+if(is.null(eval(parse(text = i1)))){
+null.count <- c(null.count, i1)
+}
+}
+if( ! is.null(null.count)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NULL
 warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
@@ -9414,7 +9492,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::gui
 # the oob argument of scale_y_continuous() https://ggplot2.tidyverse.org/reference/scale_continuous.html
 # see also https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
 # secondary ticks
-bef.final.plot <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::coord_cartesian(ylim = if(diff(y.lim) < 0){rev(y.lim)}else{y.lim})}else{ggplot2::coord_flip(ylim = y.lim)}'))))
+bef.final.plot <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none)}else{ggplot2::coord_flip(ylim = y.lim)}')))) # here I do not need the x-axis and y-axis orientation, I just need the number of main ticks and the legend
 tempo.coord <- bef.final.plot$layout$panel_params[[1]]
 # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non NULL or if y.log argument is different from "no")
 if(y.log != "no"){ # integer main ticks for log2 and log10
@@ -9569,19 +9647,12 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 
 
 
-# add return.ggplot = FALSE, from boxplot
 # add facet from boxplot if data1 is a dataframe or list of length 1
-# inter.tick x and y do not work: see labbook CL
-# change the rule of categ
-# add dot.size and line.size as list except if one value, idem color and geom and alpha
-# http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
-# geom_step. Add "hv" or "vh", see also https://stackoverflow.com/questions/42633374/how-to-get-a-step-plot-using-geom-step-with-different-colors-for-the-segments
+# check  dot.size and line.size as list except if one value, idem color and geom and alpha
+# check geom_step. Add "hv" or "vh", see also https://stackoverflow.com/questions/42633374/how-to-get-a-step-plot-using-geom-step-with-different-colors-for-the-segments
 # add categ.order
 # add categ.class.order replacing levels(factor(data1[[i1]][, categ[[i1]]])), thus check data1[[i1]][, categ[[i1]]]
-# for the length of ticks see ?unit in grid package and https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size
-
-# Problem of 1: Ignoring unknown parameters: lineend
-# problem of 2nd tick values not printed
+# add dot border color and size
 
 
 
@@ -9590,9 +9661,9 @@ data1,
 x, 
 y, 
 categ = NULL, 
-legend.name = NULL, 
 color = NULL, 
 geom = "geom_point", 
+geom.step.dir = "hv", 
 alpha = 0.5, 
 dot.size = 2, 
 line.size = 0.5, 
@@ -9619,12 +9690,14 @@ title = "",
 title.text.size = 12, 
 legend.show = TRUE, 
 legend.width = 0.5, 
+legend.name = NULL, 
 raster = FALSE, 
 raster.ratio = 1, 
 raster.threshold = NULL, 
 article = TRUE, 
 grid = FALSE, 
 return = FALSE, 
+return.ggplot = FALSE,
 plot = TRUE, 
 add = NULL, 
 warn.print = FALSE, 
@@ -9635,18 +9708,34 @@ lib.path = NULL
 # for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 # WARNINGS
 # rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
+# Size arguments (dot.size, dot.border.size, line.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
 # ARGUMENTS
 # data1: a dataframe compatible with ggplot2, or a list of data frames
 # x: character string of the data1 column name for x-axis. If data1 is a list, then x must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Write NULL for each "geom_hline" in geom argument
 # y: character string of the data1 column name for y-axis. If data1 is a list, then y must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Write NULL for each "geom_vline" in geom argument
-# categ: character string of the data1 column name for categories. If categ == NULL, no categories -> no legend displayed. If data1 is a list, then categ must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL, and other not
-# legend.name: character string of the legend title. If legend.name == NULL and categ != NULL, then legend.name <- categ. If data1 is a list, then legend.name must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL, and other not # add with other legends below
-# color: vector of character string of the colors of categ arguments. If color == NULL, default colors of ggplot2. If non null, it can be either: (1) a single color string (all the dots of the corresponding data1 will have this color, whatever categ NULL or not), (2) if categ non null, a vector of string colors, one for each class of categ (each color will be associated according to the alphabetical order of categ classes), (3) if categ non null, a vector or factor of string colors, like if it was one of the column of data1 data frame (beware: a single color per class of categ and a single class of categ per color must be respected). Integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by fun_gg_palette() using the max integer value among all the integers in color. If data1 is a list, then color must be a list of character strings or integers, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the compartments can be NULL. In that case, a different grey color will be used for each NULL compartment
-# geom: character string of the kind of plot. Either "geom_point" (scatterplot), "geom_line" (coordinates plotted then line connection from the lowest to highest coordinates), "geom_path" (line connection respecting the order in data1), "geom_step" line connection respecting the order in data1 but drawn in steps), "geom_hline" (horizontal line) or "geom_vline" (vertical line). BEWARE: for "geom_hline" or "geom_vline", (1) x or y argument must be NULL, respectively, (2) x.lim or y.lim argument must NOT be NULL, respectively, if only these kind of lines are drawn (if other geom present, then x.lim = NULL and y.lim = NULL will generate x.lim and y.lim defined by these other geom, which is not possible with "geom_hline" or "geom_vline"), (3) the function will draw n lines for n values in the x argument column name of the data1 data frame. If several colors required, the categ argument must be specified and the corresponding categ column name must exist in the data1 data frame with a different class name for each row. If data1 is a list, then geom must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc.
-# alpha: numeric value (from 0 to 1) of transparency. If data1 is a list, then alpha must be a list of numeric value, of same size as data1, with compartment 1 related to compartment 1 of data1, etc.
-# dot.size: numeric value of point size
-# line.size: numeric value of line size
-# x.lim: 2 numeric values for x-axis range. If NULL, range of x in data1. Order of the 2 values matters (for inverted axis). BEWARE: values of the x.lim must be already in the corresponding log if x.log argument is not "no" (see below)
+# categ: either NULL or a character string or a list of character strings
+# If categ == NULL, no categories -> no legend displayed
+# If data1 is a data frame, categ must be a character string of the data1 column name for categories
+# If data1 is a list, then categ must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL (no legend display for these compartments), and other not
+# color: either (1) NULL, or (2) a vector of character strings or integers, or (3) a list of vectors of character strings or integers
+# If color == NULL, default colors of ggplot2
+# If data1 is a data frame, color argument can be either: (1) a single color string (all the dots of the corresponding data1 will have this color, whatever categ NULL or not), (2) if categ non null, a vector of string colors, one for each class of categ (each color will be associated according to the alphabetical order of categ classes), (3) if categ non null, a vector or factor of string colors, like if it was one of the column of data1 data frame (WARNING: a single color per class of categ and a single class of categ per color must be respected). Integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by fun_gg_palette() using the max integer value among all the integers in color
+# If data1 is a list, then color argument must be either (1) a list of character strings or integers, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single character string or a single integer. With a list (former possibility), the rules described for when data1 is a data frame apply to each compartment of the list. Some of the compartments can be NULL. In that case, a different grey color will be used for each NULL compartment. With a single value (latter possibility), the same color will be used for all the dots and lines, whatever the data1 list
+# geom: character string of the kind of plot, or a list of single character strings
+# Either:
+# "geom_point" (scatterplot)
+# "geom_line" (coordinates plotted then line connection from the lowest to highest coordinates)
+# "geom_path" (line connection respecting the order in data1)
+# "geom_step" line connection respecting the order in data1 but drawn in steps). See the geom.step.dir argument
+# "geom_hline" (horizontal line)
+# "geom_vline" (vertical line)
+# If data1 is a list, then geom must be either (1) a list of single character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single character string. In that case the same kind of plot will apply for the different compartments of the data1 list
+# WARNING concerning "geom_hline" or "geom_vline": (1) x or y argument must be NULL, respectively, (2) x.lim or y.lim argument must NOT be NULL, respectively, if only these kind of lines are drawn (if other geom present, then x.lim = NULL and y.lim = NULL will generate x.lim and y.lim defined by these other geom, which is not possible with "geom_hline" or "geom_vline" alone), (3) the function will draw n lines for n values in the x argument column name of the data1 data frame. If several colors required, the categ argument must be specified and the corresponding categ column name must exist in the data1 data frame with a different class name for each row
+# geom.step.dir: character string indicating the direction when using "geom_step" of the geom argument. Either "vh" for vertical then horizontal, "hv" for horizontal then vertical, or "mid" for step half-way between adjacent x-values. See https://ggplot2.tidyverse.org/reference/geom_path.html. If data1 is a list, then geom.step.dir must be either (1) a list of single character string, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single character string. With a list (former possibility), the value in compartments related to other geom values than "geom_step" will be ignored. With a single value (latter possibility), the same geom.step.dir will be used for all the "geom_step" values of the geom argument, whatever the data1 list
+# alpha: single numeric value (from 0 to 1) of transparency. If data1 is a list, then alpha must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value. In that case the same transparency will apply for the different compartments of the data1 list
+# dot.size: single numeric value of dot diameter in mm. If data1 is a list, then dot.size must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value.  With a list (former possibility), the value in compartments related to lines will be ignored. With a single value (latter possibility), the same dot.size will be used for all the dots, whatever the data1 list
+# line.size: single numeric value of line width in mm. If data1 is a list, then line.size must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value.  With a list (former possibility), the value in compartments related to dots will be ignored. With a single value (latter possibility), the same line.size will be used for all the lines, whatever the data1 list
+# x.lim: 2 numeric values for x-axis range. If NULL, range of x in data1. Order of the 2 values matters (for inverted axis). WARNING: values of the x.lim must be already in the corresponding log if x.log argument is not "no" (see below)
 # x.lab: a character string or expression for x-axis legend. If NULL, x of the first data frame in data1. Warning message if the elements in x are different between data frames in data1
 # x.log: either "no", "log2" (values in the x argument column of the data1 data frame will be log2 transformed and x-axis will be log2 scaled) or "log10" (values in the x argument column of the data1 data frame will be log10 transformed and x-axis will be log10 scaled)
 # x.tick.nb: approximate number of desired label values on the x-axis (n argument of the fun_scale() function). If NULL, the number is managed by ggplot2
@@ -9655,7 +9744,7 @@ lib.path = NULL
 # x.left.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to x.lim. If different from 0, add the range of the axis * x.left.extra.margin (e.g., abs(x.lim[2] - x.lim[1]) * x.left.extra.margin) to the left of x-axis
 # x.right.extra.margin: idem as x.left.extra.margin but to the bottom of x-axis
 # x.text.angle: integer value of the text angle for the x-axis labels. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
-# y.lim: 2 numeric values for y-axis range. If NULL, range of y in data1. Order of the 2 values matters (for inverted axis). BEWARE: values of the y.lim must be already in the corresponding log if y.log argument is not "no" (see below)
+# y.lim: 2 numeric values for y-axis range. If NULL, range of y in data1. Order of the 2 values matters (for inverted axis). WARNING: values of the y.lim must be already in the corresponding log if y.log argument is not "no" (see below)
 # y.lab: a character string or expression for y-axis legend. If NULL, y of the first data frame in data1. Warning message if the elements in y are different between data frames in data1
 # y.log: either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled)
 # y.tick.nb: approximate number of desired label values on the y-axis (n argument of the fun_scale() function). If NULL, the number is managed by ggplot2
@@ -9664,26 +9753,29 @@ lib.path = NULL
 # y.left.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis * y.left.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.left.extra.margin) to the left of y-axis
 # y.right.extra.margin: idem as y.left.extra.margin but to the bottom of y-axis
 # y.text.angle: integer value of the text angle for the y-axis labels. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
-# text.size: numeric value of the size of the (1) axis numbers and axis legends and (2) texts in the graphic legend
+# text.size: numeric value of the font size of the (1) axis numbers and axis legends and (2) texts in the graphic legend (in mm)
 # title: character string of the graph title
-# title.text.size: numeric value of the title size (in points)
+# title.text.size: numeric value of the title size (in mm)
 # legend.show: logical. Show legend? Ignored if categ argument is NULL, because this already generate no legend
 # legend.width: single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend which will overlay the plot region. If categ argument is NULL or legend.show argument is FALSE, an empty legend space is created, which can be useful when desiring graphs of exactly the same width, whatever they have legends or not. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend
+# legend.name: character string of the legend title. If legend.name == NULL and categ != NULL, then legend.name <- categ. If data1 is a list, then legend.name must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL, and other not
 # raster: logical. Dots in raster mode? If FALSE, dots from each geom_point from geom argument are in vectorial mode (bigger pdf and long to display if millions of dots). If TRUE, dots from each geom_point from geom argument are in matricial mode (smaller pdf and easy display if millions of dots, but long to generate the layer). If TRUE, the raster.ratio argument is used to avoid an ellipsoid representation of the dots. If TRUE, solve the transparency problem with some GUI. Overriden by raster.threshold if non NULL
 # raster.ratio: single numeric value indicating the height / width ratio of the graphic device used (for instance provided by the $dim of the output of the fun_open() function). The default value is 1 because by default R opens a square graphic device. But this argument has to be set when using other device dimensions. Ignored if raster == FALSE
 # raster.threshold: positive integer value indicating the limit of the dot number above which geom_point from geom argument switch from vectorial mode to raster mode (see the raster argument). If any layer is raster, then raster.ratio argument is used to avoid an ellipsoid representation of the dots. Inactive the raster argument if non NULL
 # article: logical. If TRUE, use a article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (add = "+ggplot2::theme_classic()" for the exact classic ggplot theme
 # grid: logical. Draw horizontal and vertical lines in the background to better read the values? Not considered if article == FALSE
 # return: logical. Return the graph info?
+# return.ggplot: logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the fun_gg_boxplot() function (e.g., a <- fun_gg_boxplot()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
 # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
 # add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
-# BEWARE: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
+# WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
 # If the character string contains the "ggplot2::theme" string, then the article argument of fun_gg_boxplot() (see above) is ignored with a warning
 # Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
 # warn.print: logical. Print warnings at the end of the execution? If TRUE, no print if no warning message generated
 # lib.path: character string indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders
 # REQUIRED PACKAGES
 # ggplot2
+# scales
 # if raster plots are drawn (see the raster and raster.threshold arguments):
 # Cairo
 # grid
@@ -9706,17 +9798,18 @@ lib.path = NULL
 # $dots: dot coordinates
 # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non NULL or if y.log argument is different from "no")
 # y.second.tick.values: values of secondary ticks. NULL except if y.second.tick.nb argument is non NULL or if y.log argument is different from "no")
-# $panel: the variable names used for the panels (NULL if no panels). BEWARE: NA can be present according to ggplot2 upgrade to v3.3.0
+# $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0
 # $axes: the x-axis and y-axis info
 # $warn: the warning messages. Use cat() for proper display. NULL if no warning
 # $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
 # EXAMPLES
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; x.lim = NULL ; x.lab = "KM" ; x.log = "no" ; x.tick.nb = 10 ; x.second.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(1, 25) ; y.lab = "TIME (s)" ; y.log = "no" ; y.tick.nb = 5 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = TRUE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; x.lim = c(14, 4) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(60, 5) ; y.lab = NULL ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = TRUE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
-# data1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; data1 ; x = "km"; y = "time"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_point"; alpha = 0.1 ; dot.size = 1 ; line.size = 0.5 ; x.lim = c(1,10) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = NULL ; y.lab = expression(paste("TIME (", 10^-20, " s)")) ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; x.lim = NULL ; x.lab = "KM" ; x.log = "no" ; x.tick.nb = 10 ; x.second.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(1, 25) ; y.lab = "TIME (s)" ; y.log = "no" ; y.tick.nb = 5 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = TRUE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; x.lim = c(14, 4) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(60, 5) ; y.lab = NULL ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = TRUE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# data1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; data1 ; x = "km"; y = "time"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; alpha = 0.1 ; dot.size = 3 ; line.size = 0.5 ; x.lim = c(1,10) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = NULL ; y.lab = expression(paste("TIME (", 10^-20, " s)")) ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+arg.user.setting <- as.list(match.call(expand.dots=FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
 # end function name
 # required function checking
 req.function <- c(
@@ -9740,6 +9833,12 @@ stop(tempo.cat)
 # reserved words to avoid bugs (used in this function)
 reserved.words <- c("fake_x", "fake_y", "fake_categ", "color")
 # end reserved words to avoid bugs (used in this function)
+# arg with no default values
+if(any(missing(data1) | missing(x) | missing(y))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS data1, x AND y HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end arg with no default values
 # primary argument checking
 arg.check <- NULL #
 text.check <- NULL #
@@ -9799,14 +9898,19 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
-if( ! is.null(geom)){
-tempo1 <- fun_check(data = geom, class = "vector", mode = "character", na.contain = TRUE, length = 1, fun.name = function.name)
+tempo1 <- fun_check(data = geom, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = geom, class = "list", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+tempo1 <- fun_check(data = geom.step.dir, options = c("vh", "hv", "mid"), na.contain = FALSE, length = 1, fun.name = function.name)
+tempo2 <- fun_check(data = geom.step.dir, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom.step.dir ARGUMENT MUST BE A SINGLE CHARACTER STRING (\"vh\" OR \"hv\" OR \"mid\") OR A LIST OF THESE CHARACTER STRINGS")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = alpha, prop = TRUE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = alpha, class = "list", na.contain = TRUE, fun.name = function.name)
@@ -9815,8 +9919,20 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": alpha ARGUMENT MUST BE A SING
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
-tempo <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo1 <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
+tempo2 <- fun_check(data = dot.size, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo1 <- fun_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
+tempo2 <- fun_check(data = line.size, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": line.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
 if( ! is.null(x.lim)){
 tempo <- fun_check(data = x.lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(x.lim %in% c(Inf, -Inf))){
@@ -9904,6 +10020,7 @@ tempo <- fun_check(data = raster.threshold, class = "vector", typeof = "integer"
 tempo <- fun_check(data = article, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = return.ggplot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
 tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
@@ -9930,9 +10047,66 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 
 
 # second round of checking and data preparation
-# check list lengths (and names of data1 compartments if non name present)
+# dealing with NA
+tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
+if(any(tempo) == TRUE){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NA
+# dealing with NULL
+null.count <- NULL
+for(i1 in c(
+"data1", 
+# "x", # inactivated because of hline or vline
+# "y", # inactivated because of hline or vline
+"geom", 
+"geom.step.dir", 
+"alpha", 
+"dot.size", 
+"line.size", 
+"x.log", 
+"x.include.zero", 
+"x.left.extra.margin", 
+"x.right.extra.margin", 
+"x.text.angle", 
+"y.log", 
+"y.include.zero", 
+"y.top.extra.margin", 
+"y.bottom.extra.margin", 
+"y.text.angle", 
+"text.size", 
+"title", 
+"title.text.size", 
+"legend.show", 
+"legend.width", 
+"raster", 
+"raster.ratio", 
+"article", 
+"grid", 
+"return", 
+"return.ggplot", 
+"plot", 
+"warn.print"
+)){
+if(is.null(eval(parse(text = i1)))){
+null.count <- c(null.count, i1)
+}
+}
+if( ! is.null(null.count)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+# end dealing with NULL
+# check list lengths (and names of data1 compartments if present)
 warn <- NULL
 warn.count <- 0
+list.color <- NULL
+list.geom <- NULL
+list.geom.step.dir <- NULL
+list.alpha <- NULL
+list.dot.size <- NULL
+list.line.size <- NULL
 if(all(class(data1) == "list")){
 if(length(data1) > 6){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A LIST OF 6 DATA FRAMES MAXIMUM (6 OVERLAYS MAX)\n\n================\n\n")
@@ -9966,28 +10140,58 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ
 stop(tempo.cat, call. = FALSE)
 }
 }
+if( ! is.null(color)){
+if( ! ((all(class(color) == "list") & length(data1) == length(color)) | ((all(mode(color) == "character") | all(mode(color) == "numeric")) & length(color) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER STRING OR INTEGER\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if((all(mode(color) == "character") | all(mode(color) == "numeric")) & length(color) == 1){ # convert the single value into a list of single value
+list.color <- vector(mode = "list", length = length(data1))
+list.color[] <- color
+}
+}
+if( ! ((all(class(geom) == "list") & length(data1) == length(geom)) | (all(mode(geom) == "character") & length(geom) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(geom) == "character") & length(geom) == 1){ # convert the single value into a list of single value
+list.geom <- vector(mode = "list", length = length(data1))
+list.geom[] <- geom
+}
+if( ! ((all(class(geom.step.dir) == "list") & length(data1) == length(geom.step.dir)) | (all(mode(geom.step.dir) == "character") & length(geom.step.dir) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom.step.dir ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(geom.step.dir) == "character") & length(geom.step.dir) == 1){ # convert the single value into a list of single value
+list.geom.step.dir <- vector(mode = "list", length = length(data1))
+list.geom.step.dir[] <- geom.step.dir
+}
+if( ! ((all(class(alpha) == "list") & length(data1) == length(alpha)) | (all(mode(alpha) == "numeric") & length(alpha) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": alpha ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(alpha) == "numeric") & length(alpha) == 1){ # convert the single value into a list of single value
+list.alpha <- vector(mode = "list", length = length(data1))
+list.alpha[] <- alpha
+}
+if( ! ((all(class(dot.size) == "list") & length(data1) == length(dot.size)) | (all(mode(dot.size) == "numeric") & length(dot.size) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(dot.size) == "numeric") & length(dot.size) == 1){ # convert the single value into a list of single value
+list.dot.size <- vector(mode = "list", length = length(data1))
+list.dot.size[] <- dot.size
+}
+if( ! ((all(class(line.size) == "list") & length(data1) == length(line.size)) | (all(mode(line.size) == "numeric") & length(line.size) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(line.size) == "numeric") & length(line.size) == 1){ # convert the single value into a list of single value
+list.line.size <- vector(mode = "list", length = length(data1))
+list.line.size[] <- line.size
+}
 if( ! is.null(legend.name)){
 if( ! (all(class(legend.name) == "list") & length(data1) == length(legend.name))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": legend.name ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
-if( ! is.null(color)){
-if( ! (all(class(color) == "list") & length(data1) == length(color))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
 }
-}
-if( ! (all(class(geom) == "list") & length(data1) == length(geom))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
-}
-if( ! (all(class(alpha) == "list") & length(data1) == length(alpha))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": alpha ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
-}
-}
-# end check list lengths (and names of data1 compartments if non name present)
+# end check list lengths (and names of data1 compartments if present)
 # conversion into lists
 if(all(is.data.frame(data1))){
 data1 <- list(L1 = data1)
@@ -10011,14 +10215,6 @@ stop(tempo.cat, call. = FALSE)
 categ <- list(L1 = categ)
 }
 }
-if( ! is.null(legend.name)){
-if(all(class(legend.name) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": legend.name ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
-}else{
-legend.name <- list(L1 = legend.name)
-}
-}
 if( ! is.null(color)){
 if(all(class(color) == "list")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
@@ -10033,17 +10229,65 @@ stop(tempo.cat, call. = FALSE)
 }else{
 geom <- list(L1 = geom)
 }
+if(all(class(geom.step.dir) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom.step.dir ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+geom.step.dir <- list(L1 = geom.step.dir)
+}
 if(all(class(alpha) == "list")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": alpha ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 alpha <- list(L1 = alpha)
 }
+if(all(class(dot.size) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+dot.size <- list(L1 = dot.size)
+}
+if(all(class(line.size) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+line.size <- list(L1 = line.size)
+}
+if( ! is.null(legend.name)){
+if(all(class(legend.name) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": legend.name ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+legend.name <- list(L1 = legend.name)
+}
+}
 }else if( ! all(sapply(data1, FUN = "class") == "data.frame")){ # if not a data frame, data1 can only be a list, as tested above
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OR A LIST OF DATA FRAMES\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-# data, x, y, geom, alpha are list now
+# single value converted into list now reattributed to the argument name
+if( ! is.null(color)){
+if( ! is.null(list.color)){
+color <- list.color
+}
+}
+if( ! is.null(list.geom)){
+geom <- list.geom
+}
+if( ! is.null(list.geom.step.dir)){
+geom.step.dir <- list.geom.step.dir
+}
+if( ! is.null(list.alpha)){
+alpha <- list.alpha
+}
+if( ! is.null(list.dot.size)){
+dot.size <- list.dot.size
+}
+if( ! is.null(list.line.size)){
+line.size <- list.line.size
+}
+# end single value converted into list now reattributed to the argument name
+# data, x, y, categ, geom, alpha, dot.size, line.size, legend.name are list now
 # if non NULL, categ, legend.name, color are list now
 # end conversion into lists
 # legend name filling
@@ -10098,7 +10342,10 @@ data1.ini <- data1 # to report NA removal
 removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
 removed.rows <- vector("list", length = length(data1)) # to report NA removal
 for(i1 in 1:length(data1)){
-tempo <- fun_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "data.frame", na.contain = TRUE, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "data.frame", na.contain = TRUE, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 # reserved word checking
 if(any(names(data1[[i1]]) %in% reserved.words)){ # I do not use fun_name_change() because cannot control y before creating "fake_y". But ok because reserved are not that common
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COLUMN NAMES OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", paste(reserved.words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function.name, " FUNCTION\n\n================\n\n")
@@ -10106,7 +10353,14 @@ stop(tempo.cat, call. = FALSE)
 }
 # end reserved word checking
 # check of geom now because required for y argument
-tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_step", "geom_hline", "geom_vline"), length = 1, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_step", "geom_hline", "geom_vline"), length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
+tempo <- fun_check(data = geom.step.dir[[i1]], data.name = ifelse(length(geom.step.dir) == 1, "geom.step.dir", paste0("geom.step.dir NUMBER ", i1)), options = c("vh", "hv", "mid"), length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 # end check of geom now because required for y argument
 if(is.null(x[[i1]])){
 if(all(geom[[i1]] != "geom_hline")){
@@ -10125,7 +10379,10 @@ if(all(geom[[i1]] == "geom_hline")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": x ARGUMENT MUST BE NULL IF ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_hline\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-tempo <- fun_check(data = x[[i1]], data.name = ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), class = "vector", mode = "character", length = 1, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = x[[i1]], data.name = ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), class = "vector", mode = "character", length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 }
 if(is.null(y[[i1]])){
 if(all(geom[[i1]] != "geom_vline")){
@@ -10144,7 +10401,10 @@ if(all(geom[[i1]] == "geom_vline")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": y ARGUMENT MUST BE NULL IF ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_vline\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-tempo <- fun_check(data = y[[i1]], data.name = ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), class = "vector", mode = "character", length = 1, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = y[[i1]], data.name = ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), class = "vector", mode = "character", length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 }
 # x[[i1]] and y[[i1]] not NULL anymore
 if( ! (x[[i1]] %in% names(data1[[i1]]))){
@@ -10170,10 +10430,19 @@ tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMN ", if(x[[i1]] == "
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end na detection and removal (done now to be sure of the correct length of categ)
-tempo <- fun_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF x ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = ifelse(x[[i1]] == "fake_x", TRUE, FALSE), fun.name = function.name, print = TRUE)
-tempo <- fun_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF y ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = ifelse(y[[i1]] == "fake_y", TRUE, FALSE), fun.name = function.name, print = TRUE)
-if(( ! is.null(categ)) & ( ! is.null(categ[[i1]]))){ # if categ[[i1]] = NULL, fake_categ will be created later on
-tempo <- fun_check(data = categ[[i1]], data.name = ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")),, class = "vector", mode = "character", length = 1, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF x ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = ifelse(x[[i1]] == "fake_x", TRUE, FALSE), fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
+tempo <- fun_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF y ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = ifelse(y[[i1]] == "fake_y", TRUE, FALSE), fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
+if(( ! is.null(categ)) & ( ! is.null(categ[[i1]]))){ # is.null(categ[[i1]]) works even if categ is NULL # is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created later on
+tempo <- fun_check(data = categ[[i1]], data.name = ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")),, class = "vector", mode = "character", length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 if( ! (categ[[i1]] %in% names(data1[[i1]]))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
@@ -10208,8 +10477,8 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", if
 stop(tempo.cat, call. = FALSE)
 }
 }
-}else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # if categ[[i1]] = NULL, fake_categ will be created. BEWARE: is.null(categ[[i1]]) means no legend display (see above), because categ has not been precised. This also means a single color for data1[[i1]]
-if(length(color[[i1]]) > 1){ # 0 means is.null(color[[i1]]) and 1 is ok -> single color for data1[[i1]]
+}else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created. WARNING: is.null(categ[[i1]]) means no legend display (see above), because categ has not been precised. This also means a single color for data1[[i1]]
+if(length(color[[i1]]) > 1){ # 0 means is.null(color[[i1]]) or is.null(color) and 1 is ok -> single color for data1[[i1]]
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NULL ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -10228,7 +10497,10 @@ tempo.warn <- paste0("(", warn.count,") NULL ", ifelse(length(categ) == 1, "cate
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(legend.name[[i1]])){
-tempo <- fun_check(data = legend.name[[i1]], data.name = ifelse(length(legend.name) == 1, "legend.name", paste0("legend.name NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = legend.name[[i1]], data.name = ifelse(length(legend.name) == 1, "legend.name", paste0("legend.name NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 }
 if( ! is.null(color)){ # if color is NULL, will be filled later on
 # check the nature of color
@@ -10298,7 +10570,10 @@ if(categ[[i1]] == "fake_categ"){
 data1[[i1]][, "fake_categ"] <- factor(paste0("Line_", formatC(1:nrow(data1[[i2]]), width = nchar(nrow(data1[[i2]])), flag = "0")))
 }
 }
-tempo <- fun_check(data = alpha[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), prop = TRUE, length = 1, fun.name = function.name, print = TRUE)
+tempo <- fun_check(data = alpha[[i1]], data.name = ifelse(length(alpha) == 1, "alpha", paste0("alpha NUMBER ", i1)), prop = TRUE, length = 1, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 # management of log scale
 if(x.log != "no"){
 data1[[i1]][, x[[i1]]] <- suppressWarnings(get(x.log)(data1[[i1]][, x[[i1]]]))
@@ -10621,7 +10896,7 @@ add.check <- FALSE
 }
 }
 if(add.check == TRUE & article == TRUE){
-# BEWARE: not possible to add several times theme(). NO message but the last one overwrites the others
+# WARNING: not possible to add several times theme(). NO message but the last one overwrites the others
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
 if(grid == TRUE){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
@@ -10695,7 +10970,7 @@ lg.alpha[[1]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size[[i1]], color = color[[i1]][i5], alpha = alpha[[i1]])) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = as.character(color[[i1]]), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of fill, breaks reorder the classes according to class.categ in the legend, order argument of guide_legend determines the order of the different aesthetics in the legend (not order of classes)
@@ -10708,7 +10983,7 @@ lg.alpha[[2]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size[[i1]], color = color[[i1]][i5], alpha = alpha[[i1]])) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(19, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of shape, breaks reorder the classes according to class.categ in the legend
@@ -10721,7 +10996,7 @@ lg.alpha[[3]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size, color = color[[i1]][i5], alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size[[i1]], color = color[[i1]][i5], alpha = alpha[[i1]])) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(0.5, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of stroke, breaks reorder the classes according to class.categ in the legend
@@ -10743,7 +11018,7 @@ lg.alpha[[4]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], linetype = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round", alpha = alpha[[i1]])) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::", geom[[i1]], "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", x[[i1]], ", y = ", y[[i1]], ", linetype = ", categ[[i1]], "), color = \"", color[[i1]][i5], "\", size = ", line.size[[i1]], ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), ", alpha = ", alpha[[i1]], ")")))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(1, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
@@ -10763,7 +11038,7 @@ lg.alpha[[5]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], alpha = categ[[i1]]), color = color[[i1]][i5], size = line.size, lineend = "round")) # beware: a single color allowed for color argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::", geom[[i1]], "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", x[[i1]], ", y = ", y[[i1]], ", alpha = ", categ[[i1]], "), color = \"", color[[i1]][i5], "\", size = ", line.size[[i1]], ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), ")")))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
@@ -10783,10 +11058,10 @@ lg.alpha[[6]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste("ggplot2::", geom[[i1]], sep ="")))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], size = categ[[i1]]), color = color[[i1]][i5], alpha = alpha[[i1]], lineend = "round")) # beware: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::", geom[[i1]], "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", x[[i1]], ", y = ", y[[i1]], ", size = ", categ[[i1]], "), color = \"", color[[i1]][i5], "\"", ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), ", alpha = ", alpha[[i1]], ")")))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, breaks reorder the classes according to class.categ in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size[[i1]], length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, breaks reorder the classes according to class.categ in the legend
 }
 }
 }
@@ -10826,9 +11101,6 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(t
 
 
 # scale management
-tempo.coord <- suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ", ' + ggplot2::coord_cartesian(xlim = if(diff(x.lim) < 0){rev(x.lim)}else{x.lim}, ylim = if(diff(y.lim) < 0){rev(y.lim)}else{y.lim})'))))$layout$panel_params[[1]])
-tempo.coord <- suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ", ' + ggplot2::scale_x_continuous(expand = c(0, 0), limits = sort(x.lim), oob = scales::rescale_none, trans = ifelse(diff(x.lim) < 0, "reverse", "identity")) + ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none, trans = ifelse(diff(y.lim) < 0, "reverse", "identity"))'))))$layout$panel_params[[1]])
-tempo.coord <- suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ggplot2::scale_x_continuous(expand = c(0, 0), limits = sort(x.lim), oob = scales::rescale_none) + ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none)', if(diff(x.lim) < 0){'+ ggplot2::scale_x_reverse()'}, if(diff(y.lim) < 0){'+ ggplot2::scale_y_reverse()'}))))$layout$panel_params[[1]])
 tempo.coord <- suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ", ' + ggplot2::scale_x_continuous(expand = c(0, 0), limits = sort(x.lim), oob = scales::rescale_none) + ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none)'))))$layout$panel_params[[1]]) # here I do not need the x-axis and y-axis orientation, I just need the number of main ticks
 # x.second.tick.positions # coordinates of secondary ticks (only if x.second.tick.nb argument is non NULL or if x.log argument is different from "no")
 if(x.log != "no"){ # integer main ticks for log2 and log10
@@ -10853,7 +11125,12 @@ tempo <- fun_inter_ticks(lim = x.lim, log = x.log)
 x.second.tick.values <- tempo$values
 x.second.tick.pos <- tempo$coordinates
 # if(vertical == TRUE){ # do not remove in case the bug is fixed
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", x = x.second.tick.pos, xend = x.second.tick.pos, y = tempo.coord$y.range[1], yend = tempo.coord$y.range[1] + diff(tempo.coord$y.range) / 80))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
+geom = "segment", x = x.second.tick.pos, 
+xend = x.second.tick.pos, 
+y = if(diff(y.lim) > 0){tempo.coord$y.range[1]}else{tempo.coord$y.range[2]}, 
+yend = if(diff(y.lim) > 0){tempo.coord$y.range[1] + abs(diff(tempo.coord$y.range)) / 80}else{tempo.coord$y.range[2] - abs(diff(tempo.coord$y.range)) / 80}
+))
 # }else{ # not working because  of the ggplot2 bug
 # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", y = x.second.tick.pos, yend = x.second.tick.pos, x = tempo.coord$x.range[1], xend = tempo.coord$x.range[1] + diff(tempo.coord$x.range) / 80))
 # }
@@ -10867,8 +11144,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 geom = "segment", 
 x = x.second.tick.pos, 
 xend = x.second.tick.pos, 
-y = tempo.coord$y.range[1], 
-yend = tempo.coord$y.range[1] + diff(tempo.coord$y.range) / 80
+y = if(diff(y.lim) > 0){tempo.coord$y.range[1]}else{tempo.coord$y.range[2]}, 
+yend = if(diff(y.lim) > 0){tempo.coord$y.range[1] + abs(diff(tempo.coord$y.range)) / 80}else{tempo.coord$y.range[2] - abs(diff(tempo.coord$y.range)) / 80}
 ))
 coord.names <- c(coord.names, "x.second.tick.positions")
 }
@@ -10906,7 +11183,13 @@ tempo <- fun_inter_ticks(lim = y.lim, log = y.log)
 y.second.tick.values <- tempo$values
 y.second.tick.pos <- tempo$coordinates
 # if(vertical == TRUE){ # do not remove in case the bug is fixed
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", y = y.second.tick.pos, yend = y.second.tick.pos, x = tempo.coord$x.range[1], xend = tempo.coord$x.range[1] + diff(tempo.coord$x.range) / 80))
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
+geom = "segment", 
+y = y.second.tick.pos, 
+yend = y.second.tick.pos, 
+x = if(diff(x.lim) > 0){tempo.coord$x.range[1]}else{tempo.coord$x.range[2]}, 
+xend = if(diff(x.lim) > 0){tempo.coord$x.range[1] + abs(diff(tempo.coord$x.range)) / 80}else{tempo.coord$x.range[2] - abs(diff(tempo.coord$x.range)) / 80}
+))
 # }else{ # not working because  of the ggplot2 bug
 # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", x = y.second.tick.pos, xend = y.second.tick.pos, y = tempo.coord$y.range[1], yend = tempo.coord$y.range[1] + diff(tempo.coord$y.range) / 80))
 # }
@@ -10920,8 +11203,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 geom = "segment", 
 y = y.second.tick.pos, 
 yend = y.second.tick.pos, 
-x = tempo.coord$x.range[1], 
-xend = tempo.coord$x.range[1] + diff(tempo.coord$x.range) / 80
+x = if(diff(x.lim) > 0){tempo.coord$x.range[1]}else{tempo.coord$x.range[2]}, 
+xend = if(diff(x.lim) > 0){tempo.coord$x.range[1] + abs(diff(tempo.coord$x.range)) / 80}else{tempo.coord$x.range[2] - abs(diff(tempo.coord$x.range)) / 80}
 ))
 coord.names <- c(coord.names, "y.second.tick.positions")
 }
@@ -10936,7 +11219,7 @@ oob = scales::rescale_none,
 trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
 ))
 # end y.second.tick.positions
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(xlim = x.lim, ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # rev() because of a bug in ggplot2, see my issue in ggplot2 github # at that stage, x.lim and y.lim not NULL anymore
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(xlim = x.lim, ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region. The problem is that points out of bounds are also drawn outside the plot region. Thus, I cannot use it # at that stage, x.lim and y.lim not NULL anymore
 # end scale management
 
 
@@ -10997,14 +11280,14 @@ y.range = tempo$y.range,
 y.labels = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{tempo$y$scale$get_labels()}, 
 y.positions = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{unlist(attributes(tempo$y$breaks))}
 ), 
-warn = paste0("\n", warn, "\n\n")
+warn = paste0("\n", warn, "\n\n"), 
+ggplot = if(return.ggplot == TRUE){fin.plot}else{NULL} # fin.plot plots the graph if return == TRUE
 )
-return(output)
+return(output) # this plots the graph if return.ggplot is TRUE and if no assignment
 }
 # end outputs
 # end main code
 }
-
 
 
 
