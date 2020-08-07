@@ -116,7 +116,7 @@ obs1 <- data.frame(Time = c((1:20) * 100), Group1 = rep(c("G", "H"), times = 10)
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10")
 ### log scale. Example (2). BEWARE: values of the y.lim must be in the corresponding log
 obs1 <- data.frame(Time = c((1:20) * 100), Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10", y.lim = c(1,10))
+fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.log = "log10", y.lim = c(100,1000))
 ### tick number. Example (1)
 obs1 <- data.frame(Time = 1:20, Group1 = rep(c("G", "H"), times = 10), Group2 = rep(c("A", "B"), each = 10))
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Group1", "Group2"), y.tick.nb = 10)
