@@ -7764,7 +7764,7 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 # http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/76-add-p-values-and-significance-levels-to-ggplots/
-
+# kind of double plotting -> solve it. It must be in the different layers -> plot twice
 
 
 fun_gg_boxplot <- function(
@@ -7834,6 +7834,7 @@ lib.path = NULL
 # With grouped boxs (categ argument with two elements), box.width argument defines each set of grouped box width. The box.width argument also defines the space between set of grouped boxs by using (1 - box.width). In addition, xmin and xmax of the fun_gg_boxplot() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped box)
 # The dot.alpha argument can alter the display of the color boxes when using pdf output
 # Size arguments (box.line.size, dot.size, dot.border.size, stat.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
+# The function uses options(warning.length = 8170) which increases the length of warning messages
 # ARGUMENTS
 # data1: dataframe containing one column of values (see y argument below) and one or two columns of categories (see categ argument below). Duplicated column names are not allowed
 # y: character string of the data1 column name for y-axis (column containing numeric values). Numeric values will be split according to the classes of the column names indicated in the categ argument to generate the boxs and will also be used to plot the dots
@@ -8039,11 +8040,9 @@ tempo <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", l
 if( ! is.null(dot.border.color)){
 tempo1 <- fun_check(data = dot.border.color, class = "vector", mode = "character", length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
-if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-# integer colors into gg_palette
-tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.color MUST BE A SINGLE CHARACTER STRING OF COLOR OR A SINGLE INTEGER VALUE") # integer possible because dealt above
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
+if((tempo1$problem == TRUE & tempo2$problem == TRUE) | (tempo1$problem == FALSE & tempo2$problem == TRUE & ! (all(dot.border.color %in% colors() | grepl(pattern = "^#", dot.border.color))))){ # check that all strings of low.color start by #
+tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE\nHERE IT IS: ", paste(unique(dot.border.color), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
 if( ! is.null(x.lab)){
@@ -8110,19 +8109,6 @@ tempo <- fun_check(data = return.ggplot, class = "logical", length = 1, fun.name
 tempo <- fun_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
 tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE & ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
-tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}else if(tempo$problem == FALSE & ! grepl(pattern = ")\\s*$", add)){ # check that the add string  finished by )
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
-text.check <- c(text.check, tempo.cat)
-arg.check <- c(arg.check, TRUE)
-}
 }
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(lib.path)){
@@ -8172,7 +8158,7 @@ for(i1 in c(
 "box.mean", 
 "box.whisker.kind", 
 "box.whisker.width", 
-"dot.color", 
+# "dot.color", # inactivated because can be null
 "dot.tidy", 
 "dot.tidy.bin.nb", 
 "dot.jitter", 
@@ -8192,7 +8178,7 @@ for(i1 in c(
 "title", 
 "title.text.size", 
 "legend.show", 
-"legend.width", 
+# "legend.width", # inactivated because can be null
 "article", 
 "grid", 
 "return", 
@@ -8281,6 +8267,20 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 # end reserved word checking
+# verif of add
+if( ! is.null(add)){
+if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
+tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
+stop(tempo.cat, call. = FALSE)
+}else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+stop(tempo.cat, call. = FALSE)
+}else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string  finished by )
+tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
+stop(tempo.cat, call. = FALSE)
+}
+}
+# end verif of add
 # management of add containing facet
 facet.categ <- NULL
 if( ! is.null(add)){
@@ -8335,7 +8335,10 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 data1[, categ[i3]] <- factor(as.character(data1[, categ[i3]])) # if already a factor, change nothing, if characters, levels according to alphabetical order
 categ.class.order[[i3]] <- levels(data1[, categ[i3]]) # character vector that will be used later
 }else{
-tempo <- fun_check(data = categ.class.order[[i3]], data.name = paste0("COMPARTMENT ", i3 , " OF categ.class.order ARGUMENT"), class = "vector", mode = "character", length = length(levels(data1[, categ[i3]])), fun.name = function.name, print = TRUE) # length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
+tempo <- fun_check(data = categ.class.order[[i3]], data.name = paste0("COMPARTMENT ", i3 , " OF categ.class.order ARGUMENT"), class = "vector", mode = "character", length = length(levels(data1[, categ[i3]])), fun.name = function.name) # length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 }
 if(any(duplicated(categ.class.order[[i3]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(categ.class.order[[i3]], collapse = " "))
@@ -8624,17 +8627,14 @@ if(is.null(dot.color) & box.fill == FALSE & dot.border.size == 0){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE FOLLOWING ARGUMENTS WERE SET AS:\ndot.color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox.fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\ndot.border.size = 0 (NO BORDER FOR POTENTIAL OUTLIER DOTS)\n-> THESE SETTINGS ARE NOT ALLOWED BECAUSE THE POTENTIAL OUTLIER DOTS WILL NOT BE VISIBLE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
+# integer dot.border.color into gg_palette
 if( ! is.null(dot.border.color)){
-tempo1 <- fun_check(data = dot.border.color, class = "vector", mode = "character", length = 1, fun.name = function.name)
-tempo2 <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
-if(tempo1$problem == FALSE & tempo2$problem == TRUE & ! (all(dot.border.color %in% colors() | grepl(pattern = "^#", dot.border.color)))){ # check that all strings of low.color start by #
-tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE\nHERE IT IS: ", paste(unique(dot.border.color), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
-}else if(tempo1$problem == TRUE & tempo2$problem == FALSE){ # convert integers into colors
+tempo <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
+if(tempo$problem == FALSE){ # convert integers into colors
 dot.border.color <- fun_gg_palette(max(dot.border.color, na.rm = TRUE))[dot.border.color]
 }
-# end integer colors into gg_palette
 }
+# end integer dot.border.color into gg_palette
 # management of log scale
 if(y.log != "no"){
 tempo <- if(any(is.na(data1[, y]) | ! is.finite(data1[, y]))){TRUE}else{FALSE}
@@ -8948,7 +8948,7 @@ add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
 if(grepl(pattern = "ggplot2\\s*::\\s*theme", add) == TRUE){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> article ARGUMENT WILL BE IGNORED")
+tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER\n-> article ARGUMENT WILL BE IGNORED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 add.check <- FALSE
 }
@@ -9606,6 +9606,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
 # }
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
 if(return == TRUE){
@@ -9647,12 +9648,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 
 
 
-# add facet from boxplot if data1 is a dataframe or list of length 1
-# check  dot.size and line.size as list except if one value, idem color and geom and alpha
-# check geom_step. Add "hv" or "vh", see also https://stackoverflow.com/questions/42633374/how-to-get-a-step-plot-using-geom-step-with-different-colors-for-the-segments
-# add categ.order
-# add categ.class.order replacing levels(factor(data1[[i1]][, categ[[i1]]])), thus check data1[[i1]][, categ[[i1]]]
-# add dot border color and size
 
 
 
@@ -9661,12 +9656,17 @@ data1,
 x, 
 y, 
 categ = NULL, 
+categ.class.order = NULL, 
 color = NULL, 
 geom = "geom_point", 
 geom.step.dir = "hv", 
 alpha = 0.5, 
 dot.size = 2, 
+dot.shape = 21, 
+dot.border.size = 0.5, 
+dot.border.color = NULL, 
 line.size = 0.5, 
+line.type = "solid", 
 x.lim = NULL, 
 x.lab = NULL, 
 x.log = "no", 
@@ -9709,17 +9709,22 @@ lib.path = NULL
 # WARNINGS
 # rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
 # Size arguments (dot.size, dot.border.size, line.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
+# The function uses options(warning.length = 8170) which increases the length of warning messages
 # ARGUMENTS
 # data1: a dataframe compatible with ggplot2, or a list of data frames
 # x: character string of the data1 column name for x-axis. If data1 is a list, then x must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Write NULL for each "geom_hline" in geom argument
 # y: character string of the data1 column name for y-axis. If data1 is a list, then y must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Write NULL for each "geom_vline" in geom argument
-# categ: either NULL or a character string or a list of character strings
+# categ: either NULL or a character string or a list of character strings, indicating the data1 column names to use for categories which creates legend display
 # If categ == NULL, no categories -> no legend displayed
 # If data1 is a data frame, categ must be a character string of the data1 column name for categories
 # If data1 is a list, then categ must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL (no legend display for these compartments), and other not
+# categ.class.order: either NULL or a vector of character strings or a list of these vectors, setting the order of the classes of categ in the legend display
+# If categ.class.order == NULL, classes are represented according to the alphabetical order
+# If data1 is a data frame, categ.class.order must be a vector of character strings specifying the different classes of the categ data1 column name
+# If data1 is a list, then categ.class.order must be a list of vector of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL (alphabetical order for these compartments), and other not
 # color: either (1) NULL, or (2) a vector of character strings or integers, or (3) a list of vectors of character strings or integers
 # If color == NULL, default colors of ggplot2
-# If data1 is a data frame, color argument can be either: (1) a single color string (all the dots of the corresponding data1 will have this color, whatever categ NULL or not), (2) if categ non null, a vector of string colors, one for each class of categ (each color will be associated according to the alphabetical order of categ classes), (3) if categ non null, a vector or factor of string colors, like if it was one of the column of data1 data frame (WARNING: a single color per class of categ and a single class of categ per color must be respected). Integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by fun_gg_palette() using the max integer value among all the integers in color
+# If data1 is a data frame, color argument can be either: (1) a single color string (all the dots of the corresponding data1 will have this color, whatever categ NULL or not), (2) if categ non null, a vector of string colors, one for each class of categ (each color will be associated according to the categ.class.order argument if specified, to the alphabetical order of categ classes otherwise), (3) if categ is non null, a vector or factor of string colors, like if it was one of the column of data1 data frame (WARNING: a single color per class of categ and a single class of categ per color must be respected). Integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by fun_gg_palette() using the max integer value among all the integers in color
 # If data1 is a list, then color argument must be either (1) a list of character strings or integers, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single character string or a single integer. With a list (former possibility), the rules described for when data1 is a data frame apply to each compartment of the list. Some of the compartments can be NULL. In that case, a different grey color will be used for each NULL compartment. With a single value (latter possibility), the same color will be used for all the dots and lines, whatever the data1 list
 # geom: character string of the kind of plot, or a list of single character strings
 # Either:
@@ -9734,7 +9739,11 @@ lib.path = NULL
 # geom.step.dir: character string indicating the direction when using "geom_step" of the geom argument. Either "vh" for vertical then horizontal, "hv" for horizontal then vertical, or "mid" for step half-way between adjacent x-values. See https://ggplot2.tidyverse.org/reference/geom_path.html. If data1 is a list, then geom.step.dir must be either (1) a list of single character string, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single character string. With a list (former possibility), the value in compartments related to other geom values than "geom_step" will be ignored. With a single value (latter possibility), the same geom.step.dir will be used for all the "geom_step" values of the geom argument, whatever the data1 list
 # alpha: single numeric value (from 0 to 1) of transparency. If data1 is a list, then alpha must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value. In that case the same transparency will apply for the different compartments of the data1 list
 # dot.size: single numeric value of dot diameter in mm. If data1 is a list, then dot.size must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value.  With a list (former possibility), the value in compartments related to lines will be ignored. With a single value (latter possibility), the same dot.size will be used for all the dots, whatever the data1 list
+# dot.shape: value indicating the shape of the dots (see https://ggplot2.tidyverse.org/articles/ggplot2-specs.html) If data1 is a list, then dot.shape must be either (1) a list of single shape values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single shape value.  With a list (former possibility), the value in compartments related to lines will be ignored. With a single value (latter possibility), the same dot.shape will be used for all the dots, whatever the data1 list
+# dot.border.size: single numeric value of border dot width in mm. Write zero for no dot border. If data1 is a list, then dot.border.size must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value.  With a list (former possibility), the value in compartments related to lines will be ignored. With a single value (latter possibility), the same dot.border.size will be used for all the dots, whatever the data1 list
+# dot.border.color: single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by fun_gg_palette()
 # line.size: single numeric value of line width in mm. If data1 is a list, then line.size must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value.  With a list (former possibility), the value in compartments related to dots will be ignored. With a single value (latter possibility), the same line.size will be used for all the lines, whatever the data1 list
+# line.type: value indicating the kind of lines (see https://ggplot2.tidyverse.org/articles/ggplot2-specs.html) If data1 is a list, then line.type must be either (1) a list of single line kind values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single line kind value.  With a list (former possibility), the value in compartments related to dots will be ignored. With a single value (latter possibility), the same line.type will be used for all the lines, whatever the data1 list
 # x.lim: 2 numeric values for x-axis range. If NULL, range of x in data1. Order of the 2 values matters (for inverted axis). WARNING: values of the x.lim must be already in the corresponding log if x.log argument is not "no" (see below)
 # x.lab: a character string or expression for x-axis legend. If NULL, x of the first data frame in data1. Warning message if the elements in x are different between data frames in data1
 # x.log: either "no", "log2" (values in the x argument column of the data1 data frame will be log2 transformed and x-axis will be log2 scaled) or "log10" (values in the x argument column of the data1 data frame will be log10 transformed and x-axis will be log10 scaled)
@@ -9804,9 +9813,9 @@ lib.path = NULL
 # $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
 # EXAMPLES
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; line.size = 0.5 ; x.lim = NULL ; x.lab = "KM" ; x.log = "no" ; x.tick.nb = 10 ; x.second.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(1, 25) ; y.lab = "TIME (s)" ; y.log = "no" ; y.tick.nb = 5 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = TRUE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; line.size = 0.5 ; x.lim = c(14, 4) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(60, 5) ; y.lab = NULL ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = TRUE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
-# data1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; data1 ; x = "km"; y = "time"; categ = "group"; legend.name = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; alpha = 0.1 ; dot.size = 3 ; line.size = 0.5 ; x.lim = c(1,10) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = NULL ; y.lab = expression(paste("TIME (", 10^-20, " s)")) ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500)) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500)) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2" ; categ.class.order = NULL ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = NULL ; x.lab = "KM" ; x.log = "no" ; x.tick.nb = 10 ; x.second.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(1, 25) ; y.lab = "TIME (s)" ; y.log = "no" ; y.tick.nb = 5 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = TRUE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B")), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1")), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"))) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; categ.class.order = NULL ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = c(14, 4) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(60, 5) ; y.lab = NULL ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = TRUE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# data1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B")) ; data1 ; x = "km"; y = "time"; categ = "group" ; categ.class.order = NULL ; legend.name = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; alpha = 0.1 ; dot.size = 3 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = c(1,10) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = NULL ; y.lab = expression(paste("TIME (", 10^-20, " s)")) ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0  ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 arg.user.setting <- as.list(match.call(expand.dots=FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
@@ -9831,7 +9840,7 @@ stop(tempo.cat)
 }
 # end required function checking
 # reserved words to avoid bugs (used in this function)
-reserved.words <- c("fake_x", "fake_y", "fake_categ", "color")
+reserved.words <- c("fake_x", "fake_y", "fake_categ")
 # end reserved words to avoid bugs (used in this function)
 # arg with no default values
 if(any(missing(data1) | missing(x) | missing(y))){
@@ -9870,10 +9879,19 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(categ)){
-tempo1 <- fun_check(data = categ, class = "vector", mode = "character", na.contain = TRUE, length = 1, fun.name = function.name)
+tempo1 <- fun_check(data = categ, class = "vector", mode = "character", length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = categ, class = "list", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": categ ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
+if( ! is.null(categ.class.order)){
+tempo1 <- fun_check(data = categ.class.order, class = "vector", mode = "character", fun.name = function.name)
+tempo2 <- fun_check(data = categ.class.order, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A VECTOR OF CHARACTER STRINGS OR A LIST OF VECTOR OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -9926,10 +9944,42 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": dot.size ARGUMENT MUST BE A S
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+tempo1 <- fun_check(data = dot.shape, class = "vector", length = 1, fun.name = function.name)
+tempo2 <- fun_check(data = dot.shape, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.shape ARGUMENT MUST BE A SINGLE SHAPE VALUE OR A LIST OF SINGLE SHAPE VALUES (SEE https://ggplot2.tidyverse.org/articles/ggplot2-specs.html)")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo1 <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
+tempo2 <- fun_check(data = dot.border.size, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+if( ! is.null(dot.border.color)){
+tempo1 <- fun_check(data = dot.border.color, class = "vector", mode = "character", length = 1, fun.name = function.name)
+tempo2 <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+# integer colors -> gg_palette
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.color MUST BE A SINGLE CHARACTER STRING OF COLOR OR A SINGLE INTEGER VALUE")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}
 tempo1 <- fun_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
 tempo2 <- fun_check(data = line.size, class = "list", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": line.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo1 <- fun_check(data = line.type, class = "vector", typeof = "integer", double.as.integer.allowed = FALSE, length = 1, fun.name = function.name)
+tempo2 <- fun_check(data = line.type, class = "vector", mode = "character", length = 1, fun.name = function.name)
+tempo3 <- fun_check(data = line.type, class = "list", na.contain = TRUE, fun.name = function.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": line.type ARGUMENT MUST BE A SINGLE LINE KIND VALUE OR A LIST OF SINGLE LINE KIND VALUES (SEE https://ggplot2.tidyverse.org/articles/ggplot2-specs.html)")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -10064,7 +10114,10 @@ for(i1 in c(
 "geom.step.dir", 
 "alpha", 
 "dot.size", 
+"dot.shape", 
+"dot.border.size", 
 "line.size", 
+"line.type", 
 "x.log", 
 "x.include.zero", 
 "x.left.extra.margin", 
@@ -10079,7 +10132,7 @@ for(i1 in c(
 "title", 
 "title.text.size", 
 "legend.show", 
-"legend.width", 
+# "legend.width", # inactivated because can be null
 "raster", 
 "raster.ratio", 
 "article", 
@@ -10106,7 +10159,11 @@ list.geom <- NULL
 list.geom.step.dir <- NULL
 list.alpha <- NULL
 list.dot.size <- NULL
+list.dot.shape <- NULL
+list.dot.border.size <- NULL
+list.dot.border.color <- NULL
 list.line.size <- NULL
+list.line.type <- NULL
 if(all(class(data1) == "list")){
 if(length(data1) > 6){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A LIST OF 6 DATA FRAMES MAXIMUM (6 OVERLAYS MAX)\n\n================\n\n")
@@ -10137,6 +10194,12 @@ y <- vector("list", length(data1))
 if( ! is.null(categ)){
 if( ! (all(class(categ) == "list") & length(data1) == length(categ))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}
+}
+if( ! is.null(categ.class.order)){
+if( ! (all(class(categ.class.order) == "list") & length(data1) == length(categ.class.order))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -10177,12 +10240,42 @@ stop(tempo.cat, call. = FALSE)
 list.dot.size <- vector(mode = "list", length = length(data1))
 list.dot.size[] <- dot.size
 }
+if( ! ((all(class(dot.shape) == "list") & length(data1) == length(dot.shape)) | (all(mode(dot.shape) != "list") & length(dot.shape) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.shape ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE SHAPE VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(dot.shape) != "list") & length(dot.shape) == 1){ # convert the single value into a list of single value
+list.dot.shape <- vector(mode = "list", length = length(data1))
+list.dot.shape[] <- dot.shape
+}
+if( ! ((all(class(dot.border.size) == "list") & length(data1) == length(dot.border.size)) | (all(mode(dot.border.size) == "numeric") & length(dot.border.size) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(dot.border.size) == "numeric") & length(dot.border.size) == 1){ # convert the single value into a list of single value
+list.dot.border.size <- vector(mode = "list", length = length(data1))
+list.dot.border.size[] <- dot.border.size
+}
+if( ! is.null(dot.border.color)){
+if( ! ((all(class(dot.border.color) == "list") & length(data1) == length(dot.border.color)) | ((all(mode(dot.border.color) == "character") | all(mode(dot.border.color) == "numeric")) & length(dot.border.color) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER STRING OR INTEGER\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if((all(mode(dot.border.color) == "character") | all(mode(dot.border.color) == "numeric")) & length(dot.border.color) == 1){ # convert the single value into a list of single value
+list.dot.border.color <- vector(mode = "list", length = length(data1))
+list.dot.border.color[] <- dot.border.color
+}
+}
 if( ! ((all(class(line.size) == "list") & length(data1) == length(line.size)) | (all(mode(line.size) == "numeric") & length(line.size) == 1))){ # list of same length as data1 or single value
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else if(all(mode(line.size) == "numeric") & length(line.size) == 1){ # convert the single value into a list of single value
 list.line.size <- vector(mode = "list", length = length(data1))
 list.line.size[] <- line.size
+}
+if( ! ((all(class(line.type) == "list") & length(data1) == length(line.type)) | (all(mode(line.type) != "list") & length(line.type) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.type ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE LINE KIND VALUE\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else if(all(mode(line.type) != "list") & length(line.type) == 1){ # convert the single value into a list of single value
+list.line.type <- vector(mode = "list", length = length(data1))
+list.line.type[] <- line.type
 }
 if( ! is.null(legend.name)){
 if( ! (all(class(legend.name) == "list") & length(data1) == length(legend.name))){
@@ -10213,6 +10306,14 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ
 stop(tempo.cat, call. = FALSE)
 }else{
 categ <- list(L1 = categ)
+}
+}
+if( ! is.null(categ.class.order)){
+if(all(class(categ.class.order) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+categ.class.order <- list(L1 = categ.class.order)
 }
 }
 if( ! is.null(color)){
@@ -10247,11 +10348,37 @@ stop(tempo.cat, call. = FALSE)
 }else{
 dot.size <- list(L1 = dot.size)
 }
+if(all(class(dot.shape) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.shape ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+dot.shape <- list(L1 = dot.shape)
+}
+if(all(class(dot.border.size) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+dot.border.size <- list(L1 = dot.border.size)
+}
+if( ! is.null(dot.border.color)){
+if(all(class(dot.border.color) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.color ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+dot.border.color <- list(L1 = dot.border.color)
+}
+}
 if(all(class(line.size) == "list")){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 line.size <- list(L1 = line.size)
+}
+if(all(class(line.type) == "list")){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.type ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+line.type <- list(L1 = line.type)
 }
 if( ! is.null(legend.name)){
 if(all(class(legend.name) == "list")){
@@ -10283,12 +10410,26 @@ alpha <- list.alpha
 if( ! is.null(list.dot.size)){
 dot.size <- list.dot.size
 }
+if( ! is.null(list.dot.shape)){
+dot.shape <- list.dot.shape
+}
+if( ! is.null(list.dot.border.size)){
+dot.border.size <- list.dot.border.size
+}
+if( ! is.null(dot.border.color)){
+if( ! is.null(list.dot.border.color)){
+dot.border.color <- list.dot.border.color
+}
+}
 if( ! is.null(list.line.size)){
 line.size <- list.line.size
 }
+if( ! is.null(list.line.type)){
+line.type <- list.line.type
+}
 # end single value converted into list now reattributed to the argument name
-# data, x, y, categ, geom, alpha, dot.size, line.size, legend.name are list now
-# if non NULL, categ, legend.name, color are list now
+# data, x, y, geom, alpha, dot.size, shape, dot.border.size, line.size, line.type, legend.name are list now
+# if non NULL, categ, categ.class.order, legend.name, color are list now
 # end conversion into lists
 # legend name filling
 if(is.null(legend.name) & ! is.null(categ)){
@@ -10318,10 +10459,10 @@ legend.disp[[i2]] <- TRUE
 tempo.check.color <- NULL
 for(i1 in 1:length(data1)){
 if(any(is.na(color[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": color ARGUMENT CANNOT CONTAIN NA\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), ": color ARGUMENT CANNOT CONTAIN NA\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-tempo.check.color <- c(tempo.check.color, fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem)
+tempo.check.color <- c(tempo.check.color, fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem)
 }
 tempo.check.color <- ! tempo.check.color # invert TRUE and FALSE because if integer, then problem = FALSE
 if(any(tempo.check.color == TRUE)){ # convert integers into colors
@@ -10338,9 +10479,7 @@ color[[i1]] <-tempo.color[color[[i1]]]
 
 # second round of argument checking
 compart.null.color <- 0 # will be used to attribute a color when color is non NULL but a compartment of color is NULL
-data1.ini <- data1 # to report NA removal
-removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
-removed.rows <- vector("list", length = length(data1)) # to report NA removal
+
 for(i1 in 1:length(data1)){
 tempo <- fun_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "data.frame", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
@@ -10350,6 +10489,12 @@ stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"),
 if(any(names(data1[[i1]]) %in% reserved.words)){ # I do not use fun_name_change() because cannot control y before creating "fake_y". But ok because reserved are not that common
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COLUMN NAMES OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", paste(reserved.words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function.name, " FUNCTION\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
+}
+if( ! (is.null(add))){
+if(grepl(x = add, pattern = paste(reserved.words, collapse = "|"))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF COLUMN NAMES OF data1 IN THE add ARGUMENT STRING, THAT CORRESPOND TO RESERVED STRINGS FOR ", function.name, "\nCOLUMN NAMES HAVE TO BE CHANGED\nFOR INFORMATION, THE RESERVED WORDS ARE:\n", paste(reserved.words, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
 }
 # end reserved word checking
 # check of geom now because required for y argument
@@ -10408,58 +10553,37 @@ stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"),
 }
 # x[[i1]] and y[[i1]] not NULL anymore
 if( ! (x[[i1]] %in% names(data1[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(x[[i1]], collapse = " "))), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if( ! (y[[i1]] %in% names(data1[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(y[[i1]], collapse = " "))), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-# na detection and removal (done now to be sure of the correct length of categ)
+tempo <- fun_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF x ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
+tempo <- fun_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF y ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
 if(x[[i1]] == "fake_x" & y[[i1]] == "fake_y"){ # because the code cannot accept to be both "fake_x" and "fake_y" at the same time
 tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\nTHE CODE CANNOT ACCEPT x AND y TO BE \"fake_x\" AND \"fake_y\" IN THE SAME DATA FRAME ", i1, " \n\n============\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-if(any(is.na(data1[[i1]][, c(if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]})]))){
-tempo.removed.row.nb <- unlist(lapply(lapply(c(data1[[i1]][c(if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]})]), FUN = is.na), FUN = which))
-removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], tempo.removed.row.nb)
-# report of removed rows will be performed at the very end
-data1[[i1]] <- data1[[i1]][-tempo.removed.row.nb, ]
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMN ", if(x[[i1]] == "fake_x"){""}else{ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT"))}, if(x[[i1]] != "fake_x" & y[[i1]] != "fake_y"){" AND "}, if(y[[i1]] == "fake_y"){""}else{ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT"))}, " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ". CORRESPONDING ROWS HAVE BEEN REMOVED (SEE $removed.row.nb AND $removed.rows)")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}
-# end na detection and removal (done now to be sure of the correct length of categ)
-tempo <- fun_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF x ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = ifelse(x[[i1]] == "fake_x", TRUE, FALSE), fun.name = function.name)
-if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
-}
-tempo <- fun_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF y ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = ifelse(y[[i1]] == "fake_y", TRUE, FALSE), fun.name = function.name)
-if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
-}
+
 if(( ! is.null(categ)) & ( ! is.null(categ[[i1]]))){ # is.null(categ[[i1]]) works even if categ is NULL # is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created later on
 tempo <- fun_check(data = categ[[i1]], data.name = ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")),, class = "vector", mode = "character", length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
 stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
 }
 if( ! (categ[[i1]] %in% names(data1[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(categ[[i1]], collapse = " "))), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-# na detection and removal (done now to be sure of the correct length of categ)
-if(any(is.na(data1[[i1]][, categ[[i1]]]))){
-tempo.removed.row.nb <- unlist(lapply(lapply(c(data1[[i1]][categ[[i1]]]), FUN = is.na), FUN = which))
-removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], tempo.removed.row.nb)
-# report of removed rows will be performed at the very end
-data1[[i1]] <- data1[[i1]][-tempo.removed.row.nb, ]
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", THE CATEGORY COLUMN:\n", paste(categ[[i1]], collapse = " "), "\nCONTAINS NA")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}
-# end na detection and removal (done now to be sure of the correct length of categ)
-tempo1 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "vector", mode = "character", na.contain = FALSE, fun.name = function.name)
-tempo2 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "factor", na.contain = FALSE, fun.name = function.name)
+tempo1 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
+tempo2 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "factor", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " MUST BE A FACTOR OR CHARACTER VECTOR\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
@@ -10470,7 +10594,6 @@ tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(categ) == 1, "categ"
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 
 }
-# OK: all the non NULL categ columns of data1 are factors from here
 if(geom[[i1]] == "geom_vline" | geom[[i1]] == "geom_hline"){
 if(length(unique(data1[[i1]][, categ[[i1]]])) != nrow(data1[[i1]])){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(geom) == 1, "geom OF data1 ARGUMENT", paste0("geom NUMBER ", i1, " OF DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT IS ", geom[[i1]], ", MEANING THAT ", ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " MUST HAVE A DIFFERENT CLASS PER LINE OF data1 (ONE x VALUE PER CLASS)\n\n================\n\n")
@@ -10480,7 +10603,7 @@ stop(tempo.cat, call. = FALSE)
 }else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created. WARNING: is.null(categ[[i1]]) means no legend display (see above), because categ has not been precised. This also means a single color for data1[[i1]]
 if(length(color[[i1]]) > 1){ # 0 means is.null(color[[i1]]) or is.null(color) and 1 is ok -> single color for data1[[i1]]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NULL ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
+tempo.warn <- paste0("(", warn.count,") NULL ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 color[[i1]] <- NULL # will provide a single color below
 }
@@ -10496,6 +10619,40 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NULL ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT -> FOR DATA FRAME ", ifelse(length(data1) == 1, "data1 ARGUMENT:", paste0("NUMBER ", i1, " OF data1 ARGUMENT:")), "\n- FAKE \"fake_categ\" COLUMN ADDED FILLED WITH \"\"(OR WITH \"Line_...\" FOR LINES)\n- SINGLE COLOR USED FOR PLOTTING\n- NO LEGEND DISPLAYED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
+# OK: if categ is not NULL, all the non NULL categ columns of data1 are factors from here
+
+if( ! is.null(categ.class.order)){
+# the following check will be done several times but I prefer to keep it here, after the creation of categ
+if(is.null(categ[[i1]]) & ! is.null(categ.class.order[[i1]])){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i1, " OF categ ARGUMENT CANNOT BE NULL IF COMPARTMENT ", i1, " OF categ.class.order ARGUMENT IS NOT NULL: ", paste(categ.class.order, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}else{
+if(is.null(categ.class.order[[i1]])){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") THE categ.class.order COMPARTMENT ", i1, " IS NULL. ALPHABETICAL ORDER WILL BE APPLIED")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+data1[[i1]][, categ[[i1]]] <- factor(as.character(data1[[i1]][, categ[[i1]]])) # if already a factor, change nothing, if characters, levels according to alphabetical order
+categ.class.order[[i1]] <- levels(data1[[i1]][, categ[[i1]]]) # character vector that will be used later
+}else{
+tempo <- fun_check(data = categ.class.order[[i1]], data.name = paste0("COMPARTMENT ", i1 , " OF categ.class.order ARGUMENT"), class = "vector", mode = "character", length = length(levels(data1[[i1]][, categ[[i1]]])), fun.name = function.name) # length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+}
+}
+if(any(duplicated(categ.class.order[[i1]]))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i1, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(categ.class.order[[i1]], collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}else if( ! (all(categ.class.order[[i1]] %in% unique(data1[[i1]][, categ[[i1]]])) & all(unique(data1[[i1]][, categ[[i1]]]) %in% categ.class.order[[i1]]))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i1, " OF categ.class.order ARGUMENT MUST BE CLASSES OF COMPARTMENT ", i1, " OF categ ARGUMENT\nHERE IT IS:\n", paste(categ.class.order[[i1]], collapse = " "), "\nFOR COMPARTMENT ", i1, " OF categ.class.order AND IT IS:\n", paste(unique(data1[[i1]][, categ[[i1]]]), collapse = " "), "\nFOR COLUMN ", categ[[i1]], " OF data1 NUMBER ", i1)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}else{
+data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]], levels = categ.class.order[[i1]]) # reorder the factor
+}
+names(categ.class.order)[i1] <- categ[[i1]]
+}
+}
+# OK: if categ.class.order is not NULL, all the NULL categ.class.order columns of data1 are character from here
+
 if( ! is.null(legend.name[[i1]])){
 tempo <- fun_check(data = legend.name[[i1]], data.name = ifelse(length(legend.name) == 1, "legend.name", paste0("legend.name NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
@@ -10508,32 +10665,32 @@ if(is.null(color[[i1]])){
 compart.null.color <- compart.null.color + 1
 color[[i1]] <- grey(compart.null.color / 8) # cannot be more than 7 overlays. Thus 7 different greys. 8/8 is excluded because white dots
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NULL COLOR IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", SINGLE COLOR ", paste(color[[i1]], collapse = " "), " HAS BEEN ATTRIBUTED")
+tempo.warn <- paste0("(", warn.count,") NULL COLOR IN ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " ASSOCIATED TO ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", SINGLE COLOR ", paste(color[[i1]], collapse = " "), " HAS BEEN ATTRIBUTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
-tempo1 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
-tempo2 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), class = "factor", na.contain = TRUE, fun.name = function.name)
+tempo1 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name) # na.contain = TRUE in case of colum of data1
+tempo2 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), class = "factor", na.contain = TRUE, fun.name = function.name) # idem
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
 stop(tempo.cat, call. = FALSE)
 }else if( ! (all(color[[i1]] %in% colors() | grepl(pattern = "^#", color[[i1]])))){ # check that all strings of low.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(color[[i1]]), collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(color[[i1]]), collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 if(any(is.na(color[[i1]]))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", THE COLORS:\n", paste(unique(color[[i1]]), collapse = " "), "\nCONTAINS NA")
+tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), ", THE COLORS:\n", paste(unique(color[[i1]]), collapse = " "), "\nCONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end check the nature of color
 # check the length of color
 if(is.null(categ) & length(color[[i1]]) != 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST BE A SINGLE COLOR IF categ IS NULL\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF categ IS NULL\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else if( ! is.null(categ)){
 # No problem of NA management by ggplot2 because already removed
 if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST BE A SINGLE COLOR IF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else if(length(color[[i1]]) == length(unique(data1[[i1]][, categ[[i1]]]))){ # here length(color) is equal to the different number of categ
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
@@ -10544,13 +10701,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 data1[[i1]] <- cbind(data1[[i1]], color = color[[i1]])
 tempo.check <- unique(data1[[i1]][ , c(categ[[i1]], "color")])
 if( ! (nrow(data1[[i1]]) == length(color[[i1]]) & nrow(tempo.check) == length(unique(data1[[i1]][ , categ[[i1]]])))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF THIS categ:\n", paste(unique(mapply(FUN = "paste", data1[[i1]][ ,categ[[i1]]], data1[[i1]][ ,"color"])), collapse = "\n"), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color")), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF THIS categ:\n", paste(unique(mapply(FUN = "paste", data1[[i1]][ ,categ[[i1]]], data1[[i1]][ ,"color"])), collapse = "\n"), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 color[[i1]] <- unique(color[[i1]][order(data1[[i1]][, categ[[i1]]])]) # Modif to have length(color) equal to the different number of categ (length(color) == length(levels(data1[[i1]][, categ[[i1]]])))
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count, ") FROM FUNCTION ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ AS:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\n", paste(color[[i1]], collapse = " "))
+tempo.warn <- paste0("(", warn.count, ") FROM FUNCTION ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ AS:\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\n", paste(color[[i1]], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else if(length(color[[i1]]) == 1){
@@ -10560,7 +10717,7 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", COLOR HAS LENGTH 1 MEANING THAT ALL THE DIFFERENT CLASSES OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), "\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(color[[i1]], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES, OR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN. HERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES, OR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -10584,14 +10741,14 @@ data1[[i1]][, y[[i1]]] <- suppressWarnings(get(y.log)(data1[[i1]][, y[[i1]]]))
 # end management of log scale
 }
 if(length(data1) > 1){
-if(length(unique(unlist(x))) > 1){
+if(length(unique(unlist(x)[ ! x == "fake_x"])) > 1){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") THE x ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES:\n", paste(unlist(x), collapse = " "), "\nX-AXIS OVERLAYING DIFFERENT VARIABLES?")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
 if(length(data1) > 1){
-if(length(unique(unlist(y))) > 1){
+if(length(unique(unlist(y)[ ! y == "fake_y"])) > 1){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") THE y ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES:\n", paste(unlist(y), collapse = " "), "\nY-AXIS OVERLAYING DIFFERENT VARIABLES?")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -10635,18 +10792,51 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 y.include.zero <- FALSE
 }
 # end management of log scale
+# verif of add
 if( ! is.null(add)){
-if( ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
+if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
+tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
 stop(tempo.cat, call. = FALSE)
-}else if( ! grepl(pattern = "ggplot2::", add)){ #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "), "\n\n================\n\n")
+}else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
 stop(tempo.cat, call. = FALSE)
-}else if( ! grepl(pattern = ")$", add)){ # check that the add string finished by )
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "), "\n\n================\n\n")
+}else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string  finished by )
+tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
 stop(tempo.cat, call. = FALSE)
 }
 }
+# end verif of add
+# management of add containing facet
+facet.categ <- NULL
+if( ! is.null(add)){
+facet.check <- TRUE
+tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
+tempo <- sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
+tempo <- sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
+tempo <- sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
+if(length(data1) > 1 & (any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")) | grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid"))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nfacet PANELS CANNOT BE USED IF MORE THAN ONE DATA FRAME IN THE data1 ARGUMENT\nPLEASE REWRITE THE add STRING AND RERUN")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}else{
+if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"))){
+tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
+facet.categ <- list(names(tempo1$params$facets)) # list of length 1
+tempo.text <- "facet_wrap OR facet_rep_wrap"
+facet.check <- FALSE
+}else if(grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
+tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
+facet.categ <- list(c(names(tempo1$params$rows), names(tempo1$params$cols))) # list of length 1
+tempo.text <- "facet_grid OR facet_rep_grid"
+facet.check <- FALSE
+}
+if(facet.check == FALSE & ! all(facet.categ %in% names(data1[[1]]))){ # BEWARE: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
+tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1[[1]]), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+}
+}
+}
+# if facet.categ is not NULL, it is a list of length 1 now
+# end management of add containing facet
 # end second round of argument checking
 # end second round of checking and data preparation
 
@@ -10758,12 +10948,26 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NULL categ ARGUMENT -> FAKE \"fake_categ\" COLUMN ADDED TO EACH DATA FRAME OF data1, AND FILLED WITH \"\"")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
+# categ is not NULL anymore
+if(is.null(categ.class.order)){
+categ.class.order <- vector("list", length = length(data1))
+tempo.categ.class.order <- NULL
+for(i2 in 1:length(categ.class.order)){
+categ.class.order[[i2]] <- levels(data1[[i2]][, categ[[i2]]])
+names(categ.class.order)[i2] <- categ[[i2]]
+tempo.categ.class.order <- c(tempo.categ.class.order, ifelse(i2 != 1, "\n", ""), categ.class.order[[i2]])
+}
+if(any(unlist(legend.disp))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") THE categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR CLASS ORDERING:\n", paste(tempo.categ.class.order, collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
 # end create a fake categ if NULL to deal with legend display
+# categ.class.order is not NULL anymore
 
 
-
-
-# vector of color with length as in data1
+# vector of color with length as in levels(categ) of data1
 if(is.null(color)){
 color <- vector("list", length(data1))
 length.categ.list <- lapply(lapply(mapply(FUN = "[[", data1, categ, SIMPLIFY = FALSE), FUN = unique), FUN = function(x){length(x[ ! is.na(x)])})
@@ -10771,26 +10975,78 @@ length.categ.list[sapply(categ, FUN = "==", "fake_categ")] <- 1 # when is.null(c
 total.categ.length <- sum(unlist(length.categ.list), na.rm = TRUE)
 tempo.color <- fun_gg_palette(total.categ.length)
 tempo.count <- 0
-for(i3 in 1:length(data1)){
-color[[i3]] <- tempo.color[(1:length.categ.list[[i3]]) + tempo.count]
-tempo.count <- tempo.count + length.categ.list[[i3]]
+for(i2 in 1:length(data1)){
+color[[i2]] <- tempo.color[(1:length.categ.list[[i2]]) + tempo.count]
+tempo.count <- tempo.count + length.categ.list[[i2]]
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NULL color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i3, " OF categ ARGUMENT")), " (", categ[[i3]], ") IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i3, " OF data1 ARGUMENT")), ":\n", paste(color[[i3]], collapse = " "), "\n", paste(if(all(levels(data1[[i3]][, categ[[i3]]]) == "")){'\"\"'}else{levels(data1[[i3]][, categ[[i3]]])}, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") NULL color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i2, " OF categ ARGUMENT")), " (", categ[[i2]], ") IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i2, " OF data1 ARGUMENT")), ":\n", paste(color[[i2]], collapse = " "), "\n", paste(if(all(levels(data1[[i2]][, categ[[i2]]]) == "")){'\"\"'}else{levels(data1[[i2]][, categ[[i2]]])}, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
-# end vector of color with length as in data1
+# end vector of color with length as in levels(categ) of data1
+# color is not NULL anymore
 
+
+# na detection and removal
+data1.ini <- data1 # to report NA removal
+removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
+removed.rows <- vector("list", length = length(data1)) # to report NA removal
+for(i1 in 1:length(data1)){
+column.check <- unlist(c( #unlist because creates a list
+if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, 
+if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]}, 
+if(is.null(categ[[i1]])){NULL}else{categ[[i1]]}, 
+if(is.null(facet.categ)){NULL}else{facet.categ}
+)) # dot.categ because can be a 3rd column of data1
+if(any(is.na(data1[[i1]][, column.check]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMNS ", paste(column.check, collapse = " "), " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+for(i3 in 1:length(column.check)){
+if(any(is.na(data1[[i1]][, column.check[i3]]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NA REMOVAL DUE TO COLUMN ", column.check[i3], " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+removed.row.nb[[i1]] <- unlist(lapply(lapply(c(data1[[i1]][column.check]), FUN = is.na), FUN = which))
+removed.rows[[i1]] <- data1[[i1]][removed.row.nb[[i1]], ]
+column.check <- column.check[ ! (column.check == x[[i1]] | column.check == y[[i1]])] # remove x and y to keep quali columns
+if(length(removed.row.nb[[i1]]) != 0){
+data1[[i1]] <- data1[[i1]][-removed.row.nb[[i1]], ]
+for(i4 in 1:length(column.check)){
+if(any( ! unique(removed.rows[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") IN COLUMN ", column.check[i4], " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA REMOVAL\n(IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", paste(unique(removed.rows[[i1]][, column.check[i4]])[ ! unique(removed.rows[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])], collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+if(column.check[i4] %in% categ[[i1]]){
+categ.class.order[[i1]] <- levels(data1[[i1]][, column.check[i4]])[levels(data1[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])] # remove the absent class in the categ.class.order vector
+color[[i1]] <-color[[i1]][levels(data1[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])] # remove the absent color in the character vector
+data1[[i1]][, column.check[i4]] <- factor(as.character(data1[[i1]][, column.check[i4]]), levels = unique(categ.class.order[[i1]]))
+}
+if(column.check[i4] %in% facet.categ){ # works if facet.categ == NULL this method should keep the order of levels when removing some levels
+tempo.levels <- levels(data1[[i1]][, column.check[i4]])[levels(data1[[i1]][, column.check[i4]]) %in% unique(as.character(data1[[i1]][, column.check[i4]]))]
+data1[[i1]][, column.check[i4]] <- factor(as.character(data1[[i1]][, column.check[i4]]), levels = tempo.levels)
+}
+}
+}
+}
+}else{
+removed.row.nb[[i1]] <- NULL
+removed.rows[[i1]] <- NULL
+}
+}
+# end na detection and removal
 
 
 
 # last check
 for(i1 in 1:length(data1)){
 if(categ[[i1]] != "fake_categ" & length(color[[i1]]) != length(unique(data1[[i1]][, categ[[i1]]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST HAVE LENGTH 1 WHEN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE LENGTH 1 WHEN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -10825,7 +11081,7 @@ geom[[i1]] <- "geom_line"
 if(length(color[[i1]]) == 1){
 color[[i1]] <- rep(color[[i1]], length(unique(data1[[i1]][ , categ[[i1]]])))
 }else if(length(color[[i1]]) != length(unique(data1[[i1]][ , categ[[i1]]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " geom_hline AND geom_vline CONVERSION TO FIT THE XLIM AND YLIM LIMITS OF THE DATA: ", ifelse(length(color) == 1, "color", paste0("color NUMBER ", i1)), " ARGUMENT MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " geom_hline AND geom_vline CONVERSION TO FIT THE XLIM AND YLIM LIMITS OF THE DATA: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 }
@@ -10877,7 +11133,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 coord.names <- NULL
 tempo.gg.name <- "gg.indiv.plot."
 tempo.gg.count <- 0
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::ggplot()", if(is.null(add)){""}else{add})))) # add added here to have the facets
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xlab(if(is.null(x.lab)){x[[1]]}else{x.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(y.lab)){y[[1]]}else{y.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
@@ -10889,8 +11145,7 @@ add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
 if(grepl(pattern = "ggplot2::theme", add) == TRUE){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER.
-\nIT IS RECOMMENDED TO USE \"+ theme(aspect.ratio = raster.ratio)\" IF RASTER MODE IS ACTIVATED")
+tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER\n-> article ARGUMENT WILL BE IGNORED\nIT IS RECOMMENDED TO USE \"+ theme(aspect.ratio = raster.ratio)\" IF RASTER MODE IS ACTIVATED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 add.check <- FALSE
 }
@@ -10949,7 +11204,6 @@ aspect.ratio = if(fix.ratio == TRUE){raster.ratio}else{NULL} # for raster
 }
 # end no need loop part
 
-# add categ.class.order replacing levels(factor(data1[[i1]][, categ[[i1]]])), thus check data1[[i1]][, categ[[i1]]]
 
 # loop part
 point.count <- 0
@@ -10957,8 +11211,17 @@ line.count <- 0
 lg.order <- vector(mode = "list", length = 6) # order of the legend
 lg.order <- lapply(lg.order, as.numeric) # order of the legend
 lg.color <- vector(mode = "list", length = 6) # color of the legend
-lg.alpha <- vector(mode = "list", length = 6) # order of the legend
-lg.alpha <- lapply(lg.alpha, as.numeric) # alpha of the legend
+lg.dot.shape <- vector(mode = "list", length = 6) # etc.
+lg.dot.size <- vector(mode = "list", length = 6) # etc.
+lg.dot.size <- lapply(lg.dot.size, as.numeric) # etc.
+lg.dot.border.size <- vector(mode = "list", length = 6) # etc.
+lg.dot.border.size <- lapply(lg.dot.border.size, as.numeric) # etc.
+lg.dot.border.color <- vector(mode = "list", length = 6) # etc.
+lg.line.size <- vector(mode = "list", length = 6) # etc.
+lg.line.size <- lapply(lg.line.size, as.numeric) # etc.
+lg.line.type <- vector(mode = "list", length = 6) # etc.
+lg.alpha <- vector(mode = "list", length = 6) # etc.
+lg.alpha <- lapply(lg.alpha, as.numeric) # etc.
 for(i1 in 1:length(data1)){
 if(geom[[i1]] == "geom_point"){
 point.count <- point.count + 1
@@ -10966,40 +11229,78 @@ if(point.count == 1){
 fin.lg.disp[[1]] <- legend.disp[[point.count + line.count]]
 lg.order[[1]] <- point.count + line.count
 lg.color[[1]] <- color[[i1]]
+lg.dot.shape[[1]] <- dot.shape[[i1]]
+lg.dot.size[[1]] <- dot.size[[i1]]
+lg.dot.border.size[[1]] <- dot.border.size[[i1]]
+lg.dot.border.color[[1]] <- dot.border.color[[i1]]
 lg.alpha[[1]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
+if(plot == TRUE & fin.lg.disp[[1]] == TRUE & dot.shape[[1]] %in% 0:14 & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE DOTS (DOT LAYER NUMBER ", point.count, ") IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+lg.alpha[[1]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
+}else{
+lg.alpha[[1]] <- alpha[[i1]]
+}
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), size = dot.size[[i1]], color = color[[i1]][i5], alpha = alpha[[i1]])) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), shape = dot.shape[[i1]], size = dot.size[[i1]], stroke = dot.border.size[[i1]], color = if(is.null(dot.border.color)){color[[i1]][i5]}else{dot.border.color[[i1]]}, alpha = alpha[[i1]], show.legend = if(i5 == 1){TRUE}else{FALSE})) # WARNING: a single color allowed for color argument  outside aesthetic, but here a single color for border --> loop could be inactivated but kept for commodity # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = as.character(color[[i1]]), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of fill, breaks reorder the classes according to class.categ in the legend, order argument of guide_legend determines the order of the different aesthetics in the legend (not order of classes)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = as.character(color[[i1]]), breaks = class.categ)) # values are the values of fill, breaks reorder the classes according to class.categ in the legend, order argument of guide_legend determines the order of the different aesthetics in the legend (not order of classes). See guide_legend settings of scale_..._manual below
 }
 if(point.count == 2){
 fin.lg.disp[[2]] <- legend.disp[[point.count + line.count]]
 lg.order[[2]] <- point.count + line.count
 lg.color[[2]] <- color[[i1]]
+lg.dot.shape[[2]] <- dot.shape[[i1]]
+lg.dot.size[[2]] <- dot.size[[i1]]
+lg.dot.border.size[[2]] <- dot.border.size[[i1]]
+lg.dot.border.color[[2]] <- dot.border.color[[i1]]
 lg.alpha[[2]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
+if(plot == TRUE & fin.lg.disp[[2]] == TRUE & dot.shape[[2]] %in% 0:14 & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE DOTS (DOT LAYER NUMBER ", point.count, ") IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+lg.alpha[[2]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
+}else{
+lg.alpha[[2]] <- alpha[[i1]]
+}
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size[[i1]], color = color[[i1]][i5], alpha = alpha[[i1]])) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size[[i1]], stroke = dot.border.size[[i1]], fill = color[[i1]][i5], color = if(is.null(dot.border.color)){color[[i1]][i5]}else{dot.border.color[[i1]]}, alpha = alpha[[i1]], show.legend = FALSE)) # WARNING: a single color allowed for fill argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(19, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of shape, breaks reorder the classes according to class.categ in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(dot.shape[[i1]], length(color[[i1]])), breaks = class.categ)) # values are the values of shape, breaks reorder the classes according to class.categ in the legend. See guide_legend settings of scale_..._manual below
+
 }
 if(point.count == 3){
 fin.lg.disp[[3]] <- legend.disp[[point.count + line.count]]
 lg.order[[3]] <- point.count + line.count
 lg.color[[3]] <- color[[i1]]
+lg.dot.shape[[3]] <- dot.shape[[i1]]
+lg.dot.size[[3]] <- dot.size[[i1]]
+lg.dot.border.size[[3]] <- dot.border.size[[i1]]
+lg.dot.border.color[[3]] <- dot.border.color[[i1]]
 lg.alpha[[3]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
+if(plot == TRUE & fin.lg.disp[[3]] == TRUE & dot.shape[[3]] %in% 0:14 & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE DOTS (DOT LAYER NUMBER ", point.count, ") IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+lg.alpha[[3]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
+}else{
+lg.alpha[[3]] <- alpha[[i1]]
+}
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), size = dot.size[[i1]], color = color[[i1]][i5], alpha = alpha[[i1]])) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), shape = dot.shape[[i1]], size = dot.size[[i1]], fill = color[[i1]][i5],  stroke = dot.border.size[[i1]], color = if(is.null(dot.border.color)){color[[i1]][i5]}else{dot.border.color[[i1]]}, alpha = alpha[[i1]], show.legend = FALSE)) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(0.5, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], linetype = 0)))) # values are the values of stroke, breaks reorder the classes according to class.categ in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(dot.border.size[[i1]], length(color[[i1]])), breaks = class.categ)) # values are the values of stroke, breaks reorder the classes according to class.categ in the legend. See guide_legend settings of scale_..._manual below
+
 }
 }else{
 line.count <- line.count + 1
@@ -11007,9 +11308,12 @@ if(line.count == 1){
 fin.lg.disp[[4]] <- legend.disp[[point.count + line.count]]
 lg.order[[4]] <- point.count + line.count
 lg.color[[4]] <- color[[i1]]
+lg.line.size[[4]] <- line.size[[i1]]
+lg.line.type[[4]] <- line.type[[i1]]
+lg.alpha[[4]] <- alpha[[i1]]
 if(plot == TRUE & fin.lg.disp[[4]] == TRUE & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES (LINE LAYER NUMBER ", line.count, ") IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 lg.alpha[[4]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 }else{
@@ -11018,18 +11322,39 @@ lg.alpha[[4]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::", geom[[i1]], "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", x[[i1]], ", y = ", y[[i1]], ", linetype = ", categ[[i1]], "), color = \"", color[[i1]][i5], "\", size = ", line.size[[i1]], ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), ", alpha = ", alpha[[i1]], ")")))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0(
+"ggplot2::", 
+geom[[i1]], 
+"(data = tempo.data.frame, mapping = ggplot2::aes(x = ", 
+x[[i1]], 
+", y = ", 
+y[[i1]], 
+", linetype = ", 
+categ[[i1]], 
+"), color = \"", 
+color[[i1]][i5], 
+"\", size = ", 
+line.size[[i1]], 
+ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), 
+ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), 
+", alpha = ", 
+alpha[[i1]], 
+", show.legend = FALSE)"
+)))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(1, length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.type[[i1]], length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
 }
 if(line.count == 2){
 fin.lg.disp[[5]] <- legend.disp[[point.count + line.count]]
 lg.order[[5]] <- point.count + line.count
 lg.color[[5]] <- color[[i1]]
+lg.line.size[[5]] <- line.size[[i1]]
+lg.line.type[[5]] <- line.type[[i1]]
+lg.alpha[[5]] <- alpha[[i1]]
 if(plot == TRUE & fin.lg.disp[[5]] == TRUE & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES (LINE LAYER NUMBER ", line.count, ") IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 lg.alpha[[5]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 }else{
@@ -11038,18 +11363,43 @@ lg.alpha[[5]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::", geom[[i1]], "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", x[[i1]], ", y = ", y[[i1]], ", alpha = ", categ[[i1]], "), color = \"", color[[i1]][i5], "\", size = ", line.size[[i1]], ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), ")")))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0(
+"ggplot2::", 
+geom[[i1]], 
+"(data = tempo.data.frame, mapping = ggplot2::aes(x = ", 
+x[[i1]], 
+", y = ", 
+y[[i1]], 
+", alpha = ", 
+categ[[i1]], 
+"), color = \"", 
+color[[i1]][i5], 
+"\", size = ", 
+line.size[[i1]], 
+", linetype = ", 
+ifelse(is.numeric(line.type[[i1]]), "", "\""), 
+line.type[[i1]], 
+ifelse(is.numeric(line.type[[i1]]), "", "\""), 
+ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), 
+ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), 
+", show.legend = ", 
+ifelse(i5 == 1, TRUE, FALSE), 
+")"
+)))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(alpha[[i1]], length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
 }
 if(line.count == 3){
 fin.lg.disp[[6]] <- legend.disp[[point.count + line.count]]
 lg.order[[6]] <- point.count + line.count
 lg.color[[6]] <- color[[i1]]
+lg.line.size[[6]] <- line.size[[i1]]
+lg.line.type[[6]] <- line.type[[i1]]
+lg.alpha[[6]] <- alpha[[i1]]
 if(plot == TRUE & fin.lg.disp[[6]] == TRUE & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES (LINE LAYER NUMBER ", line.count, ") IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 lg.alpha[[6]] <- 1 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 }else{
@@ -11058,10 +11408,30 @@ lg.alpha[[6]] <- alpha[[i1]]
 class.categ <- levels(factor(data1[[i1]][, categ[[i1]]]))
 for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same because already checked that lengths are the same
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::", geom[[i1]], "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", x[[i1]], ", y = ", y[[i1]], ", size = ", categ[[i1]], "), color = \"", color[[i1]][i5], "\"", ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), ", alpha = ", alpha[[i1]], ")")))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("
+ggplot2::", 
+geom[[i1]], 
+"(data = tempo.data.frame, mapping = ggplot2::aes(x = ", 
+x[[i1]], 
+", y = ", 
+y[[i1]], 
+", size = ", 
+categ[[i1]], 
+"), color = \"", 
+color[[i1]][i5], 
+"\", linetype = ", 
+ifelse(is.numeric(line.type[[i1]]), "", "\""), 
+line.type[[i1]], 
+ifelse(is.numeric(line.type[[i1]]), "", "\""), 
+ifelse(geom[[i1]] == 'geom_path', ', lineend = \"round\"', ''), 
+ifelse(geom[[i1]] == 'geom_step', paste0(', direction = \"', geom.step.dir[[i1]], '\"'), ''), 
+", alpha = ", 
+alpha[[i1]], 
+", show.legend = FALSE)"
+)))) # WARNING: a single color allowed for color argument  outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
 coord.names <- c(coord.names, paste0(geom[[i1]], ".", class.categ[i5]))
 }
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size[[i1]], length(color[[i1]])), breaks = class.categ, guide = ggplot2::guide_legend(override.aes = list(colour = color[[i1]], shape = NA)))) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, breaks reorder the classes according to class.categ in the legend
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = rep(line.size[[i1]], length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, breaks reorder the classes according to class.categ in the legend
 }
 }
 }
@@ -11071,7 +11441,98 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 
 
 # legend display
-tempo.legend.final <- 'ggplot2::guides(fill = if(fin.lg.disp[[1]] == TRUE){ggplot2::guide_legend(order = lg.order[[1]], override.aes = list(alpha = lg.alpha[[1]], color = lg.color[[1]]))}else{FALSE}, shape = if(fin.lg.disp[[2]] == TRUE){ggplot2::guide_legend(order = lg.order[[2]], override.aes = list(alpha = lg.alpha[[2]], color = lg.color[[2]]))}else{FALSE}, stroke = if(fin.lg.disp[[3]] == TRUE){ggplot2::guide_legend(order = lg.order[[3]], override.aes = list(alpha = lg.alpha[[2]], color = lg.color[[3]]))}else{FALSE}, linetype = if(fin.lg.disp[[4]] == TRUE){ggplot2::guide_legend(order = lg.order[[4]], override.aes = list(alpha = lg.alpha[[4]], color = lg.color[[4]]))}else{FALSE}, alpha = if(fin.lg.disp[[5]] == TRUE){ggplot2::guide_legend(order = lg.order[[5]], override.aes = list(alpha = lg.alpha[[5]], color = lg.color[[5]]))}else{FALSE}, size = if(fin.lg.disp[[6]] == TRUE){ggplot2::guide_legend(order = lg.order[[6]], override.aes = list(alpha = lg.alpha[[6]], color = lg.color[[6]]))}else{FALSE})' # clip = "off" to have secondary ticks outside plot region does not work
+tempo.legend.final <- 'ggplot2::guides(
+fill = if(fin.lg.disp[[1]] == TRUE){
+ggplot2::guide_legend(
+order = lg.order[[1]], 
+override.aes = list(
+fill = lg.color[[1]], 
+colour = if(lg.dot.shape[[1]] %in% 21:24 & ! is.null(dot.border.color)){lg.dot.border.color[[1]]}else{lg.color[[1]]}, # lg.dot.shape[[1]] %in% 21:24 are the only one that can be filled
+shape = lg.dot.shape[[1]], 
+size = lg.dot.size[[1]], 
+stroke = lg.dot.border.size[[1]], 
+alpha = lg.alpha[[1]], 
+linetype = 0
+)
+)
+}else{
+FALSE
+}, 
+shape = if(fin.lg.disp[[2]] == TRUE){
+ggplot2::guide_legend(
+order = lg.order[[2]], 
+override.aes = list(
+fill = lg.color[[2]], 
+colour = if(lg.dot.shape[[2]] %in% 21:24 & ! is.null(dot.border.color)){lg.dot.border.color[[2]]}else{lg.color[[2]]}, # lg.dot.shape[[2]] %in% 21:24 are the only one that can be filled
+shape = lg.dot.shape[[2]], 
+size = lg.dot.size[[2]], 
+stroke = lg.dot.border.size[[2]], 
+alpha = lg.alpha[[2]], 
+linetype = 0
+)
+)
+}else{
+FALSE
+}, 
+stroke = if(fin.lg.disp[[3]] == TRUE){
+ggplot2::guide_legend(
+order = lg.order[[3]], 
+override.aes = list(
+fill = lg.color[[3]], 
+colour = if(lg.dot.shape[[3]] %in% 21:24 & ! is.null(dot.border.color)){lg.dot.border.color[[3]]}else{lg.color[[3]]}, # lg.dot.shape[[3]] %in% 21:24 are the only one that can be filled
+shape = lg.dot.shape[[3]], 
+size = lg.dot.size[[3]], 
+stroke = lg.dot.border.size[[3]], 
+alpha = lg.alpha[[3]], 
+linetype = 0
+)
+)
+}else{
+FALSE
+}, 
+linetype = if(fin.lg.disp[[4]] == TRUE){
+ggplot2::guide_legend(
+order = lg.order[[4]], 
+override.aes = list(
+color = lg.color[[4]], 
+size = lg.line.size[[4]], 
+linetype = lg.line.type[[4]], 
+alpha = lg.alpha[[4]], 
+shape = NA
+)
+)
+}else{
+FALSE
+}, 
+alpha = if(fin.lg.disp[[5]] == TRUE){
+ggplot2::guide_legend(
+order = lg.order[[5]], 
+override.aes = list(
+color = lg.color[[5]], 
+size = lg.line.size[[5]], 
+linetype = lg.line.type[[5]], 
+alpha = lg.alpha[[5]], 
+shape = NA
+)
+)
+}else{
+FALSE
+}, 
+size = if(fin.lg.disp[[6]] == TRUE){
+ggplot2::guide_legend(
+order = lg.order[[6]], 
+override.aes = list(
+color = lg.color[[6]], 
+size = lg.line.size[[6]], 
+linetype = lg.line.type[[6]], 
+alpha = lg.alpha[[6]], 
+shape = NA
+)
+)
+}else{
+FALSE
+}
+)' # clip = "off" to have secondary ticks outside plot region does not work
 if( ! is.null(legend.width)){
 if(any(unlist(legend.disp))){ # means some TRUE
 tempo.graph.info <- suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste0(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ', tempo.legend.final))))) # will be recovered later again, when ylim will be considered
@@ -11226,7 +11687,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coo
 
 
 # drawing
-fin.plot <- eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "),if(is.null(add)){NULL}else{add})))
+fin.plot <- eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))
 if(plot == TRUE){
 if( ! is.null(legend.width)){ # any(unlist(legend.disp)) == TRUE removed to have empty legend space # not & any(unlist(fin.lg.disp)) == TRUE here because converted to FALSE
 suppressMessages(suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=c(1, legend.width))))
@@ -11244,6 +11705,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 
 # outputs
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
 if(return == TRUE){
@@ -11272,6 +11734,7 @@ data = data1,
 removed.row.nb = removed.row.nb, 
 removed.rows = removed.rows, 
 plot = c(output$data, x.second.tick.values = list(x.second.tick.values), y.second.tick.values = list(y.second.tick.values)), 
+panel = facet.categ, 
 axes = list(
 x.range = tempo$x.range, 
 x.labels = if(is.null(attributes(tempo$x$breaks))){tempo$x$breaks}else{tempo$x$scale$get_labels()}, # is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
