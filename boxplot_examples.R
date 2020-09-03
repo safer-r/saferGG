@@ -7,7 +7,8 @@ obs1 <- data.frame(
     Categ1 = rep(c("CAT", "DOG"), times = 40), 
     Categ2 = rep(c("A", "B", "C", "D"), each = 20), 
     Color1 = rep(c("coral", "lightblue"), times = 40), 
-    Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20)
+    Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), 
+    stringsAsFactors = TRUE
 )
 set.seed(NULL)
 fun_info(obs1)
