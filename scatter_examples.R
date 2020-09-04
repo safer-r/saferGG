@@ -2,49 +2,56 @@
 
 ### Data set
 set.seed(1)
-# straight relationship
+# Curves
 obs1 <- data.frame(
-	Km = 2:7, 
-	Time = (2:7)^2, 
-    Car = c("TUTUT", "TUTUT", "TUTUT", "WIM-WIM", "WIM-WIM", "WIM-WIM"), 
+    Km = 2:7, 
+    Time = (2:7)^2, 
+    Car = c("TUUT", "TUUT", "TUUT", "WIM-WIM", "WIM-WIM", "WIM-WIM"), 
     Color1 = rep(c("coral", "lightblue"), each = 3), 
     stringsAsFactors = TRUE
 )
-# first scatter
+# First scattering
 obs2 <- data.frame(
-	Km = rnorm(1000, 20, 3), 
-	Time = rnorm(1000, 20, 3), 
+    Km = rnorm(1000, 20, 3), 
+    Time = rnorm(1000, 20, 3), 
     Animal = rep(c("CAT", "DOG"), 500), 
-    Color1 = rep(c("coral", "lightblue"), times = 500), 
+    Color2 = rep(c("darkblue", "darkred"), times = 500), 
     stringsAsFactors = TRUE
 )
-# second scatter
+# Second scattering
 obs3 <- data.frame(
-	Km = rnorm(1000, 30, 3), 
-	Time = rnorm(1000, 30, 3), 
-    Animal = rep(c("LION", "ZEBRA"), 500), 
-    Color1 = rep(1:2, times = 500), 
+    Distance = rnorm(1000, 30, 3), 
+    Time_lapse = rnorm(1000, 30, 3), 
+    Beast = rep(c("LION", "ZEBRA"), 500), 
+    Color3 = rep(3:4, times = 500), 
     stringsAsFactors = TRUE
 )
 set.seed(NULL)
 fun_info(obs1)
 fun_info(obs2)
 fun_info(obs3)
+fun_open(pdf = FALSE, width = 5, height = 5, rescale = "R")
+
+
+
+
+
+
+
+
 
 ## Mandatory arguments
 ### single dataset
-fun_gg_scatter(
-	data1 = obs1, 
-	x = "Km", 
-	y = "Time"
-)
+fun_gg_scatter(data1 = obs1, x = "Km", y = "Time")
 ### single dataset submitted as list
 fun_gg_scatter(
-	data1 = list(obs1), 
-	x = list("Km"), 
-	y = list("Time")
+    data1 = list(obs1), 
+    x = list("Km"), 
+    y = list("Time")
 )
-# multiple dataset. Elements in list have names (L1, L2, etc.) just to show the correspondence between the arguments data1, x, y, categ, etc.
+### multiple dataset
+# Elements in list have names (L1, L2, etc.) just to show the correspondence between the arguments data1, x, y, categ, etc.
+# Of note, no legend is displayed. For a legend, please merge the two data frames, or create a new categ column in each data frame (see below)
 fun_gg_scatter(
     data1 = list(
         L1 = obs2,
@@ -52,11 +59,190 @@ fun_gg_scatter(
     ), 
     x = list(
         L1 = "Km",
-        L2 = "Km"
+        L2 = "Distance"
     ), 
     y = list(
         L1 = "Time",
-        L2 = "Time"
+        L2 = "Time_lapse"
+    )
+)
+
+### The categ argument to generate legends. Create a categ column in data frames if a legend is required
+### single dataset
+fun_gg_scatter(data1 = obs1, x = "Km", y = "Time", categ = "Car")
+### multiple datasets
+fun_gg_scatter(
+    data1 = list(
+        L1 = obs2,
+        L2 = obs3
+    ), 
+    x = list(
+        L1 = "Km",
+        L2 = "Distance"
+    ), 
+    y = list(
+        L1 = "Time",
+        L2 = "Time_lapse"
+    ), 
+    categ = list(
+        L1 = "Animal",
+        L2 = "Beast"
+    )
+)
+# Another way for multiple datasets representation, depending on legend required
+obs4 <- data.frame(
+    Km = c(obs2$Km, obs3$Distance), 
+    Time = c(obs2$Time, obs3$Time_lapse), 
+    Type = c(as.character(obs2$Animal), as.character(obs3$Beast)), 
+    stringsAsFactors = TRUE
+)
+fun_gg_scatter(data1 = obs4, x = "Km", y = "Time", categ = "Type")
+
+
+### Order in the legend
+### single dataset
+fun_gg_scatter(
+    data1 = obs1, 
+    x = "Km", 
+    y = "Time", 
+    categ = "Car", 
+    categ.class.order = c("WIM-WIM", "TUUT")
+)
+### multiple datasets
+fun_gg_scatter(
+    data1 = list(
+        L1 = obs2,
+        L2 = obs3
+    ), 
+    x = list(
+        L1 = "Km",
+        L2 = "Distance"
+    ), 
+    y = list(
+        L1 = "Time",
+        L2 = "Time_lapse"
+    ), 
+    categ = list(
+        L1 = "Animal",
+        L2 = "Beast"
+    ), 
+    categ.class.order = list(
+        c("DOG", "CAT"),
+        c("ZEBRA", "LION")
+    )
+)
+
+
+
+### Colors
+### single dataset
+# Using a single color value
+fun_gg_scatter(data1 = obs1, x = "Km", y = "Time", color = "black") # replace "black" by 2 to test integer values
+# Using one color value par class of Categ1
+fun_gg_scatter(
+    data1 = obs1, 
+    x = "Km", 
+    y = "Time", 
+    categ = "Car", # mandatory categ argument when several color required
+    color = c("darkblue", "darkgreen") # replace c("darkblue", "darkgreen") by 2:3 to test integer values
+)
+# Using a vector of color values (e.g., data frame column), with respect of the correspondence between Car and Color1 columns
+fun_gg_scatter(
+    data1 = obs1, 
+    x = "Km", 
+    y = "Time", 
+    categ = "Car", # mandatory categ argument when several color required
+    color = obs1$Color1 # # replace obs1$Color1 by as.numeric(obs1$Color1) to test integer values
+)
+### multiple datasets
+# single color -> same color for all the datasets and all the classes of categ if non NULL
+fun_gg_scatter(
+    data1 = list(
+        L1 = obs2,
+        L2 = obs3
+    ), 
+    x = list(
+        L1 = "Km",
+        L2 = "Distance"
+    ), 
+    y = list(
+        L1 = "Time",
+        L2 = "Time_lapse"
+    ), 
+    categ = list( # mandatory categ argument when several color required per dataset
+        L1 = "Animal",
+        L2 = "Beast"
+    ), 
+    color = "darkblue" # replace "darkblue" by 2 to test integer values
+)
+
+# list of single colors -> each dataset with the same color
+fun_gg_scatter(
+    data1 = list(
+        L1 = obs2,
+        L2 = obs3
+    ), 
+    x = list(
+        L1 = "Km",
+        L2 = "Distance"
+    ), 
+    y = list(
+        L1 = "Time",
+        L2 = "Time_lapse"
+    ), 
+    categ = list( # mandatory categ argument when several color required per dataset
+        L1 = "Animal",
+        L2 = "Beast"
+    ), 
+    color = list(
+        L1 = "darkblue", # replace "darkblue" by 2 to test integer values
+        L2 = "darkgreen" # replace "darkgreen" by 3 to test integer values
+    )
+)
+# list of single colors for each class of the categ argument
+fun_gg_scatter(
+    data1 = list(
+        L1 = obs2,
+        L2 = obs3
+    ), 
+    x = list(
+        L1 = "Km",
+        L2 = "Distance"
+    ), 
+    y = list(
+        L1 = "Time",
+        L2 = "Time_lapse"
+    ), 
+    categ = list( # mandatory categ argument when several color required per dataset
+        L1 = "Animal",
+        L2 = "Beast"
+    ), 
+    color = list(
+        L1 = c("darkblue", "darkred"), # replace c("darkblue", "darkred") by 2:3 to test integer values
+        L2 = c("darkgreen", "darkorange") # replace c("darkgreen", "darkviolet") by 4:5 to test integer values
+    )
+)
+# list of vectors of color values (e.g., data frame column), with respect of the correspondence between the categorical and the color columns
+fun_gg_scatter(
+    data1 = list(
+        L1 = obs2,
+        L2 = obs3
+    ), 
+    x = list(
+        L1 = "Km",
+        L2 = "Distance"
+    ), 
+    y = list(
+        L1 = "Time",
+        L2 = "Time_lapse"
+    ), 
+    categ = list( # mandatory categ argument when several color required per dataset
+        L1 = "Animal",
+        L2 = "Beast"
+    ), 
+    color = list(
+        L1 = obs2$Color2, # Replace by NULL to see that different levels of grey is used per dataset (not per class of the categ argument)
+        L2 = obs3$Color3 # color of integer value can be used. Replace by NULL to see that different levels of grey is used per dataset (not per class of the categ argument)
     )
 )
 
@@ -65,28 +251,6 @@ fun_gg_scatter(
 
 
 
-
-### Changing the order of the boxes
-# separate boxes
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.class.order = list(c("DOG", "CAT")))
-# grouped boxes
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Categ1", "Categ2"), categ.class.order = list(c("DOG", "CAT"), c("D", "C", "B", "A")))
-
-### Box color
-# Using a single color value
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.color = "coral")
-# Using one color value par class of Categ1
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.color = c("coral", "lightblue"))
-# Using a vector of color values (e.g., data frame column), with respect of the correspondence between Categ1 and box.color columns
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.color = obs1$Color1)
-# Using integers instead of color strings
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.color = 1)
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.color = 1:2)
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", categ.color = as.numeric(obs1$Color1))
-# With grouped boxes, we generate the same effects but for the second category
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Categ1", "Categ2"), categ.color = "coral")
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Categ1", "Categ2"), categ.color = 1:4)
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = c("Categ1", "Categ2"), categ.color = obs1$Color2)
 
 ### Other parameters of boxes
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
@@ -128,12 +292,7 @@ dot.categ.class.order = c("D", "A", "C", "B"),
 dot.legend.name = "ANIMAL GROUP"
 )
 
-### Tidy or random dot spreading
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
-dot.tidy = TRUE, 
-dot.tidy.bin.nb = 50, # from 0 to Inf. Only if dot.tidy = TRUE
-dot.jitter = 0.5 # from 0 to 1. Only if dot.tidy = FALSE
-)
+
 
 ### Other parameters of dots
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
@@ -162,18 +321,7 @@ y.top.extra.margin = 0,
 y.bottom.extra.margin = 0, 
 )
 
-### Stat numbers above boxes
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
-stat.disp = "above", # try "top"
-stat.disp.mean = FALSE, 
-stat.size = 4, 
-stat.dist = 2
-)
 
-### Plot orientation
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
-vertical = FALSE # with log2 and log10 scales, horizontal orientation is blocked because of a bug in ggplot2 (https://github.com/tidyverse/ggplot2/issues/881)
-)
 
 
 ### Text management

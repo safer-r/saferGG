@@ -3564,7 +3564,7 @@ return(window.width)
 
 
 # Check OK: clear to go Apollo
-fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, remove.read.only = TRUE, return.output = FALSE){
+fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, rescale = "fixed", remove.read.only = TRUE, return.output = FALSE){
 # AIM
 # open a pdf or screen (GUI) graphic window and return initial graphic parameters
 # this order can be used:
@@ -3579,13 +3579,14 @@ fun_open <- function(pdf = TRUE, pdf.path = "working.dir", pdf.name = "graph", w
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS:
-# pdf: logical. Use pdf display?
+# pdf: logical. Use pdf display? If FALSE, a GUI is opened
 # pdf.path: where the pdf is saved (do not terminate by / or \\). Write "working.dir" if working directory is required (default). Ignored if pdf == FALSE
 # pdf.name: name of the pdf file containing the graphs (the .pdf extension is added by the function, if not detected in the name end). Ignored if pdf == FALSE
 # width: width of the window (in inches)
 # height: height of the window (in inches)
 # paper: paper argument of the pdf function (paper format). Only used for pdf(). Either "a4", "letter", "legal", "us", "executive", "a4r", "USr" or "special". If "special", means that the paper dimension will be width and height. With another paper format, if width or height is over the size of the paper, width or height will be modified such that the plot is adjusted to the paper dimension (see $dim in the returned list below to see the modified dimensions). Ignored if pdf == FALSE
 # pdf.overwrite: logical. Existing pdf can be overwritten? . Ignored if pdf == FALSE
+# rescale: kind of GUI. Either "R", "fit", or "fixed". Ignored on Mac and Linux OS. See ?windows for details
 # remove.read.only: logical. remove the read only (R.O.) graphical parameters? If TRUE, the graphical parameters are returned without the R.O. parameters. The returned $ini.par list can be used to set the par() of a new graphical device. If FALSE, graphical parameters are returned with the R.O. parameters, which provides information like text dimension (see ?par() ). The returned $ini.par list can be used to set the par() of a new graphical device, but generate a warning message. Ignored if return.output == FALSE. 
 # return.output: logical. Return output ? If TRUE the output list is displayed
 # RETURN
@@ -3619,6 +3620,7 @@ tempo <- fun_check(data = width, class = "vector", mode = "numeric", length = 1,
 tempo <- fun_check(data = height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = paper, options = c("a4", "letter", "legal", "us", "executive", "a4r", "USr", "special", "A4", "LETTER", "LEGAL", "US"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data =pdf.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = rescale, options = c("R", "fit", "fixed"), length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = remove.read.only, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
@@ -3696,7 +3698,7 @@ pdf(width = width, height = height, file=pdf.loc, paper = paper)
 }else if(pdf == FALSE){
 pdf.loc <- NULL
 if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
-windows(width = width, height = height, rescale="fixed")
+windows(width = width, height = height, rescale = rescale)
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! is.null(open.fail)){
 tempo.cat <- "\n\n================\n\nERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n"
@@ -4865,7 +4867,7 @@ fun_gg_just <- function(angle, axis){
 # AIM
 # provide correct justification for axis labeling, depending on the chosen angle
 # ARGUMENTS
-# angle: integer value of the text angle for the axis labels. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
+# angle: integer value of the text angle for the axis labels, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc. 
 # axis: which axis for? Either "x" or "y"
 # REQUIRED PACKAGES
 # none
