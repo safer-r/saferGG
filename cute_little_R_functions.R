@@ -9749,8 +9749,9 @@ lib.path = NULL
 # "geom_line" (coordinates plotted then line connection from the lowest to highest coordinates)
 # "geom_path" (coordinates plotted then line connection respecting the order in data1)
 # "geom_step" coordinates plotted then line connection respecting the order in data1 but drawn in steps). See the geom.step.dir argument
-# "geom_hline" (horizontal line)
-# "geom_vline" (vertical line)
+# "geom_hline" (horizontal line, no x value provided)
+# "geom_vline" (vertical line, no y value provided)
+# "geom_stick" (dots as vertical bars)
 # If data1 is a list, then geom must be either:
 # (1) a list of single character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc.
 # (2) a single character string. In that case the same kind of plot will apply for the different compartments of the data1 list
@@ -10528,7 +10529,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 # end reserved word checking
 # check of geom now because required for y argument
-tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_step", "geom_hline", "geom_vline"), length = 1, fun.name = function.name)
+tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_step", "geom_hline", "geom_vline", "geom_stick"), length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
 stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
 }
@@ -10901,8 +10902,8 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if(suppressWarnings(all(x.lim %in% c(Inf, -Inf)))){ # happen when x is only NULL
-if(all(unlist(geom) == "geom_vline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " NOT POSSIBLE TO ONLY DRAW geom_vline KIND OF LINES IF x.lim ARGUMENT IS SET TO NULL, SINCE NO X-AXIS DEFINED (", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)\n\n================\n\n")
+if(all(unlist(geom) %in% c("geom_vline", "geom_stick"))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " NOT POSSIBLE TO DRAW geom_vline OR geom_stick KIND OF LINES ALONE IF x.lim ARGUMENT IS SET TO NULL, SINCE NO X-AXIS DEFINED (", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " x.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", paste(x.lim, collapse = " "), "\n\n================\n\n")
@@ -10940,7 +10941,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 if(suppressWarnings(all(y.lim %in% c(Inf, -Inf)))){ # happen when y is only NULL
 if(all(unlist(geom) == "geom_vline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " NOT POSSIBLE TO ONLY DRAW geom_vline KIND OF LINES IF y.lim ARGUMENT IS SET TO NULL, SINCE NO Y-AXIS DEFINED (", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " NOT POSSIBLE TO DRAW geom_vline KIND OF LINES ALONE IF y.lim ARGUMENT IS SET TO NULL, SINCE NO Y-AXIS DEFINED (", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " y.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", paste(y.lim, collapse = " "), "\n\n================\n\n")
@@ -11354,11 +11355,12 @@ for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same becau
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0(
 "ggplot2::", 
-geom[[i1]], 
+ifelse(geom[[i1]] == 'geom_stick', 'geom_segment', geom[[i1]]), # geom_segment because geom_stick converted to geom_segment for plotting
 "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", 
 x[[i1]], 
-", y = ", 
+ifelse(geom[[i1]] == 'geom_stick', ", yend = ", ", y = "), 
 y[[i1]], 
+if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', y.lim[1])}, 
 ", linetype = ", 
 categ[[i1]], 
 "), color = \"", 
@@ -11395,11 +11397,12 @@ for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same becau
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0(
 "ggplot2::", 
-geom[[i1]], 
+ifelse(geom[[i1]] == 'geom_stick', 'geom_segment', geom[[i1]]), # geom_segment because geom_stick converted to geom_segment for plotting
 "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", 
 x[[i1]], 
-", y = ", 
+ifelse(geom[[i1]] == 'geom_stick', ", yend = ", ", y = "), 
 y[[i1]], 
+if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', y.lim[1])}, 
 ", alpha = ", 
 categ[[i1]], 
 "), color = \"", 
@@ -11440,11 +11443,12 @@ for(i5 in 1:length(color[[i1]])){ # or length(class.categ). It is the same becau
 tempo.data.frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class.categ[i5], ]
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("
 ggplot2::", 
-geom[[i1]], 
+ifelse(geom[[i1]] == 'geom_stick', 'geom_segment', geom[[i1]]), # geom_segment because geom_stick converted to geom_segment for plotting
 "(data = tempo.data.frame, mapping = ggplot2::aes(x = ", 
 x[[i1]], 
-", y = ", 
+ifelse(geom[[i1]] == 'geom_stick', ", yend = ", ", y = "), 
 y[[i1]], 
+if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', y.lim[1])}, 
 ", size = ", 
 categ[[i1]], 
 "), color = \"", 
