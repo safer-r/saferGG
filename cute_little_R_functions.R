@@ -33,53 +33,53 @@
 
 ################ Object analysis    2
 ######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_secu() #### verif that local variables are not present in other envs   9
+######## fun_secu() #### verif that local variables are not present in other envs   10
 ######## fun_info() #### recover object information 12
-######## fun_head() #### head of the left or right of big 2D objects    13
+######## fun_head() #### head of the left or right of big 2D objects    14
 ######## fun_tail() #### tail of the left or right of big 2D objects    15
 ######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 16
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   20
 ######## fun_comp_list() #### comparison of two lists   26
-######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  28
+######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  29
 ################ Object modification    43
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  43
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 44
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 45
 ######## fun_round() #### rounding number if decimal present    47
 ######## fun_mat_rotate() #### 90° clockwise matrix rotation    49
 ######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    50
 ######## fun_mat_op() #### assemble several matrices with operation 53
-######## fun_mat_inv() #### return the inverse of a square matrix   55
+######## fun_mat_inv() #### return the inverse of a square matrix   56
 ######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  57
-######## fun_permut() #### progressively breaks a vector order  60
+######## fun_permut() #### progressively breaks a vector order  61
 ######## fun_slide() #### return a computation made on a vector using a sliding window  71
-################ Graphics management    74
-######## fun_width() #### window width depending on classes to plot 74
-######## fun_open() #### open a GUI or pdf graphic window   76
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    79
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 83
-######## fun_inter_ticks() #### define coordinates of secondary ticks   88
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   92
-######## fun_close() #### close specific graphic windows    104
-################ Standard graphics  105
-######## fun_empty_graph() #### text to display for empty graphs    105
-################ gg graphics    107
-######## fun_gg_palette() #### ggplot2 default color palette    107
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  109
-######## fun_gg_get_legend() #### get the legend of ggplot objects  111
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  114
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    117
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   117
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  117
-######## fun_gg_empty_graph() #### text to display for empty graphs 131
-################ Graphic extraction 132
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 133
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   141
-################ Import 174
-######## fun_pack() #### check if R packages are present and import into the working environment    174
-######## fun_python_pack() #### check if python packages are present    175
-################ Print / Exporting results (text & tables)  178
-######## fun_report() #### print string or data object into output file 178
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 181
+################ Graphics management    78
+######## fun_width() #### window width depending on classes to plot 78
+######## fun_open() #### open a GUI or pdf graphic window   80
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    84
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 88
+######## fun_inter_ticks() #### define coordinates of secondary ticks   93
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   97
+######## fun_close() #### close specific graphic windows    108
+################ Standard graphics  110
+######## fun_empty_graph() #### text to display for empty graphs    110
+################ gg graphics    112
+######## fun_gg_palette() #### ggplot2 default color palette    112
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  113
+######## fun_gg_get_legend() #### get the legend of ggplot objects  116
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  118
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    121
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   121
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  122
+######## fun_gg_empty_graph() #### text to display for empty graphs 135
+################ Graphic extraction 137
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 137
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   146
+################ Import 178
+######## fun_pack() #### check if R packages are present and import into the working environment    178
+######## fun_python_pack() #### check if python packages are present    180
+################ Print / Exporting results (text & tables)  182
+######## fun_report() #### print string or data object into output file 182
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 185
 
 
 ################################ FUNCTIONS ################################
@@ -102,12 +102,14 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # check also other kind of data parameters, is it a proportion? Is it type double but numbers without decimal part?
 # if options == NULL, then at least class or type or mode or length argument must be non null
 # if options is non null, then class, type and mode must be NULL, and length can be NULL or specified
+# WARNINGS
+# Since R >= 4.0.0, class(matrix()) returns "matrix" "array", and not "matrix" alone as before. However, the fun_check() function still make the difference between matrix and array. Thus, use argument class = "matrix" to check for matrix object (of class "matrix" "array" in R >= 4.0.0) and use argument class = "array" to check for array object (of class "array" in R >= 4.0.0)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # none
 # ARGUMENTS
 # data: object to test
 # data.name: character string indicating the name of the object to test. If NULL, use the name of the object assigned to the data argument
-# class: character string. Either one of the class() result or "vector" or "ggplot2" (i.e., objects of class c("gg", "ggplot")) or NULL
+# class: character string. Either one of the class() result (But see the warning section above) or "vector" or "ggplot2" (i.e., objects of class c("gg", "ggplot")) or NULL
 # typeof: character string. Either one of the typeof() result or NULL
 # mode: character string. Either one of the mode() result (for non vector object) or NULL
 # length: numeric value indicating the length of the object. Not considered if NULL
@@ -511,7 +513,7 @@ output <- c(output, tempo)
 tempo <- list("SUMMARY" = summary(data))
 output <- c(output, tempo)
 }
-if(all(class(data) == "data.frame" | class(data) == "matrix")){
+if(all(class(data) == "data.frame" | all(class(data) %in% c("matrix", "array")))){
 tempo <- list("ROW_NAMES" = dimnames(data)[[1]])
 output <- c(output, tempo)
 tempo <- list("COLUM_NAMES" = dimnames(data)[[2]])
@@ -595,7 +597,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
-if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
 return(head(data1, n))
 }else{
 obs.dim <- dim(data1)
@@ -655,7 +657,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
-if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
 return(tail(data1, n))
 }else{
 obs.dim <- dim(data1)
@@ -959,11 +961,11 @@ fun_comp_2d <- function(data1, data2){
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # argument checking
-if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-if( ! any(class(data2) %in% c("matrix", "data.frame", "table"))){
+if( ! (any(class(data2) %in% c("data.frame", "table")) | all(class(data2) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data2) %in% c("matrix", "data.frame", "table"))
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
@@ -998,7 +1000,7 @@ same.col.pos1 <- NULL
 same.col.pos2 <- NULL
 identical.object <- NULL
 identical.content <- NULL
-if(identical(data1, data2) & any(class(data1) %in% c("matrix", "data.frame", "table"))){
+if(identical(data1, data2) & (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
 same.class <- TRUE
 class <- class(data1)
 same.dim <- TRUE
@@ -1039,7 +1041,7 @@ stop(tempo.cat, call. = FALSE)
 }
 if( ! identical(class(data1), class(data2))){
 same.class <- FALSE
-}else if( ! any(class(data1) %in% c("matrix", "data.frame", "table"))){
+}else if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 AND data2 ARGUMENTS MUST BE EITHER MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }else{
@@ -1118,14 +1120,14 @@ col.name <- dimnames(data1)[[2]]
 # identical row and col content
 if(all(class(data1) == "table")){
 as.data.frame(matrix(data1, ncol = ncol(data1)), stringsAsFactors = FALSE)
-}else if(all(class(data1) == "matrix")){
+}else if(all(class(data1) %in% c("matrix", "array"))){
 data1 <- as.data.frame(data1, stringsAsFactors = FALSE)
 }else if(all(class(data1) == "data.frame")){
 data1 <- data.frame(lapply(data1, as.character), stringsAsFactors=FALSE)
 }
 if(all(class(data2) == "table")){
 as.data.frame(matrix(data2, ncol = ncol(data2)), stringsAsFactors = FALSE)
-}else if(all(class(data2) == "matrix")){
+}else if(all(class(data2) %in% c("matrix", "array"))){
 data2 <- as.data.frame(data2, stringsAsFactors = FALSE)
 }else if(all(class(data2) == "data.frame")){
 data2 <- data.frame(lapply(data2, as.character), stringsAsFactors=FALSE)
@@ -3185,6 +3187,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right")
 # DEBUGGING
 # data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL ; thread.nb = NULL ; print.count = 10 ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
+data = lag.pos; window.size = window.size; step = step; fun = length; from = min(a$pos); to = max(a$pos)
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 instruction <- match.call()
@@ -5817,7 +5820,7 @@ stop(tempo.cat, call. = FALSE)
 # end required function checking
 # argument checking
 # argument checking without fun_check()
-if( ! (all(class(data) == "numeric") | all(class(data) == "integer") | (all(class(data) == "matrix") & mode(data) == "numeric"))){
+if( ! (all(class(data) == "numeric") | all(class(data) == "integer") | (all(class(data) %in% c("matrix", "array")) & mode(data) == "numeric"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A NUMERIC VECTOR OR NUMERIC MATRIX\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
@@ -5871,7 +5874,7 @@ stop(tempo.cat, call. = FALSE)
 }
 # end argument checking
 # main code
-if(class(data) == "matrix"){
+if(class(data)%in% c("matrix", "array")){
 data <- as.vector(data)
 }
 na.nb <- NULL
@@ -7554,7 +7557,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking
 # main code
 if( ! is.null(data)){
-if(all(class(data) %in% c("matrix", "data.frame", "table"))){
+if(all(class(data) == "data.frame") | all(class(data) == "table") | all(class(data) %in% c("matrix", "array"))){ # before R4.0.0, it was  all(class(data) %in% c("matrix", "data.frame", "table"))
 if(rownames.kept == FALSE & all(class(data) == "data.frame") & nrow(data) != 0 & nrow(data) <= 4){ # for data frames with nrows <= 4
 rownames.output.tables <- ""
 length.rows <- nrow(data)
@@ -7562,7 +7565,7 @@ for(i in 1:length.rows){ # replace the rownames of the first 4 rows by increasin
 rownames.output.tables <- c(rownames.output.tables, paste0(rownames.output.tables[i]," ", collapse=""))
 }
 row.names(data) <- rownames.output.tables[1:length.rows]
-}else if(rownames.kept == FALSE & all(class(data) %in% c("matrix", "table"))){
+}else if(rownames.kept == FALSE & (all(class(data) == "table") | all(class(data) %in% c("matrix", "array")))){ # before R4.0.0, it was  & all(class(data) %in% c("matrix", "table"))
 rownames(data) <- rep("", nrow(data)) # identical row names allowed in matrices and tables
 }
 if(noquote == TRUE){
@@ -9653,7 +9656,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
 
 
 
@@ -11785,6 +11787,7 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
+
 
 
 
