@@ -103,7 +103,8 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # if options == NULL, then at least class or type or mode or length argument must be non null
 # if options is non null, then class, type and mode must be NULL, and length can be NULL or specified
 # WARNINGS
-# Since R >= 4.0.0, class(matrix()) returns "matrix" "array", and not "matrix" alone as before. However, the fun_check() function still make the difference between matrix and array. Thus, use argument class = "matrix" to check for matrix object (of class "matrix" "array" in R >= 4.0.0) and use argument class = "array" to check for array object (of class "array" in R >= 4.0.0)
+# The function tests what is written in arguments, even if what is written in incoherent. For instance, fun_check(data = factor(1), class = "factor", mode = "character") will return a problem, and this, what ever the object tested in the data argument, because no object can be class "factor" and mode "character" (factors are class "factor" and mode "numeric")
+# Since R >= 4.0.0, class(matrix()) returns "matrix" "array", and not "matrix" alone as before. However, use argument class = "matrix" to check for matrix object (of class "matrix" "array" in R >= 4.0.0) and use argument class = "array" to check for array object (of class "array" in R >= 4.0.0)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # none
 # ARGUMENTS
@@ -142,7 +143,7 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # argument checking
 # fun.name checked first because required next
 if( ! is.null(fun.name)){
-if( ! (class(fun.name) == "character" & length(fun.name) == 1)){
+if( ! (all(class(fun.name) == "character") & length(fun.name) == 1)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
@@ -170,7 +171,7 @@ stop(tempo.cat, call. = FALSE)
 # tested below
 # end dealing with logical
 if( ! is.null(data.name)){
-if( ! (length(data.name) == 1 & class(data.name) == "character")){
+if( ! (length(data.name) == 1 & all(class(data.name) == "character"))){
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
@@ -192,7 +193,7 @@ tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.nu
 stop(tempo.cat, call. = FALSE)
 }
 if( ! is.null(class)){
-if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built") & any(is.na(class)) != TRUE)){ # not length == 1 here because ordered factors are class "factor" "ordered" (length == 2)
+if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built") & any(is.na(class)) != TRUE & length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0
 tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\"\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
@@ -298,6 +299,13 @@ text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO
 }
 }
 arg.names <- c("class", "typeof", "mode", "length")
+if( ! is.null(class)){
+if(class == "matrix"){ # because of class(matric()) since R4.0.0
+class <- c("matrix", "array")
+}else if(class == "factor" & all(class(data) %in% c("factor", "ordered"))){ # to deal with ordered factors
+class <- c("factor", "ordered")
+}
+}
 if(is.null(options)){
 for(i2 in 1:length(arg.names)){
 if( ! is.null(get(arg.names[i2]))){
@@ -309,18 +317,18 @@ text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name))
 }else{
 text <- paste0(text, " AND ") ; 
 }
-text <- paste0(text, toupper(arg.names[i2]), " ", get(arg.names[i2]))
+text <- paste0(text, toupper(arg.names[i2]), " ", if(all(get(arg.names[i2]) %in% c("matrix", "array"))){"matrix"}else if(all(get(arg.names[i2]) %in% c("factor", "ordered"))){"factor"}else{get(arg.names[i2])})
 '
 # end script to execute
-if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & get(arg.names[i2]) == "integer") | (arg.names[i2] == "typeof" & get(arg.names[i2]) == "integer"))){
+if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2]) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2]) == "integer")))){
 if( ! all(data %% 1 == 0, na.rm = TRUE)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result
 eval(parse(text = tempo.script)) # execute tempo.script
 }
-}else if( ! any(get(arg.names[i2]) %in% c("vector", "ggplot2")) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2]))){  # no need of na.rm = TRUE for all because %in% does not output NA
+}else if( ! any(all(get(arg.names[i2]) %in% c("vector", "ggplot2"))) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2]))){ # test the four c("class", "typeof", "mode", "length") arguments with their corresponding function. No need of na.rm = TRUE for all because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & get(arg.names[i2]) == "vector" & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){  # no need of na.rm = TRUE for all because %in% does not output NA
+}else if(arg.names[i2] == "class" & all(get(arg.names[i2]) == "vector") & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){ # test class == "vector". No need of na.rm = TRUE for all because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & get(arg.names[i2]) == "ggplot2" & ! all(class(data) %in% c("gg", "ggplot"))){
+}else if(arg.names[i2] == "class" & all(get(arg.names[i2]) == "ggplot2") & ! all(class(data) %in% c("gg", "ggplot"))){ # test ggplot object
 eval(parse(text = tempo.script)) # execute tempo.script
 }
 }
@@ -9663,6 +9671,7 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 
 
 
+
 fun_gg_scatter <- function(
 data1, 
 x, 
@@ -11787,7 +11796,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
 
 
 
