@@ -163,7 +163,7 @@ stop(tempo.cat, call. = FALSE)
 # end dealing with NA
 # dealing with NULL
 if(is.null(prop) | is.null(double.as.integer.allowed) | is.null(all.options.in.data) | is.null(na.contain) | is.null(neg.values) | is.null(print)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THESE ARGUMENTS prop, double.as.integer.allowed, all.options.in.data, na.contain, neg.values AND print CANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print")[c(is.null(prop), is.null(double.as.integer.allowed), is.null(all.options.in.data), is.null(na.contain), is.null(neg.values), is.null(print))], collapse = " "), "\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THESE ARGUMENTS\nprop\ndouble.as.integer.allowed\nall.options.in.data\nna.contain\nneg.values\nprint\nCANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print")[c(is.null(prop), is.null(double.as.integer.allowed), is.null(all.options.in.data), is.null(na.contain), is.null(neg.values), is.null(print))], collapse = " "), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NULL
@@ -1528,7 +1528,7 @@ stop(tempo.cat, call. = FALSE)
 # end dealing with NA
 # dealing with NULL
 if(is.null(fun) | is.null(arg) | is.null(val) | is.null(print.count) | is.null(plot.fun) | is.null(export)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS fun, arg, val, print.count, plot.fun AND export CANNOT BE NULL\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\nfun\narg\nval\nprint.count\nplot.fun\nexport\nCANNOT BE NULL\n\n================\n\n") #problematic arguments are -> put everywhere
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NULL
@@ -3159,11 +3159,12 @@ return(output)
 ######## fun_slide() #### return a computation made on a vector using a sliding window
 
 
-fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args = NULL, boundary = "left", thread.nb = NULL, print.count = 100, res.path = NULL, lib.path = NULL, verbose = TRUE, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
+fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args = NULL, boundary = "left", parall = FALSE, thread.nb = NULL, print.count = 100, res.path = NULL, lib.path = NULL, verbose = TRUE, cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"){
 # AIM
 # return a computation made on a vector using a sliding window
 # WARNING
-# The function uses two strategies, depending on the amout of memory required which depends on the data, window.size and step arguments. The first one uses lapply(), is fast but requires lots of memory. The second one uses a parallelized loop. The choice between the two strategies is automatic
+# The function uses two strategies, depending on the amout of memory required which depends on the data, window.size and step arguments. The first one uses lapply(), is generally fast but requires lots of memory. The second one uses a parallelized loop. The choice between the two strategies is automatic if parall argument is FALSE, and is forced toward parallelization if parall argument is TRUE
+# The parall argument forces the parallelization, which is convenient when the data argument is big, because the lapply() function is sometimes slower than the parallelization
 # ARGUMENTS
 # data: vector, matrix, table or array of numeric values (mode must be numeric). Inf not allowed. NA will be removed before computation
 # window.size: single numeric value indicating the width of the window sliding across data (in the same unit as data value)
@@ -3173,6 +3174,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # fun: function or character string (without brackets) indicating the name of the function to apply in each window. Example: fun = "mean", or fun = mean
 # args: character string of additional arguments of fun (separated by a comma between the quotes). Example args = "na.rm = TRUE" for fun = mean. Ignored if NULL
 # boundary: either "left" or "right". Indicates if the sliding window includes values equal to left boundary and exclude values equal to right boundary ("left") or the opposite ("right")
+# parall: logical. Force parallelization ?
 # thread.nb: numeric value indicating the number of threads to use if ever parallelization is required. If NULL, all the available threads will be used
 # print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
 # res.path: character string indicating the absolute pathway where the parallelization log file will be created if parallelization is used. If NULL, will be created in the R current directory
@@ -3194,9 +3196,10 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 #$value : the computed value by the fun argument in each window)
 # EXAMPLES
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left")
-# fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right")
+# fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right") # effect of boundary argument
+# fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left", parall = TRUE) # effect of parall argument
 # DEBUGGING
-# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; thread.nb = NULL ; print.count = 100 ; res.path = NULL ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
+# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; parall = FALSE ; thread.nb = NULL ; print.count = 100 ; res.path = NULL ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
 # data = lag.pos; window.size = window.size; step = step; fun = length; from = min(a$pos); to = max(a$pos)
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
@@ -3250,6 +3253,7 @@ tempo <- fun_check(data = boundary, options = c("left", "right"), length = 1, fu
 if( ! is.null(thread.nb)){
 tempo <- fun_check(data = thread.nb, typeof = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
 }
+tempo <- fun_check(data = parall, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = print.count, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if( ! is.null(res.path)){
 tempo <- fun_check(data = res.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
@@ -3274,14 +3278,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument primary checking
 # second round of checking and data preparation
 # dealing with NA
-if(any(is.na(window.size)) | any(is.na(step)) | any(is.na(from)) | any(is.na(to)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(thread.nb)) | any(is.na(print.count)) | any(is.na(res.path)) | any(is.na(lib.path)) | any(is.na(verbose))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT data CAN HAVE NA VALUES\n\n================\n\n")
+if(any(is.na(window.size)) | any(is.na(step)) | any(is.na(from)) | any(is.na(to)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(parall)) | any(is.na(thread.nb)) | any(is.na(print.count)) | any(is.na(res.path)) | any(is.na(lib.path)) | any(is.na(verbose))){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT data CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("window.size", "step", "from", "to", "fun", "args", "boundary", "parall", "thread.nb", "print.count", "res.path", "lib.path", "verbose")[c(any(is.na(window.size)), any(is.na(step)), any(is.na(from)), any(is.na(to)), suppressWarnings(any(is.na(fun))), any(is.na(args)), any(is.na(boundary)), any(is.na(parall)), any(is.na(thread.nb)), any(is.na(print.count)), any(is.na(res.path)), any(is.na(lib.path)), any(is.na(verbose)))], collapse = "\n"), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NA
 # dealing with NULL
-if(is.null(data) | is.null(window.size) | is.null(step) | is.null(fun) | is.null(boundary) | is.null(print.count) | is.null(verbose)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS data, window.size, step, fun, boundary, print.count AND verbose CANNOT BE NULL\n\n================\n\n")
+if(is.null(data) | is.null(window.size) | is.null(step) | is.null(fun) | is.null(boundary) | is.null(parall) | is.null(print.count) | is.null(verbose)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\ndata\nwindow.size\nstep\nfun\nboundary\nparall\nprint.count\nverbose\nCANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data", "window.size", "step", "fun", "boundary", "parall", "print.count", "verbose")[c(is.null(data), is.null(window.size), is.null(step), is.null(fun), is.null(boundary), is.null(parall), is.null(print.count), is.null(verbose))], collapse = "\n"), "\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NULL
@@ -3355,8 +3359,9 @@ tempo.log <- get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = 
 tempo.log[min(which(tempo.log), na.rm = TRUE)] <- FALSE # convert the first left boundary that goes above max(data, na.rm = TRUE) to FALSE to keep it (the next ones will be removed)
 wind <- wind[ ! tempo.log,]
 }
-# test if lapply can be used
 
+# test if lapply can be used
+if(parall == FALSE){
 # new environment
 env.name <- paste0("env", ini.time)
 if(exists(env.name, where = -1)){
@@ -3368,10 +3373,13 @@ assign("wind", wind, envir = get(env.name))
 assign("data", data, envir = get(env.name))
 }
 # end new environment
-tempo <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})", kind = "error", header = FALSE, env = get(env.name), print.no = FALSE)
+tempo.message <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})", kind = "error", header = FALSE, env = get(env.name), print.no = FALSE)
 rm(env.name) # optional, because should disappear at the end of the function execution
+}else{
+tempo.message <- "ERROR" # with this, force the parallelization by default
+}
 # end test if lapply can be used
-if( ! any(grepl(x = tempo, pattern = "ERROR.*"))){
+if( ! any(grepl(x = tempo.message, pattern = "ERROR.*"))){
 left.log <- lapply(X = wind$left, Y = data, FUN = function(X, Y){
 res <- get(left)(Y, X)
 return(res)
@@ -4205,7 +4213,7 @@ stop(tempo.cat, call. = FALSE)
 # end dealing with NA
 # dealing with NULL
 if(is.null(lim) | is.null(log)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nTHESE ARGUMENTS lim AND log CANNOT BE NULL\n\n================\n\n")
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nTHESE ARGUMENTS\nlim\nlog\nCANNOT BE NULL\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NULL
@@ -7797,6 +7805,7 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
 fun_gg_boxplot <- function(
 data1, 
 y, 
@@ -9683,6 +9692,9 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
+
+
+
 
 
 
@@ -11813,11 +11825,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
-
-
-
-
 
 
 
