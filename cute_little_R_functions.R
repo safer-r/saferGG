@@ -1,6 +1,6 @@
 ################################################################
 ##                                                            ##
-##     CUTE FUNCTIONS v6.0.0                                  ##
+##     CUTE FUNCTIONS                                         ##
 ##                                                            ##
 ##     Gael A. Millot                                         ##
 ##                                                            ##
@@ -2782,9 +2782,10 @@ fun_permut <- function(data1, data2 = NULL, n = NULL, seed = NULL, print.count =
 # 1) n times (when n is precised) or
 # 2) until the correlation between data1 and data2 decreases down to the cor.limit (0.2 by default). See cor.limit below to deal with negative correlations
 # Example of consecutive position flipping: ABCD -> BACD -> BADC, etc.
+# designed for discrete values, but worls also for continuous values
 # WARNINGS
 # see # https://www.r-bloggers.com/strategies-to-speedup-r-code/ for code speedup
-# the random switch of non consecutive positions (ABCD -> DBCA for instance) does not work very well as the correaltion is quickly obtained but the initial vector structure is mainly kept (no much order). Ths code would be: pos <- ini.pos[1:2] ; pos <- sample.int(n = n , size = 2, replace = FALSE) ; tempo.pos[pos] <- tempo.pos[rev(pos)]
+# the random switch of non consecutive positions (ABCD -> DBCA for instance) does not work very well as the correlation is quickly obtained but the initial vector structure is mainly kept (no much order). Ths code would be: pos <- ini.pos[1:2] ; pos <- sample.int(n = n , size = 2, replace = FALSE) ; tempo.pos[pos] <- tempo.pos[rev(pos)]
 # ARGUMENTS
 # data1: a vector of at least 2 elements. Must be numeric if data2 is specified
 # data2: a numeric vector of same length as data1
@@ -3183,6 +3184,7 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # parallel if parallelization is used
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
+# fun_get_message
 # fun_pack()
 # RETURN
 # a data frame containing
@@ -3194,15 +3196,17 @@ fun_slide <- function(data, window.size, step, from = NULL, to = NULL, fun, args
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left")
 # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right")
 # DEBUGGING
-# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; lib.path = NULL ; thread.nb = NULL ; print.count = 10 ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
-data = lag.pos; window.size = window.size; step = step; fun = length; from = min(a$pos); to = max(a$pos)
+# data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; thread.nb = NULL ; print.count = 100 ; res.path = NULL ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
+# data = lag.pos; window.size = window.size; step = step; fun = length; from = min(a$pos); to = max(a$pos)
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 instruction <- match.call()
 # end function name
 # required function checking
 req.function <- c(
-"fun_check"
+"fun_check", 
+"fun_get_message", 
+"fun_pack"
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
@@ -3352,7 +3356,20 @@ tempo.log[min(which(tempo.log), na.rm = TRUE)] <- FALSE # convert the first left
 wind <- wind[ ! tempo.log,]
 }
 # test if lapply can be used
-tempo <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})")
+
+# new environment
+env.name <- paste0("env", ini.time)
+if(exists(env.name, where = -1)){
+tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
+stop(tempo.cat, call. = FALSE)
+}else{
+assign(env.name, new.env())
+assign("wind", wind, envir = get(env.name))
+assign("data", data, envir = get(env.name))
+}
+# end new environment
+tempo <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})", kind = "error", header = FALSE, env = get(env.name), print.no = FALSE)
+rm(env.name) # optional, because should disappear at the end of the function execution
 # end test if lapply can be used
 if( ! any(grepl(x = tempo, pattern = "ERROR.*"))){
 left.log <- lapply(X = wind$left, Y = data, FUN = function(X, Y){
@@ -3490,7 +3507,7 @@ if(verbose == TRUE){
 end.date <- Sys.time()
 end.time <- as.numeric(end.date)
 total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
-cat(paste0("fun_test JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
+cat(paste0("fun_slide JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
 }
 return(output)
 }
@@ -7612,6 +7629,7 @@ fun_get_message <- function(data, kind = "error", header = TRUE, print.no = FALS
 # using argument print.no = FALSE, return NULL if no message, which is convenient in some cases
 # WARNING
 # Only the first message is returned
+# Always use the env argument when fun_get_message() is used inside functions
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # ARGUMENTS
@@ -7772,6 +7790,7 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
+
 
 
 
@@ -9664,8 +9683,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
-
 
 
 
@@ -11796,6 +11813,12 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
+
+
+
+
+
+
 
 
 
