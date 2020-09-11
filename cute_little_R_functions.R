@@ -1148,13 +1148,32 @@ data2 <- data.frame(lapply(data2, as.character), stringsAsFactors=FALSE)
 row.names(data1) <- paste0("A", 1:nrow(data1))
 row.names(data2) <- paste0("A", 1:nrow(data2))
 if(same.col.nb == TRUE){ # because if not the same col nb, the row cannot be identical
-if(as.double(nrow(data1)) * nrow(data2) <= 1e10){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
-same.row.pos1 <- which(c(as.data.frame(t(data1), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data2), stringsAsFactors = FALSE)))
+if(all(sapply(data1, FUN = typeof) == "integer") & all(sapply(data2, FUN = typeof) == "integer") & as.double(nrow(data1)) * nrow(data2) <= 1e10){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
+same.row.pos1 <- which(c(as.data.frame(t(data1), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data2), stringsAsFactors = FALSE))) # this work fast with only integers (because 32 bits)
 same.row.pos2 <- which(c(as.data.frame(t(data2), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data1), stringsAsFactors = FALSE)))
+}else if(as.double(nrow(data1)) * nrow(data2) <= 1e6){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
+same.row.pos1 <- logical(length = nrow(data1)) # FALSE by default
+same.row.pos1[] <- FALSE # security
+for(i3 in 1:nrow(data1)){
+for(i4 in 1:nrow(data2)){
+same.row.pos1[i3] <- identical(data1[i3, ], data2[i4, ])
+}
+}
+same.row.pos1 <- which(same.row.pos1)
+
+same.row.pos2 <- logical(length = nrow(data2)) # FALSE by default
+same.row.pos2[] <- FALSE # security
+for(i3 in 1:nrow(data2)){
+for(i4 in 1:nrow(data1)){
+same.row.pos2[i3] <- identical(data2[i3, ], data1[i4, ])
+}
+}
+same.row.pos2 <- which(same.row.pos2)
 }else{
 same.row.pos1 <- "TOO BIG FOR EVALUATION"
 same.row.pos2 <- "TOO BIG FOR EVALUATION"
 }
+
 names(same.row.pos1) <- NULL
 names(same.row.pos2) <- NULL
 if(all(is.na(same.row.pos1))){
@@ -1181,9 +1200,27 @@ any.id.row <- FALSE
 # same.row.pos1 and 2 remain NULL
 }
 if(same.row.nb == TRUE){ # because if not the same row nb, the col cannot be identical
-if(as.double(ncol(data1)) * ncol(data2) <= 1e10){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
+if(all(sapply(data1, FUN = typeof) == "integer") & all(sapply(data2, FUN = typeof) == "integer") & as.double(ncol(data1)) * ncol(data2) <= 1e10){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
 same.col.pos1 <- which(c(data1) %in% c(data2))
 same.col.pos2 <- which(c(data2) %in% c(data1))
+}else if(as.double(ncol(data1)) * ncol(data2) <= 1e6){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
+same.col.pos1 <- logical(length = ncol(data1)) # FALSE by default
+same.col.pos1[] <- FALSE # security
+for(i3 in 1:ncol(data1)){
+for(i4 in 1:ncol(data2)){
+same.col.pos1[i3] <- identical(data1[ , i3], data2[ ,i4])
+}
+}
+same.col.pos1 <- which(same.col.pos1)
+
+same.col.pos2 <- logical(length = ncol(data2)) # FALSE by default
+same.col.pos2[] <- FALSE # security
+for(i3 in 1:ncol(data2)){
+for(i4 in 1:ncol(data1)){
+same.col.pos2[i3] <- identical(data2[ , i3], data1[ , i4])
+}
+}
+same.col.pos2 <- which(same.col.pos2)
 }else{
 same.col.pos1 <- "TOO BIG FOR EVALUATION"
 same.col.pos2 <- "TOO BIG FOR EVALUATION"
