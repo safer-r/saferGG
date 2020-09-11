@@ -96,6 +96,7 @@ obs4 <- data.frame(
     Type = c(as.character(obs2$Animal), as.character(obs3$Beast)), 
     stringsAsFactors = TRUE
 )
+fun_info(obs4)
 fun_gg_scatter(data1 = obs4, x = "Km", y = "Time", categ = "Type")
 
 
@@ -245,6 +246,9 @@ fun_gg_scatter(
         L2 = obs3$Color3 # color of integer value can be used. Replace by NULL to see that different levels of grey is used per dataset (not per class of the categ argument)
     )
 )
+
+
+
 
 
 

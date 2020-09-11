@@ -939,17 +939,21 @@ fun_comp_2d <- function(data1, data2){
 # $same.col.name.pos1: position, in data1, of the column names identical in data2
 # $same.col.name.pos2: position, in data2, of the column names identical in data1
 # $common.col.names: common column names between data1 and data2 (can be a subset of $name or not). NULL if no common column names
-# $any.id.row: logical. is there identical rows (not considering row names) ?
-# $same.row.pos1: position, in data1, of the rows identical in data2 (not considering row names)
-# $same.row.pos2: position, in data2, of the rows identical in data1 (not considering row names)
-# $any.id.col: logical. is there identical columns (not considering column names)?
-# $same.col.pos1: position in data1 of the cols identical in data2 (not considering column names)
-# $same.col.pos2: position in data2 of the cols identical in data1 (not considering column names)
+# $any.id.row: logical. is there identical rows (not considering row names)? NULL if nrow(data1) * nrow(data2) > 1e10
+# $same.row.pos1: position, in data1, of the rows identical in data2 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
+# $same.row.pos2: position, in data2, of the rows identical in data1 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
+# $any.id.col: logical. is there identical columns (not considering column names)? NULL if ncol(data1) * ncol(data2) > 1e10
+# $same.col.pos1: position in data1 of the cols identical in data2 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
+# $same.col.pos2: position in data2 of the cols identical in data1 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
 # $identical.object: logical. Are objects identical (including row & column names)?
 # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
 # EXAMPLES
 # obs1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
 # obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
+# large matrices
+# obs1 = matrix(1:1e6, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; obs2 = matrix(as.integer((1:1e6)+1e6/5), ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; head(obs1) ; head(obs2) ; fun_comp_2d(obs1, obs2)
+# WARNING: when comparing content (rows, columns, or total), double and integer data are considered as different -> double(1) != integer(1)
+# obs1 = matrix(1:1e6, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; obs2 = matrix((1:1e6)+1e6/5, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; head(obs1) ; head(obs2) ; fun_comp_2d(obs1, obs2)
 # obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
 # obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
 # DEBUGGING
@@ -965,6 +969,7 @@ fun_comp_2d <- function(data1, data2){
 # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = as.data.frame(matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) # for function debugging
 # data1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; data2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) # for function debugging
 # data1 = table(Exp1 = c("A", "A", "A", "B", "B", "B"), Exp2 = c("A1", "B1", "A1", "C1", "C1", "B1")) ; data2 = data.frame(A = 1:3, B= letters[1:3]) # for function debugging
+# data1 = matrix(1:1e6, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; data2 = matrix((1:1e6)+1e6/5, ncol = 5, dimnames = list(NULL, LETTERS[1:5]))
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -1143,8 +1148,13 @@ data2 <- data.frame(lapply(data2, as.character), stringsAsFactors=FALSE)
 row.names(data1) <- paste0("A", 1:nrow(data1))
 row.names(data2) <- paste0("A", 1:nrow(data2))
 if(same.col.nb == TRUE){ # because if not the same col nb, the row cannot be identical
+if(as.double(nrow(data1)) * nrow(data2) <= 1e10){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
 same.row.pos1 <- which(c(as.data.frame(t(data1), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data2), stringsAsFactors = FALSE)))
 same.row.pos2 <- which(c(as.data.frame(t(data2), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data1), stringsAsFactors = FALSE)))
+}else{
+same.row.pos1 <- "TOO BIG FOR EVALUATION"
+same.row.pos2 <- "TOO BIG FOR EVALUATION"
+}
 names(same.row.pos1) <- NULL
 names(same.row.pos2) <- NULL
 if(all(is.na(same.row.pos1))){
@@ -1161,14 +1171,23 @@ any.id.row <- TRUE
 }
 if(is.null(same.row.pos1) & is.null(same.row.pos2)){
 any.id.row <- FALSE
+}else if(length(same.row.pos1) == 0 & length(same.row.pos2) == 0){
+any.id.row <- FALSE
+}else if(all(same.row.pos1 == "TOO BIG FOR EVALUATION") & all(same.row.pos2 == "TOO BIG FOR EVALUATION")){
+any.id.row <- NULL
 }
 }else{
 any.id.row <- FALSE
 # same.row.pos1 and 2 remain NULL
 }
 if(same.row.nb == TRUE){ # because if not the same row nb, the col cannot be identical
+if(as.double(ncol(data1)) * ncol(data2) <= 1e10){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
 same.col.pos1 <- which(c(data1) %in% c(data2))
 same.col.pos2 <- which(c(data2) %in% c(data1))
+}else{
+same.col.pos1 <- "TOO BIG FOR EVALUATION"
+same.col.pos2 <- "TOO BIG FOR EVALUATION"
+}
 names(same.col.pos1) <- NULL
 names(same.col.pos2) <- NULL
 if(all(is.na(same.col.pos1))){
@@ -1185,13 +1204,21 @@ any.id.col <- TRUE
 }
 if(is.null(same.col.pos1) & is.null(same.col.pos2)){
 any.id.col <- FALSE
+}else if(length(same.col.pos1) == 0 & length(same.col.pos2) == 0){
+any.id.col <- FALSE
+}else if(all(same.col.pos1 == "TOO BIG FOR EVALUATION") & all(same.col.pos2 == "TOO BIG FOR EVALUATION")){
+any.id.col <- NULL
 }
 }else{
 any.id.col <- FALSE
 # same.col.pos1 and 2 remain NULL
 }
-if(same.dim == TRUE & ! all(is.null(same.row.pos1), is.null(same.row.pos2), is.null(same.col.pos1), is.null(same.col.pos2))){ # same.dim == TRUE means that same.row.nb == TRUE and same.col.nb == TRUE, meaning that row.nb != NULL and col.nb != NULL. Thus, no need to include these checkings
-if(identical(same.row.pos1, 1:row.nb) & identical(same.row.pos2, 1:row.nb) & identical(same.col.pos1, 1:col.nb) & identical(same.col.pos2, 1:col.nb)){
+if(same.dim == TRUE){
+names(data1) <- NULL
+row.names(data1) <- NULL
+names(data2) <- NULL
+row.names(data2) <- NULL
+if(identical(data1, data2)){
 identical.content <- TRUE
 }else{
 identical.content <- FALSE
@@ -7804,8 +7831,6 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-
-
 fun_gg_boxplot <- function(
 data1, 
 y, 
@@ -9692,7 +9717,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
 
 
 
@@ -11825,7 +11849,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
 
 
 
