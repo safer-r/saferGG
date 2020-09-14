@@ -168,16 +168,48 @@ add = "+ggplot2::facet_wrap(facets = 'Categ2', labeller = 'label_both') + ggplot
 
 
 ### Other parameters
-fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
+res <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
 return = TRUE, 
 return.ggplot = TRUE,
+return.gtable = FALSE,
 plot = FALSE, 
 warn.print = FALSE, 
 lib.path = NULL
 )
+# plot the result
+fun_open(pdf = FALSE)
+res$ggplot
+
+# display the output (manipulation of res triggers plotting because of the presence of non NULL $ggplot, which is annoying, as explain in the function description)
+fun_open(pdf = FALSE)
+res
+
+# The advantage of $ggplot is that it is easy to update the plot
 
 
+### Notes about the gtable output
+res2 <- fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
+return = TRUE, 
+return.ggplot = FALSE,
+return.gtable = TRUE,
+plot = TRUE, # plot must be TRUE to have a non NULL $gtable output
+warn.print = FALSE, 
+lib.path = NULL
+)
 
+# display the results (does not plot the graph, contrary to $ggplot)
+fun_open(pdf = FALSE)
+res2
+
+# replot
+fun_open(pdf = FALSE)
+gridExtra::grid.arrange(res2$gtable)
+# plot the first grob
+fun_open(pdf = FALSE)
+gridExtra::grid.arrange(res2$gtable[1,1])
+# plot the second grob
+fun_open(pdf = FALSE)
+gridExtra::grid.arrange(res2$gtable[1,2])
 
 
 
