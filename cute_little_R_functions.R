@@ -8,6 +8,7 @@
 ################################################################
 
 
+# color palette: see https://github.com/EmilHvitfeldt/r-color-palettes
 # https://usethis.r-lib.org/ and usethat also
 # change everywhere: if( ! is.null(arg.check)){
 # BEWARE: do not forget to save the modifications in the .R file (through RSTUDIO for indentation)
@@ -1810,7 +1811,7 @@ if(print.count.loop == print.count){
 print.count.loop <- 0
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-final.loop <- (tempo.time - ini.time) / count * ifelse(is.null(thread.nb), total.comp.nb, length(x)) # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.loop <- (tempo.time - ini.time) / count * ifelse(is.null(thread.nb), total.comp.nb, length(x)) # expected duration in seconds # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
 final.exp <- as.POSIXct(final.loop, origin = ini.date)
 cat(paste0(ifelse(is.null(thread.nb), "\n", paste0("\nIN PROCESS ", process.id, " | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
@@ -3015,7 +3016,7 @@ count.loop <- 0
 pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
-final.loop <- (tempo.time - tempo.time.loop) / i3 * n
+final.loop <- (tempo.time - tempo.time.loop) / i3 * n # expected duration in seconds
 final.exp <- as.POSIXct(final.loop, origin = tempo.date.loop)
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP ", i3, " / ", n, " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
@@ -3161,7 +3162,7 @@ count.loop <- 0
 pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
-final.loop <- (tempo.time - tempo.time.loop) / i6 * loop.nb.est # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.loop <- (tempo.time - tempo.time.loop) / i6 * loop.nb.est # expected duration in seconds # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
 final.exp <- as.POSIXct(final.loop, origin = tempo.date.loop)
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FOR LOOP | ROUND ", round, " | LOOP: ", format(i6, big.mark=","), " / ", format(loop.nb.est, big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
@@ -3196,7 +3197,7 @@ count.loop <- 0
 pos <- sample.int(n = pos.selec.seq.max , size = print.count, replace = TRUE) # BEWARE: never forget to resample here
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - tempo.time.loop))
-final.loop <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
+final.loop <- (tempo.time - tempo.time.loop) / (tempo.cor.loop - tempo.cor) * (tempo.cor - cor.limit) # expected duration in seconds # tempo.cor.loop - tempo.cor always positive and tempo.cor decreases progressively starting from tempo.cor.loop
 final.exp <- as.POSIXct(final.loop, origin = tempo.date.loop)
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "WHILE LOOP | LOOP NB: ", format(count.loop, big.mark=","), " | COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
@@ -3540,7 +3541,7 @@ if(print.count.loop == print.count){
 print.count.loop <- 0
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-final.loop <- (tempo.time - ini.time) / i4 * length(x) # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.loop <- (tempo.time - ini.time) / i4 * length(x) # expected duration in seconds # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
 final.exp <- as.POSIXct(final.loop, origin = ini.date)
 cat(paste0("\nIN PROCESS ", process.id, " | LOOP ", format(i4, big.mark=","), " / ", format(length(x), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
@@ -7441,15 +7442,27 @@ lib.path <- .libPaths() # .libPaths(new = lib.path) # or .libPaths(new = c(.libP
 }else{
 .libPaths(new = sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
 }
+tempo <- NULL
 for(i1 in 1:length(req.package)){
 if( ! req.package[i1] %in% rownames(utils::installed.packages(lib.loc = lib.path))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i1], " MUST BE INSTALLED IN:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
+tempo <- c(tempo, req.package[i1])
+}
+}
+if( ! is.null(tempo)){
+tempo.cat <- paste0(
+"\n\n================\n\nERROR IN ", 
+function.name, 
+": PACKAGE", 
+ifelse(length(tempo) == 1, paste0("\n\n", tempo, "\n\n"), paste0("S\n", paste(tempo, collapse = "\n"), "\n")), 
+"MUST BE INSTALLED IN", 
+ifelse(length(lib.path) == 1, "", " ONE OF THESE FOLDERS"), 
+":\n", 
+paste(lib.path, collapse = "\n"), 
+"\n\n================\n\n"
+)
 stop(tempo.cat, call. = FALSE)
-}else{
-if(load == TRUE){
+}else if(load == TRUE){
 suppressMessages(suppressWarnings(suppressPackageStartupMessages(library(req.package[i1], lib.loc = lib.path, quietly = TRUE, character.only = TRUE))))
-}
-}
 }
 }
 
@@ -7867,6 +7880,8 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+
 fun_gg_boxplot <- function(
 data1, 
 y, 
@@ -7921,7 +7936,7 @@ return.ggplot = FALSE,
 return.gtable = TRUE,
 plot = TRUE, 
 add = NULL, 
-warn.print = TRUE, 
+warn.print = FALSE, 
 lib.path = NULL
 ){
 # AIM
@@ -7979,7 +7994,7 @@ lib.path = NULL
 # y.lim: 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used. 
 # y.log: either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # y.tick.nb: approximate number of desired values labeling the y-axis (i.e., main ticks, see the n argument of the the cute::fun_scale() function). If NULL and if y.log is "no", then the number of labeling values is set by ggplot2. If NULL and if y.log is "log2" or "log10", then the number of labeling values corresponds to all the exposant integers in the y.lim range (e.g., 10^1, 10^2 and 10^3, meaning 3 main ticks for y.lim = c(9, 1200)). WARNING: if non-NULL and if y.log is "log2" or "log10", labeling can be difficult to read (e.g., ..., 10^2, 10^2.5, 10^3, ...)
-# y.second.tick.nb: number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks
+ # y.second.tick.nb: number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks
 # y.include.zero: logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10"
 # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis
 # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
@@ -8746,15 +8761,33 @@ dot.border.color <- fun_gg_palette(max(dot.border.color, na.rm = TRUE))[dot.bord
 }
 # end integer dot.border.color into gg_palette
 # management of log scale
-if(y.log != "no"){
-tempo <- if(any(is.na(data1[, y]) | ! is.finite(data1[, y]))){TRUE}else{FALSE}
-data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))
-if(tempo == FALSE & any(is.na(data1[, y]) | ! is.finite(data1[, y]))){
+if(any(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NA OR NaN VALUES IN THE y COLUMN OF THE data1 ARGUMENT, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") PRESENCE OF -Inf OR Inf VALUES IN THE y COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+data1.ini <- data1 # strictly identical to data1 except that in data1 y is log converted if and only if y.log != "no"
+if(y.log != "no"){
+# just check for Inf and NaN created by log conversion but data1 not modified yet because I need the non log stat values as output
+tempo1 <- if(any(is.na(data1[, y]) | ! is.finite(data1[, y]))){TRUE}else{FALSE}
+data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))
+if(tempo1 == FALSE & any(is.na(data1[, y]) | ! is.finite(data1[, y]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN THE y COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
+# Inf removal
+if(any( ! is.finite(data1[, y]))){
+removed.row.nb <- which( ! is.finite(data1[, y]))
+removed.rows <- data1.ini[removed.row.nb, ] # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
+data1 <- data1[-removed.row.nb, ] #
+data1.ini <- data1.ini[-removed.row.nb, ] #
+}else{
+removed.row.nb <- NULL
+removed.rows <- NULL
+}
+# end Inf removal
 if(y.log != "no" & ! is.null(y.lim)){
 if(any(y.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
@@ -8793,7 +8826,7 @@ fun_pack(req.package = c(
 # main code
 # na detection and removal (done now to be sure of the correct length of categ)
 column.check <- c(y, categ, "categ.color", if( ! is.null(dot.color)){"dot.color"}, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ}) # dot.categ because can be a 3rd column of data1
-if(any(is.na(data1[, column.check]))){
+if(any(is.na(data1[, column.check]))){ # data1 used here instead of data1.ini in case of new NaN created by log conversion (neg values)
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMNS ", paste(column.check, collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -8804,15 +8837,17 @@ tempo.warn <- paste0("(", warn.count,") NA REMOVAL DUE TO COLUMN ", column.check
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
-removed.row.nb <- unlist(lapply(lapply(c(data1[column.check]), FUN = is.na), FUN = which))
-removed.rows <- data1[removed.row.nb, ]
+tempo <- unlist(lapply(lapply(c(data1[column.check]), FUN = is.na), FUN = which))
+removed.row.nb <- c(removed.row.nb, tempo)
+removed.rows <- c(removed.rows, data1.ini[tempo, ]) # here data1.ini used to have the non NA rows that will be removed because of NAN creatin after log transformation (neg values for instance)
 column.check <- column.check[ ! column.check == y] # remove y to keep quali columns
-if(length(removed.row.nb) != 0){
-data1 <- data1[-removed.row.nb, ]
+if(length(tempo) != 0){
+data1 <- data1[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
+data1.ini <- data1.ini[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
 for(i3 in 1:length(column.check)){
 if(any( ! unique(removed.rows[, column.check[i3]]) %in% unique(data1[, column.check[i3]]))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN COLUMN ", column.check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", paste(unique(removed.rows[, column.check[i3]])[ ! unique(removed.rows[, column.check[i3]]) %in% unique(data1[, column.check[i3]])], collapse = " "))
+tempo.warn <- paste0("(", warn.count,") IN COLUMN ", column.check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA/Inf REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", paste(unique(removed.rows[, column.check[i3]])[ ! unique(removed.rows[, column.check[i3]]) %in% unique(data1[, column.check[i3]])], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -8851,12 +8886,14 @@ tempo.levels <- levels(data1[, column.check[i2]])[levels(data1[, column.check[i2
 data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = tempo.levels)
 }
 }
-}else{
-removed.row.nb <- NULL
-removed.rows <- NULL
 }
+# Inactivated because finally created before
+# }else{
+# removed.row.nb <- NULL
+# removed.rows <- NULL
+# }
 # end na detection and removal (done now to be sure of the correct length of categ)
-
+# From here, data1 is non log but can be used down to before the final plot because zero and neg values have been removed from data1 if it has to be log converted. NA and Inf already removed, thus no more NaN or Inf created for sure
 
 # y coordinates recovery (create ini.box.coord, dot.coord and modify data1)
 if(length(categ) == 1){
@@ -8995,6 +9032,12 @@ tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.
 stop(tempo.cat)
 }else{
 stat <- data.frame(stat[c("MIN", "QUART1", "MEDIAN")], MEAN = tempo.mean$MEAN, stat[c("QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER", "OUTLIERS")], tempo.mean[colnames(tempo.mean) != "MEAN"], stat["COLOR"], stringsAsFactors = TRUE) # ini.box.coord["outliers"] written like this because it is a list
+stat.nolog <- stat # stat ini will serve for outputs
+if(y.log != "no"){
+stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER")] <- ifelse(y.log == "log2", 2, 10)^(stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER")])
+stat.nolog$OUTLIERS <- lapply(stat.nolog$OUTLIERS, FUN = function(X){ifelse(y.log == "log2", 2, 10)^X})
+
+}
 }
 # end stat output (will also serve for boxplot and mean display)
 
@@ -9014,16 +9057,19 @@ y.lim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes 
 y.lim <- get(y.log)(y.lim)
 }
 if(y.log != "no"){
+# normally this control is not necessary anymore
 if(any( ! is.finite(y.lim))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
 if(suppressWarnings(all(y.lim %in% c(Inf, -Inf)))){
+# normally this control is not necessary anymore
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " y.lim CONTAINS Inf VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT\n\n================\n\n")
 stop(tempo.cat)
 }
 if(suppressWarnings(any(is.na(y.lim)))){
+# normally this control is not necessary anymore
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " y.lim CONTAINS NA OR NaN VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT\n\n================\n\n")
 stop(tempo.cat)
 }
@@ -9737,8 +9783,8 @@ tempo.output$data <- tempo.output$data[coord.names != "bad_remove"]
 }
 tempo <- tempo.output$layout$panel_params[[1]]
 output <- list(
-data = data1, 
-stat = stat, 
+data = data1.ini, 
+stat = stat.nolog, 
 removed.row.nb = removed.row.nb, 
 removed.rows = removed.rows, 
 plot = c(tempo.output$data, y.second.tick.values = list(y.second.tick.values)), 
@@ -11899,7 +11945,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end outputs
 # end main code
 }
-
 
 
 
