@@ -8251,14 +8251,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
-# dealing with NA
+# dealing with NA in arguments
 tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
 if(any(tempo) == TRUE){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-# end dealing with NA
-# dealing with NULL
+# end dealing with NA in arguments
+# dealing with NULL in arguments
 null.count <- NULL
 for(i1 in c(
 "data1", 
@@ -8319,7 +8319,7 @@ if( ! is.null(null.count)){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL\n\n================\n\n")
 stop(tempo.cat, call. = FALSE)
 }
-# end dealing with NULL
+# end dealing with NULL in arguments
 warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
@@ -8447,6 +8447,16 @@ data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change n
 }
 # OK: all the categ columns of data1 are factors from here
 # end conversion of categ columns in data1 into factors
+
+
+
+
+
+
+
+
+
+
 if( ! is.null(categ.class.order)){
 if(length(categ.class.order) != length(categ)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.class.order ARGUMENT MUST BE A LIST OF LENGTH EQUAL TO LENGTH OF categ\nHERE IT IS LENGTH: ", length(categ.class.order), " VERSUS ", length(categ))
@@ -8522,7 +8532,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
 if(length(categ.color) == length(levels(data1[, categ[categ.len]]))){ # here length(categ.color) is equal to the different number of categ
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]])
+data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]])  # no need stringsAsFactors here for stat.nolog as factors remain factors
 data1$categ.color <- factor(data1$categ.color, labels = categ.color)
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
@@ -8761,7 +8771,7 @@ dot.border.color <- fun_gg_palette(max(dot.border.color, na.rm = TRUE))[dot.bord
 }
 # end integer dot.border.color into gg_palette
 # management of log scale
-if(any(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))){
+if(any(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") PRESENCE OF -Inf OR Inf VALUES IN THE y COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -8787,6 +8797,7 @@ data1.ini <- data1.ini[-removed.row.nb, ] #
 removed.row.nb <- NULL
 removed.rows <- NULL
 }
+# From here, data1 and data.ini have no more Inf
 # end Inf removal
 if(y.log != "no" & ! is.null(y.lim)){
 if(any(y.lim <= 0)){
@@ -8893,7 +8904,7 @@ data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), lev
 # removed.rows <- NULL
 # }
 # end na detection and removal (done now to be sure of the correct length of categ)
-# From here, data1 is non log but can be used down to before the final plot because zero and neg values have been removed from data1 if it has to be log converted. NA and Inf already removed, thus no more NaN or Inf created for sure
+# From here, data1 and data.ini have no more NA or NaN
 
 # y coordinates recovery (create ini.box.coord, dot.coord and modify data1)
 if(length(categ) == 1){
@@ -9036,7 +9047,6 @@ stat.nolog <- stat # stat ini will serve for outputs
 if(y.log != "no"){
 stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER")] <- ifelse(y.log == "log2", 2, 10)^(stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER")])
 stat.nolog$OUTLIERS <- lapply(stat.nolog$OUTLIERS, FUN = function(X){ifelse(y.log == "log2", 2, 10)^X})
-
 }
 }
 # end stat output (will also serve for boxplot and mean display)
@@ -9174,6 +9184,7 @@ tempo.graph.info <- ggplot2::ggplot_build(eval(parse(text = paste0(paste(paste0(
 tempo.yx.ratio <- (tempo.graph.info$layout$panel_params[[1]]$y.range[2] - tempo.graph.info$layout$panel_params[[1]]$y.range[1]) / (tempo.graph.info$layout$panel_params[[1]]$x.range[2] - tempo.graph.info$layout$panel_params[[1]]$x.range[1])
 box.coord <- tempo.graph.info$data[[2]] # to have the summary statistics of the plot. Contrary to ini.box.plot, now integrates ylim Here because can be required for stat.disp when just box are plotted
 box.coord <- box.coord[order(box.coord$group), ]
+box.coord$x <- as.numeric(box.coord$x) # because x is of special class that block comparison of values using identical
 if(stat.disp.mean == TRUE){ # for mean display
 if( ! identical(tempo.mean$BOX, box.coord$group)){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\ntempo.mean$BOX AND box.coord$group DO NOT HAVE THE SAME VALUE ORDER\n\n============\n\n")
@@ -9565,7 +9576,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # layer after dots but ok, behind dots on the plot
 if( ! is.null(stat.disp)){
 if(stat.disp == "top"){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = stat$X, y = y.lim[2], label = if(stat.disp.mean == FALSE){fun_round(stat$MEDIAN, 2)}else{fun_round(stat$MEAN, 2)}, size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 1.1), vjust = ifelse(vertical == TRUE, 1.1, 0.5))) # WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = stat$X, y = y.lim[2], label = if(stat.disp.mean == FALSE){fun_round(stat.nolog$MEDIAN, 2)}else{fun_round(stat.nolog$MEAN, 2)}, size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 1.1), vjust = ifelse(vertical == TRUE, 1.1, 0.5))) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
 coord.names <- c(coord.names, "stat.display")
 }else if(stat.disp == "above"){
 # stat coordinates
@@ -9611,7 +9622,11 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 geom = "text", 
 x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.high], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxes or dots
 y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.high, if(is.null(dot.color)){"middle"}else{"text.max.pos"}], 
-label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[tempo.log.high]}else{fun_round(box.coord$MEAN, 2)[tempo.log.high]}, 
+label = if(stat.disp.mean == FALSE){
+if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$middle, 2)[tempo.log.high])}else{fun_round(box.coord$middle, 2)[tempo.log.high]}
+}else{
+if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$MEAN, 2)[tempo.log.high])}else{fun_round(box.coord$MEAN, 2)[tempo.log.high]}
+}, 
 size = stat.size, 
 color = "black", 
 hjust = ifelse(vertical == TRUE, 0.5, 0.5 - stat.dist), 
@@ -9624,7 +9639,11 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 geom = "text", 
 x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.low], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxes or dots
 y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.low, if(is.null(dot.color)){"middle"}else{"text.min.pos"}], 
-label = if(stat.disp.mean == FALSE){fun_round(box.coord$middle, 2)[tempo.log.low]}else{fun_round(box.coord$MEAN, 2)[tempo.log.low]}, 
+label = if(stat.disp.mean == FALSE){
+if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$middle, 2)[tempo.log.low])}else{fun_round(box.coord$middle, 2)[tempo.log.low]}
+}else{
+if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$MEAN, 2)[tempo.log.low])}else{fun_round(box.coord$MEAN, 2)[tempo.log.low]}
+}, 
 size = stat.size, 
 color = "black", 
 hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
