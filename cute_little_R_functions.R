@@ -1470,7 +1470,7 @@ req.function <- c(
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 }
 # end required function checking
@@ -3279,7 +3279,7 @@ req.function <- c(
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 }
 # end required function checking
@@ -3404,7 +3404,7 @@ right <- "<="
 right.last.wind <- ">="
 }else{
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 data <- as.vector(data)
 data <- sort(data, na.last = NA) # NA removed
@@ -3413,7 +3413,7 @@ wind <- data.frame(wind, right = wind$left + window.size)
 wind <- data.frame(wind, center = (wind$left + wind$right) / 2)
 if(all(wind$right < if(is.null(to)){max(data, na.rm = TRUE)}else{to})){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 # The 3 next lines is for the rule of to argument with center (see to argument description)
 # if(any(wind$center > max(data, na.rm = TRUE))){
@@ -3457,7 +3457,7 @@ log <- mapply(FUN = "&", left.log, right.log, SIMPLIFY = FALSE)
 output <- eval(parse(text = paste0("sapply(lapply(log, FUN = function(X){(data[X])}), FUN = fun", if( ! is.null(args)){paste0(", ", args)}, ")"))) # take the values of the data vector according to log (list of logical, each compartment of length(data)) and apply fun with args of fun
 if(length(output) != nrow(wind)){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 3\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }else{
 output <- data.frame(wind, value = output)
 }
@@ -3555,7 +3555,7 @@ cat(paste0("\nPROCESS ", process.id, " ENDED | LOOP ", format(i4, big.mark=","),
 wind <- wind[x, ]
 if(length(output) != nrow(wind)){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }else{
 output <- data.frame(wind, value = output)
 return(output)
@@ -3571,7 +3571,7 @@ output <- rbind(output, paral.output.list[[i2]])
 # end result assembly
 if(nrow(output) != nrow(wind)){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 5\nlength(output): ", length(output), "\nnrow(wind): ", nrow(wind), "\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }else{
 output <- output[order(output$left), ]
 }
@@ -4238,7 +4238,7 @@ req.function <- c(
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nREQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 }
 # end required function checking
@@ -4351,7 +4351,7 @@ tick.values <- tick.pos
 }
 if(any(is.na(tick.pos) | ! is.finite(tick.pos))){ 
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": NA or Inf GENERATED FOR THE INTER TICK POSITIONS: ", paste(tick.pos, collapse = " "), "\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 if(length(tick.pos) == 0){
 tempo.warn <- paste0("NO INTER TICKS COMPUTED BETWEEN THEN LIMITS INDICATED: ", paste(lim, collapse = " "))
@@ -5111,7 +5111,7 @@ req.function <- c(
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 }
 # end required function checking
@@ -7948,7 +7948,7 @@ lib.path = NULL
 # To have a single box, please create a factor column with a single class and specify the name of this column in the categ argument. For a single set of grouped boxes, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1, knowing that categ2 must also be specified in this situation). See categ argument below
 # The dot.alpha argument can alter the display of the color boxes when using pdf output
 # Size arguments (box.line.size, dot.size, dot.border.size, stat.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
-# The function uses options(warning.length = 8170) which increases the length of warning messages. Use options(warning.length = 1000) after using fun_gg_boxplot() to go back to the default value
+# The function uses options(warning.length = 8170) which increases the length of warning messages. In case of error, warning.length is not set back to 1000 (default value). Use options(warning.length = 1000) if required
 # Display seems to be done twice on Windows devices (like a blink). However, no double plots on pdf devices. Thus, the blink remains mysterious
 # ARGUMENTS
 # data1: data frame containing one column of quantitative values (see the y argument below) and one or two columns of categories (see the categ argument below). Duplicated column names are not allowed
@@ -8084,8 +8084,8 @@ req.function <- c(
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nREQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
 # end required function checking
@@ -8095,8 +8095,8 @@ reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.categ", "dot
 # argument primary checking
 # arg with no default values
 if(any(missing(data1) | missing(y) | missing(categ))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS data1, y AND categ HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS data1, y AND categ HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end arg with no default values
 arg.check <- NULL #
@@ -8254,8 +8254,8 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # dealing with NA in arguments
 tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
 if(any(tempo) == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end dealing with NA in arguments
 # dealing with NULL in arguments
@@ -8316,38 +8316,40 @@ null.count <- c(null.count, i1)
 }
 }
 if( ! is.null(null.count)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end dealing with NULL in arguments
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 if( ! (y %in% names(data1))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny ARGUMENT MUST BE A COLUMN NAME OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 tempo <- fun_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny ARGUMENT MUST BE NUMERIC COLUMN IN data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 if(length(categ) > 2){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg ARGUMENT CANNOT HAVE MORE THAN 2 COLUMN NAMES OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if( ! all(categ %in% names(data1))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", paste(categ, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # reserved word checking
 if(any(names(data1) %in% reserved.words)){
 if(any(duplicated(names(data1)))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 if( ! is.null(dot.categ)){
 if(dot.categ %in% categ){
@@ -8387,7 +8389,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 if( ! (is.null(add) | is.null(tempo.output$ini))){
 if(grepl(x = add, pattern = paste(tempo.output$ini, collapse = "|"))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF COLUMN NAMES OF data1 IN THE add ARGUMENT STRING, THAT CORRESPOND TO RESERVED STRINGS FOR ", function.name, "\nCOLUMN NAMES HAVE TO BE CHANGED\nTHE PROBLEMATIC COLUMN NAMES ARE SOME OF THESE NAMES:\n", paste(tempo.output$ini, collapse = " "), "\nIN THE DATA FRAME OF data1 AND IN THE STRING OF add ARGUMENT, TRY TO REPLACE NAMES BY:\n", paste(tempo.output$post, collapse = " "), "\n\nFOR INFORMATION, THE RESERVED WORDS ARE:\n", paste(reserved.words, collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 }
@@ -8396,13 +8398,13 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 if( ! is.null(add)){
 if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
 tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 # end verif of add
@@ -8427,7 +8429,7 @@ facet.check <- FALSE
 }
 if(facet.check == FALSE & ! all(facet.categ %in% names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 # end management of add containing facet
@@ -8437,7 +8439,7 @@ tempo1 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER 
 tempo2 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\n", paste0("categ NUMBER ", i1, " OF data1"), " MUST BE A FACTOR OR CHARACTER VECTOR")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if(tempo1$problem == FALSE){ # character vector
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR, WITH LEVELS ACCORDING TO THE ALPHABETICAL ORDER")
@@ -8450,17 +8452,114 @@ data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change n
 
 
 
-
-
-
-
+# management of log scale and Inf removal
+if(any(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") PRESENCE OF -Inf OR Inf VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+data1.ini <- data1 # strictly identical to data1 except that in data1 y is log converted if and only if y.log != "no"
+if(y.log != "no"){
+# just check for Inf and NaN created by log conversion but data1 not modified yet because I need the non log stat values as output
+tempo1 <- ! is.finite(data1[, y]) # where are initial NA and Inf
+data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))
+if(any( ! (tempo1 | is.finite(data1[, y])))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+# Inf removal
+if(any(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf
+removed.row.nb <- which(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))
+removed.rows <- data1.ini[removed.row.nb, ] # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
+data1 <- data1[-removed.row.nb, ] #
+data1.ini <- data1.ini[-removed.row.nb, ] #
+}else{
+removed.row.nb <- NULL
+removed.rows <- data.frame(stringsAsFactors = FALSE)
+}
+# From here, data1 and data.ini have no more Inf
+# end Inf removal
+if(y.log != "no" & ! is.null(y.lim)){
+if(any(y.lim <= 0)){
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+}else if(any( ! is.finite(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+}
+}
+if(y.log != "no" & y.include.zero == TRUE){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE 0 VALUE CANNOT BE REPRESENTED IN LOG SCALE")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+y.include.zero <- FALSE
+}
+if(y.log != "no" & vertical == FALSE){
+vertical <- TRUE
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BOXES HORIZONTALLY WITH A Y.LOG SCALE -> vertical ARGUMENT RESET TO TRUE")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+# end management of log scale and Inf removal
+# na detection and removal (done now to be sure of the correct length of categ)
+column.check <- unique(c(y, categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){dot.categ}, if( ! is.null(facet.categ)){facet.categ})) # dot.categ because can be a 3rd column of data1, categ.color and dot.color will be tested later
+if(any(is.na(data1[, column.check]))){ # data1 used here instead of data1.ini in case of new NaN created by log conversion (neg values)
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMNS OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+for(i2 in 1:length(column.check)){
+if(any(is.na(data1[, column.check[i2]]))){
+tempo.warn <- paste0("NA REMOVAL DUE TO COLUMN ", column.check[i2], " OF data1")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n", tempo.warn)))
+}
+}
+tempo <- unique(unlist(lapply(lapply(c(data1[column.check]), FUN = is.na), FUN = which)))
+removed.row.nb <- c(removed.row.nb, tempo) # removed.row.nb created to remove Inf
+removed.rows <- rbind(removed.rows, data1.ini[tempo, ], stringsAsFactors = FALSE) # here data1.ini used to have the non NA rows that will be removed because of NAN creation after log transformation (neg values for instance)
+column.check <- column.check[ ! column.check == y] # remove y to keep quali columns
+if(length(tempo) != 0){
+data1 <- data1[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
+data1.ini <- data1.ini[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers than the former
+for(i3 in 1:length(column.check)){
+if(any( ! unique(removed.rows[, column.check[i3]]) %in% unique(data1[, column.check[i3]]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") IN COLUMN ", column.check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA/Inf REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", paste(unique(removed.rows[, column.check[i3]])[ ! unique(removed.rows[, column.check[i3]]) %in% unique(data1[, column.check[i3]])], collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+}
+count.categ <- 0
+for(i2 in 1:length(column.check)){
+if(column.check[i2] %in% categ){
+count.categ <- count.categ + 1
+}
+if(column.check[i2] == categ[count.categ]){
+categ.class.order[count.categ] <- list(levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(data1[, column.check[i2]])]) # remove the absent color in the character vector
+data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = unique(categ.class.order[[count.categ]]))
+}
+if( ! is.null(dot.color) & ! is.null(dot.categ)){ # reminder : dot.categ cannot be a column name of categ anymore (because in that case dot.categ name is changed into "..._DOT"
+if(column.check[i2] == dot.categ){
+dot.categ.class.order <- levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(data1[, column.check[i2]])] # remove the absent color in the character vector
+data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = unique(dot.categ.class.order))
+}
+}
+if(column.check[i2] %in% facet.categ){ # works if facet.categ == NULL this method should keep the order of levels when removing some levels
+tempo.levels <- levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(as.character(data1[, column.check[i2]]))]
+data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = tempo.levels)
+}
+}
+}
+# end na detection and removal (done now to be sure of the correct length of categ)
+# From here, data1 and data.ini have no more NA or NaN in y, categ, dot.categ (if dot.color != NULL) and facet.categ
 
 
 
 if( ! is.null(categ.class.order)){
 if(length(categ.class.order) != length(categ)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.class.order ARGUMENT MUST BE A LIST OF LENGTH EQUAL TO LENGTH OF categ\nHERE IT IS LENGTH: ", length(categ.class.order), " VERSUS ", length(categ))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 for(i3 in 1:length(categ.class.order)){
 if(is.null(categ.class.order[[i3]])){
@@ -8477,10 +8576,10 @@ stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"),
 }
 if(any(duplicated(categ.class.order[[i3]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(categ.class.order[[i3]], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if( ! (all(categ.class.order[[i3]] %in% unique(data1[, categ[i3]])) & all(unique(data1[, categ[i3]]) %in% categ.class.order[[i3]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT MUST BE CLASSES OF ELEMENT ", i3, " OF categ ARGUMENT\nHERE IT IS:\n", paste(categ.class.order[[i3]], collapse = " "), "\nFOR COMPARTMENT ", i3, " OF categ.class.order AND IT IS:\n", paste(unique(data1[, categ[i3]]), collapse = " "), "\nFOR COLUMN ", categ[i3], " OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 data1[, categ[i3]] <- factor(data1[, categ[i3]], levels = categ.class.order[[i3]]) # reorder the factor
 
@@ -8520,7 +8619,7 @@ categ.color <- fun_gg_palette(max(categ.color, na.rm = TRUE))[categ.color]
 # end integer colors into gg_palette
 if( ! (all(categ.color %in% colors() | grepl(pattern = "^#", categ.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(categ.color), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 if(any(is.na(categ.color))){
 warn.count <- warn.count + 1
@@ -8542,7 +8641,7 @@ data1 <- data.frame(data1, categ.color = categ.color)
 tempo.check <- unique(data1[ , c(categ[categ.len], "categ.color")])
 if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[categ.len]])))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[categ.len]], data1[ ,"categ.color"])), collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 categ.color <- unique(data1$categ.color[order(data1[, categ[categ.len]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
@@ -8558,8 +8657,8 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA COULD BE THE PROBLEM")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }else{
 categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
@@ -8584,7 +8683,7 @@ if( ! is.null(dot.categ)){
 ini.dot.categ <- dot.categ
 if( ! dot.categ %in% names(data1)){ # no need to use all() because length(dot.categ) = 1
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ ARGUMENT MUST BE A COLUMN NAME OF data1. HERE IT IS:\n", dot.categ)
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if(dot.categ %in% categ){ # no need to use all() because length(dot.categ) = 1. Do not use dot.categ %in% categ[length(categ)] -> error
 # management of dot legend if dot.categ %in% categ (because legends with the same name are joined in ggplot2) 
 warn.count <- warn.count + 1
@@ -8600,17 +8699,17 @@ tempo1 <- fun_check(data = data1[, dot.categ], data.name = paste0(dot.categ, " C
 tempo2 <- fun_check(data = data1[, dot.categ], data.name = paste0(dot.categ, " COLUMN OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ COLUMN MUST BE A FACTOR OR CHARACTER VECTOR") #
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 data1[, dot.categ] <- factor(data1[, dot.categ]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 # dot.categ column of data1 is factor from here
 if( ! is.null(dot.categ.class.order)){
 if(any(duplicated(dot.categ.class.order))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(dot.categ.class.order, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if( ! (all(dot.categ.class.order %in% levels(data1[, dot.categ])) & all(levels(data1[, dot.categ]) %in% dot.categ.class.order))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ.class.order ARGUMENT MUST BE CLASSES OF dot.categ ARGUMENT\nHERE IT IS:\n", paste(dot.categ.class.order, collapse = " "), "\nFOR dot.categ.class.order AND IT IS:\n", paste(levels(data1[, dot.categ]), collapse = " "), "\nFOR dot.categ COLUMN (", ini.dot.categ, ") OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 data1[, dot.categ] <- factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
 }
@@ -8633,10 +8732,10 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 if(all(dot.color == "same") & length(dot.color) == 1){
 if( ! identical(ini.dot.categ, categ[length(categ)])){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nWHEN dot.color ARGUMENT IS \"same\", THE COLUMN NAME IN dot.categ ARGUMENT MUST BE IDENTICAL TO THE LAST COLUMN NAME IN categ ARGUMENT. HERE IT IS:\ndot.categ: ", paste(ini.dot.categ, collapse = " "), "\ncateg: ", paste(categ, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if( ! fun_comp_1d(unlist(categ.class.order[length(categ)]), dot.categ.class.order)$identical.content){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nWHEN dot.color ARGUMENT IS \"same\",\nLAST COMPARTMENT OF categ.class.order ARGUMENT AND dot.categ.class.order ARGUMENT CANNOT BE DIFFERENT:\nLAST COMPARTMENT OF categ.class.order: ", paste(unlist(categ.class.order[length(categ)]), collapse = " "), "\ndot.categ.class.order: ", paste(dot.categ.class.order, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 for(i3 in 1:length(categ)){
@@ -8677,7 +8776,7 @@ tempo.warn <- paste0("(", warn.count,") dot.color ARGUMENT HAS BEEN SET TO \"sam
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if( ! (all(dot.color %in% colors() | grepl(pattern = "^#", dot.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGERS, OR THE STRING\"same\"\nHERE IT IS: ", paste(unique(dot.color), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 if(any(is.na(dot.color))){
 warn.count <- warn.count + 1
@@ -8690,7 +8789,7 @@ if( ! is.null(dot.categ)){
 # optional legend of dot colors
 if(length(dot.color) > 1 & length(unique(data1[, dot.categ])) != length(dot.color)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT IS NOT THE SAME LENGTH AS LEVELS OF dot.categ COLUMN (", dot.categ, "):\ndot.color: ", paste(dot.color, collapse = " "), "\ndot.categ LEVELS: ", paste(levels(data1[, dot.categ]), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if(length(dot.color) == 1 & length(dot.categ.class.order) > 1){ # to deal with single color
 dot.color <- rep(dot.color, length(dot.categ.class.order))
 }
@@ -8703,7 +8802,7 @@ dot.color <- rep(dot.color, length(dot.categ.class.order))
 tempo.check <- unique(data1[ , c(dot.categ, "dot.color")])
 if(length(unique(data1[ , "dot.color"])) > 1 & ( ! (nrow(tempo.check) == length(unique(data1[ , "dot.color"])) & nrow(tempo.check) == length(unique(data1[ , dot.categ]))))){ # length(unique(data1[ , "dot.color"])) > 1 because if only one color, can be attributed to each class of dot.categ
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF dot.categ (", dot.categ, ") COLUMN:\n", paste(unique(mapply(FUN = "paste", data1[ , dot.categ], data1[ ,"dot.color"])), collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN dot.categ ARGUMENT (", ini.dot.categ, "), THE FOLLOWING COLORS OF DOTS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(data1[, dot.categ]), collapse = " "))
@@ -8731,8 +8830,8 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(dot.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA COULD BE THE PROBLEM")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # end check the length of color
 dot.color <- as.character(dot.color)
@@ -8760,7 +8859,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 if(is.null(dot.color) & box.fill == FALSE & dot.border.size == 0){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE FOLLOWING ARGUMENTS WERE SET AS:\ndot.color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox.fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\ndot.border.size = 0 (NO BORDER FOR POTENTIAL OUTLIER DOTS)\n-> THESE SETTINGS ARE NOT ALLOWED BECAUSE THE POTENTIAL OUTLIER DOTS WILL NOT BE VISIBLE")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # integer dot.border.color into gg_palette
 if( ! is.null(dot.border.color)){
@@ -8770,88 +8869,21 @@ dot.border.color <- fun_gg_palette(max(dot.border.color, na.rm = TRUE))[dot.bord
 }
 }
 # end integer dot.border.color into gg_palette
-# management of log scale
-if(any(( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") PRESENCE OF -Inf OR Inf VALUES IN THE y COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}
-data1.ini <- data1 # strictly identical to data1 except that in data1 y is log converted if and only if y.log != "no"
-if(y.log != "no"){
-# just check for Inf and NaN created by log conversion but data1 not modified yet because I need the non log stat values as output
-tempo1 <- if(any(is.na(data1[, y]) | ! is.finite(data1[, y]))){TRUE}else{FALSE}
-data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))
-if(tempo1 == FALSE & any(is.na(data1[, y]) | ! is.finite(data1[, y]))){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN THE y COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}
-}
-# Inf removal
-if(any( ! is.finite(data1[, y]))){
-removed.row.nb <- which( ! is.finite(data1[, y]))
-removed.rows <- data1.ini[removed.row.nb, ] # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
-data1 <- data1[-removed.row.nb, ] #
-data1.ini <- data1.ini[-removed.row.nb, ] #
-}else{
-removed.row.nb <- NULL
-removed.rows <- NULL
-}
-# From here, data1 and data.ini have no more Inf
-# end Inf removal
-if(y.log != "no" & ! is.null(y.lim)){
-if(any(y.lim <= 0)){
-tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
-}else if(any( ! is.finite(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}))){
-tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
-}
-}
-if(y.log != "no" & y.include.zero == TRUE){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE 0 VALUE CANNOT BE REPRESENTED IN LOG SCALE")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-y.include.zero <- FALSE
-}
-if(y.log != "no" & vertical == FALSE){
-vertical <- TRUE
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BOXES HORIZONTALLY WITH A Y.LOG SCALE -> vertical ARGUMENT RESET TO TRUE")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}
-# end management of log scale
-# end second round of checking and data preparation
-
-
-# package checking
-fun_pack(req.package = c(
-"ggplot2", 
-"gridExtra", 
-"scales"
-), lib.path = lib.path)
-# end package checking
-
-
-
-# main code
 # na detection and removal (done now to be sure of the correct length of categ)
-column.check <- c(y, categ, "categ.color", if( ! is.null(dot.color)){"dot.color"}, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ}) # dot.categ because can be a 3rd column of data1
+column.check <- c("categ.color", if( ! is.null(dot.color)){"dot.color"}) # 
 if(any(is.na(data1[, column.check]))){ # data1 used here instead of data1.ini in case of new NaN created by log conversion (neg values)
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMNS ", paste(column.check, collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 for(i2 in 1:length(column.check)){
 if(any(is.na(data1[, column.check[i2]]))){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NA REMOVAL DUE TO COLUMN ", column.check[i2], " OF data1")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+tempo.warn <- paste0("NA REMOVAL DUE TO COLUMN ", column.check[i2], " OF data1")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n", tempo.warn)))
 }
 }
-tempo <- unlist(lapply(lapply(c(data1[column.check]), FUN = is.na), FUN = which))
+tempo <- unique(unlist(lapply(lapply(c(data1[column.check]), FUN = is.na), FUN = which)))
 removed.row.nb <- c(removed.row.nb, tempo)
-removed.rows <- c(removed.rows, data1.ini[tempo, ]) # here data1.ini used to have the non NA rows that will be removed because of NAN creatin after log transformation (neg values for instance)
-column.check <- column.check[ ! column.check == y] # remove y to keep quali columns
+removed.rows <- rbind(removed.rows, data1[tempo, ], stringsAsFactors = FALSE) # here data1 used because categorical columns tested
 if(length(tempo) != 0){
 data1 <- data1[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
 data1.ini <- data1.ini[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
@@ -8863,21 +8895,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 }
 }
-count.categ <- 0
 for(i2 in 1:length(column.check)){
-if(column.check[i2] %in% categ){
-count.categ <- count.categ + 1
-}
-if(column.check[i2] == categ[count.categ]){
-categ.class.order[count.categ] <- list(levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(data1[, column.check[i2]])]) # remove the absent color in the character vector
-data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = unique(categ.class.order[[count.categ]]))
-}
-if( ! is.null(dot.color) & ! is.null(dot.categ)){ # reminder : dot.categ cannot be a column name of categ anymore (because in that case dot.categ name is changed into "..._DOT"
-if(column.check[i2] == ini.dot.categ){
-dot.categ.class.order <- levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(data1[, column.check[i2]])] # remove the absent color in the character vector
-data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = unique(dot.categ.class.order))
-}
-}
 if(column.check[i2] == "categ.color"){
 categ.color <- levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(data1[, column.check[i2]])] # remove the absent color in the character vector
 if(length(categ.color) == 1 & length(unlist(categ.class.order[length(categ)])) > 1){ # to deal with single color
@@ -8892,20 +8910,29 @@ dot.color <- rep(dot.color, length(dot.categ.class.order))
 }
 data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = unique(dot.color))
 }
-if(column.check[i2] %in% facet.categ){ # works if facet.categ == NULL this method should keep the order of levels when removing some levels
-tempo.levels <- levels(data1[, column.check[i2]])[levels(data1[, column.check[i2]]) %in% unique(as.character(data1[, column.check[i2]]))]
-data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), levels = tempo.levels)
 }
 }
-}
-# Inactivated because finally created before
-# }else{
-# removed.row.nb <- NULL
-# removed.rows <- NULL
-# }
 # end na detection and removal (done now to be sure of the correct length of categ)
 # From here, data1 and data.ini have no more NA or NaN
 
+
+
+# end second round of checking and data preparation
+
+
+# package checking
+fun_pack(req.package = c(
+"ggplot2", 
+"gridExtra", 
+"scales"
+), lib.path = lib.path)
+# end package checking
+
+
+
+
+
+# main code
 # y coordinates recovery (create ini.box.coord, dot.coord and modify data1)
 if(length(categ) == 1){
 # width commputations
@@ -8944,8 +8971,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color) == 1){rep(categ.color, length(unique(data1[, categ[2]])))}else{categ.color}))
 # end per box dots coordinates recovery
 }else{
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
 dot.coord <- tempo.graph.info.ini$data[[1]]
@@ -8973,8 +9000,8 @@ tempo.test <- paste0(tempo.test, ".", formatC(as.numeric(dot.coord[, facet.categ
 }
 tempo.test <- as.integer(factor(tempo.test))
 if( ! identical(as.integer(dot.coord$PANEL), tempo.test)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nas.integer(dot.coord$PANEL) AND tempo.test MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nas.integer(dot.coord$PANEL) AND tempo.test MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 if(dot.tidy == TRUE){
@@ -9006,12 +9033,12 @@ dot.coord <- data.frame(dot.coord, tidy_group_coord = dot.coord$group)
 }
 }
 if( ! (identical(dot.coord$y, dot.coord$y.check) & identical(dot.coord$group, dot.coord$categ.check))){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\n(dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\n(dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 if( ! identical(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ]$BOX, unique(dot.coord[order(dot.coord$group, dot.coord$PANEL), c("group", "PANEL")])$group)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\n(tempo.mean$BOX, tempo.mean$PANEL) AND (dot.coord$group, dot.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\n(tempo.mean$BOX, tempo.mean$PANEL) AND (dot.coord$group, dot.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 tempo <- unique(dot.coord[order(dot.coord$group, dot.coord$PANEL), c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ}), drop = FALSE])
 # names(tempo) <- paste0(names(tempo), ".mean")
@@ -9039,8 +9066,8 @@ stat <- data.frame(MIN = ini.box.coord$ymin, QUART1 = ini.box.coord$lower, MEDIA
 names(stat)[names(stat) == "outliers"] <- "OUTLIERS"
 tempo.mean <- tempo.mean[order(tempo.mean$BOX), ]
 if( ! fun_comp_2d(ini.box.coord[c("PANEL", "group")], tempo.mean[c("PANEL", "BOX")])$identical.content){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nini.box.coord[c(\"PANEL\", \"group\")] AND tempo.mean[c(\"PANEL\", \"BOX\")] MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nini.box.coord[c(\"PANEL\", \"group\")] AND tempo.mean[c(\"PANEL\", \"BOX\")] MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 stat <- data.frame(stat[c("MIN", "QUART1", "MEDIAN")], MEAN = tempo.mean$MEAN, stat[c("QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER", "OUTLIERS")], tempo.mean[colnames(tempo.mean) != "MEAN"], stat["COLOR"], stringsAsFactors = TRUE) # ini.box.coord["outliers"] written like this because it is a list
 stat.nolog <- stat # stat ini will serve for outputs
@@ -9059,7 +9086,7 @@ stat.nolog$OUTLIERS <- lapply(stat.nolog$OUTLIERS, FUN = function(X){ifelse(y.lo
 if(is.null(y.lim)){
 if(any(data1[, y] %in% c(Inf, -Inf))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ", y, " COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 y.lim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
@@ -9070,18 +9097,18 @@ if(y.log != "no"){
 # normally this control is not necessary anymore
 if(any( ! is.finite(y.lim))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 if(suppressWarnings(all(y.lim %in% c(Inf, -Inf)))){
 # normally this control is not necessary anymore
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " y.lim CONTAINS Inf VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("ERROR IN ", function.name, " y.lim CONTAINS Inf VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 if(suppressWarnings(any(is.na(y.lim)))){
 # normally this control is not necessary anymore
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " y.lim CONTAINS NA OR NaN VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("ERROR IN ", function.name, " y.lim CONTAINS NA OR NaN VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 y.lim.order <- order(y.lim) # to deal with inverse axis
 y.lim <- sort(y.lim)
@@ -9092,8 +9119,8 @@ y.lim <- range(c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes
 }
 y.lim <- y.lim[y.lim.order]
 if(any(is.na(y.lim))){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # end ylim range
 
@@ -9187,8 +9214,8 @@ box.coord <- box.coord[order(box.coord$group), ]
 box.coord$x <- as.numeric(box.coord$x) # because x is of special class that block comparison of values using identical
 if(stat.disp.mean == TRUE){ # for mean display
 if( ! identical(tempo.mean$BOX, box.coord$group)){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\ntempo.mean$BOX AND box.coord$group DO NOT HAVE THE SAME VALUE ORDER\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntempo.mean$BOX AND box.coord$group DO NOT HAVE THE SAME VALUE ORDER")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 tempo <- c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ})
 for(i3 in tempo){
@@ -9205,8 +9232,8 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 width.ini <- c(box.coord$xmax - box.coord$xmin)[1] # all the box widths are equal here. Only the first one taken
 width.correct <- width.ini * box.space / 2
 if( ! identical(box.coord$group, stat$BOX)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\n(box.coord$group AND stat$BOX) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\n(box.coord$group AND stat$BOX) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 stat <- data.frame(
 stat, 
@@ -9235,8 +9262,8 @@ if( ! is.null(dot.color)){
 if(dot.tidy == FALSE){
 dot.coord.rd1 <- merge(dot.coord, box.coord[c("fill", "PANEL", "group", "x")], by = c("PANEL", "group"), sort = FALSE) # rd for random. Send the coord of the boxes into the coord data.frame of the dots (in the column x.y). WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
 if(nrow(dot.coord.rd1) != nrow(dot.coord)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd1 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd1 DATA FRAME. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 set.seed(1)
 sampled.dot.jitter <- if(nrow(dot.coord.rd1) == 1){runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2)}else{sample(x = runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2), size = nrow(dot.coord.rd1), replace = FALSE)}
@@ -9261,13 +9288,13 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 6\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 6")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have replaced by = "group" by intersect("group", "group") because of an error due to wrong group group merging in dot.coord.rd3
 if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_comp_2d(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # end random dots
 }
@@ -9467,21 +9494,21 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 # coordinates of tidy dots
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
 if(length(which(sapply(tempo.coord, FUN = nrow) == nrow(data1))) > if(is.null(dot.categ)){1}else{2}){ # if(is.null(dot.categ)){1}else{2} because 1 dotplot if dot.categ is NULL and 2 dotplots is not, with the second being a blank dotplot with wrong coordinates. Thus take the first in that situation
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nMORE THAN ", if(is.null(dot.categ)){1}else{2}, " COMPARTMENT WITH NROW EQUAL TO nrow(data1) IN THE tempo.coord LIST (FOR TIDY DOT COORDINATES). CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nMORE THAN ", if(is.null(dot.categ)){1}else{2}, " COMPARTMENT WITH NROW EQUAL TO nrow(data1) IN THE tempo.coord LIST (FOR TIDY DOT COORDINATES). CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 dot.coord.tidy1 <- tempo.coord[[which(sapply(tempo.coord, FUN = nrow) == nrow(data1))[1]]] # the second being a blank dotplot with wrong coordinates. Thus take the first whatever situation
 }
 tempo.box.coord <- merge(box.coord, unique(dot.coord[, c("PANEL", "group", categ)]), by = c("PANEL", "group"), sort = FALSE) # do not add dot.categ and tidy_group_coord here because the coordinates are for stats. Add the categ in box.coord. WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
 # below inactivated because not true when dealing with dot.categ different from categ
 if(nrow(tempo.box.coord) != nrow(box.coord)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 dot.coord.tidy2 <- merge(dot.coord.tidy1, tempo.box.coord[c("fill", "PANEL", "group", "x", categ)], by = c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Group1 Group2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
 if(nrow(dot.coord.tidy2) != nrow(dot.coord)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # From here, check for dot.coord.tidy3 which wil be important for stat over the plot. WARNING: dot.categ has nothing to do here for stat coordinates. Thus, not in tempo.data1
 if(length(categ) == 1){
@@ -9503,13 +9530,13 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 7\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 7")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have tested intersect("group", "group") instead of by = "group". May be come back to by = "group" in case of error. But I did this because of an error in dot.coord.rd3 above
 if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_comp_2d(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 # end coordinates of tidy dots
 }
@@ -9576,7 +9603,16 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # layer after dots but ok, behind dots on the plot
 if( ! is.null(stat.disp)){
 if(stat.disp == "top"){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "text", x = stat$X, y = y.lim[2], label = if(stat.disp.mean == FALSE){fun_round(stat.nolog$MEDIAN, 2)}else{fun_round(stat.nolog$MEAN, 2)}, size = stat.size, color = "black", hjust = ifelse(vertical == TRUE, 0.5, 1.1), vjust = ifelse(vertical == TRUE, 1.1, 0.5))) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
+geom = "text", 
+x = stat$X, 
+y = y.lim[2], 
+label = if(stat.disp.mean == FALSE){formatC(stat.nolog$MEDIAN, digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(stat.nolog$MEAN, digit = 2, drop0trailing = TRUE, format = "f")}, 
+size = stat.size, 
+color = "black", 
+hjust = ifelse(vertical == TRUE, 0.5, 1.1), 
+vjust = ifelse(vertical == TRUE, 1.1, 0.5)
+)) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
 coord.names <- c(coord.names, "stat.display")
 }else if(stat.disp == "above"){
 # stat coordinates
@@ -9594,8 +9630,8 @@ names(stat.coord2) <- paste0(names(stat.coord2), "_from.dot.max")
 names(stat.coord2)[names(stat.coord2) == "y_from.dot.max"] <- "dot.max"
 stat.coord3 <- cbind(box.coord[order(box.coord$x), ], stat.coord1[order(stat.coord1$x.y), ], stat.coord2[order(stat.coord2$x.y), ], stringsAsFactors = TRUE) # should be ok to use box.coord$x and stat.coord$x.y to assemble the two data frames because x coordinates of the boxes. Thus, we cannot have identical values
 if( ! all(identical(round(stat.coord3$x, 9), round(stat.coord3$x.y, 9)))){ # as.numeric() because stat.coord3$x is class "mapped_discrete" "numeric"
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nFUSION OF box.coord, stat.coord1 AND stat.coord2 ACCORDING TO box.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nFUSION OF box.coord, stat.coord1 AND stat.coord2 ACCORDING TO box.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 text.coord <- stat.coord3[, c("x", "group", "dot.min", "dot.max")]
 names(text.coord)[names(text.coord) == "dot.min"] <- "text.min.pos"
@@ -9603,8 +9639,8 @@ names(text.coord)[names(text.coord) == "dot.max"] <- "text.max.pos"
 box.coord <- box.coord[order(box.coord$x), ]
 text.coord <- text.coord[order(text.coord$x), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
 if( ! identical(text.coord$x, box.coord$x)){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\ntext.coord AND box.coord DO NOT HAVE THE SAME x COLUMN CONTENT\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntext.coord AND box.coord DO NOT HAVE THE SAME x COLUMN CONTENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 # end stat coordinates
@@ -9623,9 +9659,9 @@ geom = "text",
 x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.high], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxes or dots
 y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.high, if(is.null(dot.color)){"middle"}else{"text.max.pos"}], 
 label = if(stat.disp.mean == FALSE){
-if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$middle, 2)[tempo.log.high])}else{fun_round(box.coord$middle, 2)[tempo.log.high]}
+if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$middle[tempo.log.high]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$middle[tempo.log.high], digit = 2, drop0trailing = TRUE, format = "f")}
 }else{
-if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$MEAN, 2)[tempo.log.high])}else{fun_round(box.coord$MEAN, 2)[tempo.log.high]}
+if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$MEAN[tempo.log.high]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$MEAN[tempo.log.high], digit = 2, drop0trailing = TRUE, format = "f")}
 }, 
 size = stat.size, 
 color = "black", 
@@ -9640,9 +9676,9 @@ geom = "text",
 x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.low], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxes or dots
 y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.low, if(is.null(dot.color)){"middle"}else{"text.min.pos"}], 
 label = if(stat.disp.mean == FALSE){
-if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$middle, 2)[tempo.log.low])}else{fun_round(box.coord$middle, 2)[tempo.log.low]}
+if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$middle[tempo.log.low]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$middle[tempo.log.low], digit = 2, drop0trailing = TRUE, format = "f")}
 }else{
-if(y.log != "no"){ifelse(y.log == "log2", 2, 10)^(fun_round(box.coord$MEAN, 2)[tempo.log.low])}else{fun_round(box.coord$MEAN, 2)[tempo.log.low]}
+if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$MEAN[tempo.log.low]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$MEAN[tempo.log.low], digit = 2, drop0trailing = TRUE, format = "f")}
 }, 
 size = stat.size, 
 color = "black", 
@@ -9653,8 +9689,8 @@ coord.names <- c(coord.names, "stat.display.negative")
 }
 # end stat display
 }else{
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 9\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 9")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
 # end stat display
@@ -9680,8 +9716,8 @@ tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim,
 }else{
 tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
 if(all(is.na(tempo))){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$y$breaks\n\n============\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$y$breaks")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks. If fact: n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) replaced by n = ifelse(is.null(y.tick.nb), 4, y.tick.nb))
 }
@@ -9716,7 +9752,7 @@ coord.names <- c(coord.names, "y.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 minor_breaks = y.second.tick.pos, 
-labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat)}, 
+labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)}, 
 expand = c(0, 0), # remove space after after axis limits
 limits = sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
 oob = scales::rescale_none, 
@@ -9787,15 +9823,15 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
 # }
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
-warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
+options(warning.length = ini.warning.length)
 if(return == TRUE){
 tempo.output <- ggplot2::ggplot_build(fin.plot)
 tempo.output$data <- tempo.output$data[-1] # remove the first data because corresponds to the initial empty boxplot
 if(length(tempo.output$data) != length(coord.names)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, "\nlength(tempo.output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nlength(tempo.output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 names(tempo.output$data) <- coord.names
 tempo.output$data <- tempo.output$data[coord.names != "bad_remove"]
@@ -9892,7 +9928,7 @@ lib.path = NULL
 # WARNINGS
 # Rows containing NA in data1[, c(x, y, categ)] will be removed before processing, with a warning (see below)
 # Size arguments (dot.size, dot.border.size, line.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
-# The function uses options(warning.length = 8170) which increases the length of warning messages. Use options(warning.length = 1000) after using fun_gg_scatter() to go back to the default value
+# The function uses options(warning.length = 8170) which increases the length of warning messages. In case of error, warning.length is not set back to 1000 (default value). Use options(warning.length = 1000) if required
 # ARGUMENTS
 # data1: a dataframe compatible with ggplot2, or a list of data frames
 # x: single character string of the data1 column name for x-axis coordinates. If data1 is a list, then x must be a list of single character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Write NULL for each "geom_hline" in geom argument
@@ -10041,7 +10077,7 @@ req.function <- c(
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 }
 # end required function checking
@@ -10360,6 +10396,8 @@ stop(tempo.cat, call. = FALSE)
 }
 # end dealing with NULL
 # check list lengths (and names of data1 compartments if present)
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 list.color <- NULL
@@ -11781,11 +11819,11 @@ tempo.scale <- (as.integer(min(x.lim, na.rm = TRUE)) - 1):(as.integer(max(x.lim,
 tempo <- if(is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{unlist(attributes(tempo.coord$x$breaks))}
 if(all(is.na(tempo))){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$x$breaks\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 if(length(unique(x.lim)) <= 1){
 tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, "\nIT SEEMS THAT X-AXIS VALUES HAVE A NULL RANGE: ", paste(x.lim, collapse = " "), "\nPLEASE, USE THE x.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }else{
 tempo.scale <- fun_scale(lim = x.lim, n = ifelse(is.null(x.tick.nb), length(tempo[ ! is.na(tempo)]), x.tick.nb)) # in ggplot 3.3.0, tempo.coord$x.major_source replaced by tempo.coord$x$breaks. If fact: n = ifelse(is.null(x.tick.nb), length(tempo[ ! is.na(tempo)]), x.tick.nb)) replaced by n = ifelse(is.null(x.tick.nb), 4, x.tick.nb))
 }
@@ -11825,7 +11863,7 @@ coord.names <- c(coord.names, "x.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
 breaks = tempo.scale, 
 minor_breaks = x.second.tick.pos, 
-labels = if(x.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(x.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(x.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat)}, 
+labels = if(x.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(x.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(x.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat, call. = FALSE)}, 
 expand = c(0, 0), # remove space after after axis limits
 limits = sort(x.lim), # NA indicate that limits must correspond to data limits but xlim() already used
 oob = scales::rescale_none, 
@@ -11839,11 +11877,11 @@ tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim,
 tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
 if(all(is.na(tempo))){
 tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$y$breaks\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }
 if(length(unique(y.lim)) <= 1){
 tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, "\nIT SEEMS THAT Y-AXIS VALUES HAVE A NULL RANGE: ", paste(y.lim, collapse = " "), "\nPLEASE, USE THE y.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS\n\n============\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }else{
 tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks. If fact: n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) replaced by n = ifelse(is.null(y.tick.nb), 4, y.tick.nb))
 }
@@ -11884,7 +11922,7 @@ coord.names <- c(coord.names, "y.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 minor_breaks = y.second.tick.pos, 
-labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat)}, 
+labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat, call. = FALSE)}, 
 expand = c(0, 0), # remove space after axis limits
 limits = sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
 oob = scales::rescale_none, 
@@ -11920,12 +11958,13 @@ if(warn.print == TRUE & ! is.null(warn)){
 options(warning.length = 8170)
 warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
+options(warning.length = ini.warning.length)
 if(return == TRUE){
 output <- suppressMessages(ggplot2::ggplot_build(fin.plot))
 # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
 if(length(output$data) != length(coord.names)){
 tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, ": length(output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat)
+stop(tempo.cat, call. = FALSE)
 }else{
 names(output$data) <- coord.names
 }
