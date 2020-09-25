@@ -7918,7 +7918,7 @@ y.second.tick.nb = 1,
 y.include.zero = FALSE, 
 y.top.extra.margin = 0.05, 
 y.bottom.extra.margin = 0.05, 
-stat.disp = NULL, 
+stat.disp = "top", 
 stat.disp.mean = FALSE, 
 stat.size = 4, 
 stat.dist = 2, 
@@ -7948,7 +7948,6 @@ lib.path = NULL
 # To have a single box, please create a factor column with a single class and specify the name of this column in the categ argument. For a single set of grouped boxes, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1, knowing that categ2 must also be specified in this situation). See categ argument below
 # The dot.alpha argument can alter the display of the color boxes when using pdf output
 # Size arguments (box.line.size, dot.size, dot.border.size, stat.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
-# The function uses options(warning.length = 8170) which increases the length of warning messages. In case of error, warning.length is not set back to 1000 (default value). Use options(warning.length = 1000) if required
 # Display seems to be done twice on Windows devices (like a blink). However, no double plots on pdf devices. Thus, the blink remains mysterious
 # ARGUMENTS
 # data1: data frame containing one column of quantitative values (see the y argument below) and one or two columns of categories (see the categ argument below). Duplicated column names are not allowed
@@ -8039,10 +8038,10 @@ lib.path = NULL
 # RETURN
 # a boxplot if plot argument is TRUE
 # a list of the graph info if return argument is TRUE:
-# $data: the initial data with graphic information added. WARNING: if the y.log argument is not "no", y argument column of the data1 data frame are log2 or log10 converted in $data. Use 2^values or 10^$values to recover the initial values, respectively
-# $stat: the graphic statistics
-# $removed.row.nb: which rows have been removed due to NA detection in y and categ columns (NULL if no row removed)
-# $removed.rows: removed rows containing NA (NULL if no row removed)
+# $data: the initial data with graphic information added
+# $stat: the graphic statistics (mostly equivalent to ggplot_build()$data[[2]])
+# $removed.row.nb: which rows have been removed due to NA/Inf detection in y and categ columns (NULL if no row removed)
+# $removed.rows: removed rows (NULL if no row removed)
 # $plot: the graphic box and dot coordinates
 # $dots: dot coordinates
 # $main.box: coordinates of boxes
@@ -8322,6 +8321,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end dealing with NULL in arguments
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
@@ -8486,7 +8486,7 @@ if(any(y.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else if(any( ! is.finite(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}))){
-tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF/NA WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
 }
@@ -8976,13 +8976,14 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 }
 tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
 dot.coord <- tempo.graph.info.ini$data[[1]]
-ini.box.coord <- tempo.graph.info.ini$data[[2]]
+dot.coord$x <- as.numeric(dot.coord$x) # because weird class
+dot.coord$PANEL <- as.numeric(dot.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
 tempo.mean <- aggregate(x = dot.coord$y, by = list(dot.coord$group, dot.coord$PANEL), FUN = mean, na.rm = TRUE)
 names(tempo.mean)[names(tempo.mean) == "x"] <- "MEAN"
 names(tempo.mean)[names(tempo.mean) == "Group.1"] <- "BOX"
 names(tempo.mean)[names(tempo.mean) == "Group.2"] <- "PANEL"
 dot.coord <- data.frame(
-dot.coord[order(dot.coord$group, dot.coord$y), ], 
+dot.coord[order(dot.coord$group, dot.coord$y), ], # dot.coord$PANEL deals below
 y.check = as.double(data1[order(data1$categ.check, data1[, y]), y]), 
 categ.check = data1[order(data1$categ.check, data1[, y]), "categ.check"], 
 dot.color = if(is.null(dot.color)){NA}else{data1[order(data1$categ.check, data1[, y]), "dot.color"]}, 
@@ -9051,40 +9052,9 @@ tempo.mean <- data.frame(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ], 
 
 
 
-
-
-
-
-
-
-
-
-
-# stat output (will also serve for boxplot and mean display)
-ini.box.coord <- ini.box.coord[order(ini.box.coord$group), ]
-stat <- data.frame(MIN = ini.box.coord$ymin, QUART1 = ini.box.coord$lower, MEDIAN = ini.box.coord$middle, QUART3 = ini.box.coord$upper, MAX = ini.box.coord$ymax, NOTCHUPPER = ini.box.coord$notchupper, NOTCHLOWER = ini.box.coord$notchlower, OUTLIERS = ini.box.coord["outliers"], COLOR = ini.box.coord$fill, stringsAsFactors = TRUE) # ini.box.coord["outliers"] written like this because it is a list. X coordinates not put now because several features to set
-names(stat)[names(stat) == "outliers"] <- "OUTLIERS"
-tempo.mean <- tempo.mean[order(tempo.mean$BOX), ]
-if( ! fun_comp_2d(ini.box.coord[c("PANEL", "group")], tempo.mean[c("PANEL", "BOX")])$identical.content){
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nini.box.coord[c(\"PANEL\", \"group\")] AND tempo.mean[c(\"PANEL\", \"BOX\")] MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
-}else{
-stat <- data.frame(stat[c("MIN", "QUART1", "MEDIAN")], MEAN = tempo.mean$MEAN, stat[c("QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER", "OUTLIERS")], tempo.mean[colnames(tempo.mean) != "MEAN"], stat["COLOR"], stringsAsFactors = TRUE) # ini.box.coord["outliers"] written like this because it is a list
-stat.nolog <- stat # stat ini will serve for outputs
-if(y.log != "no"){
-stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER")] <- ifelse(y.log == "log2", 2, 10)^(stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "NOTCHUPPER", "NOTCHLOWER")])
-stat.nolog$OUTLIERS <- lapply(stat.nolog$OUTLIERS, FUN = function(X){ifelse(y.log == "log2", 2, 10)^X})
-}
-}
-# end stat output (will also serve for boxplot and mean display)
-
-
-
-
-
 # ylim range
 if(is.null(y.lim)){
-if(any(data1[, y] %in% c(Inf, -Inf))){
+if(any(data1[, y] %in% c(Inf, -Inf))){ # kept but normally no more Inf in data1
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ", y, " COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -9205,34 +9175,66 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 
 
 
-# x coordinates management (for random plotting and for stat display)
-# boxes
+# graphic info recovery (including means)
 tempo.graph.info <- ggplot2::ggplot_build(eval(parse(text = paste0(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, notch = box.notch, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}) + ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color) == 1){rep(categ.color, length(unique(data1[, categ[length(categ)]])))}else{categ.color})')))) # will be recovered later again, when ylim will be considered
 tempo.yx.ratio <- (tempo.graph.info$layout$panel_params[[1]]$y.range[2] - tempo.graph.info$layout$panel_params[[1]]$y.range[1]) / (tempo.graph.info$layout$panel_params[[1]]$x.range[2] - tempo.graph.info$layout$panel_params[[1]]$x.range[1])
 box.coord <- tempo.graph.info$data[[2]] # to have the summary statistics of the plot. Contrary to ini.box.plot, now integrates ylim Here because can be required for stat.disp when just box are plotted
-box.coord <- box.coord[order(box.coord$group), ]
 box.coord$x <- as.numeric(box.coord$x) # because x is of special class that block comparison of values using identical
-if(stat.disp.mean == TRUE){ # for mean display
-if( ! identical(tempo.mean$BOX, box.coord$group)){
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntempo.mean$BOX AND box.coord$group DO NOT HAVE THE SAME VALUE ORDER")
+box.coord$PANEL <- as.numeric(box.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
+box.coord <- box.coord[order(box.coord$group, box.coord$PANEL), ]
+if( ! (identical(tempo.mean$BOX, box.coord$group) & identical(tempo.mean$PANEL, box.coord$PANEL))){
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nidentical(tempo.mean$BOX, box.coord$group) & identical(tempo.mean$PANEL, box.coord$PANEL) DO NOT HAVE THE SAME VALUE ORDER")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
-tempo <- c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ})
-for(i3 in tempo){
-names(tempo.mean)[names(tempo.mean) == i3] <- paste0(i3, ".mean")
+# tempo <- c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ})
+if(any(names(tempo.mean) %in% names(box.coord))){
+names(tempo.mean)[names(tempo.mean) %in% names(box.coord)] <- paste0(names(tempo.mean)[names(tempo.mean) %in% names(box.coord)], ".mean")
 }
 box.coord <- data.frame(box.coord, tempo.mean)
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") MEAN VALUES INSTEAD OF MEDIAN VALUES ABOVE BOXES")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+# end graphic info recovery (including means)
 
+
+
+# stat output (will also serve for boxplot and mean display)
+# x not added know to do not have them in stat.nolog
+stat <- data.frame(
+MIN = box.coord$ymin_final, 
+QUART1 = box.coord$lower, 
+MEDIAN = box.coord$middle, 
+MEAN = box.coord$MEAN, 
+QUART3 = box.coord$upper, 
+MAX = box.coord$ymax_final, 
+WHISK_INF = box.coord$ymin, 
+BOX_INF = box.coord$lower, 
+NOTCH_INF = box.coord$notchlower, 
+NOTCH_SUP = box.coord$notchupper, 
+BOX_SUP = box.coord$upper, 
+WHISK_SUP = box.coord$ymax, 
+OUTLIERS = box.coord["outliers"], 
+tempo.mean[colnames(tempo.mean) != "MEAN"], 
+COLOR = box.coord$fill, 
+stringsAsFactors = TRUE
+) # box.coord["outliers"] written like this because it is a list. X coordinates not put now because several features to set
+names(stat)[names(stat) == "outliers"] <- "OUTLIERS"
+stat.nolog <- stat # stat.nolog ini will serve for outputs
+if(y.log != "no"){
+stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "WHISK_INF", "BOX_INF", "NOTCH_INF", "NOTCH_SUP", "BOX_SUP", "WHISK_SUP")] <- ifelse(y.log == "log2", 2, 10)^(stat.nolog[c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "WHISK_INF", "BOX_INF", "NOTCH_INF", "NOTCH_SUP", "BOX_SUP", "WHISK_SUP")])
+stat.nolog$OUTLIERS <- lapply(stat.nolog$OUTLIERS, FUN = function(X){ifelse(y.log == "log2", 2, 10)^X})
 }
-}
+# end stat output (will also serve for boxplot and mean display)
+
+
+
+
+
+
+# x coordinates management (for random plotting and for stat display)
 # width commputations
 width.ini <- c(box.coord$xmax - box.coord$xmin)[1] # all the box widths are equal here. Only the first one taken
 width.correct <- width.ini * box.space / 2
-if( ! identical(box.coord$group, stat$BOX)){
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\n(box.coord$group AND stat$BOX) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+if( ! (identical(stat$BOX, box.coord$group) & identical(stat$PANEL, box.coord$PANEL))){
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nidentical(stat$BOX, box.coord$group) & identical(stat$PANEL, box.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 stat <- data.frame(
@@ -9248,7 +9250,7 @@ X_WHISK_SUP = box.coord$x + (box.coord$x - (box.coord$xmin + width.correct)) * b
 stringsAsFactors = TRUE
 )
 stat$COLOR <- factor(stat$COLOR, levels = unique(categ.color))
-if( ! all(stat$NOTCHUPPER < stat$QUART3 & stat$NOTCHLOWER > stat$QUART1) & box.notch == TRUE){
+if( ! all(stat$NOTCH_SUP < stat$BOX_SUP & stat$NOTCH_INF > stat$BOX_INF) & box.notch == TRUE){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") SOME NOTCHES ARE BEYOND BOX HINGES. TRY ARGUMENT box.notch = FALSE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -9256,7 +9258,6 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 dot.jitter <- c((box.coord$xmax - width.correct) - (box.coord$xmin + width.correct))[1] * dot.jitter # real dot.jitter. (box.coord$xmin + width.correct) - (box.coord$xmax - width.correct))[1] is the width of the box. Is equivalent to (box.coord$x - (box.coord$xmin + width.correct))[1] * 2
 # end width commputations
-# end boxes
 if( ! is.null(dot.color)){
 # random dots
 if(dot.tidy == FALSE){
@@ -9320,7 +9321,7 @@ tempo.polygon <- cbind(tempo.polygon, c(t(stat[, rep(categ[i3], 5)])), stringsAs
 }
 }
 names(tempo.polygon) <- categ
-tempo.polygon <- data.frame(X = c(t(stat[, c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = c(t(stat[, c("QUART1", "QUART1", "QUART3", "QUART3", "QUART1")])), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = as.character(c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
+tempo.polygon <- data.frame(X = c(t(stat[, c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = c(t(stat[, c("BOX_INF", "BOX_INF", "BOX_SUP", "BOX_SUP", "BOX_INF")])), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = as.character(c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
 if( ! is.null(facet.categ)){
 for(i4 in 1:length(facet.categ)){
 tempo.polygon <- data.frame(tempo.polygon, c(t(stat[, c(facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4])])), stringsAsFactors = TRUE)
@@ -9336,7 +9337,7 @@ tempo.polygon <- cbind(tempo.polygon, c(t(stat[, rep(categ[i3], 11)])), stringsA
 }
 }
 names(tempo.polygon) <- categ
-tempo.polygon <- data.frame(X = c(t(stat[, c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_NOTCH_SUP", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF", "X_NOTCH_INF", "X_BOX_INF", "X_BOX_INF")])), Y = c(t(stat[, c("QUART1", "QUART1", "NOTCHLOWER", "MEDIAN", "NOTCHUPPER", "QUART3", "QUART3", "NOTCHUPPER", "MEDIAN", "NOTCHLOWER", "QUART1")])), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = as.character(c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
+tempo.polygon <- data.frame(X = c(t(stat[, c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_NOTCH_SUP", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF", "X_NOTCH_INF", "X_BOX_INF", "X_BOX_INF")])), Y = c(t(stat[, c("BOX_INF", "BOX_INF", "NOTCH_INF", "MEDIAN", "NOTCH_SUP", "BOX_SUP", "BOX_SUP", "NOTCH_SUP", "MEDIAN", "NOTCH_INF", "BOX_INF")])), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = as.character(c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
 if( ! is.null(facet.categ)){
 for(i4 in 1:length(facet.categ)){
 tempo.polygon <- data.frame(tempo.polygon, c(t(stat[, c(facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4])])), stringsAsFactors = TRUE)
@@ -9376,14 +9377,14 @@ size = box.line.size,
 alpha = box.alpha
 ))
 coord.names <- c(coord.names, "main.box")
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = QUART3, yend = MAX, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
 coord.names <- c(coord.names, "sup.whisker")
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = QUART1, yend = MIN, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_INF, yend = WHISK_INF, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
 coord.names <- c(coord.names, "inf.whisker")
 if(box.whisker.width > 0){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = MAX, yend = MAX, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha, lineend = "round")) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_SUP, yend = WHISK_SUP, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha, lineend = "round")) # 
 coord.names <- c(coord.names, "sup.whisker.edge")
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = MIN, yend = MIN, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha, lineend = "round")) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_INF, yend = WHISK_INF, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha, lineend = "round")) # 
 coord.names <- c(coord.names, "inf.whisker.edge")
 }
 if(box.mean == TRUE){
@@ -9498,14 +9499,16 @@ tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nMORE THAN ", if
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }else{
 dot.coord.tidy1 <- tempo.coord[[which(sapply(tempo.coord, FUN = nrow) == nrow(data1))[1]]] # the second being a blank dotplot with wrong coordinates. Thus take the first whatever situation
+dot.coord.tidy1$x <- as.numeric(dot.coord.tidy1$x) # because weird class
+dot.coord.tidy1$PANEL <- as.numeric(dot.coord.tidy1$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
 }
-tempo.box.coord <- merge(box.coord, unique(dot.coord[, c("PANEL", "group", categ)]), by = c("PANEL", "group"), sort = FALSE) # do not add dot.categ and tidy_group_coord here because the coordinates are for stats. Add the categ in box.coord. WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
+# tempo.box.coord <- merge(box.coord, unique(dot.coord[, c("PANEL", "group", categ)]), by = c("PANEL", "group"), sort = FALSE) # not required anymore because box.coord already contains categ do not add dot.categ and tidy_group_coord here because the coordinates are for stats. Add the categ in box.coord. WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
 # below inactivated because not true when dealing with dot.categ different from categ
-if(nrow(tempo.box.coord) != nrow(box.coord)){
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
-}
-dot.coord.tidy2 <- merge(dot.coord.tidy1, tempo.box.coord[c("fill", "PANEL", "group", "x", categ)], by = c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Group1 Group2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
+# if(nrow(tempo.box.coord) != nrow(box.coord)){
+# tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED")
+# stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+# }
+dot.coord.tidy2 <- merge(dot.coord.tidy1, box.coord[c("fill", "PANEL", "group", "x", categ)], by = c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Group1 Group2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
 if(nrow(dot.coord.tidy2) != nrow(dot.coord)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
@@ -9562,14 +9565,14 @@ linejoin = "round"
 coord.names <- c(coord.names, "main.box")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = if(box.notch == FALSE){X_BOX_INF}else{X_NOTCH_INF}, xend = if(box.notch == FALSE){X_BOX_SUP}else{X_NOTCH_SUP}, y = MEDIAN, yend = MEDIAN, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size * 2, alpha = box.alpha)) # 
 coord.names <- c(coord.names, "median")
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = QUART3, yend = MAX, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha)) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha)) # 
 coord.names <- c(coord.names, "sup.whisker")
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = QUART1, yend = MIN, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha)) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_INF, yend = WHISK_INF, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha)) # 
 coord.names <- c(coord.names, "inf.whisker")
 if(box.whisker.width > 0){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = MAX, yend = MAX, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha, lineend = "round")) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_SUP, yend = WHISK_SUP, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha, lineend = "round")) # 
 coord.names <- c(coord.names, "sup.whisker.edge")
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = MIN, yend = MIN, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha, lineend = "round")) # 
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_INF, yend = WHISK_INF, group = categ[length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha, lineend = "round")) # 
 coord.names <- c(coord.names, "inf.whisker.edge")
 }
 if(box.mean == TRUE){
@@ -9590,7 +9593,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 if(plot == TRUE & ((length(dev.list()) > 0 & names(dev.cur()) == "windows") | (length(dev.list()) == 0 & Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
 # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
+tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM ->\nTRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND TO PREVENT A WINDOWS DEPENDENT BUG (SEE https://github.com/tidyverse/ggplot2/issues/2452)\nTO OVERCOME THIS ON WINDOWS, USE ANOTHER DEVICE (pdf() FOR INSTANCE)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
@@ -9602,6 +9605,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # stat display
 # layer after dots but ok, behind dots on the plot
 if( ! is.null(stat.disp)){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NUMBERS ABOVE BOXES ARE ", ifelse(stat.disp.mean == FALSE, "MEDIANS", "MEANS"))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if(stat.disp == "top"){
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
 geom = "text", 
@@ -9623,13 +9629,13 @@ tempo.stat.ini <- dot.coord.rd3
 tempo.stat.ini <- dot.coord.tidy3
 tempo.stat.ini$x.y <- tempo.stat.ini$x.x # this is just to be able to use tempo.stat.ini$x.y for untidy or tidy dots (remember that dot.coord.tidy3$x.y is not good, see above)
 }
-stat.coord1 <- aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(length(categ) == 1){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(length(categ) == 2){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; names(x.env) <- if(length(categ) == 1){c("group", "x.y", categ[1])}else if(length(categ) == 2){c("group", "x.y", categ[1], categ[2])} ; x.env}, FUN = min, na.rm = TRUE)
+stat.coord1 <- aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(length(categ) == 1){list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(length(categ) == 2){list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; names(x.env) <- if(length(categ) == 1){c("group", "PANEL", "x.y", categ[1])}else if(length(categ) == 2){c("group", "PANEL", "x.y", categ[1], categ[2])} ; x.env}, FUN = min, na.rm = TRUE)
 names(stat.coord1)[names(stat.coord1) == "y"] <- "dot.min"
-stat.coord2 <- aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(length(categ) == 1){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(length(categ) == 2){list(tempo.stat.ini$group, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; names(x.env) <- if(length(categ) == 1){c("group", "x.y", categ[1])}else if(length(categ) == 2){c("group", "x.y", categ[1], categ[2])} ; x.env}, FUN = max, na.rm = TRUE)
+stat.coord2 <- aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(length(categ) == 1){list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(length(categ) == 2){list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; names(x.env) <- if(length(categ) == 1){c("group", "PANEL", "x.y", categ[1])}else if(length(categ) == 2){c("group", "PANEL", "x.y", categ[1], categ[2])} ; x.env}, FUN = max, na.rm = TRUE)
 names(stat.coord2) <- paste0(names(stat.coord2), "_from.dot.max")
 names(stat.coord2)[names(stat.coord2) == "y_from.dot.max"] <- "dot.max"
-stat.coord3 <- cbind(box.coord[order(box.coord$x), ], stat.coord1[order(stat.coord1$x.y), ], stat.coord2[order(stat.coord2$x.y), ], stringsAsFactors = TRUE) # should be ok to use box.coord$x and stat.coord$x.y to assemble the two data frames because x coordinates of the boxes. Thus, we cannot have identical values
-if( ! all(identical(round(stat.coord3$x, 9), round(stat.coord3$x.y, 9)))){ # as.numeric() because stat.coord3$x is class "mapped_discrete" "numeric"
+stat.coord3 <- cbind(box.coord[order(box.coord$group, box.coord$PANEL), ], stat.coord1[order(stat.coord1$group, stat.coord1$x.y), ], stat.coord2[order(stat.coord2$group, stat.coord2$x.y), ], stringsAsFactors = TRUE) # 
+if( ! all(identical(round(stat.coord3$x, 9), round(as.numeric(stat.coord3$x.y), 9)))){ # as.numeric() because stat.coord3$x is class "mapped_discrete" "numeric"
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nFUSION OF box.coord, stat.coord1 AND stat.coord2 ACCORDING TO box.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
 }
@@ -9772,7 +9778,7 @@ if( ! is.null(legend.width)){
 legend.final <- fun_gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path) # get legend
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = FALSE, color = FALSE, alpha = FALSE)) # inactivate the initial legend
 if(is.null(legend.final) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
-legend.final <- fun_gg_empty_graph() # empty graph instead of legend
+legend.final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (NON NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend.width ARGUMENT\n")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -9825,7 +9831,6 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 if(warn.print == TRUE & ! is.null(warn)){
 warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
-options(warning.length = ini.warning.length)
 if(return == TRUE){
 tempo.output <- ggplot2::ggplot_build(fin.plot)
 tempo.output$data <- tempo.output$data[-1] # remove the first data because corresponds to the initial empty boxplot
@@ -10398,6 +10403,7 @@ stop(tempo.cat, call. = FALSE)
 # check list lengths (and names of data1 compartments if present)
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 list.color <- NULL
@@ -11794,7 +11800,7 @@ tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (NON-NULL categ ARGUMEN
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else if(plot == TRUE){ # means all FALSE
-legend.final <- fun_gg_empty_graph() # empty graph instead of legend
+legend.final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (NON-NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON-NULL legend.width ARGUMENT\n")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -11955,10 +11961,8 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 
 # outputs
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
 }
-options(warning.length = ini.warning.length)
 if(return == TRUE){
 output <- suppressMessages(ggplot2::ggplot_build(fin.plot))
 # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
