@@ -145,27 +145,27 @@ fun_check <- function(data, data.name = NULL, class = NULL, typeof = NULL, mode 
 # fun.name checked first because required next
 if( ! is.null(fun.name)){
 if( ! (all(class(fun.name) == "character") & length(fun.name) == 1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end fun.name checked first because required next
 # arg with no default values
 if(missing(data)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": ARGUMENT data HAS NO DEFAULT VALUE AND REQUIRES ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": ARGUMENT data HAS NO DEFAULT VALUE AND REQUIRES ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 # dealing with NA
 if(any(is.na(data.name)) | any(is.na(class)) | any(is.na(typeof)) | any(is.na(mode)) | any(is.na(length)) | any(is.na(prop)) | any(is.na(double.as.integer.allowed)) | any(is.na(all.options.in.data)) | any(is.na(na.contain)) | any(is.na(neg.values)) | any(is.na(print)) | any(is.na(fun.name))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(print)), any(is.na(fun.name)))], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(print)), any(is.na(fun.name)))], collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NA
 # dealing with NULL
 if(is.null(prop) | is.null(double.as.integer.allowed) | is.null(all.options.in.data) | is.null(na.contain) | is.null(neg.values) | is.null(print)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THESE ARGUMENTS\nprop\ndouble.as.integer.allowed\nall.options.in.data\nna.contain\nneg.values\nprint\nCANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print")[c(is.null(prop), is.null(double.as.integer.allowed), is.null(all.options.in.data), is.null(na.contain), is.null(neg.values), is.null(print))], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THESE ARGUMENTS\nprop\ndouble.as.integer.allowed\nall.options.in.data\nna.contain\nneg.values\nprint\nCANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print")[c(is.null(prop), is.null(double.as.integer.allowed), is.null(all.options.in.data), is.null(na.contain), is.null(neg.values), is.null(print))], collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL
 # dealing with logical
@@ -173,100 +173,100 @@ stop(tempo.cat, call. = FALSE)
 # end dealing with logical
 if( ! is.null(data.name)){
 if( ! (length(data.name) == 1 & all(class(data.name) == "character"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(is.null(options) & is.null(class) & is.null(typeof) & is.null(mode) &  prop == FALSE & is.null(length)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": AT LEAST ONE OF THE options, class, typeof, mode, prop, OR length ARGUMENT MUST BE SPECIFIED (I.E, TRUE FOR prop)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": AT LEAST ONE OF THE options, class, typeof, mode, prop, OR length ARGUMENT MUST BE SPECIFIED (I.E, TRUE FOR prop)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(options) & ( ! is.null(class) | ! is.null(typeof) | ! is.null(mode) | prop == TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE class, typeof, mode ARGUMENTS MUST BE NULL, AND prop FALSE, IF THE options ARGUMENT IS SPECIFIED\nTHE options ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE class, typeof, mode ARGUMENTS MUST BE NULL, AND prop FALSE, IF THE options ARGUMENT IS SPECIFIED\nTHE options ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (all(class(neg.values) == "logical") & length(neg.values) == 1 & any(is.na(neg.values)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & is.null(class) & is.null(typeof) & is.null(mode)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE neg.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE neg.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(class)){
 if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built") & any(is.na(class)) != TRUE & length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\"\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\"")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF neg.values ARGUMENT IS SWITCHED TO FALSE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(typeof)){
 if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin", "environment", "S4")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\"\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\"")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & ! typeof %in% c("double", "integer")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT CANNOT BE OTHER THAN \"double\" OR \"integer\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT CANNOT BE OTHER THAN \"double\" OR \"integer\" IF neg.values ARGUMENT IS SWITCHED TO FALSE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(mode)){
 if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\"\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\"")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & mode != "numeric"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF neg.values ARGUMENT IS SWITCHED TO FALSE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF neg.values ARGUMENT IS SWITCHED TO FALSE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(length)){
 if( ! (is.numeric(length) & length(length) == 1 & ! grepl(length, pattern = "\\.") & any(is.na(length)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": length ARGUMENT MUST BE A SINGLE INTEGER VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": length ARGUMENT MUST BE A SINGLE INTEGER VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! (is.logical(prop) | (length(prop) == 1 & any(is.na(prop)) != TRUE))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": prop ARGUMENT MUST BE TRUE OR FALSE ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": prop ARGUMENT MUST BE TRUE OR FALSE ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(prop == TRUE){
 if( ! is.null(class)){
 if( ! any(class %in% c("vector", "numeric", "matrix", "array", "data.frame", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT CANNOT BE OTHER THAN NULL, \"vector\", \"numeric\", \"matrix\", \"array\", \"data.frame\", \"table\" IF prop ARGUMENT IS TRUE\n\n================\n\n") # not integer because prop
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": class ARGUMENT CANNOT BE OTHER THAN NULL, \"vector\", \"numeric\", \"matrix\", \"array\", \"data.frame\", \"table\" IF prop ARGUMENT IS TRUE") # not integer because prop
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(mode)){
 if(mode != "numeric"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT CANNOT BE OTHER THAN NULL OR \"numeric\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": mode ARGUMENT CANNOT BE OTHER THAN NULL OR \"numeric\" IF prop ARGUMENT IS TRUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(typeof)){
 if(typeof != "double"){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT CANNOT BE OTHER THAN NULL OR \"double\" IF prop ARGUMENT IS TRUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": typeof ARGUMENT CANNOT BE OTHER THAN NULL OR \"double\" IF prop ARGUMENT IS TRUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 }
 if( ! (all(class(double.as.integer.allowed) == "logical") & length(double.as.integer.allowed) == 1 & any(is.na(double.as.integer.allowed)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (is.logical(all.options.in.data) & length(all.options.in.data) == 1 & any(is.na(all.options.in.data)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" IN ", fun.name)), ": all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (all(class(na.contain) == "logical") & length(na.contain) == 1 & any(is.na(na.contain)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (all(class(print) == "logical") & length(print) == 1 & any(is.na(print)) != TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # fun.name tested at the beginning
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
@@ -403,8 +403,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -589,8 +589,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -649,8 +649,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -744,21 +744,21 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # argument checking
 if( ! any(class(data1) %in% c("logical", "integer", "numeric", "character", "factor", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NON NULL VECTOR, FACTOR OR 1D TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NON NULL VECTOR, FACTOR OR 1D TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(all(class(data1) %in% "table")){
 if(length(dim(data1)) > 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A 1D TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A 1D TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! any(class(data2) %in% c("logical", "integer", "numeric", "character", "factor", "table"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NON NULL VECTOR, FACTOR OR 1D TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NON NULL VECTOR, FACTOR OR 1D TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(all(class(data2) %in% "table")){
 if(length(dim(data2)) > 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A 1D TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A 1D TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
@@ -976,12 +976,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # argument checking
 if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (any(class(data2) %in% c("data.frame", "table")) | all(class(data2) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data2) %in% c("matrix", "data.frame", "table"))
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
@@ -1046,18 +1046,18 @@ identical.content <- TRUE
 }else{
 identical.object <- FALSE
 if(all(class(data1) == "table") & length(dim(data1)) == 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(all(class(data2) == "table") & length(dim(data2)) == 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! identical(class(data1), class(data2))){
 same.class <- FALSE
 }else if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 AND data2 ARGUMENTS MUST BE EITHER MATRIX, DATA FRAME OR TABLE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 AND data2 ARGUMENTS MUST BE EITHER MATRIX, DATA FRAME OR TABLE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 same.class <- TRUE
 class <- class(data1)
@@ -1312,12 +1312,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # argument checking
 if( ! any(class(data1) %in% "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! any(class(data2) %in% "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
@@ -1469,16 +1469,16 @@ req.function <- c(
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end required function checking
 # argument primary checking
 # arg with no default values
 if(any(missing(fun) | missing(arg) | missing(val))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS fun, arg AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS fun, arg AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 # using fun_check()
@@ -1587,14 +1587,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # second round of checking and data preparation
 # dealing with NA
 if(any(is.na(fun)) | any(is.na(arg)) | any(is.na(expect.error)) | any(is.na(thread.nb)) | any(is.na(print.count)) | any(is.na(plot.fun)) | any(is.na(export)) | any(is.na(res.path)) | any(is.na(lib.path))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT val CAN HAVE NA VALUES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": NO ARGUMENT EXCEPT val CAN HAVE NA VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NA
 # dealing with NULL
 if(is.null(fun) | is.null(arg) | is.null(val) | is.null(print.count) | is.null(plot.fun) | is.null(export)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\nfun\narg\nval\nprint.count\nplot.fun\nexport\nCANNOT BE NULL\n\n================\n\n") #problematic arguments are -> put everywhere
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\nfun\narg\nval\nprint.count\nplot.fun\nexport\nCANNOT BE NULL") #problematic arguments are -> put everywhere
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL
 if(length(arg) != length(val)){
@@ -1646,8 +1646,8 @@ ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
 if(export == TRUE){
 res.path <- paste0(res.path, "/fun_test_res_", trunc(ini.time))
 if(dir.exists(res.path)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": FOLDER ALREADY EXISTS\n", res.path, "\nPLEASE RERUN ONCE\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": FOLDER ALREADY EXISTS\n", res.path, "\nPLEASE RERUN ONCE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 dir.create(res.path)
 }
@@ -1802,8 +1802,8 @@ tempo <- fun_post_plot(corner.text = tempo.title)
 }else if(plot.kind == "special"){
 eval(parse(text = fun.test))
 }else{
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR 1 IN ", function.name, ": CODE HAS TO BE MODIFIED\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR 1 IN ", function.name, ": CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 }
@@ -1921,8 +1921,8 @@ invisible(dev.set(window.nb))
 # new environment
 env.name <- paste0("env", ini.time)
 if(exists(env.name, where = -1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 assign(env.name, new.env())
 assign("val", val, envir = get(env.name)) # var replaced by val
@@ -1994,8 +1994,8 @@ invisible(dev.set(window.nb))
 # new environment
 env.name <- paste0("env", ini.time)
 if(exists(env.name, where = -1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 assign(env.name, new.env())
 assign("val", val, envir = get(env.name)) # var replaced by val
@@ -2080,8 +2080,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2163,15 +2163,15 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
 # argument checking without fun_check()
 if( ! any(class(data) %in% "data.frame")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE data ARGUMENT MUST BE A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data ARGUMENT MUST BE A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
 # argument checking with fun_check()
@@ -2197,22 +2197,22 @@ data[, i] <- as.character(data[, i])
 tempo.factor <- unlist(lapply(data, mode))
 if(length(data) == 2){
 if( ! ((mode(data[, 1]) == "character" & mode(data[, 2]) == "numeric") | mode(data[, 2]) == "character" & mode(data[, 1]) == "numeric" | mode(data[, 2]) == "numeric" & mode(data[, 1]) == "numeric") ){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": IF data ARGUMENT IS A DATA FRAME MADE OF 2 COLUMNS, EITHER A COLUMN MUST BE NUMERIC AND THE OTHER CHARACTER, OR THE TWO COLUMNS MUST BE NUMERIC\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": IF data ARGUMENT IS A DATA FRAME MADE OF 2 COLUMNS, EITHER A COLUMN MUST BE NUMERIC AND THE OTHER CHARACTER, OR THE TWO COLUMNS MUST BE NUMERIC")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if((mode(data[, 1]) == "character" | mode(data[, 2]) == "character") & (quanti.col.name != "quanti" | quali.col.name != "quali")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": IMPROPER quanti.col.name OR quali.col.name RESETTINGS. THESE ARGUMENTS ARE RESERVED FOR DATA FRAMES MADE OF n NUMERIC COLUMNS ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": IMPROPER quanti.col.name OR quali.col.name RESETTINGS. THESE ARGUMENTS ARE RESERVED FOR DATA FRAMES MADE OF n NUMERIC COLUMNS ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }else{
 if( ! all(tempo.factor %in% "numeric")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": IF data ARGUMENT IS A DATA FRAME MADE OF ONE COLUMN, OR MORE THAN 2 COLUMNS, THESE COLUMNS MUST BE NUMERIC\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": IF data ARGUMENT IS A DATA FRAME MADE OF ONE COLUMN, OR MORE THAN 2 COLUMNS, THESE COLUMNS MUST BE NUMERIC")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(( ! any(tempo.factor %in% "character")) & is.null(names(data))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NUMERIC DATA FRAME in the data ARGUMENT MUST HAVE COLUMN NAMES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": NUMERIC DATA FRAME in the data ARGUMENT MUST HAVE COLUMN NAMES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(all(tempo.factor %in% "numeric")){ # transfo 1
 quanti <- NULL
@@ -2279,15 +2279,15 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
 # argument checking without fun_check()
 if( ! (all(typeof(data) == "character") | all(typeof(data) == "double") | all(typeof(data) == "integer"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A VECTOR OF NUMBERS (IN NUMERIC OR CHARACTER MODE)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": data ARGUMENT MUST BE A VECTOR OF NUMBERS (IN NUMERIC OR CHARACTER MODE)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
 # argument checking with fun_check()
@@ -2356,8 +2356,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2409,8 +2409,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2430,18 +2430,18 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking with fun_check()
 # argument checking without fun_check()
 if(mat.hsv.h == TRUE & fun_check(data = mat1, mode = "numeric", prop = TRUE)$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat1 ARGUMENT MUST BE A MATRIX OF PROPORTIONS SINCE THE mat.hsv.h ARGUMENT IS SET TO TRUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat1 ARGUMENT MUST BE A MATRIX OF PROPORTIONS SINCE THE mat.hsv.h ARGUMENT IS SET TO TRUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(forced.color)){
 tempo <- fun_check(data = forced.color, class = "character")
 if(any(tempo$problem == TRUE)){
-paste0("\n\n================\n\n", paste(tempo$text[tempo$problem], collapse = "\n"), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+paste0("\n\n================\n\n", paste(tempo$text[tempo$problem], collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! all(forced.color %in% colors() | grepl(pattern = "^#", forced.color))){ # check that all strings of forced.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": forced.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": forced.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end argument checking without fun_check()
@@ -2454,13 +2454,13 @@ mat1.name <- deparse(substitute(mat1))
 # change the scale of the plotted matrix
 if(mat.hsv.h == TRUE){
 if(any(min(mat1, na.rm = TRUE) < 0 | max(mat1, na.rm = TRUE) > 1, na.rm = TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat1 MUST BE MADE OF VALUES BETWEEN 0 AND 1 BECAUSE mat.hsv.h ARGUMENT SET TO TRUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat1 MUST BE MADE OF VALUES BETWEEN 0 AND 1 BECAUSE mat.hsv.h ARGUMENT SET TO TRUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }else{
 if(any(mat1 - floor(mat1) > 0, na.rm = TRUE) | any(mat1 == 0, na.rm = TRUE)){ # no need of isTRUE(all.equal()) because we do not require approx here but strictly 0, thus == is ok
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat1 MUST BE MADE OF INTEGER VALUES WITHOUT 0 BECAUSE mat.hsv.h ARGUMENT SET TO FALSE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat1 MUST BE MADE OF INTEGER VALUES WITHOUT 0 BECAUSE mat.hsv.h ARGUMENT SET TO FALSE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 mat1 <- mat1 / max(mat1, na.rm = TRUE)
 }
@@ -2471,11 +2471,11 @@ different.color <- different.color[ ! is.na(different.color)]
 tempo.different.color <- different.color + c(0, cumsum(rep(notch, length(different.color) - 1)))
 tempo.different.color <- tempo.different.color - floor(tempo.different.color)
 if(any(duplicated(tempo.different.color) == TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DUPLICATED VALUES AFTER USING notch (", paste(tempo.different.color[duplicated(tempo.different.color)], collapse = " "), "). TRY ANOTHER notch VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": DUPLICATED VALUES AFTER USING notch (", paste(tempo.different.color[duplicated(tempo.different.color)], collapse = " "), "). TRY ANOTHER notch VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(length(different.color) != length(tempo.different.color)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": LENGTH OF different.color (", paste(different.color, collapse = " "), ") DIFFERENT FROM LENGTH OF tempo.different.color (", paste(tempo.different.color, collapse = " "), ")\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF different.color (", paste(different.color, collapse = " "), ") DIFFERENT FROM LENGTH OF tempo.different.color (", paste(tempo.different.color, collapse = " "), ")")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 for(i in 1:length(different.color)){
 mat1[mat1 == different.color[i]] <- tempo.different.color[i] # no need of isTRUE(all.equal()) because different.color comes from mat1
@@ -2495,8 +2495,8 @@ problem <- FALSE
 }
 for(i in 1:length(hexa.values.to.change)){
 if( ! any(mat1 == hexa.values.to.change[i], na.rm = TRUE)){# no need of isTRUE(all.equal()) because character
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE ", hexa.values.to.change[i], " VALUE FROM hexa.values.to.change IS NOT REPRESENTED IN mat1 : ", paste(unique(as.vector(mat1)), collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE ", hexa.values.to.change[i], " VALUE FROM hexa.values.to.change IS NOT REPRESENTED IN mat1 : ", paste(unique(as.vector(mat1)), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 mat1[which(mat1 == hexa.values.to.change[i])] <- forced.color[i] # no need of isTRUE(all.equal()) because character
 }
@@ -2541,12 +2541,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_comp_2d() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_comp_2d() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2563,14 +2563,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking with fun_check()
 # argument checking without fun_check()
 if(length(mat.list) < 2){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat.list ARGUMENT MUST BE A LIST CONTAINING AT LEAST 2 MATRICES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat.list ARGUMENT MUST BE A LIST CONTAINING AT LEAST 2 MATRICES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 for(i1 in 1:length(mat.list)){
 tempo <- fun_check(data = mat.list[[i1]], class = "matrix", mode = "numeric", na.contain = TRUE)
 if(tempo$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ELEMENT ", i1, " OF mat.list ARGUMENT MUST BE A NUMERIC MATRIX\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ELEMENT ", i1, " OF mat.list ARGUMENT MUST BE A NUMERIC MATRIX")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 ident.row.names <- TRUE
@@ -2578,8 +2578,8 @@ ident.col.names <- TRUE
 for(i1 in 2:length(mat.list)){
 tempo <- fun_comp_2d(data1 = mat.list[[1]], data2 = mat.list[[i1]])
 if(tempo$same.dim == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": MATRIX ", i1, " OF mat.list ARGUMENT MUST HAVE THE SAME DIMENSION (", paste(dim(mat.list[[i1]]), collapse = " "), ") THAN THE MATRIX 1 IN mat.list (", paste(dim(mat.list[[1]]), collapse = " "), ")\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": MATRIX ", i1, " OF mat.list ARGUMENT MUST HAVE THE SAME DIMENSION (", paste(dim(mat.list[[i1]]), collapse = " "), ") THAN THE MATRIX 1 IN mat.list (", paste(dim(mat.list[[1]]), collapse = " "), ")")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(tempo$same.row.name)){
 if(tempo$same.row.name != TRUE){ # != TRUE to deal with NA
@@ -2639,8 +2639,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2656,16 +2656,16 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking with fun_check()
 # argument checking without fun_check()
 if(ncol(mat) != nrow(mat)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(mat %in% c(Inf, -Inf, NA))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MUST BE A MATRIX WITHOUT Inf, -Inf OR NA\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MUST BE A MATRIX WITHOUT Inf, -Inf OR NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(all(mat == 0) & ncol(mat) == 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUARE MATRIX MADE OF A SINGLE CASE OF 0\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUARE MATRIX MADE OF A SINGLE CASE OF 0")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
@@ -2721,8 +2721,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2740,20 +2740,20 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking with fun_check()
 # argument checking without fun_check()
 if(ncol(mat) != nrow(mat)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (mode(mat) %in% c("numeric", "character"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MUST BE A NUMERIC OR CHARACTER MATRIX\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MUST BE A NUMERIC OR CHARACTER MATRIX")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(nrow(mat) == 1 & ncol(mat) == 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUARE MATRIX MADE OF A SINGLE CASE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUARE MATRIX MADE OF A SINGLE CASE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(ifelse(is.na(empty.cell.string), ! any(is.na(mat)), ! any(mat == empty.cell.string, na.rm = TRUE))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": mat ARGUMENT MATRIX MUST HAVE CELLS WITH THE EMPTY STRING SPECIFIED IN empty.cell.string ARGUMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MATRIX MUST HAVE CELLS WITH THE EMPTY STRING SPECIFIED IN empty.cell.string ARGUMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
@@ -2774,6 +2774,9 @@ diag.scan <-c( # same order as sector. Recover each diag from center to corner
 tempo.list.diag <- list.diag
 empty.sector <- NULL
 full.sector <- NULL
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 for(i1 in 1:length(sector)){
@@ -2789,32 +2792,32 @@ if(i1 == nrow(mat) - 1){
 if(all(unlist(lapply(tempo.list.diag, FUN = function(x){if(is.na(empty.cell.string)){is.na(x)}else{x == empty.cell.string}})), na.rm = TRUE)){
 empty.sector <- c(empty.sector, sector[i1])
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": EMPTY SECTOR DETECTED ON THE ", toupper(sector[i1]), " CORNER, FULL OF ", empty.cell.string)
+tempo.warn <- paste0("(", warn.count,") EMPTY SECTOR DETECTED ON THE ", toupper(sector[i1]), " CORNER, FULL OF ", empty.cell.string)
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE ", toupper(sector[i1]), " SECTOR, DETECTED AS EMPTY, IS NOT? DIFFERENT VALUES IN THIS SECTOR:\n", paste(names(table(unlist(tempo.list.diag), useNA = "ifany")), collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE ", toupper(sector[i1]), " SECTOR, DETECTED AS EMPTY, IS NOT? DIFFERENT VALUES IN THIS SECTOR:\n", paste(names(table(unlist(tempo.list.diag), useNA = "ifany")), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 }
 # end empty part detection
 if(length(empty.sector) == 0){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ACCORDING TO empty.cell.string ARGUMENT (", empty.cell.string, "), mat ARGUMENT MATRIX HAS ZERO EMPTY HALF PART")
+tempo.warn <- paste0("(", warn.count,") ACCORDING TO empty.cell.string ARGUMENT (", empty.cell.string, "), mat ARGUMENT MATRIX HAS ZERO EMPTY HALF PART")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 if(length(empty.sector) > 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ACCORDING TO empty.cell.string ARGUMENT (", empty.cell.string, "), mat ARGUMENT MATRIX HAS MORE THAN ONE EMPTY HALF PART (ACCORDING TO THE GRAND DIAGONAL): ", paste(empty.sector, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ACCORDING TO empty.cell.string ARGUMENT (", empty.cell.string, "), mat ARGUMENT MATRIX HAS MORE THAN ONE EMPTY HALF PART (ACCORDING TO THE GRAND DIAGONAL): ", paste(empty.sector, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(any(full.sector %in% empty.sector, na.rm = TRUE)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE FUNCTION HAS DETECTED EMPTY AND NON EMPTY HALF PART IN THE SAME SECTOR: ", paste(full.sector[full.sector %in% empty.sector], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE FUNCTION HAS DETECTED EMPTY AND NON EMPTY HALF PART IN THE SAME SECTOR: ", paste(full.sector[full.sector %in% empty.sector], collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(length(empty.sector) + length(full.sector)!= 4){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE FUNCTION HAS DETECTED MORE OR LESS SECTORS THAN 4:\nHALF SECTORS:", paste(empty.sector, collapse = " "), "\nFULL SECTORS:", paste(full.sector, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE FUNCTION HAS DETECTED MORE OR LESS SECTORS THAN 4:\nHALF SECTORS:", paste(empty.sector, collapse = " "), "\nFULL SECTORS:", paste(full.sector, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": ", toupper(empty.sector), " SECTOR HAS BEEN COMPLETED TO BECOME SYMMETRICAL")
+tempo.warn <- paste0("(", warn.count,") ", toupper(empty.sector), " SECTOR HAS BEEN COMPLETED TO BECOME SYMMETRICAL")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # matrix filling
@@ -2832,7 +2835,7 @@ eval(parse(text = paste0(diag.scan[4], " <- ", diag.scan[2])))
 # end matrix filling
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn, call. = FALSE)
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
 }
 return(list(mat = mat, warn = warn))
 }
@@ -2896,16 +2899,16 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_round", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -2915,14 +2918,14 @@ checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data1, class = "vector", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data1) < 2){
-tempo.cat <- paste0("ERROR IN ", function.name, ": data1 ARGUMENT MUST BE A VECTOR OF MINIMUM LENGTH 2. HERE IT IS: ", length(data1),"\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": data1 ARGUMENT MUST BE A VECTOR OF MINIMUM LENGTH 2. HERE IT IS: ", length(data1))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(data2)){
 tempo <- fun_check(data = data1, class = "vector", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(tempo$problem == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ": data1 MUST BE A NUMERIC VECTOR IF data2 ARGUMENT IS SPECIFIED\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": data1 MUST BE A NUMERIC VECTOR IF data2 ARGUMENT IS SPECIFIED")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -2933,7 +2936,7 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }else if(is.null(n)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": n ARGUMENT CANNOT BE NULL IF data2 ARGUMENT IS NULL\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": n ARGUMENT CANNOT BE NULL IF data2 ARGUMENT IS NULL")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -2985,6 +2988,9 @@ ini.pos <- 1:length(data1) # positions of data1 before permutation loops
 tempo.pos <- ini.pos # positions of data1 that will be modified during loops
 # pos.selec.seq <- ini.pos[-length(data1)] # selection of 1 position in initial position, without the last because always up permutation (pos -> pos+1 & pos+1 -> pos)
 pos.selec.seq.max <- length(ini.pos) - 1 # max position (used by sample.int() function). See  below for - 1
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 count <- 0
@@ -2994,7 +3000,7 @@ tempo.cor <- 0
 if(is.null(data2)){
 if(length(table(data1)) == 1){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
+tempo.warn <- paste0("(", warn.count,") NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 }else{
 if(print.count > n){
@@ -3028,12 +3034,12 @@ cat("\n\n")
 }else{
 if(length(table(data1)) == 1){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
+tempo.warn <- paste0("(", warn.count,") NO PERMUTATION PERFORMED BECAUSE data1 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data1)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 tempo.cor <- 1
 }else if(length(table(data2)) == 1){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO PERMUTATION PERFORMED BECAUSE data2 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data2)))
+tempo.warn <- paste0("(", warn.count,") NO PERMUTATION PERFORMED BECAUSE data2 ARGUMENT SEEMS TO BE MADE OF IDENTICAL ELEMENTS: ", names(table(data2)))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 tempo.cor <- 1
 }else{
@@ -3042,7 +3048,7 @@ tempo.cor <- cor.ini # correlation that will be modified during loops
 neg.cor <- FALSE
 if(tempo.cor < 0){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": INITIAL ", toupper(cor.method), " CORRELATION BETWEEN data1 AND data2 HAS BEEN DETECTED AS NEGATIVE: ", tempo.cor, ". THE LOOP STEPS WILL BE PERFORMED USING POSITIVE CORRELATIONS BUT THE FINAL CORRELATION WILL BE NEGATIVE")
+tempo.warn <- paste0("(", warn.count,") INITIAL ", toupper(cor.method), " CORRELATION BETWEEN data1 AND data2 HAS BEEN DETECTED AS NEGATIVE: ", tempo.cor, ". THE LOOP STEPS WILL BE PERFORMED USING POSITIVE CORRELATIONS BUT THE FINAL CORRELATION WILL BE NEGATIVE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 neg.cor <- TRUE
 tempo.cor <- abs(tempo.cor)
@@ -3050,7 +3056,7 @@ cor.ini <- abs(cor.ini)
 }
 if(tempo.cor < cor.limit){ # randomize directly all the position to be close to correlation zero
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
+tempo.warn <- paste0("(", warn.count,") INITIAL ABSOLUTE VALUE OF THE ", toupper(cor.method), " CORRELATION ", fun_round(tempo.cor), " BETWEEN data1 AND data2 HAS BEEN DETECTED AS BELOW THE CORRELATION LIMIT PARAMETER ", cor.limit, "\nTHE data1 SEQUENCE HAS BEEN COMPLETELY RANDOMIZED TO CORRESPOND TO CORRELATION ZERO")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn))) #
 for(i4 in 1:5){ # done 5 times to be sure of the complete randomness
 tempo.pos <- sample(x = tempo.pos, size = length(tempo.pos), replace = FALSE)
@@ -3092,7 +3098,7 @@ tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
 cat(paste0("\n", ifelse(text.print == "", "", paste0(text.print, " | ")), "FIRST WHILE LOOP STEP END | LOOP COUNT: ", format(count, big.mark=","), " | CORRELATION LIMIT: ", fun_round(cor.limit, 4), " | ABS TEMPO CORRELATION: ", fun_round(tempo.cor, 4), " | TOTAL SPENT TIME: ", tempo.lapse))
 if(tempo.cor < cor.limit){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE FIRST FOR & WHILE LOOP STEPS HAVE BEEN TOO FAR AND SUBSEQUENT LOOP STEPS WILL NOT RUN")
+tempo.warn <- paste0("(", warn.count,") THE FIRST FOR & WHILE LOOP STEPS HAVE BEEN TOO FAR AND SUBSEQUENT LOOP STEPS WILL NOT RUN")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # end going out of tempo.cor == cor.ini
@@ -3121,8 +3127,8 @@ tempo.cor.est <- abs(cor(x = data1[tempo.pos.est], y = data2, use = "pairwise.co
 cor.est[i6] <- tempo.cor.est
 tempo.cor.dec.per.loop <- (cor.est.ini - tempo.cor.est) / count.est # correlation decrease per loop
 if(is.na(tempo.cor.dec.per.loop) | ! is.finite(tempo.cor.dec.per.loop)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\ncor.est.ini: ", cor.est.ini, "\ntempo.cor.est: ", tempo.cor.est, "\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 2\ncor.est.ini: ", cor.est.ini, "\ntempo.cor.est: ", tempo.cor.est)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 cor.dec.per.loop[i6] <- tempo.cor.dec.per.loop
 }
@@ -3140,8 +3146,8 @@ loop.nb.est <- round((tempo.cor - cor.limit) / cor.dec.per.loop)
 # end estimation step
 # loop step
 if(is.na(loop.nb.est) | ! is.finite(loop.nb.est)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\nloop.nb.est: ", loop.nb.est, "\ncor.ini: ", cor.ini, "\ntempo.cor: ", tempo.cor, "\ncor.limit: ", cor.limit, "\ncor.dec.per.loop: ", cor.dec.per.loop, "\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 1\nloop.nb.est: ", loop.nb.est, "\ncor.ini: ", cor.ini, "\ntempo.cor: ", tempo.cor, "\ncor.limit: ", cor.limit, "\ncor.dec.per.loop: ", cor.dec.per.loop)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(loop.nb.est > 1e4){ # below -> leave the while loop
 tempo.pos.secu <- tempo.pos
 count.secu <- count
@@ -3213,8 +3219,7 @@ tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 cat("\n\n")
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn, call. = FALSE)
-cat("\n\n")
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
 }
 output <- list(data = data1[tempo.pos], warn = warn, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
 return(output)
@@ -3278,16 +3283,16 @@ req.function <- c(
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end required function checking
 # argument primary checking
 # arg with no default values
 if(any(missing(data) | missing(window.size) | missing(step) | missing(fun))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS fun, args AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS fun, args AND val HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 # using fun_check()
@@ -3344,14 +3349,14 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # second round of checking and data preparation
 # dealing with NA
 if(any(is.na(window.size)) | any(is.na(step)) | any(is.na(from)) | any(is.na(to)) | suppressWarnings(any(is.na(fun))) | any(is.na(args)) | any(is.na(boundary)) | any(is.na(parall)) | any(is.na(thread.nb)) | any(is.na(print.count)) | any(is.na(res.path)) | any(is.na(lib.path)) | any(is.na(verbose))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT EXCEPT data CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("window.size", "step", "from", "to", "fun", "args", "boundary", "parall", "thread.nb", "print.count", "res.path", "lib.path", "verbose")[c(any(is.na(window.size)), any(is.na(step)), any(is.na(from)), any(is.na(to)), suppressWarnings(any(is.na(fun))), any(is.na(args)), any(is.na(boundary)), any(is.na(parall)), any(is.na(thread.nb)), any(is.na(print.count)), any(is.na(res.path)), any(is.na(lib.path)), any(is.na(verbose)))], collapse = "\n"), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": NO ARGUMENT EXCEPT data CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("window.size", "step", "from", "to", "fun", "args", "boundary", "parall", "thread.nb", "print.count", "res.path", "lib.path", "verbose")[c(any(is.na(window.size)), any(is.na(step)), any(is.na(from)), any(is.na(to)), suppressWarnings(any(is.na(fun))), any(is.na(args)), any(is.na(boundary)), any(is.na(parall)), any(is.na(thread.nb)), any(is.na(print.count)), any(is.na(res.path)), any(is.na(lib.path)), any(is.na(verbose)))], collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NA
 # dealing with NULL
 if(is.null(data) | is.null(window.size) | is.null(step) | is.null(fun) | is.null(boundary) | is.null(parall) | is.null(print.count) | is.null(verbose)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\ndata\nwindow.size\nstep\nfun\nboundary\nparall\nprint.count\nverbose\nCANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data", "window.size", "step", "fun", "boundary", "parall", "print.count", "verbose")[c(is.null(data), is.null(window.size), is.null(step), is.null(fun), is.null(boundary), is.null(parall), is.null(print.count), is.null(verbose))], collapse = "\n"), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\ndata\nwindow.size\nstep\nfun\nboundary\nparall\nprint.count\nverbose\nCANNOT BE NULL\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data", "window.size", "step", "fun", "boundary", "parall", "print.count", "verbose")[c(is.null(data), is.null(window.size), is.null(step), is.null(fun), is.null(boundary), is.null(parall), is.null(print.count), is.null(verbose))], collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL
 if(any( ! is.finite(data))){
@@ -3403,8 +3408,8 @@ left <- ">"
 right <- "<="
 right.last.wind <- ">="
 }else{
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 data <- as.vector(data)
 data <- sort(data, na.last = NA) # NA removed
@@ -3412,8 +3417,8 @@ wind <- data.frame(left = seq(from = if(is.null(from)){min(data, na.rm = TRUE)}e
 wind <- data.frame(wind, right = wind$left + window.size)
 wind <- data.frame(wind, center = (wind$left + wind$right) / 2)
 if(all(wind$right < if(is.null(to)){max(data, na.rm = TRUE)}else{to})){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # The 3 next lines is for the rule of to argument with center (see to argument description)
 # if(any(wind$center > max(data, na.rm = TRUE))){
@@ -3430,8 +3435,8 @@ if(parall == FALSE){
 # new environment
 env.name <- paste0("env", ini.time)
 if(exists(env.name, where = -1)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 assign(env.name, new.env())
 assign("wind", wind, envir = get(env.name))
@@ -3456,8 +3461,8 @@ return(res)
 log <- mapply(FUN = "&", left.log, right.log, SIMPLIFY = FALSE)
 output <- eval(parse(text = paste0("sapply(lapply(log, FUN = function(X){(data[X])}), FUN = fun", if( ! is.null(args)){paste0(", ", args)}, ")"))) # take the values of the data vector according to log (list of logical, each compartment of length(data)) and apply fun with args of fun
 if(length(output) != nrow(wind)){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 3\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 3")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 output <- data.frame(wind, value = output)
 }
@@ -3554,8 +3559,8 @@ cat(paste0("\nPROCESS ", process.id, " ENDED | LOOP ", format(i4, big.mark=","),
 }
 wind <- wind[x, ]
 if(length(output) != nrow(wind)){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 output <- data.frame(wind, value = output)
 return(output)
@@ -3570,8 +3575,8 @@ output <- rbind(output, paral.output.list[[i2]])
 }
 # end result assembly
 if(nrow(output) != nrow(wind)){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 5\nlength(output): ", length(output), "\nnrow(wind): ", nrow(wind), "\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 5\nlength(output): ", length(output), "\nnrow(wind): ", nrow(wind))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 output <- output[order(output$left), ]
 }
@@ -3633,8 +3638,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -3705,8 +3710,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -3739,8 +3744,8 @@ pdf.path <- sub(x = pdf.path, pattern = "/$", replacement = "") # remove the las
 pdf.path <- sub(x = pdf.path, pattern = "[\\]$", replacement = "") # remove the last /
 }
 if(dir.exists(pdf.path) == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\npdf.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", pdf.path, "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\npdf.path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", pdf.path)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # par.ini recovery
@@ -3763,8 +3768,8 @@ file.remove(paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf")) # remove t
 }else{
 # test if X11 can be opened
 if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nTHIS FUNCTION CANNOT BE USED ON LINUX IF A Rplots.pdf FILE ALREADY EXISTS HERE\n", getwd(), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nTHIS FUNCTION CANNOT BE USED ON LINUX IF A Rplots.pdf FILE ALREADY EXISTS HERE\n", getwd())
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
 if(is.null(open.fail)){
@@ -3772,8 +3777,8 @@ ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphica
 invisible(dev.off()) # close the new window
 }else if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
-tempo.cat <- ("\n\n================\n\nERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- ("ERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 }
@@ -3791,8 +3796,8 @@ pdf.name <- sub(x = pdf.name, pattern = "\\.pdf$", replacement = "") # remove th
 }
 pdf.loc <- paste0(pdf.path, "/", pdf.name, ".pdf")
 if(file.exists(pdf.loc) == TRUE & pdf.overwrite == FALSE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\npdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO pdf.overwrite ARGUMENT SET TO TRUE\n", pdf.loc, "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\npdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO pdf.overwrite ARGUMENT SET TO TRUE\n", pdf.loc)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 pdf(width = width, height = height, file=pdf.loc, paper = paper)
 }
@@ -3802,8 +3807,8 @@ if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" f
 windows(width = width, height = height, rescale = rescale)
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! is.null(open.fail)){
-tempo.cat <- "\n\n================\n\nERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN\n\n================\n\n"
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- "ERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN"
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 X11(width = width, height = height)
 }
@@ -3861,8 +3866,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -3897,8 +3902,8 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking
 # main code
 if(is.null(dev.list())){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THIS FUNCTION CANNOT BE USED IF NO GRAPHIC DEVICE ALREADY OPENED (dev.list() IS CURRENTLY NULL)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THIS FUNCTION CANNOT BE USED IF NO GRAPHIC DEVICE ALREADY OPENED (dev.list() IS CURRENTLY NULL)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # par.ini recovery
 # cannot use pdf(file = NULL), because some small differences between pdf() and other devices. For instance, differences with windows() for par()$fin, par()$pin and par()$plt
@@ -3914,8 +3919,8 @@ ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameter
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
 if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THIS FUNCTION CANNOT BE USED ON LINUX WITH param.reinitial SET TO TRUE IF A Rplots.pdf FILE ALREADY EXISTS HERE: ", getwd(), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THIS FUNCTION CANNOT BE USED ON LINUX WITH param.reinitial SET TO TRUE IF A Rplots.pdf FILE ALREADY EXISTS HERE: ", getwd())
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
 if(is.null(open.fail)){
@@ -3926,8 +3931,8 @@ ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameter
 invisible(dev.off()) # close the new window
 file.remove(paste0(getwd(), "/Rplots.pdf")) # remove the pdf file
 }else{
-tempo.cat <- ("\n\n================\n\nERROR IN fun_prior_plot()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE USE PDF GRAPHIC INTERFACES AND RERUN\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- ("ERROR IN fun_prior_plot()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE USE PDF GRAPHIC INTERFACES AND RERUN")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 }else{ # macOS
@@ -4022,12 +4027,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end initial argument checking
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_round", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -4097,8 +4102,8 @@ tempo.min <- min(lim)
 mid <- tempo.min + (tempo.range/2) # middle of axis
 tempo.inter <- tempo.range / (n + 1) # current interval between two ticks, between 0 and Inf
 if(tempo.inter == 0){ # isTRUE(all.equal(tempo.inter, rep(0, length(tempo.inter)))) not used because we strictly need zero as a result
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": THE INTERVAL BETWEEN TWO TICKS OF THE SCALE IS NULL. MODIFY THE lim OR n ARGUMENT\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE INTERVAL BETWEEN TWO TICKS OF THE SCALE IS NULL. MODIFY THE lim OR n ARGUMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 log10.abs.lim <- 200
 log10.range <- (-log10.abs.lim):log10.abs.lim
@@ -4118,8 +4123,8 @@ mantisse <- as.numeric(substr(x = tempo.inter, start = 1, stop = (regexpr(patter
 power10.exp <- as.integer(substring(text = tempo.inter, first = (regexpr(pattern = "\\-", text = tempo.inter)))) # recover the power of 10. Example recover 08 from 1e+08
 mantisse <- as.numeric(substr(x = tempo.inter, start = 1, stop = (regexpr(pattern = "\\-", text = tempo.inter) - 2))) # recover the mantisse. Example recover 1.22 from 1.22e+08
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 1")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 tempo.scale <- dec.table[log10.range == power10.exp, ]
 # new interval 
@@ -4133,8 +4138,8 @@ break()
 }
 }
 if(is.null(inter.select)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 2")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 options(scipen = ini.scipen) # restore the initial scientific penalty
 # end new interval 
@@ -4163,8 +4168,8 @@ output <- c(mid.tick - ((trunc(n / 2) - 1):1) * inter.select, mid.tick, mid.tick
 output <- c(mid.tick - (trunc(n / 2):1) * inter.select, mid.tick, mid.tick + (1:(trunc(n / 2) - 1)) * inter.select)
 }
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 3")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end centering the new scale 
 # last check
@@ -4174,17 +4179,17 @@ output <- c(output[-1], max(output) + inter.select) # remove the lowest tick and
 output <- c(min(output) - inter.select, output[-length(output)])
 }
 if(min(output) < tempo.min | max(output) > tempo.max){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 4")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(is.na(output))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5 (NA GENERATION)\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 5 (NA GENERATION)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end last check
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 6")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(diff(lim.rank) < 0){
 output <- rev(output)
@@ -4237,16 +4242,16 @@ req.function <- c(
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nREQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end required function checking
 # argument primary checking
 # arg with no default values
 if(any(missing(lim))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nARGUMENT lim HAS NO DEFAULT VALUE AND REQUIRES ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nARGUMENT lim HAS NO DEFAULT VALUE AND REQUIRES ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 # using fun_check()
@@ -4272,46 +4277,50 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # second round of checking and data preparation
 # dealing with NA
 if(any(is.na(lim)) | any(is.na(log)) | any(is.na(breaks)) | any(is.na(n)) | any(is.na(warn.print))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nNO ARGUMENT CAN HAVE NA VALUES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nNO ARGUMENT CAN HAVE NA VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NA
 # dealing with NULL
 if(is.null(lim) | is.null(log)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nTHESE ARGUMENTS\nlim\nlog\nCANNOT BE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nTHESE ARGUMENTS\nlim\nlog\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL
 if(all(diff(lim) == 0)){ # isTRUE(all.equal(diff(lim), rep(0, length(diff(lim))))) not used because we strictly need zero as a result
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nlim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES): ", paste(lim, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nlim ARGUMENT HAS A NULL RANGE (2 IDENTICAL VALUES): ", paste(lim, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(any(lim %in% c(Inf, -Inf))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nlim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nlim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(log == "no" & is.null(breaks)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nbreaks ARGUMENT CANNOT BE NULL IF log ARGUMENT IS \"no\"\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nbreaks ARGUMENT CANNOT BE NULL IF log ARGUMENT IS \"no\"")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(breaks)){
 if(length(breaks) < 2){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nbreaks ARGUMENT MUST HAVE 2 VALUES AT LEAST (OTHERWISE, INTER TICK POSITIONS CANNOT BE COMPUTED): ", paste(breaks, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nbreaks ARGUMENT MUST HAVE 2 VALUES AT LEAST (OTHERWISE, INTER TICK POSITIONS CANNOT BE COMPUTED): ", paste(breaks, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! isTRUE(all.equal(diff(sort(breaks)), rep(diff(sort(breaks))[1], length(diff(sort(breaks))))))){ # isTRUE(all.equal(n, 0)) equivalent to n == 0 but deals with floats (approx ok)
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nbreaks ARGUMENT MUST HAVE EQUIDISTANT VALUES (OTHERWISE, EQUAL NUMBER OF INTER TICK BETWEEN MAIN TICKS CANNOT BE COMPUTED): ", paste(breaks, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nbreaks ARGUMENT MUST HAVE EQUIDISTANT VALUES (OTHERWISE, EQUAL NUMBER OF INTER TICK BETWEEN MAIN TICKS CANNOT BE COMPUTED): ", paste(breaks, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(n)){
 if(n <= 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nn ARGUMENT MUST BE A POSITIVE AND NON NULL INTEGER: ", paste(n, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nn ARGUMENT MUST BE A POSITIVE AND NON NULL INTEGER: ", paste(n, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end second round of checking and data preparation
 # main code
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
+warn.count <- 0
 lim.rank <- rank(lim) # to deal with inverse axis
 if(log != "no"){
 ini.scipen <- options()$scipen
@@ -4333,8 +4342,9 @@ tick.pos <- log10(tick.values)
 breaks.rank <- rank(c(breaks[1], breaks[length(breaks)]))
 if(diff(breaks.rank) != diff(lim.rank)){
 breaks <- sort(breaks, decreasing = ifelse(diff(lim.rank) < 0, TRUE, FALSE))
-tempo.warn <- paste0("VALUES IN breaks ARGUMENT NOT IN THE SAME ORDER AS IN lim ARGUMENT -> VALUES REORDERED AS IN lim: ", paste(breaks, collapse = " "))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n", tempo.warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") VALUES IN breaks ARGUMENT NOT IN THE SAME ORDER AS IN lim ARGUMENT -> VALUES REORDERED AS IN lim: ", paste(breaks, collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 breaks.rank <- rank(c(breaks[1], breaks[length(breaks)]))
 }
 # }
@@ -4350,16 +4360,17 @@ tick.pos <- tick.pos[tick.pos >= min(lim) & tick.pos <= max(lim)]
 tick.values <- tick.pos
 }
 if(any(is.na(tick.pos) | ! is.finite(tick.pos))){ 
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, ": NA or Inf GENERATED FOR THE INTER TICK POSITIONS: ", paste(tick.pos, collapse = " "), "\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, ": NA or Inf GENERATED FOR THE INTER TICK POSITIONS: ", paste(tick.pos, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(tick.pos) == 0){
-tempo.warn <- paste0("NO INTER TICKS COMPUTED BETWEEN THEN LIMITS INDICATED: ", paste(lim, collapse = " "))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n", tempo.warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NO INTER TICKS COMPUTED BETWEEN THEN LIMITS INDICATED: ", paste(lim, collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 output <- list(log = log, coordinates = tick.pos, values = tick.values, warn = warn)
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, " FUNCTION:\n", warn, "\n"), call. = FALSE) # to recover the warning messages, see $warn
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE) # to recover the warning messages, see $warn
 }
 return(output)
 }
@@ -4451,12 +4462,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_open", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -4626,8 +4637,8 @@ x.text <- par("usr")[2]
 if(is.null(x.categ.pos)){
 x.categ.pos <- 1:length(x.categ)
 }else if(length(x.categ.pos) != length(x.categ)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x.categ.pos MUST BE THE SAME LENGTH AS x.categ\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": x.categ.pos MUST BE THE SAME LENGTH AS x.categ")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 par(xpd = TRUE)
 if(isTRUE(all.equal(x.side, 1))){ #isTRUE(all.equal(x.side, 1)) is similar to x.side == 1 but deals with float
@@ -4637,14 +4648,14 @@ text(x = x.categ.pos, y = y.mid.bottom.fig.region, labels = x.categ, srt = text.
 segments(x0 = x.left.plot.region, x1 = x.right.plot.region, y0 = y.top.plot.region, y1 = y.top.plot.region) # draw the line of the axis
 text(x = x.categ.pos, y = y.mid.top.fig.region, labels = x.categ, srt = text.angle, cex = x.axis.size)
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENT x.side CAN ONLY BE 1 OR 3\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENT x.side CAN ONLY BE 1 OR 3")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 par(xpd = FALSE)
 x.text <- par("usr")[2]
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PROBLEM WITH THE x.side (", x.side ,") OR x.log.scale (", x.log.scale,") ARGUMENTS\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": PROBLEM WITH THE x.side (", x.side ,") OR x.log.scale (", x.log.scale,") ARGUMENTS")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }else{
 x.text <- par("usr")[2]
@@ -4682,8 +4693,8 @@ y.text <- (par("usr")[4] + (par("usr")[4] - par("usr")[3]) / (par("plt")[4] - pa
 if(is.null(y.categ.pos)){
 y.categ.pos <- 1:length(y.categ)
 }else if(length(y.categ.pos) != length(y.categ)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.categ.pos MUST BE THE SAME LENGTH AS y.categ\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": y.categ.pos MUST BE THE SAME LENGTH AS y.categ")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 axis(side = y.side, at = y.categ.pos, labels = rep("", length(y.categ)), lwd=0, lwd.ticks=1) # draw the line of the axis
 par(xpd = TRUE)
@@ -4692,14 +4703,14 @@ text(x = x.mid.left.fig.region, y = y.categ.pos, labels = y.categ, srt = text.an
 }else if(isTRUE(all.equal(y.side, 4))){ # idem
 text(x = x.mid.right.fig.region, y = y.categ.pos, labels = y.categ, srt = text.angle, cex = y.axis.size)
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENT y.side CAN ONLY BE 2 OR 4\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENT y.side CAN ONLY BE 2 OR 4")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 par(xpd = FALSE)
 y.text <- (par("usr")[4] + (par("usr")[4] - par("usr")[3]) / (par("plt")[4] - par("plt")[3]) * (1 - par("plt")[4]))
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PROBLEM WITH THE y.side (", y.side ,") OR y.log.scale (", y.log.scale,") ARGUMENTSn\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": PROBLEM WITH THE y.side (", y.side ,") OR y.log.scale (", y.log.scale,") ARGUMENTS")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }else{
 y.text <- (par("usr")[4] + (par("usr")[4] - par("usr")[3]) / (par("plt")[4] - par("plt")[3]) * (1 - par("plt")[4]))
@@ -4718,8 +4729,8 @@ tempo.par <- fun_open(pdf = FALSE, return.output = TRUE)
 invisible(dev.off()) # close the new window
 if( ! is.null(custom.par)){
 if( ! names(custom.par) %in% names(tempo.par$ini.par)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": custom.par ARGUMENT SHOULD HAVE THE NAMES OF THE COMPARTMENT LIST COMING FROM THE par() LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": custom.par ARGUMENT SHOULD HAVE THE NAMES OF THE COMPARTMENT LIST COMING FROM THE par() LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 par(custom.par)
 text <- c(text, "\nGRAPH PARAMETERS SET TO VALUES DEFINED BY custom.par ARGUMENT\n")
@@ -4756,8 +4767,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -4849,8 +4860,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -4930,8 +4941,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -4992,8 +5003,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -5110,16 +5121,16 @@ req.function <- c(
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end required function checking
 # argument primary checking
 # arg with no default values
 if(any(missing(ggplot_built))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS ggplot_built HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS ggplot_built HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 # using fun_check()
@@ -5145,20 +5156,20 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # second round of checking
 # dealing with NA
 if(any(is.na(ggplot_built)) | any(is.na(fun.name)) | any(is.na(lib.path))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": NO ARGUMENT CAN HAVE NA VALUES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": NO ARGUMENT CAN HAVE NA VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NA
 # dealing with NULL
 if(is.null(ggplot_built)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, "\nggplot_built ARGUMENT CANNOT BE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nggplot_built ARGUMENT CANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL
 if( ! is.null(lib.path)){
 if( ! all(dir.exists(lib.path))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end second round of checking
@@ -5176,8 +5187,7 @@ dev.set(win.nb)
 }
 leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
 if(length(leg) == 0){
-legend <- NULL # tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, "\nTHE ggplot_built ARGUMENT HAS PROBABLY NO LEGEND\n\n============\n\n")
-# stop(tempo.cat, call. = FALSE)
+legend <- NULL
 }else{
 legend <- tmp$grobs[[leg]]
 }
@@ -5228,18 +5238,18 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 }else if(all(inactivate == TRUE)){
 function.name <- NULL
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN fun_gg_point_rast(): CODE INCONSISTENCY 1\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_gg_point_rast(): CODE INCONSISTENCY 1")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -5511,22 +5521,20 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_round", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_round() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # no reserved words required for this function
 # argument checking
-warn <- NULL
-warn.count <- 0
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -5542,35 +5550,35 @@ tempo <- fun_check(data = data1[, 2], data.name = "COLUMN 2 OF data1 (reshape2::
 tempo <- fun_check(data = data1[, 3], data.name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = legend.name1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = low.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(low.color1 %in% colors() | grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
-tempo.cat <- paste0("ERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(mid.color1)){
 tempo <- fun_check(data = mid.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(mid.color1 %in% colors() | grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
-tempo.cat <- paste0("ERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = high.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(high.color1 %in% colors() | grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
-tempo.cat <- paste0("ERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(limit1)){
 tempo <- fun_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(limit1 %in% c(Inf, -Inf))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -5582,7 +5590,7 @@ if( ! is.null(data2)){
 if(all(is.matrix(data2))){
 tempo <- fun_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! all(unique(data2) %in% c(0,1))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.matrix(data1)) & ! identical(dim(data1), dim(data2))){ # matrix and matrix
@@ -5603,7 +5611,7 @@ tempo <- fun_check(data = data2[, 2], data.name = "COLUMN 2 OF data2 (reshape2::
 tempo <- fun_check(data = data2[, 3], data.name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", mode = "numeric", fun.name = function.name) ; eval(ee)
 }
 if(tempo$problem == FALSE & ! all(unique(data2[, 3]) %in% c(0,1))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & all(is.data.frame(data1)) & ! identical(dim(data1), dim(data2))){ # data frame and data frame
@@ -5616,14 +5624,14 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = color2, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
-tempo.cat <- paste0("ERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -5671,6 +5679,11 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 fun_pack(req.package = c("reshape2", "ggplot2"), lib.path = lib.path)
 # end package checking
 # main code
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
+warn <- NULL
+warn.count <- 0
 if(all(is.matrix(data1))){
 data1 <- reshape2::melt(data1) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
 }
@@ -5680,26 +5693,26 @@ data1[, 1] <- rev(data1[, 1])
 if(is.null(limit1)){
 if(any(data1[, 3] %in% c(Inf, -Inf))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 limit1 <- range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(limit1), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(limit1), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if(suppressWarnings(any(limit1 %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(is.null(midpoint1)){
 midpoint1 <- mean(limit1, na.rm = TRUE)
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(midpoint1), collapse = " "))
+tempo.warn <- paste0("(", warn.count,") THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", paste(fun_round(midpoint1), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if(fun_round(midpoint1, 9) != fun_round(mean(limit1), 9)){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE midpoint1 ARGUMENT (", fun_round(mean(midpoint1), 9), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", fun_round(mean(limit1), 9), "). COLOR SCALE IS NOT LINEAR")
+tempo.warn <- paste0("(", warn.count,") THE midpoint1 ARGUMENT (", fun_round(mean(midpoint1), 9), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", fun_round(mean(limit1), 9), "). COLOR SCALE IS NOT LINEAR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2)){
@@ -5728,7 +5741,7 @@ add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
 if(grepl(pattern = "ggplot2::theme", add) == TRUE){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 add.check <- FALSE
 }
@@ -5751,11 +5764,11 @@ print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), col
 # )
 }else{
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": PLOT NOT SHOWN AS REQUESTED")
+tempo.warn <- paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn, call. = FALSE)
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -5806,12 +5819,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -5912,15 +5925,15 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
 # argument checking without fun_check()
 if( ! (all(class(data) == "numeric") | all(class(data) == "integer") | (all(class(data) %in% c("matrix", "array")) & mode(data) == "numeric"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data ARGUMENT MUST BE A NUMERIC VECTOR OR NUMERIC MATRIX\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": data ARGUMENT MUST BE A NUMERIC VECTOR OR NUMERIC MATRIX")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
 # argument checking with fun_check()
@@ -5967,8 +5980,8 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking with fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 if(all(is.na(data) | ! is.finite(data))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN fun_trim FUNCTION\ndata ARGUMENT CONTAINS ONLY NA OR Inf\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN fun_trim FUNCTION\ndata ARGUMENT CONTAINS ONLY NA OR Inf")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking
 # main code
@@ -6238,11 +6251,14 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
+on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 arg.check <- NULL #
@@ -6251,13 +6267,13 @@ checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data1) < 2){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS\n\n============\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = x1, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (x1 %in% names(data1))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x1 ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": x1 ARGUMENT MUST BE A COLUMN NAME OF data1")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & x1 %in% names(data1)){
@@ -6265,21 +6281,21 @@ tempo <- fun_check(data = data1[, x1], data.name = "x1 COLUMN OF data1", class =
 }
 tempo <- fun_check(data = y1, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y1 %in% names(data1))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y1 ARGUMENT MUST BE A COLUMN NAME OF data1\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": y1 ARGUMENT MUST BE A COLUMN NAME OF data1")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & y1 %in% names(data1)){
 tempo <- fun_check(data = data1[, y1], data.name = "y1 COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 }
 if(is.null(x.range.split) & is.null(y.range.split)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": AT LEAST ONE OF THE x.range.split AND y.range.split ARGUMENTS MUST BE NON NULL\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": AT LEAST ONE OF THE x.range.split AND y.range.split ARGUMENTS MUST BE NON NULL")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(x.range.split)){
 tempo <- fun_check(data = x.range.split, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & x.range.split < 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x.range.split ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": x.range.split ARGUMENT CANNOT BE LOWER THAN 1")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -6287,40 +6303,40 @@ arg.check <- c(arg.check, TRUE)
 if( ! is.null(y.range.split)){
 tempo <- fun_check(data = y.range.split, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.range.split < 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.range.split ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": y.range.split ARGUMENT CANNOT BE LOWER THAN 1")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = x.step.factor, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & x.step.factor < 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x.step.factor ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": x.step.factor ARGUMENT CANNOT BE LOWER THAN 1")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = y.step.factor, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.step.factor < 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y.step.factor ARGUMENT CANNOT BE LOWER THAN 1\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": y.step.factor ARGUMENT CANNOT BE LOWER THAN 1")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = error, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(data2)){
 if(is.null(x2) | is.null(y2)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x2 AND y2 ARGUMENTS CANNOT BE NULL IF data2 ARGUMENT IS NON NULL\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": x2 AND y2 ARGUMENTS CANNOT BE NULL IF data2 ARGUMENT IS NON NULL")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = data2, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & length(data2) < 2){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": data2 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS\n\n============\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": data2 ARGUMENT MUST BE A DATA FRAME OF AT LEAST 2 COLUMNS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 if( ! is.null(x2)){
 tempo <- fun_check(data = x2, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (x2 %in% names(data2))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x2 ARGUMENT MUST BE A COLUMN NAME OF data2\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": x2 ARGUMENT MUST BE A COLUMN NAME OF data2")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & x2 %in% names(data2)){
@@ -6330,7 +6346,7 @@ tempo <- fun_check(data = data2[, x2], data.name = "x2 COLUMN OF data2", class =
 if( ! is.null(y2)){
 tempo <- fun_check(data = y2, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & ! (y2 %in% names(data2))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y2 ARGUMENT MUST BE A COLUMN NAME OF data2\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": y2 ARGUMENT MUST BE A COLUMN NAME OF data2")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & y2 %in% names(data2)){
@@ -6350,12 +6366,12 @@ if(tempo$problem == FALSE & plot == TRUE){
 tempo <- fun_check(data = raster, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = graph.in.file, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & graph.in.file == TRUE & is.null(dev.list())){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": \ngraph.in.file PARAMETER SET TO TRUE BUT NO ACTIVE GRAPHIC DEVICE DETECTED\n\n============\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": \ngraph.in.file PARAMETER SET TO TRUE BUT NO ACTIVE GRAPHIC DEVICE DETECTED")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo$problem == FALSE & graph.in.file == TRUE & ! is.null(dev.list())){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": GRAPHS PRINTED IN THE CURRENT DEVICE (TYPE ", toupper(names(dev.cur())), ")")
+tempo.warn <- paste0("(", warn.count,") GRAPHS PRINTED IN THE CURRENT DEVICE (TYPE ", toupper(names(dev.cur())), ")")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(lib.path)){
@@ -6370,35 +6386,35 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) #
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # other required function checking
 if(plot == TRUE){
 if(length(utils::find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_open", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_open() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_gg_palette", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_gg_palette() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_gg_empty_graph", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_empty_graph() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_gg_empty_graph() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_gg_scatter", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_gg_scatter() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_gg_scatter() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_close", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_close() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_close() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end other required function checking
@@ -6421,22 +6437,22 @@ if(length(data1.removed.row.nb) > 0){
 data1.removed.rows <- data1[data1.removed.row.nb, ]
 }
 if(length(data1.removed.row.nb) == nrow(data1)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": AT LEAST ONE NA, NaN, -Inf OR Inf DETECTED IN EACH ROW OF data1. FUNCTION CANNOT BE USED ON EMPTY DATA FRAME\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": AT LEAST ONE NA, NaN, -Inf OR Inf DETECTED IN EACH ROW OF data1. FUNCTION CANNOT BE USED ON EMPTY DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(data1.removed.row.nb) > 0){
 data1 <- data1[-data1.removed.row.nb, ]
 }
 if(nrow(data1) == 0){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 1\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 1")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $data1.removed.row.nb AND $data1.removed.rows)")
+tempo.warn <- paste0("(", warn.count,") NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $data1.removed.row.nb AND $data1.removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1. NO ROW REMOVED")
+tempo.warn <- paste0("(", warn.count,") NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x1, y1), collapse = " "), " OF data1. NO ROW REMOVED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2)){
@@ -6448,22 +6464,22 @@ if(length(data2.removed.row.nb) > 0){
 data2.removed.rows <- data2[data2.removed.row.nb, ]
 }
 if(length(data2.removed.row.nb) == nrow(data2)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": AT LEAST ONE NA, NaN, -Inf OR Inf DETECTED IN EACH ROW OF data2. FUNCTION CANNOT BE USED ON EMPTY DATA FRAME\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": AT LEAST ONE NA, NaN, -Inf OR Inf DETECTED IN EACH ROW OF data2. FUNCTION CANNOT BE USED ON EMPTY DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(data2.removed.row.nb) > 0){
 data2 <- data2[-data2.removed.row.nb, ]
 }
 if(nrow(data2) == 0){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 2")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2 AND CORRESPONDING ROWS REMOVED (SEE $data2.removed.row.nb AND $data2.removed.rows)")
+tempo.warn <- paste0("(", warn.count,") NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2 AND CORRESPONDING ROWS REMOVED (SEE $data2.removed.row.nb AND $data2.removed.rows)")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2. NO ROW REMOVED")
+tempo.warn <- paste0("(", warn.count,") NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2. NO ROW REMOVED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 print(warn)
 }
@@ -6491,47 +6507,47 @@ y.data1.down.limit.r <- NULL # lower limit of the data1 cloud for right step lin
 y.data1.top.limit.r <- NULL # upper limit of the data1 cloud for left step line
 if(any(data1[, x1] %in% c(Inf, -Inf))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 x.range <- range(data1[, x1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if(suppressWarnings(any(x.range %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED x.range CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " COMPUTED x.range CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data1[, y1] %in% c(Inf, -Inf))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y1 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 y.range <- range(data1[, y1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if(suppressWarnings(any(x.range %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED y.range CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " COMPUTED y.range CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 x.range.plot <- range(data1[, x1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 y.range.plot <- range(data1[, y1], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if( ! is.null(data2)){
 if(any(data2[, x2] %in% c(Inf, -Inf))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE x2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 x.range.plot <- range(data1[, x1], data2[, x2], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 if(any(data2[, y2] %in% c(Inf, -Inf))){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") FROM FUNCTION ", function.name, ": THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+tempo.warn <- paste0("(", warn.count,") THE data2 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE y2 COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 y.range.plot <- range(data1[, y1], data2[, y2], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }
 if(suppressWarnings(any(x.range.plot %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED x.range.plot CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 (AND data2?) ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " COMPUTED x.range.plot CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 (AND data2?) ARGUMENTS ARE NA OR Inf ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(suppressWarnings(any(y.range.plot %in% c(Inf, -Inf)))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " COMPUTED y.range.plot CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 (AND data2?) ARGUMENTS ARE NA OR Inf ONLY\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " COMPUTED y.range.plot CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 (AND data2?) ARGUMENTS ARE NA OR Inf ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(x.range.split)){
 # data.frame ordering to slide the window from small to big values + sliding window definition
@@ -6621,8 +6637,8 @@ y.unknown.data2.dot.nb <- unique(y.unknown.data2.dot.nb)
 # }
 }
 if(max.pos < x.range[2]){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE SLIDING WINDOW HAS NOT REACHED THE MAX VALUE OF data1 ON THE X-AXIS: ", max.pos, " VERSUS ", x.range[2], "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE SLIDING WINDOW HAS NOT REACHED THE MAX VALUE OF data1 ON THE X-AXIS: ", max.pos, " VERSUS ", x.range[2])
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 y.incon.data1.dot.nb.final <- unique(c(y.outside.data1.dot.nb[y.outside.data1.dot.nb %in% y.inside.data1.dot.nb], y.inside.data1.dot.nb[y.inside.data1.dot.nb %in% y.outside.data1.dot.nb])) # inconsistent dots: if a row number of y.inside.data1.dot.nb is present in y.outside.data1.dot.nb (and vice versa), it means that during the sliding, a dot has been sometime inside, sometime outside -> removed from the outside list
 y.outside.data1.dot.nb.final <- y.outside.data1.dot.nb[ ! (y.outside.data1.dot.nb %in% y.incon.data1.dot.nb.final)] # inconsistent dots removed from the outside list
@@ -6736,8 +6752,8 @@ x.unknown.data2.dot.nb <- unique(x.unknown.data2.dot.nb)
 # }
 }
 if(max.pos < y.range[2]){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THE SLIDING WINDOW HAS NOT REACHED THE MAX VALUE OF data1 ON THE Y-AXIS: ", max.pos, " VERSUS ", y.range[2], "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THE SLIDING WINDOW HAS NOT REACHED THE MAX VALUE OF data1 ON THE Y-AXIS: ", max.pos, " VERSUS ", y.range[2])
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 x.incon.data1.dot.nb.final <- unique(c(x.outside.data1.dot.nb[x.outside.data1.dot.nb %in% x.inside.data1.dot.nb], x.inside.data1.dot.nb[x.inside.data1.dot.nb %in% x.outside.data1.dot.nb])) # inconsistent dots: if a row number of x.inside.data1.dot.nb is present in x.outside.data1.dot.nb (and vice versa), it means that during the sliding, a dot has been sometime inside, sometime outside -> removed from the outside list
 x.outside.data1.dot.nb.final <- x.outside.data1.dot.nb[ ! (x.outside.data1.dot.nb %in% x.incon.data1.dot.nb.final)] # inconsistent dots removed from the outside list
@@ -6867,8 +6883,8 @@ y.outside.data2.dot.nb.final <- y.outside.data2.dot.nb.final[ ! y.outside.data2.
 y.inside.data2.dot.nb.final <- y.inside.data2.dot.nb.final[ ! y.inside.data2.dot.nb.final %in% data2.unknown.dot$DOT_NB] # remove y.unknown.data2.dot.nb.final from y.inside.data2.dot.nb.final
 }
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 3")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end unknown dots recovery 
@@ -6894,8 +6910,8 @@ data1.non.signif.dot <- data1[data1$DOT_NB %in% tempo.inside, ]
 data1.non.signif.dot <- data1[unique(c(x.inside.data1.dot.nb.final, y.inside.data1.dot.nb.final)), ] # if no outside dots, I recover all the inside dots and that's it
 }
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 4")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(data2)){
 if(xy.cross.kind == "|"){ # here the problem is to deal with significant dots depending on x and y. Thus I start with that, recover dots finally non significant in outside and put them in inside (when &), and remove from inside the dots in outside
@@ -6919,8 +6935,8 @@ data2.non.signif.dot <- data2[data2$DOT_NB %in% tempo.inside, ]
 data2.non.signif.dot <- data2[unique(c(x.inside.data2.dot.nb.final, y.inside.data2.dot.nb.final)), ] # if no outside dots, I recover all the inside dots and that's it
 }
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 5")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end sign and non sign dot recovery
@@ -6945,8 +6961,8 @@ if(length(y.unknown.data2.dot.nb.final) > 0){
 data2.unknown.dot <- data2[data2$DOT_NB %in% y.unknown.data2.dot.nb.final, ]
 }
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 6\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 6")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end unknown dots recovery 
@@ -6987,8 +7003,8 @@ if(length(x.unknown.data2.dot.nb.final) > 0){
 data2.unknown.dot <- data2[data2$DOT_NB %in% x.unknown.data2.dot.nb.final, ]
 }
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 7\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 7")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end unknown dots recovery 
@@ -7012,77 +7028,77 @@ data2.non.signif.dot <- data2[data2$DOT_NB %in% x.inside.data2.dot.nb.final, ]
 # end recovering the dot coordinates
 # verif
 if(any(data1.signif.dot$DOT_NB %in% data1.non.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY 8\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY 8")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data1.non.signif.dot$DOT_NB %in% data1.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY 9\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", FUNCTION.NAME, ": CODE INCONSISTENCY 9")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data1.signif.dot$DOT_NB %in% data1.incon.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 10\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 10")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data1.incon.dot$DOT_NB %in% data1.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 11\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 11")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data1.non.signif.dot$DOT_NB %in% data1.incon.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 12\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 12")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data1.incon.dot$DOT_NB %in% data1.non.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 13\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 13")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(data2)){
 if(any(data2.signif.dot$DOT_NB %in% data2.non.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 14\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 14")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.non.signif.dot$DOT_NB %in% data2.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 15\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 15")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.signif.dot$DOT_NB %in% data2.unknown.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 16\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 16")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.unknown.dot$DOT_NB %in% data2.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 17\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 17")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.signif.dot$DOT_NB %in% data2.incon.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 18\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 18")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.incon.dot$DOT_NB %in% data2.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 19\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 19")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.non.signif.dot$DOT_NB %in% data2.unknown.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 20\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 20")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.unknown.dot$DOT_NB %in% data2.non.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 21\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 21")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.non.signif.dot$DOT_NB %in% data2.incon.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 22\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 22")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.incon.dot$DOT_NB %in% data2.non.signif.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 23\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 23")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.unknown.dot$DOT_NB %in% data2.incon.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 24\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 24")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(data2.incon.dot$DOT_NB %in% data2.unknown.dot$DOT_NB)){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 25\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 25")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end verif
@@ -7370,8 +7386,7 @@ fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size 
 }
 # end plot
 if(warn.print == TRUE & ! is.null(warn)){
-warning(warn, call. = FALSE)
-cat("\n\n")
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
 }
 tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, axes = axes, warn = warn)
 return(tempo.list)
@@ -7410,8 +7425,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -7450,17 +7465,16 @@ tempo <- c(tempo, req.package[i1])
 }
 if( ! is.null(tempo)){
 tempo.cat <- paste0(
-"\n\n================\n\nERROR IN ", 
+"ERROR IN ", 
 function.name, 
 ": PACKAGE", 
 ifelse(length(tempo) == 1, paste0("\n\n", tempo, "\n\n"), paste0("S\n", paste(tempo, collapse = "\n"), "\n")), 
 "MUST BE INSTALLED IN", 
 ifelse(length(lib.path) == 1, "", " ONE OF THESE FOLDERS"), 
 ":\n", 
-paste(lib.path, collapse = "\n"), 
-"\n\n================\n\n"
+paste(lib.path, collapse = "\n")
 )
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(load == TRUE){
 suppressMessages(suppressWarnings(suppressPackageStartupMessages(library(req.package[i1], lib.loc = lib.path, quietly = TRUE, character.only = TRUE))))
 }
@@ -7503,12 +7517,12 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(length(utils::find("fun_pack", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_pack() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -7579,8 +7593,8 @@ tempo.try[[i2]] <- suppressWarnings(try(reticulate::import_from_path(req.package
 }
 if(all(sapply(tempo.try, FUN = grepl, pattern = "[Ee]rror"))){
 print(tempo.try)
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": PACKAGE ", req.package[i1], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": PACKAGE ", req.package[i1], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 } # else{
 # suppressMessages(suppressWarnings(suppressPackageStartupMessages(assign(req.package[i1], reticulate::import(req.package[i1]))))) # not required because try() already evaluates
 # }
@@ -7623,8 +7637,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # argument checking
@@ -7634,14 +7648,14 @@ checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = output, class = "character", length = 1, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & output == ""){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": output ARGUMENT AS \"\" DOES NOT CORRESPOND TO A VALID FILE NAME\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": output ARGUMENT AS \"\" DOES NOT CORRESPOND TO A VALID FILE NAME")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 if( ! all(dir.exists(path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", paste(path, collapse = "\n"),"\n\n================\n\n")
+tempo.cat <- paste0("ERROR IN ", function.name, ": path ARGUMENT DOES NOT CORRESPOND TO EXISTING DIRECTORY\n", paste(path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -7661,8 +7675,8 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
 # arg.without.default.value <- sapply(default.arg.list, is.symbol) & sapply(sapply(default.arg.list, as.character), identical, "") # logical to detect argument without default values (these are typeof "symbol" and class "name" and empty character
 # if( ! all(names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list))){ # test that the arguments with no null values are provided by the user
-# tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": VALUE REQUIRED FOR THESE ARGUMENTS WITH NO DEFAULTS VALUES: ", paste(names(default.arg.list)[arg.without.default.value][ ! names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list)], collapse = " "), "\n\n================\n\n")
-#stop(tempo.cat, call. = FALSE)
+# tempo.cat <- paste0("ERROR IN ", function.name, ": VALUE REQUIRED FOR THESE ARGUMENTS WITH NO DEFAULTS VALUES: ", paste(names(default.arg.list)[arg.without.default.value][ ! names(default.arg.list)[arg.without.default.value] %in% names(arg.user.list)], collapse = " "))
+# stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 # }
 # end argument checking
 # main code
@@ -7749,8 +7763,8 @@ function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
 # no need to use reserved words to avoid bugs, because it is local, and  exists("tempo.warning", inherit = FALSE), never use the scope
@@ -7879,6 +7893,7 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+# facet does not work with stat.disp https://www.r-bloggers.com/2018/11/adding-different-annotation-to-each-facet-in-ggplot/
 
 
 
@@ -8084,7 +8099,7 @@ req.function <- c(
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end required function checking
@@ -8095,7 +8110,7 @@ reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.categ", "dot
 # arg with no default values
 if(any(missing(data1) | missing(y) | missing(categ))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS data1, y AND categ HAVE NO DEFAULT VALUE AND REQUIRE ONE")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 arg.check <- NULL #
@@ -8164,7 +8179,7 @@ tempo1 <- fun_check(data = dot.border.color, class = "vector", mode = "character
 tempo2 <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
 if((tempo1$problem == TRUE & tempo2$problem == TRUE) | (tempo1$problem == FALSE & tempo2$problem == TRUE & ! (all(dot.border.color %in% colors() | grepl(pattern = "^#", dot.border.color))))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE\nHERE IT IS: ", paste(unique(dot.border.color), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if( ! is.null(x.lab)){
@@ -8245,7 +8260,7 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if(any(arg.check) == TRUE){
-stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
@@ -8254,7 +8269,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
 if(any(tempo) == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NA in arguments
 # dealing with NULL in arguments
@@ -8316,7 +8331,7 @@ null.count <- c(null.count, i1)
 }
 if( ! is.null(null.count)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL in arguments
 ini.warning.length <- options()$warning.length
@@ -8326,30 +8341,30 @@ warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! (y %in% names(data1))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny ARGUMENT MUST BE A COLUMN NAME OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 tempo <- fun_check(data = data1[, y], data.name = "y COLUMN OF data1", class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny ARGUMENT MUST BE NUMERIC COLUMN IN data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(length(categ) > 2){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg ARGUMENT CANNOT HAVE MORE THAN 2 COLUMN NAMES OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! all(categ %in% names(data1))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", paste(categ, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # reserved word checking
 if(any(names(data1) %in% reserved.words)){
 if(any(duplicated(names(data1)))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", paste(names(data1)[duplicated(names(data1))], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(dot.categ)){
 if(dot.categ %in% categ){
@@ -8389,7 +8404,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 if( ! (is.null(add) | is.null(tempo.output$ini))){
 if(grepl(x = add, pattern = paste(tempo.output$ini, collapse = "|"))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF COLUMN NAMES OF data1 IN THE add ARGUMENT STRING, THAT CORRESPOND TO RESERVED STRINGS FOR ", function.name, "\nCOLUMN NAMES HAVE TO BE CHANGED\nTHE PROBLEMATIC COLUMN NAMES ARE SOME OF THESE NAMES:\n", paste(tempo.output$ini, collapse = " "), "\nIN THE DATA FRAME OF data1 AND IN THE STRING OF add ARGUMENT, TRY TO REPLACE NAMES BY:\n", paste(tempo.output$post, collapse = " "), "\n\nFOR INFORMATION, THE RESERVED WORDS ARE:\n", paste(reserved.words, collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 }
@@ -8398,13 +8413,13 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 if( ! is.null(add)){
 if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
 tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end verif of add
@@ -8429,7 +8444,7 @@ facet.check <- FALSE
 }
 if(facet.check == FALSE & ! all(facet.categ %in% names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end management of add containing facet
@@ -8439,7 +8454,7 @@ tempo1 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER 
 tempo2 <- fun_check(data = data1[, categ[i1]], data.name = paste0("categ NUMBER ", i1, " OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\n", paste0("categ NUMBER ", i1, " OF data1"), " MUST BE A FACTOR OR CHARACTER VECTOR")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(tempo1$problem == FALSE){ # character vector
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR, WITH LEVELS ACCORDING TO THE ALPHABETICAL ORDER")
@@ -8484,10 +8499,10 @@ removed.rows <- data.frame(stringsAsFactors = FALSE)
 if(y.log != "no" & ! is.null(y.lim)){
 if(any(y.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(any( ! is.finite(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF/NA WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(y.log != "no" & y.include.zero == TRUE){
@@ -8559,7 +8574,7 @@ data1[, column.check[i2]] <- factor(as.character(data1[, column.check[i2]]), lev
 if( ! is.null(categ.class.order)){
 if(length(categ.class.order) != length(categ)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.class.order ARGUMENT MUST BE A LIST OF LENGTH EQUAL TO LENGTH OF categ\nHERE IT IS LENGTH: ", length(categ.class.order), " VERSUS ", length(categ))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 for(i3 in 1:length(categ.class.order)){
 if(is.null(categ.class.order[[i3]])){
@@ -8571,15 +8586,15 @@ categ.class.order[[i3]] <- levels(data1[, categ[i3]]) # character vector that wi
 }else{
 tempo <- fun_check(data = categ.class.order[[i3]], data.name = paste0("COMPARTMENT ", i3 , " OF categ.class.order ARGUMENT"), class = "vector", mode = "character", length = length(levels(data1[, categ[i3]])), fun.name = function.name) # length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(any(duplicated(categ.class.order[[i3]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(categ.class.order[[i3]], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! (all(categ.class.order[[i3]] %in% unique(data1[, categ[i3]])) & all(unique(data1[, categ[i3]]) %in% categ.class.order[[i3]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT MUST BE CLASSES OF ELEMENT ", i3, " OF categ ARGUMENT\nHERE IT IS:\n", paste(categ.class.order[[i3]], collapse = " "), "\nFOR COMPARTMENT ", i3, " OF categ.class.order AND IT IS:\n", paste(unique(data1[, categ[i3]]), collapse = " "), "\nFOR COLUMN ", categ[i3], " OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 data1[, categ[i3]] <- factor(data1[, categ[i3]], levels = categ.class.order[[i3]]) # reorder the factor
 
@@ -8619,7 +8634,7 @@ categ.color <- fun_gg_palette(max(categ.color, na.rm = TRUE))[categ.color]
 # end integer colors into gg_palette
 if( ! (all(categ.color %in% colors() | grepl(pattern = "^#", categ.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(categ.color), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(is.na(categ.color))){
 warn.count <- warn.count + 1
@@ -8641,7 +8656,7 @@ data1 <- data.frame(data1, categ.color = categ.color)
 tempo.check <- unique(data1[ , c(categ[categ.len], "categ.color")])
 if( ! (nrow(tempo.check) == length(unique(categ.color)) & nrow(tempo.check) == length(unique(data1[ , categ[categ.len]])))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], ":\n", paste(unique(mapply(FUN = "paste", data1[ ,categ[categ.len]], data1[ ,"categ.color"])), collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 categ.color <- unique(data1$categ.color[order(data1[, categ[categ.len]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
@@ -8658,7 +8673,7 @@ tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS LENGTH 1, MEANI
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }else{
 categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2, then colors for classes of categ2
@@ -8683,7 +8698,7 @@ if( ! is.null(dot.categ)){
 ini.dot.categ <- dot.categ
 if( ! dot.categ %in% names(data1)){ # no need to use all() because length(dot.categ) = 1
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ ARGUMENT MUST BE A COLUMN NAME OF data1. HERE IT IS:\n", dot.categ)
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(dot.categ %in% categ){ # no need to use all() because length(dot.categ) = 1. Do not use dot.categ %in% categ[length(categ)] -> error
 # management of dot legend if dot.categ %in% categ (because legends with the same name are joined in ggplot2) 
 warn.count <- warn.count + 1
@@ -8693,23 +8708,23 @@ data1 <- data.frame(data1, dot.categ = data1[, dot.categ]) # dot.categ is not a 
 dot.categ <- paste0(dot.categ, "_DOT")
 names(data1)[names(data1) == "dot.categ"] <- dot.categ # paste0(dot.categ, "_DOT") is not a column name of data1 (checked above with reserved words)
 # tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ ARGUMENT CANNOT BE A COLUMN NAME OF data1 ALREADY SPECIFIED IN THE categ ARGUMENT:\n", dot.categ, "\nINDEED, dot.categ ARGUMENT IS MADE TO HAVE MULTIPLE DOT COLORS NOT RELATED TO THE BOXPLOT CATEGORIES")
-# stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+# stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 tempo1 <- fun_check(data = data1[, dot.categ], data.name = paste0(dot.categ, " COLUMN OF data1"), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = data1[, dot.categ], data.name = paste0(dot.categ, " COLUMN OF data1"), class = "factor", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ COLUMN MUST BE A FACTOR OR CHARACTER VECTOR") #
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 data1[, dot.categ] <- factor(data1[, dot.categ]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 # dot.categ column of data1 is factor from here
 if( ! is.null(dot.categ.class.order)){
 if(any(duplicated(dot.categ.class.order))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(dot.categ.class.order, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! (all(dot.categ.class.order %in% levels(data1[, dot.categ])) & all(levels(data1[, dot.categ]) %in% dot.categ.class.order))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.categ.class.order ARGUMENT MUST BE CLASSES OF dot.categ ARGUMENT\nHERE IT IS:\n", paste(dot.categ.class.order, collapse = " "), "\nFOR dot.categ.class.order AND IT IS:\n", paste(levels(data1[, dot.categ]), collapse = " "), "\nFOR dot.categ COLUMN (", ini.dot.categ, ") OF data1")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 data1[, dot.categ] <- factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
 }
@@ -8732,10 +8747,10 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 if(all(dot.color == "same") & length(dot.color) == 1){
 if( ! identical(ini.dot.categ, categ[length(categ)])){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nWHEN dot.color ARGUMENT IS \"same\", THE COLUMN NAME IN dot.categ ARGUMENT MUST BE IDENTICAL TO THE LAST COLUMN NAME IN categ ARGUMENT. HERE IT IS:\ndot.categ: ", paste(ini.dot.categ, collapse = " "), "\ncateg: ", paste(categ, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! fun_comp_1d(unlist(categ.class.order[length(categ)]), dot.categ.class.order)$identical.content){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nWHEN dot.color ARGUMENT IS \"same\",\nLAST COMPARTMENT OF categ.class.order ARGUMENT AND dot.categ.class.order ARGUMENT CANNOT BE DIFFERENT:\nLAST COMPARTMENT OF categ.class.order: ", paste(unlist(categ.class.order[length(categ)]), collapse = " "), "\ndot.categ.class.order: ", paste(dot.categ.class.order, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 for(i3 in 1:length(categ)){
@@ -8776,7 +8791,7 @@ tempo.warn <- paste0("(", warn.count,") dot.color ARGUMENT HAS BEEN SET TO \"sam
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else if( ! (all(dot.color %in% colors() | grepl(pattern = "^#", dot.color)))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGERS, OR THE STRING\"same\"\nHERE IT IS: ", paste(unique(dot.color), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(any(is.na(dot.color))){
 warn.count <- warn.count + 1
@@ -8789,7 +8804,7 @@ if( ! is.null(dot.categ)){
 # optional legend of dot colors
 if(length(dot.color) > 1 & length(unique(data1[, dot.categ])) != length(dot.color)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT IS NOT THE SAME LENGTH AS LEVELS OF dot.categ COLUMN (", dot.categ, "):\ndot.color: ", paste(dot.color, collapse = " "), "\ndot.categ LEVELS: ", paste(levels(data1[, dot.categ]), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(length(dot.color) == 1 & length(dot.categ.class.order) > 1){ # to deal with single color
 dot.color <- rep(dot.color, length(dot.categ.class.order))
 }
@@ -8802,7 +8817,7 @@ dot.color <- rep(dot.color, length(dot.categ.class.order))
 tempo.check <- unique(data1[ , c(dot.categ, "dot.color")])
 if(length(unique(data1[ , "dot.color"])) > 1 & ( ! (nrow(tempo.check) == length(unique(data1[ , "dot.color"])) & nrow(tempo.check) == length(unique(data1[ , dot.categ]))))){ # length(unique(data1[ , "dot.color"])) > 1 because if only one color, can be attributed to each class of dot.categ
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF dot.categ (", dot.categ, ") COLUMN:\n", paste(unique(mapply(FUN = "paste", data1[ , dot.categ], data1[ ,"dot.color"])), collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN dot.categ ARGUMENT (", ini.dot.categ, "), THE FOLLOWING COLORS OF DOTS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(data1[, dot.categ]), collapse = " "))
@@ -8831,7 +8846,7 @@ tempo.warn <- paste0("(", warn.count,") dot.color ARGUMENT HAS LENGTH 1, MEANING
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(dot.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end check the length of color
 dot.color <- as.character(dot.color)
@@ -8859,7 +8874,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 if(is.null(dot.color) & box.fill == FALSE & dot.border.size == 0){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE FOLLOWING ARGUMENTS WERE SET AS:\ndot.color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox.fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\ndot.border.size = 0 (NO BORDER FOR POTENTIAL OUTLIER DOTS)\n-> THESE SETTINGS ARE NOT ALLOWED BECAUSE THE POTENTIAL OUTLIER DOTS WILL NOT BE VISIBLE")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # integer dot.border.color into gg_palette
 if( ! is.null(dot.border.color)){
@@ -8972,7 +8987,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 # end per box dots coordinates recovery
 }else{
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
 dot.coord <- tempo.graph.info.ini$data[[1]]
@@ -9002,7 +9017,7 @@ tempo.test <- paste0(tempo.test, ".", formatC(as.numeric(dot.coord[, facet.categ
 tempo.test <- as.integer(factor(tempo.test))
 if( ! identical(as.integer(dot.coord$PANEL), tempo.test)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nas.integer(dot.coord$PANEL) AND tempo.test MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(dot.tidy == TRUE){
@@ -9035,11 +9050,11 @@ dot.coord <- data.frame(dot.coord, tidy_group_coord = dot.coord$group)
 }
 if( ! (identical(dot.coord$y, dot.coord$y.check) & identical(dot.coord$group, dot.coord$categ.check))){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\n(dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 if( ! identical(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ]$BOX, unique(dot.coord[order(dot.coord$group, dot.coord$PANEL), c("group", "PANEL")])$group)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\n(tempo.mean$BOX, tempo.mean$PANEL) AND (dot.coord$group, dot.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 tempo <- unique(dot.coord[order(dot.coord$group, dot.coord$PANEL), c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ}), drop = FALSE])
 # names(tempo) <- paste0(names(tempo), ".mean")
@@ -9067,18 +9082,18 @@ if(y.log != "no"){
 # normally this control is not necessary anymore
 if(any( ! is.finite(y.lim))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 if(suppressWarnings(all(y.lim %in% c(Inf, -Inf)))){
 # normally this control is not necessary anymore
 tempo.cat <- paste0("ERROR IN ", function.name, " y.lim CONTAINS Inf VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(suppressWarnings(any(is.na(y.lim)))){
 # normally this control is not necessary anymore
 tempo.cat <- paste0("ERROR IN ", function.name, " y.lim CONTAINS NA OR NaN VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 y.lim.order <- order(y.lim) # to deal with inverse axis
 y.lim <- sort(y.lim)
@@ -9090,7 +9105,7 @@ y.lim <- range(c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes
 y.lim <- y.lim[y.lim.order]
 if(any(is.na(y.lim))){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end ylim range
 
@@ -9184,7 +9199,7 @@ box.coord$PANEL <- as.numeric(box.coord$PANEL) # because numbers as levels. But 
 box.coord <- box.coord[order(box.coord$group, box.coord$PANEL), ]
 if( ! (identical(tempo.mean$BOX, box.coord$group) & identical(tempo.mean$PANEL, box.coord$PANEL))){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nidentical(tempo.mean$BOX, box.coord$group) & identical(tempo.mean$PANEL, box.coord$PANEL) DO NOT HAVE THE SAME VALUE ORDER")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 # tempo <- c(categ, if( ! is.null(dot.color) & ! is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! is.null(facet.categ)){facet.categ})
 if(any(names(tempo.mean) %in% names(box.coord))){
@@ -9235,7 +9250,7 @@ width.ini <- c(box.coord$xmax - box.coord$xmin)[1] # all the box widths are equa
 width.correct <- width.ini * box.space / 2
 if( ! (identical(stat$BOX, box.coord$group) & identical(stat$PANEL, box.coord$PANEL))){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nidentical(stat$BOX, box.coord$group) & identical(stat$PANEL, box.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 stat <- data.frame(
 stat, 
@@ -9264,7 +9279,7 @@ if(dot.tidy == FALSE){
 dot.coord.rd1 <- merge(dot.coord, box.coord[c("fill", "PANEL", "group", "x")], by = c("PANEL", "group"), sort = FALSE) # rd for random. Send the coord of the boxes into the coord data.frame of the dots (in the column x.y). WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
 if(nrow(dot.coord.rd1) != nrow(dot.coord)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd1 DATA FRAME. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 set.seed(1)
 sampled.dot.jitter <- if(nrow(dot.coord.rd1) == 1){runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2)}else{sample(x = runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2), size = nrow(dot.coord.rd1), replace = FALSE)}
@@ -9290,12 +9305,12 @@ names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 6")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have replaced by = "group" by intersect("group", "group") because of an error due to wrong group group merging in dot.coord.rd3
 if(nrow(dot.coord.rd3) != nrow(dot.coord) | ( ! fun_comp_2d(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end random dots
 }
@@ -9496,7 +9511,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 tempo.coord <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
 if(length(which(sapply(tempo.coord, FUN = nrow) == nrow(data1))) > if(is.null(dot.categ)){1}else{2}){ # if(is.null(dot.categ)){1}else{2} because 1 dotplot if dot.categ is NULL and 2 dotplots is not, with the second being a blank dotplot with wrong coordinates. Thus take the first in that situation
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nMORE THAN ", if(is.null(dot.categ)){1}else{2}, " COMPARTMENT WITH NROW EQUAL TO nrow(data1) IN THE tempo.coord LIST (FOR TIDY DOT COORDINATES). CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 dot.coord.tidy1 <- tempo.coord[[which(sapply(tempo.coord, FUN = nrow) == nrow(data1))[1]]] # the second being a blank dotplot with wrong coordinates. Thus take the first whatever situation
 dot.coord.tidy1$x <- as.numeric(dot.coord.tidy1$x) # because weird class
@@ -9506,12 +9521,12 @@ dot.coord.tidy1$PANEL <- as.numeric(dot.coord.tidy1$PANEL) # because numbers as 
 # below inactivated because not true when dealing with dot.categ different from categ
 # if(nrow(tempo.box.coord) != nrow(box.coord)){
 # tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED")
-# stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+# stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 # }
 dot.coord.tidy2 <- merge(dot.coord.tidy1, box.coord[c("fill", "PANEL", "group", "x", categ)], by = c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Group1 Group2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
 if(nrow(dot.coord.tidy2) != nrow(dot.coord)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # From here, check for dot.coord.tidy3 which wil be important for stat over the plot. WARNING: dot.categ has nothing to do here for stat coordinates. Thus, not in tempo.data1
 if(length(categ) == 1){
@@ -9534,12 +9549,12 @@ names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 7")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have tested intersect("group", "group") instead of by = "group". May be come back to by = "group" in case of error. But I did this because of an error in dot.coord.rd3 above
 if(nrow(dot.coord.tidy3) != nrow(dot.coord) | ( ! fun_comp_2d(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end coordinates of tidy dots
 }
@@ -9637,7 +9652,7 @@ names(stat.coord2)[names(stat.coord2) == "y_from.dot.max"] <- "dot.max"
 stat.coord3 <- cbind(box.coord[order(box.coord$group, box.coord$PANEL), ], stat.coord1[order(stat.coord1$group, stat.coord1$x.y), ], stat.coord2[order(stat.coord2$group, stat.coord2$x.y), ], stringsAsFactors = TRUE) # 
 if( ! all(identical(round(stat.coord3$x, 9), round(as.numeric(stat.coord3$x.y), 9)))){ # as.numeric() because stat.coord3$x is class "mapped_discrete" "numeric"
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nFUSION OF box.coord, stat.coord1 AND stat.coord2 ACCORDING TO box.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 text.coord <- stat.coord3[, c("x", "group", "dot.min", "dot.max")]
 names(text.coord)[names(text.coord) == "dot.min"] <- "text.min.pos"
@@ -9646,7 +9661,7 @@ box.coord <- box.coord[order(box.coord$x), ]
 text.coord <- text.coord[order(text.coord$x), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
 if( ! identical(text.coord$x, box.coord$x)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntext.coord AND box.coord DO NOT HAVE THE SAME x COLUMN CONTENT")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end stat coordinates
@@ -9696,7 +9711,7 @@ coord.names <- c(coord.names, "stat.display.negative")
 # end stat display
 }else{
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 9")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
 # end stat display
@@ -9723,7 +9738,7 @@ tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim,
 tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
 if(all(is.na(tempo))){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$y$breaks")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks. If fact: n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) replaced by n = ifelse(is.null(y.tick.nb), 4, y.tick.nb))
 }
@@ -9758,7 +9773,7 @@ coord.names <- c(coord.names, "y.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 minor_breaks = y.second.tick.pos, 
-labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)}, 
+labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==}, 
 expand = c(0, 0), # remove space after after axis limits
 limits = sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
 oob = scales::rescale_none, 
@@ -9829,14 +9844,14 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
 # }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
+warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
 }
 if(return == TRUE){
 tempo.output <- ggplot2::ggplot_build(fin.plot)
 tempo.output$data <- tempo.output$data[-1] # remove the first data because corresponds to the initial empty boxplot
 if(length(tempo.output$data) != length(coord.names)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nlength(tempo.output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), " FROM ", function.name, ":\n\n", warn))), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 names(tempo.output$data) <- coord.names
 tempo.output$data <- tempo.output$data[coord.names != "bad_remove"]
@@ -9933,7 +9948,6 @@ lib.path = NULL
 # WARNINGS
 # Rows containing NA in data1[, c(x, y, categ)] will be removed before processing, with a warning (see below)
 # Size arguments (dot.size, dot.border.size, line.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
-# The function uses options(warning.length = 8170) which increases the length of warning messages. In case of error, warning.length is not set back to 1000 (default value). Use options(warning.length = 1000) if required
 # ARGUMENTS
 # data1: a dataframe compatible with ggplot2, or a list of data frames
 # x: single character string of the data1 column name for x-axis coordinates. If data1 is a list, then x must be a list of single character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Write NULL for each "geom_hline" in geom argument
@@ -10081,8 +10095,8 @@ req.function <- c(
 )
 for(i1 in req.function){
 if(length(find(i1, mode = "function")) == 0){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
 # end required function checking
@@ -10091,8 +10105,8 @@ reserved.words <- c("fake_x", "fake_y", "fake_categ")
 # end reserved words to avoid bugs (used in this function)
 # arg with no default values
 if(any(missing(data1) | missing(x) | missing(y))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ARGUMENTS data1, x AND y HAVE NO DEFAULT VALUE AND REQUIRE ONE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS data1, x AND y HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end arg with no default values
 # primary argument checking
@@ -10348,8 +10362,8 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # dealing with NA
 tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
 if(any(tempo) == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end dealing with NA
 # dealing with NULL
@@ -10396,8 +10410,8 @@ null.count <- c(null.count, i1)
 }
 }
 if( ! is.null(null.count)){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 # end dealing with NULL
 # check list lengths (and names of data1 compartments if present)
@@ -10418,8 +10432,8 @@ list.line.size <- NULL
 list.line.type <- NULL
 if(all(class(data1) == "list")){
 if(length(data1) > 6){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A LIST OF 6 DATA FRAMES MAXIMUM (6 OVERLAYS MAX)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": data1 ARGUMENT MUST BE A LIST OF 6 DATA FRAMES MAXIMUM (6 OVERLAYS MAX)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(is.null(names(data1))){
 names(data1) <- paste0("L", 1:length(data1))
@@ -10429,110 +10443,110 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 if( ! is.null(x)){
 if( ! (all(class(x) == "list") & length(data1) == length(x))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": x ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }else{
 x <- vector("list", length(data1))
 }
 if( ! is.null(y)){
 if( ! (all(class(y) == "list") & length(data1) == length(y))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": y ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }else{
 y <- vector("list", length(data1))
 }
 if( ! is.null(categ)){
 if( ! (all(class(categ) == "list") & length(data1) == length(categ))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if( ! is.null(categ.class.order)){
 if( ! (all(class(categ.class.order) == "list") & length(data1) == length(categ.class.order))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if( ! is.null(color)){
 if( ! ((all(class(color) == "list") & length(data1) == length(color)) | ((all(mode(color) == "character") | all(mode(color) == "numeric")) & length(color) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER STRING OR INTEGER\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER STRING OR INTEGER")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if((all(mode(color) == "character") | all(mode(color) == "numeric")) & length(color) == 1){ # convert the single value into a list of single value
 list.color <- vector(mode = "list", length = length(data1))
 list.color[] <- color
 }
 }
 if( ! ((all(class(geom) == "list") & length(data1) == length(geom)) | (all(mode(geom) == "character") & length(geom) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(geom) == "character") & length(geom) == 1){ # convert the single value into a list of single value
 list.geom <- vector(mode = "list", length = length(data1))
 list.geom[] <- geom
 }
 if( ! ((all(class(geom.step.dir) == "list") & length(data1) == length(geom.step.dir)) | (all(mode(geom.step.dir) == "character") & length(geom.step.dir) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom.step.dir ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom.step.dir ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(geom.step.dir) == "character") & length(geom.step.dir) == 1){ # convert the single value into a list of single value
 list.geom.step.dir <- vector(mode = "list", length = length(data1))
 list.geom.step.dir[] <- geom.step.dir
 }
 if( ! ((all(class(alpha) == "list") & length(data1) == length(alpha)) | (all(mode(alpha) == "numeric") & length(alpha) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": alpha ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": alpha ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(alpha) == "numeric") & length(alpha) == 1){ # convert the single value into a list of single value
 list.alpha <- vector(mode = "list", length = length(data1))
 list.alpha[] <- alpha
 }
 if( ! ((all(class(dot.size) == "list") & length(data1) == length(dot.size)) | (all(mode(dot.size) == "numeric") & length(dot.size) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(dot.size) == "numeric") & length(dot.size) == 1){ # convert the single value into a list of single value
 list.dot.size <- vector(mode = "list", length = length(data1))
 list.dot.size[] <- dot.size
 }
 if( ! ((all(class(dot.shape) == "list") & length(data1) == length(dot.shape)) | (all(mode(dot.shape) != "list") & length(dot.shape) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.shape ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE SHAPE VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.shape ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE SHAPE VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(dot.shape) != "list") & length(dot.shape) == 1){ # convert the single value into a list of single value
 list.dot.shape <- vector(mode = "list", length = length(data1))
 list.dot.shape[] <- dot.shape
 }
 if( ! ((all(class(dot.border.size) == "list") & length(data1) == length(dot.border.size)) | (all(mode(dot.border.size) == "numeric") & length(dot.border.size) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(dot.border.size) == "numeric") & length(dot.border.size) == 1){ # convert the single value into a list of single value
 list.dot.border.size <- vector(mode = "list", length = length(data1))
 list.dot.border.size[] <- dot.border.size
 }
 if( ! is.null(dot.border.color)){
 if( ! ((all(class(dot.border.color) == "list") & length(data1) == length(dot.border.color)) | ((all(mode(dot.border.color) == "character") | all(mode(dot.border.color) == "numeric")) & length(dot.border.color) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER STRING OR INTEGER\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.color ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE CHARACTER STRING OR INTEGER")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if((all(mode(dot.border.color) == "character") | all(mode(dot.border.color) == "numeric")) & length(dot.border.color) == 1){ # convert the single value into a list of single value
 list.dot.border.color <- vector(mode = "list", length = length(data1))
 list.dot.border.color[] <- dot.border.color
 }
 }
 if( ! ((all(class(line.size) == "list") & length(data1) == length(line.size)) | (all(mode(line.size) == "numeric") & length(line.size) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": line.size ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(line.size) == "numeric") & length(line.size) == 1){ # convert the single value into a list of single value
 list.line.size <- vector(mode = "list", length = length(data1))
 list.line.size[] <- line.size
 }
 if( ! ((all(class(line.type) == "list") & length(data1) == length(line.type)) | (all(mode(line.type) != "list") & length(line.type) == 1))){ # list of same length as data1 or single value
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.type ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE LINE KIND VALUE\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": line.type ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE LINE KIND VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(all(mode(line.type) != "list") & length(line.type) == 1){ # convert the single value into a list of single value
 list.line.type <- vector(mode = "list", length = length(data1))
 list.line.type[] <- line.type
 }
 if( ! is.null(legend.name)){
 if( ! (all(class(legend.name) == "list") & length(data1) == length(legend.name))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": legend.name ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": legend.name ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 }
@@ -10541,108 +10555,108 @@ stop(tempo.cat, call. = FALSE)
 if(all(is.data.frame(data1))){
 data1 <- list(L1 = data1)
 if(all(class(x) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": x ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": x ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 x <- list(L1 = x)
 }
 if(all(class(y) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": y ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": y ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 y <- list(L1 = y)
 }
 if( ! is.null(categ)){
 if(all(class(categ) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 categ <- list(L1 = categ)
 }
 }
 if( ! is.null(categ.class.order)){
 if(all(class(categ.class.order) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": categ.class.order ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.class.order ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 categ.class.order <- list(L1 = categ.class.order)
 }
 }
 if( ! is.null(color)){
 if(all(class(color) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": color ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": color ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 color <- list(L1 = color)
 }
 }
 if(all(class(geom) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 geom <- list(L1 = geom)
 }
 if(all(class(geom.step.dir) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom.step.dir ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom.step.dir ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 geom.step.dir <- list(L1 = geom.step.dir)
 }
 if(all(class(alpha) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": alpha ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": alpha ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 alpha <- list(L1 = alpha)
 }
 if(all(class(dot.size) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 dot.size <- list(L1 = dot.size)
 }
 if(all(class(dot.shape) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.shape ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.shape ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 dot.shape <- list(L1 = dot.shape)
 }
 if(all(class(dot.border.size) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 dot.border.size <- list(L1 = dot.border.size)
 }
 if( ! is.null(dot.border.color)){
 if(all(class(dot.border.color) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": dot.border.color ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.color ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 dot.border.color <- list(L1 = dot.border.color)
 }
 }
 if(all(class(line.size) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": line.size ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 line.size <- list(L1 = line.size)
 }
 if(all(class(line.type) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": line.type ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": line.type ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 line.type <- list(L1 = line.type)
 }
 if( ! is.null(legend.name)){
 if(all(class(legend.name) == "list")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": legend.name ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": legend.name ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 legend.name <- list(L1 = legend.name)
 }
 }
 }else if( ! all(sapply(data1, FUN = "class") == "data.frame")){ # if not a data frame, data1 can only be a list, as tested above
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OR A LIST OF DATA FRAMES\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OR A LIST OF DATA FRAMES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 # single value converted into list now reattributed to the argument name
 if( ! is.null(color)){
@@ -10711,8 +10725,8 @@ legend.disp[[i2]] <- TRUE
 tempo.check.color <- NULL
 for(i1 in 1:length(data1)){
 if(any(is.na(color[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), ": color ARGUMENT CANNOT CONTAIN NA\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), ": color ARGUMENT CANNOT CONTAIN NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo.check.color <- c(tempo.check.color, fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem)
 }
@@ -10735,34 +10749,34 @@ compart.null.color <- 0 # will be used to attribute a color when color is non-nu
 for(i1 in 1:length(data1)){
 tempo <- fun_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "data.frame", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 # reserved word checking
 if(any(names(data1[[i1]]) %in% reserved.words)){ # I do not use fun_name_change() because cannot control y before creating "fake_y". But ok because reserved are not that common
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": COLUMN NAMES OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", paste(reserved.words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function.name, " FUNCTION\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": COLUMN NAMES OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", paste(reserved.words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function.name, " FUNCTION")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if( ! (is.null(add))){
 if(grepl(x = add, pattern = paste(reserved.words, collapse = "|"))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF COLUMN NAMES OF data1 IN THE add ARGUMENT STRING, THAT CORRESPOND TO RESERVED STRINGS FOR ", function.name, "\nCOLUMN NAMES HAVE TO BE CHANGED\nFOR INFORMATION, THE RESERVED WORDS ARE:\n", paste(reserved.words, collapse = "\n"))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 # end reserved word checking
 # check of geom now because required for y argument
 tempo <- fun_check(data = geom[[i1]], data.name = ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), options = c("geom_point", "geom_line", "geom_path", "geom_step", "geom_hline", "geom_vline", "geom_stick"), length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo <- fun_check(data = geom.step.dir[[i1]], data.name = ifelse(length(geom.step.dir) == 1, "geom.step.dir", paste0("geom.step.dir NUMBER ", i1)), options = c("vh", "hv", "mid"), length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 # end check of geom now because required for y argument
 if(is.null(x[[i1]])){
 if(all(geom[[i1]] != "geom_hline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": x ARGUMENT CANNOT BE NULL EXCEPT IF ", ifelse(length(geom) == 1, "x", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_hline\"\nHERE geom ARGUMENT IS: ", paste(geom[[i1]], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": x ARGUMENT CANNOT BE NULL EXCEPT IF ", ifelse(length(geom) == 1, "x", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_hline\"\nHERE geom ARGUMENT IS: ", paste(geom[[i1]], collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 x[[i1]] <- "fake_x"
 data1[[i1]] <- cbind(data1[[i1]], fake_x = NA, stringsAsFactors = TRUE)
@@ -10773,18 +10787,18 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 }else{
 if(all(geom[[i1]] == "geom_hline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": x ARGUMENT MUST BE NULL IF ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_hline\"\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": x ARGUMENT MUST BE NULL IF ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_hline\"")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo <- fun_check(data = x[[i1]], data.name = ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), class = "vector", mode = "character", length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if(is.null(y[[i1]])){
 if(all(geom[[i1]] != "geom_vline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": y ARGUMENT CANNOT BE NULL EXCEPT IF ", ifelse(length(geom) == 1, "y", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_vline\"\nHERE geom ARGUMENT IS: ", paste(geom[[i1]], collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": y ARGUMENT CANNOT BE NULL EXCEPT IF ", ifelse(length(geom) == 1, "y", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_vline\"\nHERE geom ARGUMENT IS: ", paste(geom[[i1]], collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 y[[i1]] <- "fake_y"
 data1[[i1]] <- cbind(data1[[i1]], fake_y = NA, stringsAsFactors = TRUE)
@@ -10795,50 +10809,50 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 }else{
 if(all(geom[[i1]] == "geom_vline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": y ARGUMENT MUST BE NULL IF ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_vline\"\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ": y ARGUMENT MUST BE NULL IF ", ifelse(length(geom) == 1, "geom", paste0("geom NUMBER ", i1)), " ARGUMENT IS \"geom_vline\"")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo <- fun_check(data = y[[i1]], data.name = ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), class = "vector", mode = "character", length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 # x[[i1]] and y[[i1]] not NULL anymore
 if( ! (x[[i1]] %in% names(data1[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(x[[i1]], collapse = " "))), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(x[[i1]], collapse = " "))))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if( ! (y[[i1]] %in% names(data1[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(y[[i1]], collapse = " "))), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(y[[i1]], collapse = " "))))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo <- fun_check(data = data1[[i1]][, x[[i1]]], data.name = ifelse(length(x) == 1, "x ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF x ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo <- fun_check(data = data1[[i1]][, y[[i1]]], data.name = ifelse(length(y) == 1, "y ARGUMENT (AS COLUMN NAME OF data1 DATA FRAME)", paste0("ELEMENT ", i1, " OF y ARGUMENT", " (AS COLUMN NAME OF data1 DATA FRAME NUMBER ", i1, ")")), class = "vector", mode = "numeric", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(x[[i1]] == "fake_x" & y[[i1]] == "fake_y"){ # because the code cannot accept to be both "fake_x" and "fake_y" at the same time
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 2\nTHE CODE CANNOT ACCEPT x AND y TO BE \"fake_x\" AND \"fake_y\" IN THE SAME DATA FRAME ", i1, " \n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 2\nTHE CODE CANNOT ACCEPT x AND y TO BE \"fake_x\" AND \"fake_y\" IN THE SAME DATA FRAME ", i1, " ")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 
 if(( ! is.null(categ)) & ( ! is.null(categ[[i1]]))){ # is.null(categ[[i1]]) works even if categ is NULL # is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created later on
 tempo <- fun_check(data = categ[[i1]], data.name = ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")),, class = "vector", mode = "character", length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if( ! (categ[[i1]] %in% names(data1[[i1]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(categ[[i1]], collapse = " "))), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT MUST BE A COLUMN NAME OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT\nHERE IT IS: ", paste(categ[[i1]], collapse = " "))))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 tempo1 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = data1[[i1]][, categ[[i1]]], data.name = ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "factor", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " MUST BE A FACTOR OR CHARACTER VECTOR\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " MUST BE A FACTOR OR CHARACTER VECTOR")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(tempo1$problem == FALSE){
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 warn.count <- warn.count + 1
@@ -10848,8 +10862,8 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 if(geom[[i1]] == "geom_vline" | geom[[i1]] == "geom_hline"){
 if(length(unique(data1[[i1]][, categ[[i1]]])) != nrow(data1[[i1]])){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(geom) == 1, "geom OF data1 ARGUMENT", paste0("geom NUMBER ", i1, " OF DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT IS ", geom[[i1]], ", MEANING THAT ", ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " MUST HAVE A DIFFERENT CLASS PER LINE OF data1 (ONE x VALUE PER CLASS)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(geom) == 1, "geom OF data1 ARGUMENT", paste0("geom NUMBER ", i1, " OF DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT IS ", geom[[i1]], ", MEANING THAT ", ifelse(length(categ) == 1, "categ OF data1 ARGUMENT", paste0("ELEMENT ", i1, " OF categ ARGUMENT IN DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " MUST HAVE A DIFFERENT CLASS PER LINE OF data1 (ONE x VALUE PER CLASS)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 }else if(( ! is.null(categ)) & is.null(categ[[i1]])){ # is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created. WARNING: is.null(categ[[i1]]) means no legend display (see above), because categ has not been precised. This also means a single color for data1[[i1]]
@@ -10877,7 +10891,7 @@ if( ! is.null(categ.class.order)){
 # the following check will be done several times but I prefer to keep it here, after the creation of categ
 if(is.null(categ[[i1]]) & ! is.null(categ.class.order[[i1]])){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i1, " OF categ ARGUMENT CANNOT BE NULL IF COMPARTMENT ", i1, " OF categ.class.order ARGUMENT IS NOT NULL: ", paste(categ.class.order, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 if(is.null(categ.class.order[[i1]])){
 warn.count <- warn.count + 1
@@ -10888,15 +10902,15 @@ categ.class.order[[i1]] <- levels(data1[[i1]][, categ[[i1]]]) # character vector
 }else{
 tempo <- fun_check(data = categ.class.order[[i1]], data.name = paste0("COMPARTMENT ", i1 , " OF categ.class.order ARGUMENT"), class = "vector", mode = "character", length = length(levels(data1[[i1]][, categ[[i1]]])), fun.name = function.name) # length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if(any(duplicated(categ.class.order[[i1]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i1, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", paste(categ.class.order[[i1]], collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if( ! (all(categ.class.order[[i1]] %in% unique(data1[[i1]][, categ[[i1]]])) & all(unique(data1[[i1]][, categ[[i1]]]) %in% categ.class.order[[i1]]))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nCOMPARTMENT ", i1, " OF categ.class.order ARGUMENT MUST BE CLASSES OF COMPARTMENT ", i1, " OF categ ARGUMENT\nHERE IT IS:\n", paste(categ.class.order[[i1]], collapse = " "), "\nFOR COMPARTMENT ", i1, " OF categ.class.order AND IT IS:\n", paste(unique(data1[[i1]][, categ[[i1]]]), collapse = " "), "\nFOR COLUMN ", categ[[i1]], " OF data1 NUMBER ", i1)
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]], levels = categ.class.order[[i1]]) # reorder the factor
 }
@@ -10908,7 +10922,7 @@ names(categ.class.order)[i1] <- categ[[i1]]
 if( ! is.null(legend.name[[i1]])){
 tempo <- fun_check(data = legend.name[[i1]], data.name = ifelse(length(legend.name) == 1, "legend.name", paste0("legend.name NUMBER ", i1)),, class = "vector", mode = "character", length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if( ! is.null(color)){ # if color is NULL, will be filled later on
@@ -10923,11 +10937,11 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 tempo1 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name) # na.contain = TRUE in case of colum of data1
 tempo2 <- fun_check(data = color[[i1]], data.name = ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), class = "factor", na.contain = TRUE, fun.name = function.name) # idem
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR\n\n================\n\n") # integer possible because dealt above
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR") # integer possible because dealt above
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if( ! (all(color[[i1]] %in% colors() | grepl(pattern = "^#", color[[i1]])))){ # check that all strings of low.color start by #
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(color[[i1]]), collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(color[[i1]]), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(any(is.na(color[[i1]]))){
 warn.count <- warn.count + 1
@@ -10937,13 +10951,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # end check the nature of color
 # check the length of color
 if(is.null(categ) & length(color[[i1]]) != 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF categ IS NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF categ IS NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if( ! is.null(categ)){
 # No problem of NA management by ggplot2 because already removed
 if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(length(color[[i1]]) == length(unique(data1[[i1]][, categ[[i1]]]))){ # here length(color) is equal to the different number of categ
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 warn.count <- warn.count + 1
@@ -10953,8 +10967,8 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 data1[[i1]] <- cbind(data1[[i1]], color = color[[i1]], stringsAsFactors = TRUE)
 tempo.check <- unique(data1[[i1]][ , c(categ[[i1]], "color")])
 if( ! (nrow(data1[[i1]]) == length(color[[i1]]) & nrow(tempo.check) == length(unique(data1[[i1]][ , categ[[i1]]])))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color")), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF THIS categ:\n", paste(unique(mapply(FUN = "paste", data1[[i1]][ ,categ[[i1]]], data1[[i1]][ ,"color"])), collapse = "\n"), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color")), " ARGUMENT HAS THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF THIS categ:\n", paste(unique(mapply(FUN = "paste", data1[[i1]][ ,categ[[i1]]], data1[[i1]][ ,"color"])), collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 data1[[i1]][, categ[[i1]]] <- factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 color[[i1]] <- unique(color[[i1]][order(data1[[i1]][, categ[[i1]]])]) # Modif to have length(color) equal to the different number of categ (length(color) == length(levels(data1[[i1]][, categ[[i1]]])))
@@ -10969,8 +10983,8 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", COLOR HAS LENGTH 1 MEANING THAT ALL THE DIFFERENT CLASSES OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), "\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(color[[i1]], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES, OR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES, OR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 }
@@ -10981,7 +10995,7 @@ data1[[i1]][, "fake_categ"] <- factor(paste0("Line_", formatC(1:nrow(data1[[i2]]
 }
 tempo <- fun_check(data = alpha[[i1]], data.name = ifelse(length(alpha) == 1, "alpha", paste0("alpha NUMBER ", i1)), prop = TRUE, length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
-stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 # management of log scale
 if(x.log != "no"){
@@ -11007,19 +11021,19 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 }
 if(sum(geom %in% "geom_point") > 3){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom ARGUMENT CANNOT HAVE MORE THAN THREE \"geom_point\" ELEMENTS\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT CANNOT HAVE MORE THAN THREE \"geom_point\" ELEMENTS")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(length(geom) - sum(geom %in% "geom_point") > 3){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, ": geom ARGUMENT CANNOT HAVE MORE THAN THREE LINE ELEMENTS\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT CANNOT HAVE MORE THAN THREE LINE ELEMENTS")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(x.log != "no" & ! is.null(x.lim)){
 if(any(x.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE x.log ARGUMENT SET TO ", x.log, ":\n", paste(x.lim, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(any( ! is.finite(if(x.log == "log10"){log10(x.lim)}else{log2(x.lim)}))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lim ARGUMENT RETURNS INF WITH THE x.log ARGUMENT SET TO ", x.log, "\nAS SCALE COMPUTATION IS ", ifelse(x.log == "log10", "log10", "log2"), ":\n", paste(if(x.log == "log10"){log10(x.lim)}else{log2(x.lim)}, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if(x.log != "no" & x.include.zero == TRUE){
@@ -11031,10 +11045,10 @@ x.include.zero <- FALSE
 if(y.log != "no" & ! is.null(y.lim)){
 if(any(y.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(any( ! is.finite(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if(y.log != "no" & y.include.zero == TRUE){
@@ -11048,13 +11062,14 @@ y.include.zero <- FALSE
 if( ! is.null(add)){
 if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+
 }else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
 tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
 tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
-stop(tempo.cat, call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 # end verif of add
@@ -11068,7 +11083,7 @@ tempo <- sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_g
 tempo <- sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
 if(length(data1) > 1 & (any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")) | grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid"))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nfacet PANELS CANNOT BE USED IF MORE THAN ONE DATA FRAME IN THE data1 ARGUMENT\nPLEASE REWRITE THE add STRING AND RERUN")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"))){
 tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
@@ -11083,7 +11098,7 @@ facet.check <- FALSE
 }
 if(facet.check == FALSE & ! all(facet.categ %in% names(data1[[1]]))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
 tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1[[1]]), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 }
@@ -11119,16 +11134,16 @@ x.lim <- get(x.log)(x.lim)
 if(x.log != "no"){
 if(any( ! is.finite(x.lim))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE x.log ARGUMENT SET TO ", x.log, ":\n", paste(x.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if(suppressWarnings(all(x.lim %in% c(Inf, -Inf)))){ # happen when x is only NULL
 if(all(unlist(geom) %in% c("geom_vline", "geom_stick"))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " NOT POSSIBLE TO DRAW geom_vline OR geom_stick KIND OF LINES ALONE IF x.lim ARGUMENT IS SET TO NULL, SINCE NO X-AXIS DEFINED (", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " NOT POSSIBLE TO DRAW geom_vline OR geom_stick KIND OF LINES ALONE IF x.lim ARGUMENT IS SET TO NULL, SINCE NO X-AXIS DEFINED (", ifelse(length(x) == 1, "x", paste0("ELEMENT ", i1, " OF x")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " x.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", paste(x.lim, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " x.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", paste(x.lim, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 x.lim.order <- order(x.lim) # to deal with inverse axis
@@ -11141,8 +11156,8 @@ x.lim <- range(c(x.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes
 }
 x.lim <- x.lim[x.lim.order]
 if(any(is.na(x.lim))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 3\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 3")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(is.null(y.lim)){
 if(any(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
@@ -11157,16 +11172,16 @@ y.lim <- get(y.log)(y.lim)
 if(y.log != "no"){
 if(any( ! is.finite(y.lim))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 if(suppressWarnings(all(y.lim %in% c(Inf, -Inf)))){ # happen when y is only NULL
 if(all(unlist(geom) == "geom_vline")){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " NOT POSSIBLE TO DRAW geom_vline KIND OF LINES ALONE IF y.lim ARGUMENT IS SET TO NULL, SINCE NO Y-AXIS DEFINED (", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " NOT POSSIBLE TO DRAW geom_vline KIND OF LINES ALONE IF y.lim ARGUMENT IS SET TO NULL, SINCE NO Y-AXIS DEFINED (", ifelse(length(y) == 1, "y", paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " y.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", paste(y.lim, collapse = " "), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " y.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", paste(y.lim, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 y.lim.order <- order(y.lim) # to deal with inverse axis
@@ -11178,8 +11193,8 @@ y.lim <- range(c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes
 }
 y.lim <- y.lim[y.lim.order]
 if(any(is.na(y.lim))){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 4\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 4")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 # end axes management
 
@@ -11295,11 +11310,11 @@ removed.rows[[i1]] <- NULL
 # last check
 for(i1 in 1:length(data1)){
 if(categ[[i1]] != "fake_categ" & length(color[[i1]]) != length(unique(data1[[i1]][, categ[[i1]]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE LENGTH 1 WHEN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE LENGTH 1 WHEN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\nHERE IT IS COLOR LENGTH ", length(color[[i1]]))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 # end last check
@@ -11319,8 +11334,8 @@ tempo.data.frame[, x[[i1]]] <- x.lim
 }else if(geom[[i1]] == "geom_vline"){
 tempo.data.frame[, y[[i1]]] <- y.lim
 }else{
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, ": CODE INCONSISTENCY 5\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": CODE INCONSISTENCY 5")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 # 3 lines below inactivated because I put that above
 # if(is.null(categ[[i1]])){
@@ -11333,8 +11348,8 @@ geom[[i1]] <- "geom_line"
 if(length(color[[i1]]) == 1){
 color[[i1]] <- rep(color[[i1]], length(unique(data1[[i1]][ , categ[[i1]]])))
 }else if(length(color[[i1]]) != length(unique(data1[[i1]][ , categ[[i1]]]))){
-tempo.cat <- paste0("\n\n================\n\nERROR IN ", function.name, " geom_hline AND geom_vline CONVERSION TO FIT THE XLIM AND YLIM LIMITS OF THE DATA: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, " geom_hline AND geom_vline CONVERSION TO FIT THE XLIM AND YLIM LIMITS OF THE DATA: ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
 }
@@ -11824,12 +11839,12 @@ tempo.scale <- (as.integer(min(x.lim, na.rm = TRUE)) - 1):(as.integer(max(x.lim,
 }else{
 tempo <- if(is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{unlist(attributes(tempo.coord$x$breaks))}
 if(all(is.na(tempo))){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$x$breaks\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$x$breaks")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(length(unique(x.lim)) <= 1){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, "\nIT SEEMS THAT X-AXIS VALUES HAVE A NULL RANGE: ", paste(x.lim, collapse = " "), "\nPLEASE, USE THE x.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nIT SEEMS THAT X-AXIS VALUES HAVE A NULL RANGE: ", paste(x.lim, collapse = " "), "\nPLEASE, USE THE x.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 tempo.scale <- fun_scale(lim = x.lim, n = ifelse(is.null(x.tick.nb), length(tempo[ ! is.na(tempo)]), x.tick.nb)) # in ggplot 3.3.0, tempo.coord$x.major_source replaced by tempo.coord$x$breaks. If fact: n = ifelse(is.null(x.tick.nb), length(tempo[ ! is.na(tempo)]), x.tick.nb)) replaced by n = ifelse(is.null(x.tick.nb), 4, x.tick.nb))
 }
@@ -11869,7 +11884,7 @@ coord.names <- c(coord.names, "x.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
 breaks = tempo.scale, 
 minor_breaks = x.second.tick.pos, 
-labels = if(x.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(x.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(x.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat, call. = FALSE)}, 
+labels = if(x.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(x.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(x.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)}, 
 expand = c(0, 0), # remove space after after axis limits
 limits = sort(x.lim), # NA indicate that limits must correspond to data limits but xlim() already used
 oob = scales::rescale_none, 
@@ -11882,12 +11897,12 @@ tempo.scale <- (as.integer(min(y.lim, na.rm = TRUE)) - 1):(as.integer(max(y.lim,
 }else{
 tempo <- if(is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{unlist(attributes(tempo.coord$y$breaks))}
 if(all(is.na(tempo))){
-tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$y$breaks\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nONLY NA IN tempo.coord$y$breaks")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 if(length(unique(y.lim)) <= 1){
-tempo.cat <- paste0("\n\n============\n\nERROR IN ", function.name, "\nIT SEEMS THAT Y-AXIS VALUES HAVE A NULL RANGE: ", paste(y.lim, collapse = " "), "\nPLEASE, USE THE y.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS\n\n============\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, "\nIT SEEMS THAT Y-AXIS VALUES HAVE A NULL RANGE: ", paste(y.lim, collapse = " "), "\nPLEASE, USE THE y.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 tempo.scale <- fun_scale(lim = y.lim, n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks. If fact: n = ifelse(is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) replaced by n = ifelse(is.null(y.tick.nb), 4, y.tick.nb))
 }
@@ -11928,7 +11943,7 @@ coord.names <- c(coord.names, "y.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 minor_breaks = y.second.tick.pos, 
-labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("\n\n============\n\nINTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10\n\n============\n\n") ; stop(tempo.cat, call. = FALSE)}, 
+labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)}, 
 expand = c(0, 0), # remove space after axis limits
 limits = sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
 oob = scales::rescale_none, 
@@ -11967,8 +11982,8 @@ if(return == TRUE){
 output <- suppressMessages(ggplot2::ggplot_build(fin.plot))
 # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
 if(length(output$data) != length(coord.names)){
-tempo.cat <- paste0("\n\n================\n\nINTERNAL CODE ERROR IN ", function.name, ": length(output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED\n\n================\n\n")
-stop(tempo.cat, call. = FALSE)
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, ": length(output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else{
 names(output$data) <- coord.names
 }
