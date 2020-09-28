@@ -137,7 +137,7 @@ vertical = FALSE # with log2 and log10 scales, horizontal orientation is blocked
 ### Text management
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
 text.size = 20, 
-text.angle = 90
+x.angle = 90
 )
 
 ### Title
