@@ -4975,12 +4975,15 @@ hcl(h = hues, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind =
 
 
 # Check OK: clear to go Apollo
-fun_gg_just <- function(angle, axis){
+fun_gg_just <- function(angle, pos, kind = "axis"){
 # AIM
-# provide correct justification for axis labeling, depending on the chosen angle
+# provide correct justification for text labeling, depending on the chosen angle
+# WARNING
+# vjust sometimes does not work depending on the angle, which explain the if(pos == "top") and if(pos == "right") in the code
 # ARGUMENTS
-# angle: integer value of the text angle for the axis labels, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc. 
-# axis: which axis for? Either "x" or "y"
+# angle: integer value of the text angle, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc. 
+# pos: where text is? Either "top", "right", "bottom" or "left" of the elements to justify from
+# kind: kind of text? Either "axis" or "text". In the first case, the pos argument refers to the axis position, and in the second to annotated text (using ggplot2::annotate() or ggplot2::geom_text())
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
@@ -4988,16 +4991,20 @@ fun_gg_just <- function(angle, axis){
 # RETURN
 # a list containing:
 # $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed)
+# $pos: the selected position (argument pos)
+# $kind: the selected kind of text (argument kind)
 # $hjust: the horizontal justification
 # $vjust: the vertical justification
 # EXAMPLES
-# fun_gg_just(angle = 45, axis = "x")
-# fun_gg_just(angle = (360*2 + 45), axis = "y")
-# output <- fun_gg_just(angle = 45, axis = "x") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust))
-# output <- fun_gg_just(angle = -45, axis = "y") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.y = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)) + ggplot2::coord_flip()
-# output1 <- fun_gg_just(angle = 90, axis = "x") ; output2 <- fun_gg_just(angle = -45, axis = "y") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust, vjust = output1$vjust), axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust, vjust = output2$vjust))
+# fun_gg_just(angle = 45, pos = "bottom")
+# fun_gg_just(angle = (360*2 + 45), pos = "left")
+# output <- fun_gg_just(angle = 45, pos = "bottom") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust))
+# output <- fun_gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.y = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)) + ggplot2::coord_flip()
+# output1 <- fun_gg_just(angle = 90, pos = "bottom") ; output2 <- fun_gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10)) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust, vjust = output1$vjust), axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust, vjust = output2$vjust))
+# output <- fun_gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1, km = 1, bird = "pigeon") ; ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust)
+# obs1 <- data.frame(time = 1, km = 1, bird = "pigeon") ; fun_open(width = 4, height = 4) ; for(i0 in c("text", "axis")){for(i1 in c("top", "right", "bottom", "left")){for(i2 in c(0, 45, 90, 135, 180, 225, 270, 315, 360)){output <- fun_gg_just(angle = i2, pos = i1, kind = i0) ; title <- paste0("kind: ", i0, " | pos: ", i1, " | angle = ", i2) ; if(i0 == "text"){print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust))}else{print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird)) + ggplot2::scale_x_continuous(position = ifelse(i1 == "top", "top", "bottom")) + ggplot2::scale_y_continuous(position = ifelse(i1 == "right", "right", "left")) + ggplot2::theme(axis.text.x = if(i1 %in% c("top", "bottom")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}, axis.text.y = if(i1 %in% c("right", "left")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}))}}}} ; dev.off()
 # DEBUGGING
-# angle = 45 ; axis = "y"
+# angle = 45 ; pos = "left"
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 # end function name
@@ -5013,7 +5020,8 @@ text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
 tempo <- fun_check(data = angle, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = axis, options = c("x", "y"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = pos, options = c("left", "top", "right", "bottom"), length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = kind, options = c("axis", "text"), length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
@@ -5029,10 +5037,19 @@ angle <- angle + 360
 }
 # end to get angle between -360 and 360
 # justifications
-if(axis == "x"){
+if(pos %in% c("bottom", "top")){
+# code below is for if(pos == "bottom"){
 if(any(sapply(FUN = all.equal, c(-360, -180, 0, 180, 360), angle) == TRUE)){ # equivalent of angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360 but deals with floats
 hjust <- 0.5
+if(kind == "text"){
+if(any(sapply(FUN = all.equal, c(-360, 0, 360), angle) == TRUE)){
+vjust <- 1
+}else if(any(sapply(FUN = all.equal, c(-180, 180), angle) == TRUE)){
+vjust <- 0
+}
+}else{
 vjust <- 0.5
+}
 }else if(any(sapply(FUN = all.equal, c(-270, 90), angle) == TRUE)){
 hjust <- 1
 vjust <- 0.5
@@ -5052,10 +5069,25 @@ vjust <- 0
 hjust <- 0
 vjust <- 1
 }
-}else if(axis == "y"){
+if(pos == "top"){
+if( ! ((angle > -180 & angle < -90) | (angle > 180 & angle < 270))){
+hjust <- 1 - hjust
+}
+vjust <- 1 - vjust
+}
+}else if(pos %in% c("left", "right")){
+# code below is for if(pos == "left"){
 if(any(sapply(FUN = all.equal, c(-270, -90, 90, 270), angle) == TRUE)){ # equivalent of angle == -270 | angle == -90 | angle == 90 | angle == 270 but deals with floats
 hjust <- 0.5
+if(kind == "text"){
+if(any(sapply(FUN = all.equal, c(-90, 90), angle) == TRUE)){
+vjust <- 0
+}else if(any(sapply(FUN = all.equal, c(-270, 270), angle) == TRUE)){
+vjust <- 1
+}
+}else{
 vjust <- 0.5
+}
 }else if(any(sapply(FUN = all.equal, c(-360, 0, 360), angle) == TRUE)){
 hjust <- 1
 vjust <- 0.5
@@ -5075,9 +5107,15 @@ vjust <- 1
 hjust <- 1
 vjust <- 1
 }
+if(pos == "right"){
+hjust <- 1 - hjust
+if( ! (((angle > -270 & angle < -180) | (angle > 90 & angle < 180)) | ((angle > -180 & angle < -90) | (angle > 180 & angle < 270)))){
+vjust <- 1 - vjust
+}
+}
 }
 # end justifications
-output <- list(angle = angle, hjust = hjust, vjust = vjust)
+output <- list(angle = angle, pos = pos, hjust = hjust, vjust = vjust)
 return(output)
 }
 
@@ -7893,8 +7931,8 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-# facet does not work with stat.disp https://www.r-bloggers.com/2018/11/adding-different-annotation-to-each-facet-in-ggplot/
-
+# remain to solve the justification of the text
+# change fun_gg_just everywhere
 
 
 fun_gg_boxplot <- function(
@@ -7925,6 +7963,7 @@ dot.alpha = 0.5,
 dot.border.size = 0.5, 
 dot.border.color = NULL, 
 x.lab = NULL, 
+x.angle = 0, 
 y.lab = NULL, 
 y.lim = NULL, 
 y.log = "no", 
@@ -7937,9 +7976,9 @@ stat.disp = "top",
 stat.disp.mean = FALSE, 
 stat.size = 4, 
 stat.dist = 2, 
+stat.angle = 0, 
 vertical = TRUE, 
 text.size = 12, 
-text.angle = 0, 
 title = "", 
 title.text.size = 8, 
 legend.show = TRUE, 
@@ -8004,6 +8043,7 @@ lib.path = NULL
 # dot.border.size: numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature)
 # dot.border.color: single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by fun_gg_palette()
 # x.lab: a character string or expression for x-axis legend. If NULL, character string of categ1 (see the categ argument for categ1 and categ2 description)
+# x.angle: integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # y.lab: a character string or expression for y-axis legend. If NULL, character string of the y argument
 # y.lim: 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used. 
 # y.log: either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
@@ -8016,9 +8056,9 @@ lib.path = NULL
 # stat.disp.mean: logical. Display mean numbers instead of median numbers? Ignored if stat.disp is NULL
 # stat.size: numeric value of the stat font size in mm. Ignored if stat.disp is NULL
 # stat.dist: numeric value of the stat distance (in the unit of the hjust and vjust arguments of ggplot2::annotate() function). Increase the value to increase the distance from the box plot. Ignored if stat.disp is NULL or "top"
+# stat.angle: integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # vertical: logical. Vertical boxes? WARNING: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # text.size: numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm)
-# text.angle: integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # title: character string of the graph title
 # title.text.size: numeric value of the title font size in mm
 # legend.show: logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend, excepted if legend.width argument is non-NULL. In that specific case (categ is NULL, legend.show is TRUE and legend.width is non-NULL), an empty legend space is created. This can be useful when desiring graphs of exactly the same width, whatever they have legends or not
@@ -8077,9 +8117,9 @@ lib.path = NULL
 # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
 # EXAMPLE
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Group1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; text.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), Group3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Group1", "Group2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; text.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; text.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Group1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), Group3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Group1", "Group2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 arg.user.setting <- as.list(match.call(expand.dots=FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
@@ -8189,6 +8229,7 @@ tempo <- fun_check(data = x.lab, class = "expression", length = 1, fun.name = fu
 tempo <- fun_check(data = x.lab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
 }
+tempo <- fun_check(data = x.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.lab)){
 if(all(class(y.lab) %in% "expression")){ # to deal with math symbols
 tempo <- fun_check(data = y.lab, class = "expression", length = 1, fun.name = function.name) ; eval(ee)
@@ -8230,9 +8271,9 @@ tempo <- fun_check(data = stat.disp, options = c("top", "above"), length = 1, fu
 tempo <- fun_check(data = stat.disp.mean, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = vertical, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = text.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = legend.show, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -8303,6 +8344,7 @@ for(i1 in c(
 "dot.size", 
 "dot.alpha", 
 "dot.border.size", 
+"x.angle", 
 "y.log", 
 "y.include.zero", 
 "y.top.extra.margin", 
@@ -8310,9 +8352,9 @@ for(i1 in c(
 "stat.disp.mean", 
 "stat.size", 
 "stat.dist", 
+"stat.angle", 
 "vertical", 
 "text.size", 
-"text.angle", 
 "title", 
 "title.text.size", 
 "legend.show", 
@@ -8986,7 +9028,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color) == 1){rep(categ.color, length(unique(data1[, categ[2]])))}else{categ.color}))
 # end per box dots coordinates recovery
 }else{
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2")
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -9104,7 +9146,7 @@ y.lim <- range(c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes
 }
 y.lim <- y.lim[y.lim.order]
 if(any(is.na(y.lim))){
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4")
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 2")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end ylim range
@@ -9123,7 +9165,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xla
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(y.lab)){y}else{y.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
 # text angle management
-tempo.just <- fun_gg_just(angle = text.angle, axis = ifelse(vertical == TRUE, "x", "y"))
+tempo.just <- fun_gg_just(angle = x.angle, pos = ifelse(vertical == TRUE, "bottom", "left"), kind = "axis")
 # end text angle management
 add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
@@ -9304,7 +9346,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 6")
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 3")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 dot.coord.rd3 <- merge(dot.coord.rd2, tempo.data1, by = intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have replaced by = "group" by intersect("group", "group") because of an error due to wrong group group merging in dot.coord.rd3
@@ -9548,7 +9590,7 @@ names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
 names(tempo.data1)[names(tempo.data1) == categ[2]] <- paste0(categ[2], ".check")
 verif <- c(paste0(categ[1], ".check"), paste0(categ[2], ".check"))
 }else{
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 7")
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 4")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 dot.coord.tidy3 <- merge(dot.coord.tidy2, tempo.data1, by = intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have tested intersect("group", "group") instead of by = "group". May be come back to by = "group" in case of error. But I did this because of an error in dot.coord.rd3 above
@@ -9624,11 +9666,11 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NUMBERS ABOVE BOXES ARE ", ifelse(stat.disp.mean == FALSE, "MEDIANS", "MEANS"))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if(stat.disp == "top"){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
-geom = "text", 
-x = stat$X, 
-y = y.lim[2], 
-label = if(stat.disp.mean == FALSE){formatC(stat.nolog$MEDIAN, digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(stat.nolog$MEAN, digit = 2, drop0trailing = TRUE, format = "f")}, 
+tempo.stat <- data.frame(stat, Y = y.lim[2]) # I had to create a data frame for geom_tex() so that facet is taken into account, (ggplot2::annotate() does not deal with facet because no data and mapping arguments). Of note, facet.categ is in tempo.stat, via tempo.mean, via dot.coord
+if(stat.disp.mean == FALSE){tempo.stat$MEDIAN <- formatC(stat.nolog$MEDIAN, digit = 2, drop0trailing = TRUE, format = "f")}else{tempo.stat$MEAN <- formatC(stat.nolog$MEAN, digit = 2, drop0trailing = TRUE, format = "f")}
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
+data = tempo.stat, 
+mapping = ggplot2::aes_string(x = "X", y = "Y", label = ifelse(stat.disp.mean == FALSE, "MEDIAN", "MEAN")),
 size = stat.size, 
 color = "black", 
 hjust = ifelse(vertical == TRUE, 0.5, 1.1), 
@@ -9654,63 +9696,83 @@ if( ! all(identical(round(stat.coord3$x, 9), round(as.numeric(stat.coord3$x.y), 
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nFUSION OF box.coord, stat.coord1 AND stat.coord2 ACCORDING TO box.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-text.coord <- stat.coord3[, c("x", "group", "dot.min", "dot.max")]
-names(text.coord)[names(text.coord) == "dot.min"] <- "text.min.pos"
-names(text.coord)[names(text.coord) == "dot.max"] <- "text.max.pos"
-box.coord <- box.coord[order(box.coord$x), ]
-text.coord <- text.coord[order(text.coord$x), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
-if( ! identical(text.coord$x, box.coord$x)){
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntext.coord AND box.coord DO NOT HAVE THE SAME x COLUMN CONTENT")
+# text.coord <- stat.coord3[, c("x", "group", "dot.min", "dot.max")]
+# names(text.coord)[names(text.coord) == "dot.min"] <- "text.min.pos"
+#names(text.coord)[names(text.coord) == "dot.max"] <- "text.max.pos"
+box.coord <- box.coord[order(box.coord$x, box.coord$group, box.coord$PANEL), ]
+# text.coord <- text.coord[order(text.coord$x), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
+stat.coord3 <- stat.coord3[order(stat.coord3$x, stat.coord3$group, stat.coord3$PANEL), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
+if( ! (identical(box.coord$x, stat.coord3$x) & identical(box.coord$group, stat.coord3$group) & identical(box.coord$PANEL, stat.coord3$PANEL))){
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntext.coord AND box.coord DO NOT HAVE THE SAME x, group AND PANEL COLUMN CONTENT")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
+}else{
+stat.coord3 <- box.coord
 }
+stat.coord3 <- data.frame(
+stat.coord3, 
+Y = stat.coord3[, ifelse(
+is.null(dot.color), 
+ifelse(diff(y.lim) > 0, "ymax", "ymin"), 
+ifelse(diff(y.lim) > 0, "ymax_final", "ymin_final")
+)]
+) # ymax is top whisker, ymax_final is top dot
+# stat.coord3 <- data.frame(stat.coord3, Y = vector("numeric", length = nrow(stat.coord3)))
+# check.Y <- as.logical(stat.coord3$Y) # convert everything in Y into FALSE (because Y is full of zero)
 # end stat coordinates
 # stat display
 # performed twice: first for y values >=0, then y values < 0, because only a single value allowed for hjust anf vjust
 if(stat.disp.mean == FALSE){
-tempo.log.high <- if(diff(y.lim) > 0){box.coord$middle >= 0}else{box.coord$middle < 0}
-tempo.log.low <- if(diff(y.lim) > 0){box.coord$middle < 0}else{box.coord$middle >= 0}
+tempo.center.ref <- "middle"
 }else{
-tempo.log.high <- if(diff(y.lim) > 0){box.coord$MEAN >= 0}else{box.coord$MEAN < 0}
-tempo.log.low <- if(diff(y.lim) > 0){box.coord$MEAN < 0}else{box.coord$MEAN >= 0}
+tempo.center.ref <- "MEAN"
 }
-if(any(tempo.log.high) == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
-geom = "text", 
-x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.high], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxes or dots
-y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.high, if(is.null(dot.color)){"middle"}else{"text.max.pos"}], 
-label = if(stat.disp.mean == FALSE){
-if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$middle[tempo.log.high]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$middle[tempo.log.high], digit = 2, drop0trailing = TRUE, format = "f")}
-}else{
-if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$MEAN[tempo.log.high]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$MEAN[tempo.log.high], digit = 2, drop0trailing = TRUE, format = "f")}
-}, 
+# if(is.null(dot.color)){
+# tempo.low.ref <- "ymin"
+# tempo.high.ref <- "ymax"
+# }else{
+# tempo.low.ref <- "ymin_final"
+# tempo.high.ref <- "ymax_final"
+# }
+# tempo.log.high <- if(diff(y.lim) > 0){stat.coord3[, tempo.center.ref] >= 0}else{stat.coord3[, tempo.center.ref] < 0}
+# tempo.log.low <- if(diff(y.lim) > 0){stat.coord3[, tempo.center.ref] < 0}else{stat.coord3[, tempo.center.ref] >= 0}
+# stat.coord3$Y[tempo.log.high] <- stat.coord3[tempo.log.high, tempo.high.ref]
+# stat.coord3$Y[tempo.log.low] <- stat.coord3[tempo.log.low, tempo.low.ref]
+# correct median or mean text format
+if(y.log != "no"){
+stat.coord3[, tempo.center.ref] <- ifelse(y.log == "log2", 2, 10)^(stat.coord3[, tempo.center.ref])
+}
+stat.coord3[, tempo.center.ref] <- formatC(stat.coord3[, tempo.center.ref], digit = 2, drop0trailing = TRUE, format = "f")
+# end correct median or mean text format
+# if(any(tempo.log.high) == TRUE){
+# tempo.stat <- stat.coord3[tempo.log.high,]
+tempo.just <- fun_gg_just(angle = stat.angle, pos = ifelse(vertical == TRUE, "top", "right"), kind = "text")
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
+data = stat.coord3, 
+mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo.center.ref),
 size = stat.size, 
 color = "black", 
-hjust = ifelse(vertical == TRUE, 0.5, 0.5 - stat.dist), 
-vjust = ifelse(vertical == TRUE, 0.5 - stat.dist, 0.5)
+angle = stat.angle, 
+hjust = ifelse(vertical == TRUE, tempo.just$hjust, tempo.just$hjust - stat.dist), 
+vjust = ifelse(vertical == TRUE, tempo.just$vjust - stat.dist, tempo.just$vjust)
 )) # WARNING: no need of order() for labels because box.coord$x set the order
 coord.names <- c(coord.names, "stat.display.positive")
-}
-if(any(tempo.log.low) == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
-geom = "text", 
-x = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})$x[tempo.log.low], # get(if(is.null(dot.color)){"box.coord"}else{"text.coord"}) for text just above error boxes or dots
-y = get(if(is.null(dot.color)){"box.coord"}else{"text.coord"})[tempo.log.low, if(is.null(dot.color)){"middle"}else{"text.min.pos"}], 
-label = if(stat.disp.mean == FALSE){
-if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$middle[tempo.log.low]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$middle[tempo.log.low], digit = 2, drop0trailing = TRUE, format = "f")}
-}else{
-if(y.log != "no"){formatC(ifelse(y.log == "log2", 2, 10)^(box.coord$MEAN[tempo.log.low]), digit = 2, drop0trailing = TRUE, format = "f")}else{formatC(box.coord$MEAN[tempo.log.low], digit = 2, drop0trailing = TRUE, format = "f")}
-}, 
-size = stat.size, 
-color = "black", 
-hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
-vjust = ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5)
-)) # WARNING: no need of order() for labels because box.coord$x set the order
-coord.names <- c(coord.names, "stat.display.negative")
-}
+# }
+# if(any(tempo.log.low) == TRUE){
+# tempo.stat <- stat.coord3[tempo.log.low,]
+# assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
+# data = tempo.stat, 
+# mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo.center.ref),
+# size = stat.size, 
+# color = "black", 
+# hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
+# vjust = ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5)
+# )) # WARNING: no need of order() for labels because box.coord$x set the order
+# coord.names <- c(coord.names, "stat.display.negative")
+# }
 # end stat display
 }else{
-tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 9")
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 5")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
@@ -9773,7 +9835,7 @@ coord.names <- c(coord.names, "y.second.tick.positions")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
 breaks = tempo.scale, 
 minor_breaks = y.second.tick.pos, 
-labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 10") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)}, # == in stop() to be able to add several messages between ==}, 
+labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 6") ; stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)}, # == in stop() to be able to add several messages between ==
 expand = c(0, 0), # remove space after after axis limits
 limits = sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
 oob = scales::rescale_none, 
@@ -11405,8 +11467,8 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xla
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(y.lab)){y[[1]]}else{y.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
 # text angle management
-x.tempo.just <- fun_gg_just(angle = x.text.angle, axis = "x")
-y.tempo.just <- fun_gg_just(angle = y.text.angle, axis = "y")
+x.tempo.just <- fun_gg_just(angle = x.text.angle, pos = "bottom", kind = "axis")
+y.tempo.just <- fun_gg_just(angle = y.text.angle, pos = "left", kind = "axis")
 # end text angle management
 add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
