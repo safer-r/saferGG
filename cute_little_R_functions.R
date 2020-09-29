@@ -309,7 +309,7 @@ class <- c("factor", "ordered")
 }
 if(is.null(options)){
 for(i2 in 1:length(arg.names)){
-if( ! is.null(get(arg.names[i2]))){
+if( ! is.null(get(arg.names[i2], env = sys.nframe(), inherit = FALSE))){
 # script to execute
 tempo.script <- '
 problem <- TRUE ;
@@ -318,18 +318,18 @@ text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name))
 }else{
 text <- paste0(text, " AND ") ; 
 }
-text <- paste0(text, toupper(arg.names[i2]), " ", if(all(get(arg.names[i2]) %in% c("matrix", "array"))){"matrix"}else if(all(get(arg.names[i2]) %in% c("factor", "ordered"))){"factor"}else{get(arg.names[i2])})
+text <- paste0(text, toupper(arg.names[i2]), " ", if(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("matrix", "array"))){"matrix"}else if(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("factor", "ordered"))){"factor"}else{get(arg.names[i2], env = sys.nframe(), inherit = FALSE)})
 '
 # end script to execute
-if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2]) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2]) == "integer")))){
+if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")))){
 if( ! all(data %% 1 == 0, na.rm = TRUE)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result
 eval(parse(text = tempo.script)) # execute tempo.script
 }
-}else if( ! any(all(get(arg.names[i2]) %in% c("vector", "ggplot2"))) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2]))){ # test the four c("class", "typeof", "mode", "length") arguments with their corresponding function. No need of na.rm = TRUE for all because %in% does not output NA
+}else if( ! any(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("vector", "ggplot2"))) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2], env = sys.nframe(), inherit = FALSE))){ # test the four c("class", "typeof", "mode", "length") arguments with their corresponding function. No need of na.rm = TRUE for all because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & all(get(arg.names[i2]) == "vector") & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){ # test class == "vector". No need of na.rm = TRUE for all because %in% does not output NA
+}else if(arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "vector") & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){ # test class == "vector". No need of na.rm = TRUE for all because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & all(get(arg.names[i2]) == "ggplot2") & ! all(class(data) %in% c("gg", "ggplot"))){ # test ggplot object
+}else if(arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "ggplot2") & ! all(class(data) %in% c("gg", "ggplot"))){ # test ggplot object
 eval(parse(text = tempo.script)) # execute tempo.script
 }
 }
@@ -1448,10 +1448,10 @@ fun_test <- function(fun, arg, val, expect.error = NULL, thread.nb = NULL, print
 # fun_test(fun = "unique", arg = c("x", "incomparables"), val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)))
 # fun_test(fun = "fun_round", arg = c("data", "dec.nb", "after.lead.zero"), val = list(L1 = list(c(1, 1.0002256, 1.23568), "a", NA), L2 = list(2, c(1,3), NA), L3 = c(TRUE, FALSE, NA)))
 # fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)),  expect.error = list(x = list(FALSE, TRUE, TRUE, FALSE), y = list(FALSE, TRUE, TRUE)), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = NULL)
-# fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = 4, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
+# fun_test(fun = "plot", arg = c("x", "y"), val = list(x = list(1:10, 12:13, NA, (1:10)^2), y = list(1:10, NA, NA)), thread.nb = 4, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-4.0.2\\library\\")
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")))
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\")
-# library(ggplot2) ; fun_test(fun = "geom_histogram", arg = c("data", "mapping"), val = list(x = list(data.frame(X = "a")), y = list(ggplot2::aes(x = X))), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-3.6.1\\library\\") # BEWARE: ggplot2::geom_histogram does not work
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10)) ; fun_test(fun = "fun_gg_boxplot", arg = c("data1", "y", "categ"), val = list(L1 = list(obs1), L2 = "Time", L3 = "Group1"), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-4.0.2\\library\\")
+# library(ggplot2) ; fun_test(fun = "geom_histogram", arg = c("data", "mapping"), val = list(x = list(data.frame(X = "a")), y = list(ggplot2::aes(x = X))), thread.nb = NULL, plot.fun = TRUE, res.path = "C:\\Users\\Gael\\Desktop\\", lib.path = "C:\\Program Files\\R\\R-4.0.2\\library\\") # BEWARE: ggplot2::geom_histogram does not work
 # DEBUGGING
 # fun = "unique" ; arg = "x" ; val = list(x = list(1:10, c(1,1,2,8), NA)) ; expect.error = list(x = list(FALSE, FALSE, TRUE)) ; thread.nb = NULL ; plot.fun = FALSE ; export = FALSE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 1 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; expect.error = NULL ; thread.nb = 2 ; plot.fun = FALSE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
@@ -1495,7 +1495,7 @@ if( ! exists(fun)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": CHARACTER STRING IN fun ARGUMENT DOES NOT EXIST IN THE R WORKING ENVIRONMENT: ", paste(fun, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
-}else if( ! all(class(get(fun)) == "function")){
+}else if( ! all(class(get(fun)) == "function")){ # here no env = sys.nframe(), inherit = FALSE for get() because fun is a function in the classical scope
 tempo.cat <- paste0("ERROR IN ", function.name, ": fun ARGUMENT IS NOT CLASS \"function\" BUT: ", paste(class(get(fun)), collapse = "\n"), "\nCHECK IF ANY CREATED OBJECT WOULD HAVE THE NAME OF THE TESTED FUNCTION")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
@@ -1601,7 +1601,7 @@ if(length(arg) != length(val)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF arg ARGUMENT MUST BE IDENTICAL TO LENGTH OF val ARGUMENT:\nHERE IT IS: ", length(arg), " VERSUS ", length(val))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
-args <- names(formals(get(fun)))
+args <- names(formals(get(fun))) # here no env = sys.nframe(), inherit = FALSE for get() because fun is a function in the classical scope
 if( ! all(arg %in% args)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": SOME OF THE STRINGS IN arg ARE NOT ARGUMENTS OF fun\nfun ARGUMENTS: ", paste(args, collapse = " "),"\nPROBLEMATIC STRINGS IN arg: ", paste(arg[ ! arg %in% args], collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
@@ -1773,8 +1773,8 @@ loop.string, '
 count <- count + 1
 print.count.loop <- print.count.loop + 1
 data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
-tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name)) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
-tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name), print.no = TRUE) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
+tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE)) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
+tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE), print.no = TRUE) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
 if( ! is.null(expect.error)){
 expected.error <- c(expected.error, eval(parse(text = error.values)))
 }
@@ -1920,12 +1920,12 @@ invisible(dev.set(window.nb))
 # end plot management
 # new environment
 env.name <- paste0("env", ini.time)
-if(exists(env.name, where = -1)){
+if(exists(env.name, where = -1)){ # verify if still ok when fun_test() is inside a function
 tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 assign(env.name, new.env())
-assign("val", val, envir = get(env.name)) # var replaced by val
+assign("val", val, envir = get(env.name, env = sys.nframe(), inherit = FALSE)) # var replaced by val
 }
 # end new environment
 ini.date <- Sys.time()
@@ -1998,7 +1998,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY 
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 assign(env.name, new.env())
-assign("val", val, envir = get(env.name)) # var replaced by val
+assign("val", val, envir = get(env.name, env = sys.nframe(), inherit = FALSE)) # var replaced by val
 }
 # end new environment
 suppressMessages(suppressWarnings(eval(parse(text = code))))
@@ -2598,7 +2598,7 @@ ident.col.names <- FALSE
 # main code
 output <- mat.list[[1]]
 for(i1 in 2:length(mat.list)){
-output <- get(kind.of.operation)(output, mat.list[[i1]])
+output <- get(kind.of.operation)(output, mat.list[[i1]]) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
 dimnames(output) <- NULL
 if(ident.row.names == TRUE){
@@ -3424,8 +3424,8 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # if(any(wind$center > max(data, na.rm = TRUE))){
 # wind <- wind[ ! wind$center > max(data, na.rm = TRUE),]
 # }
-if(sum(get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = TRUE)}else{to}), na.rm = TRUE) > 1){
-tempo.log <- get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = TRUE)}else{to})
+if(sum(get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = TRUE)}else{to}), na.rm = TRUE) > 1){  # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+tempo.log <- get(right.last.wind)(wind$right, if(is.null(to)){max(data, na.rm = TRUE)}else{to}) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 tempo.log[min(which(tempo.log), na.rm = TRUE)] <- FALSE # convert the first left boundary that goes above max(data, na.rm = TRUE) to FALSE to keep it (the next ones will be removed)
 wind <- wind[ ! tempo.log,]
 }
@@ -3439,11 +3439,11 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY 
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 assign(env.name, new.env())
-assign("wind", wind, envir = get(env.name))
-assign("data", data, envir = get(env.name))
+assign("wind", wind, envir = get(env.name, env = sys.nframe(), inherit = FALSE))
+assign("data", data, envir = get(env.name, env = sys.nframe(), inherit = FALSE))
 }
 # end new environment
-tempo.message <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})", kind = "error", header = FALSE, env = get(env.name), print.no = FALSE)
+tempo.message <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})", kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE), print.no = FALSE) # no env = sys.nframe(), inherit = FALSE in get(left) because look for function in the classical scope
 rm(env.name) # optional, because should disappear at the end of the function execution
 }else{
 tempo.message <- "ERROR" # with this, force the parallelization by default
@@ -3451,11 +3451,11 @@ tempo.message <- "ERROR" # with this, force the parallelization by default
 # end test if lapply can be used
 if( ! any(grepl(x = tempo.message, pattern = "ERROR.*"))){
 left.log <- lapply(X = wind$left, Y = data, FUN = function(X, Y){
-res <- get(left)(Y, X)
+res <- get(left)(Y, X) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 return(res)
 })
 right.log <- lapply(X = wind$right, Y = data, FUN = function(X, Y){
-res <- get(right)(Y, X)
+res <- get(right)(Y, X) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 return(res)
 })
 log <- mapply(FUN = "&", left.log, right.log, SIMPLIFY = FALSE)
@@ -3539,7 +3539,7 @@ output <- NULL
 print.count.loop <- 0
 for(i4 in 1:length(x)){
 print.count.loop <- print.count.loop + 1
-log <- get(left)(data, wind$left[x[i4]]) & get(right)(data, wind$right[x[i4]])
+log <- get(left)(data, wind$left[x[i4]]) & get(right)(data, wind$right[x[i4]]) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 output <- c(output, eval(parse(text = paste0("FUN(data[log]", if( ! is.null(args)){paste0(", ", args)}, ")"))))
 if(verbose == TRUE){
 if(print.count.loop == print.count){
@@ -5004,9 +5004,10 @@ fun_gg_just <- function(angle, pos, kind = "axis"){
 # output <- fun_gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1, km = 1, bird = "pigeon") ; ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust)
 # obs1 <- data.frame(time = 1, km = 1, bird = "pigeon") ; fun_open(width = 4, height = 4) ; for(i0 in c("text", "axis")){for(i1 in c("top", "right", "bottom", "left")){for(i2 in c(0, 45, 90, 135, 180, 225, 270, 315, 360)){output <- fun_gg_just(angle = i2, pos = i1, kind = i0) ; title <- paste0("kind: ", i0, " | pos: ", i1, " | angle = ", i2) ; if(i0 == "text"){print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust))}else{print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird)) + ggplot2::scale_x_continuous(position = ifelse(i1 == "top", "top", "bottom")) + ggplot2::scale_y_continuous(position = ifelse(i1 == "right", "right", "left")) + ggplot2::theme(axis.text.x = if(i1 %in% c("top", "bottom")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}, axis.text.y = if(i1 %in% c("right", "left")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}))}}}} ; dev.off()
 # DEBUGGING
-# angle = 45 ; pos = "left"
+# angle = 45 ; pos = "left" ; kind = "axis"
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
+arg.user.setting <- as.list(match.call(expand.dots=FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
@@ -5014,7 +5015,14 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
-# argument checking
+# argument primary checking
+# arg with no default values
+if(any(missing(angle) | missing(pos))){
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS angle AND pos HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end arg with no default values
+# using fun_check()
 arg.check <- NULL #
 text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
@@ -5025,8 +5033,31 @@ tempo <- fun_check(data = kind, options = c("axis", "text"), length = 1, fun.nam
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
+# end using fun_check()
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
-# end argument checking
+# end argument primary checking
+# second round of checking and data preparation
+# dealing with NA arguments
+tempo.arg <- names(arg.user.setting) # values provided by the user
+tempo.log <- sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1 # no argument provided by the user can be just NA
+if(any(tempo.log) == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end dealing with NA arguments
+# dealing with NULL arguments
+tempo.arg <- c(
+"angle", 
+"pos", 
+"kind"
+)
+tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
+if(any(tempo.log) == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end dealing with NULL arguments
+# end second round of checking and data preparation
 # main code
 # to get angle between -360 and 360
 while(angle > 360){
@@ -5115,7 +5146,7 @@ vjust <- 1 - vjust
 }
 }
 # end justifications
-output <- list(angle = angle, pos = pos, hjust = hjust, vjust = vjust)
+output <- list(angle = angle, pos = pos, kind = kind, hjust = hjust, vjust = vjust)
 return(output)
 }
 
@@ -5492,23 +5523,23 @@ fun_gg_heatmap <- function(data1, legend.name1 = "", low.color1 = "blue", mid.co
 # color of dots. Example (2) of the legend display. The categ argument must be supplied. Make a fake categorical colum in the data frame if necessary (as in this example). The categ argument triggers the legend display. The legend.name argument is used to remove the legend title of each layer
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = "GROUP1") ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = "GROUP2") ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), categ = list(L1 = "group1", L2 = "group2"), legend.name = list(L1 = NULL, L2 = NULL), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = "coral", L2 = "green"))
 # color of dots. Example (3) when dots are in different categories (default colors)
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
 # color of dots. Example (3) when dots are in different categories. A single color mentionned per layer is applied to all the dots of the layer
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = "coral", L2 = "green"))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = "coral", L2 = "green"))
 # color of dots. Example (5) when dots are in different categories, with one color per category in each layer
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = c("coral", "blue"), L2 = c("green", "black")))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = c("coral", "blue"), L2 = c("green", "black")))
 # color of dots. Example (4) when dots are in different categories. Numbers can be used if ggplot colors are desired
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = 1:2, L2 = c(4, 7)))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = 1:2, L2 = c(4, 7)))
 # color of dots. Example (7) when dots are in different categories, with colors as a data frame column. BEWARE: one color per category must be respected (try also numbers). BEWARE: in color argument, if the column of the data frame does not exist, color can be still displayed (L2 = obs2$notgood is equivalent to L2 = NULL). Such situation is reported in the warning messages (see below)
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500), col1 = rep(c("coral", "blue"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500), col2 = rep(c("green", "black"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = obs1$col1, L2 = obs2$col2))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500), col1 = rep(c("coral", "blue"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500), col2 = rep(c("green", "black"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = obs1$col1, L2 = obs2$col2))
 # color of dots. Example (8) when dots are in different categories, with colors as a data frame column. Easiest way is not recommended with mutiple layers
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500), col1 = rep(c("coral", "blue"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500), col2 = rep(c("green", "black"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = as.numeric(obs1$group1), L2 = as.numeric(obs2$group2)))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500), col1 = rep(c("coral", "blue"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500), col2 = rep(c("green", "black"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5), color = list(L1 = as.numeric(obs1$group1), L2 = as.numeric(obs2$group2)))
 # legend name
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), legend.name = list(L1 = "CLASS A", L2 = "CLASS G"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), legend.name = list(L1 = "CLASS A", L2 = "CLASS G"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 0.5, L2 = 0.5))
 # different geom features. Example (1) with 5 layers. Note that order in data1 defines the overlay order (from below to above) and the order in the legend (from top to bottom)
 # set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; obs3 <- data.frame(time = c(29, 31), group3 = c("HORIZ.THRESHOLD.1", "HORIZ.THRESHOLD.2")) ; obs4 <- data.frame(km = 26, group4 = "VERTIC.THRESHOLD") ; obs5 <- data.frame(km = seq(1, 100, 0.1), time = 7*seq(1, 100, 0.1)^0.5, group5 = "FUNCTION") ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2, L3 = obs3, L4 = obs4, L5 = obs5), x = list(L1 = "km", L2 = "km", L3 = NULL, L4 = "km", L5 = "km"), y = list(L1 = "time", L2 = "time", L3 = "time", L4 = NULL, L5 = "time"), categ = list(L1 = "group1", L2 = "group2", L3 = "group3", L4 = "group4", L5 = "group5"), geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline", L4 = "geom_vline", L5 = "geom_line"), alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5, L4 = 0.5, L5 = 0.5), xlim = c(10, 40), ylim = c(10, 40), classic = TRUE, line.size = 0.75)
 # layer transparency. One transparency defined by layer (from 0 invisible to 1 opaque). Note that for lines, transparency in not applied in the legend to prevent a ggplot2 bug (https://github.com/tidyverse/ggplot2/issues/2452)
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"), , categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 1, L2 = 0.1))
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 22, 3), time = rnorm(1000, 22, 3), group1 = rep(c("A1", "A2"), each = 500)) ; obs2 <-data.frame(km = rnorm(1000, 30, 3), time = rnorm(1000, 30, 3), group2 = rep(c("G1", "G2"), each = 500)) ; set.seed(NULL) ; fun_gg_scatter(data1 = list(L1 = obs1, L2 = obs2), x = list(L1 = "km", L2 = "km"), y = list(L1 = "time", L2 = "time"),  categ = list(L1 = "group1", L2 = "group2"), geom = list(L1 = "geom_point", L2 = "geom_point"), alpha = list(L1 = 1, L2 = 0.1))
 # other different example of mutiple geom features are shown in the fun_segmentation function
 #### OTHER GRAPHIC ARGUMENTS
 # dot size (line.size argument controls size of lines)
@@ -7153,8 +7184,8 @@ if(plot == TRUE){
 tempo.df.name <- c("data1", "data1.signif.dot", "data1.incon.dot", "data2", "data2.signif.dot", "data2.unknown.dot", "data2.incon.dot")
 tempo.class.name <- c("data1", "data1", "data1", "data2", "data2", "data2", "data2")
 for(i2 in 1:length(tempo.df.name)){
-if( ! is.null(get(tempo.df.name[i2]))){
-assign(tempo.df.name[i2], data.frame(get(tempo.df.name[i2]), kind = tempo.class.name[i2]))
+if( ! is.null(get(tempo.df.name[i2], env = sys.nframe(), inherit = FALSE))){
+assign(tempo.df.name[i2], data.frame(get(tempo.df.name[i2], env = sys.nframe(), inherit = FALSE), kind = tempo.class.name[i2]))
 }
 }
 # end add a categ for plot legend
@@ -7932,8 +7963,9 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 # remain to solve the justification of the text
-# change fun_gg_just everywhere
-
+# check s/lapply everywhere with get: done cute boxplot scatter
+# get() with env everywhere: done cute boxplot scatter
+# add the new NA and NULL check cute, boxplot, scatter: done boxplot, scatter
 
 fun_gg_boxplot <- function(
 data1, 
@@ -8117,12 +8149,12 @@ lib.path = NULL
 # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
 # EXAMPLE
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Group1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), Group3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Group1", "Group2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), Group2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Group1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Group1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), Categ3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1", "Categ2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
 # function name
-function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
-arg.user.setting <- as.list(match.call(expand.dots=FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
+function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
+arg.user.setting <- as.list(match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
 # end function name
 # required function checking
 req.function <- c(
@@ -8149,7 +8181,7 @@ reserved.words <- c("categ.check", "categ.color", "dot.color", "dot.categ", "dot
 # argument primary checking
 # arg with no default values
 if(any(missing(data1) | missing(y) | missing(categ))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS data1, y AND categ HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS angle AND pos HAVE NO DEFAULT VALUE AND REQUIRE ONE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
@@ -8306,31 +8338,22 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
-# dealing with NA in arguments
-tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
-if(any(tempo) == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA")
+# dealing with NA arguments
+tempo.arg <- names(arg.user.setting) # values provided by the user
+tempo.log <- sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1 # no argument provided by the user can be just NA
+if(any(tempo.log) == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# end dealing with NA in arguments
-# dealing with NULL in arguments
-null.count <- NULL
-for(i1 in c(
+# end dealing with NA arguments
+# dealing with NULL arguments
+tempo.arg <-c(
 "data1", 
 "y", 
 "categ", 
 "box.fill", 
 "box.width", 
 "box.space", 
-"categ", 
-"categ", 
-"categ", 
-"categ", 
-"categ", 
-"categ", 
-"categ", 
-"categ", 
-"categ", 
 "box.line.size", 
 "box.notch", 
 "box.alpha", 
@@ -8366,16 +8389,13 @@ for(i1 in c(
 "return.gtable", 
 "plot", 
 "warn.print"
-)){
-if(is.null(eval(parse(text = i1)))){
-null.count <- c(null.count, i1)
-}
-}
-if( ! is.null(null.count)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL")
+)
+tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
+if(any(tempo.log) == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# end dealing with NULL in arguments
+# end dealing with NULL arguments
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
 on.exit(exp = options(warning.length = ini.warning.length))
@@ -8519,7 +8539,7 @@ data1.ini <- data1 # strictly identical to data1 except that in data1 y is log c
 if(y.log != "no"){
 # just check for Inf and NaN created by log conversion but data1 not modified yet because I need the non log stat values as output
 tempo1 <- ! is.finite(data1[, y]) # where are initial NA and Inf
-data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))
+data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))# no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 if(any( ! (tempo1 | is.finite(data1[, y])))){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
@@ -9031,7 +9051,12 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+stat.just <- fun_gg_just(angle = stat.angle, pos = ifelse(vertical == TRUE, "top", "right"), kind = "text")
+# has in fact no interest because ggplot2 does not create room for geom_text()
+tempo.data.max <- data1[which.max(data1[, y]), ]
+tempo.data.max <- data.frame(tempo.data.max, label = formatC(tempo.data.max[, y], digit = 2, drop0trailing = TRUE, format = "f"))
+# end has in fact no interest because ggplot2 does not create room for geom_text()
+tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if( ! is.null(stat.disp)){' + ggplot2::geom_text(data = tempo.data.max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat.size, color = "black", angle = stat.angle, hjust = ifelse(vertical == TRUE, stat.just$hjust, stat.just$hjust - stat.dist), vjust = ifelse(vertical == TRUE, stat.just$vjust - stat.dist, stat.just$vjust))'})))) # added here to have room for annotation
 dot.coord <- tempo.graph.info.ini$data[[1]]
 dot.coord$x <- as.numeric(dot.coord$x) # because weird class
 dot.coord$PANEL <- as.numeric(dot.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
@@ -9105,20 +9130,15 @@ tempo.mean <- data.frame(tempo.mean[order(tempo.mean$BOX, tempo.mean$PANEL), ], 
 }
 # at that stage, categ color and dot color are correctly attributed in data1, box.coord and dot.coord
 # end y dot coordinates recovery (create ini.box.coord, dot.coord and modify data1)
-
-
-
-
 # ylim range
 if(is.null(y.lim)){
-if(any(data1[, y] %in% c(Inf, -Inf))){ # kept but normally no more Inf in data1
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE ", y, " COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+y.lim <- tempo.graph.info.ini$layout$panel_params[[1]]$y.range # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+if(any(( ! is.finite(y.lim)) | is.na(y.lim)) | length(y.lim) != 2){ # kept but normally no more Inf in data1
+tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\ntempo.graph.info.ini$layout$panel_params[[1]]$y.range[1] CONTAINS NA OR Inf OR HAS LENGTH 1")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-y.lim <- range(data1[, y], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
 }else if(y.log != "no"){
-y.lim <- get(y.log)(y.lim)
+y.lim <- get(y.log)(y.lim) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
 if(y.log != "no"){
 # normally this control is not necessary anymore
@@ -9165,7 +9185,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xla
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(is.null(y.lab)){y}else{y.lab}))
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
 # text angle management
-tempo.just <- fun_gg_just(angle = x.angle, pos = ifelse(vertical == TRUE, "bottom", "left"), kind = "axis")
+axis.just <- fun_gg_just(angle = x.angle, pos = ifelse(vertical == TRUE, "bottom", "left"), kind = "axis")
 # end text angle management
 add.check <- TRUE
 if( ! is.null(add)){ # if add is NULL, then = 0
@@ -9190,8 +9210,8 @@ axis.line.x.bottom = ggplot2::element_line(colour = "black"), # draw lines for t
 panel.grid.major.x = if(vertical == TRUE){NULL}else{ggplot2::element_line(colour = "grey85", size = 0.75)},
 panel.grid.major.y = if(vertical == TRUE){ggplot2::element_line(colour = "grey85", size = 0.75)}else{NULL},
 panel.grid.minor.y = if(vertical == TRUE){ggplot2::element_line(colour = "grey90", size = 0.25)}else{NULL},
-axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
-axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)},
+axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}else{NULL},
+axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)},
 strip.background = ggplot2::element_rect(fill = NA, colour = NA) # for facet background
 ))
 }else{
@@ -9202,8 +9222,8 @@ line = ggplot2::element_line(size = 0.5),
 legend.key = ggplot2::element_rect(color = "white", size = 1.5), # size of the frame of the legend
 axis.line.y.left = ggplot2::element_line(colour = "black"), 
 axis.line.x.bottom = ggplot2::element_line(colour = "black"),
-axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
-axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)},
+axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}else{NULL},
+axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)},
 strip.background = ggplot2::element_rect(fill = NA, colour = NA)
 ))
 }
@@ -9221,8 +9241,8 @@ panel.grid.major.y = ggplot2::element_line(colour = "grey85", size = 0.75),
 panel.grid.minor.x = ggplot2::element_blank(), 
 panel.grid.minor.y = ggplot2::element_line(colour = "grey90", size = 0.25), 
 strip.background = ggplot2::element_rect(fill = NA, colour = NA),
-axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}else{NULL},
-axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = tempo.just$angle, hjust = tempo.just$hjust, vjust = tempo.just$vjust)}
+axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}else{NULL},
+axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}
 ))
 }
 # Contrary to fun_gg_bar(), cannot plot the boxplot right now, because I need the dots plotted first
@@ -9408,7 +9428,7 @@ for(i3 in 1:length(categ)){
 tempo.polygon[, categ[i3]] <- factor(tempo.polygon[, categ[i3]], levels = categ.class.order[[i3]])
 }
 }
-# modified name of dot.categ column (e.g., "Group1_DOT") must be included for boxplot using ridy dots
+# modified name of dot.categ column (e.g., "Categ1_DOT") must be included for boxplot using ridy dots
 if( ! is.null(dot.color) & ! is.null(dot.categ)){
 if(dot.categ != ini.dot.categ){
 tempo.polygon <- data.frame(tempo.polygon, GROUPX = tempo.polygon[, ini.dot.categ])
@@ -9565,7 +9585,7 @@ dot.coord.tidy1$PANEL <- as.numeric(dot.coord.tidy1$PANEL) # because numbers as 
 # tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED")
 # stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 # }
-dot.coord.tidy2 <- merge(dot.coord.tidy1, box.coord[c("fill", "PANEL", "group", "x", categ)], by = c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Group1 Group2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
+dot.coord.tidy2 <- merge(dot.coord.tidy1, box.coord[c("fill", "PANEL", "group", "x", categ)], by = c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Categ1 Categ2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
 if(nrow(dot.coord.tidy2) != nrow(dot.coord)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -9673,6 +9693,7 @@ data = tempo.stat,
 mapping = ggplot2::aes_string(x = "X", y = "Y", label = ifelse(stat.disp.mean == FALSE, "MEDIAN", "MEAN")),
 size = stat.size, 
 color = "black", 
+angle = stat.angle, 
 hjust = ifelse(vertical == TRUE, 0.5, 1.1), 
 vjust = ifelse(vertical == TRUE, 1.1, 0.5)
 )) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
@@ -9746,15 +9767,14 @@ stat.coord3[, tempo.center.ref] <- formatC(stat.coord3[, tempo.center.ref], digi
 # end correct median or mean text format
 # if(any(tempo.log.high) == TRUE){
 # tempo.stat <- stat.coord3[tempo.log.high,]
-tempo.just <- fun_gg_just(angle = stat.angle, pos = ifelse(vertical == TRUE, "top", "right"), kind = "text")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
 data = stat.coord3, 
 mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo.center.ref),
 size = stat.size, 
 color = "black", 
 angle = stat.angle, 
-hjust = ifelse(vertical == TRUE, tempo.just$hjust, tempo.just$hjust - stat.dist), 
-vjust = ifelse(vertical == TRUE, tempo.just$vjust - stat.dist, tempo.just$vjust)
+hjust = ifelse(vertical == TRUE, stat.just$hjust, stat.just$hjust - stat.dist), 
+vjust = ifelse(vertical == TRUE, stat.just$vjust - stat.dist, stat.just$vjust)
 )) # WARNING: no need of order() for labels because box.coord$x set the order
 coord.names <- c(coord.names, "stat.display.positive")
 # }
@@ -10167,8 +10187,8 @@ reserved.words <- c("fake_x", "fake_y", "fake_categ")
 # end reserved words to avoid bugs (used in this function)
 # arg with no default values
 if(any(missing(data1) | missing(x) | missing(y))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS data1, x AND y HAVE NO DEFAULT VALUE AND REQUIRE ONE")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENTS angle AND pos HAVE NO DEFAULT VALUE AND REQUIRE ONE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
 # primary argument checking
@@ -10415,22 +10435,17 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end primary argument checking
-
-
-
-
-
 # second round of checking and data preparation
-# dealing with NA
-tempo <- suppressWarnings(unlist(lapply(lapply(X = arg.user.setting, FUN = is.na), FUN = any))) # logical vector of the argument with NA. Here means that the user cannot use NA as value for any argument
-if(any(tempo) == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(names(tempo)[tempo], collapse = "\n"), "\nCANNOT HAVE NA")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
+# dealing with NA arguments
+tempo.arg <- names(arg.user.setting) # values provided by the user
+tempo.log <- sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1 # no argument provided by the user can be just NA
+if(any(tempo.log) == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# end dealing with NA
-# dealing with NULL
-null.count <- NULL
-for(i1 in c(
+# end dealing with NA arguments
+# dealing with NULL arguments
+tempo.arg <-c(
 "data1", 
 # "x", # inactivated because of hline or vline
 # "y", # inactivated because of hline or vline
@@ -10466,16 +10481,13 @@ for(i1 in c(
 "return.gtable", 
 "plot", 
 "warn.print"
-)){
-if(is.null(eval(parse(text = i1)))){
-null.count <- c(null.count, i1)
+)
+tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
+if(any(tempo.log) == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-}
-if( ! is.null(null.count)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\n", paste(null.count, collapse = "\n"), "\nCANNOT BE NULL")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
-}
-# end dealing with NULL
+# end dealing with NULL arguments
 # check list lengths (and names of data1 compartments if present)
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
@@ -11061,10 +11073,10 @@ stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", 
 }
 # management of log scale
 if(x.log != "no"){
-data1[[i1]][, x[[i1]]] <- suppressWarnings(get(x.log)(data1[[i1]][, x[[i1]]]))
+data1[[i1]][, x[[i1]]] <- suppressWarnings(get(x.log)(data1[[i1]][, x[[i1]]])) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
 if(y.log != "no"){
-data1[[i1]][, y[[i1]]] <- suppressWarnings(get(y.log)(data1[[i1]][, y[[i1]]]))
+data1[[i1]][, y[[i1]]] <- suppressWarnings(get(y.log)(data1[[i1]][, y[[i1]]])) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
 # end management of log scale
 }
@@ -11191,7 +11203,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 x.lim <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only. y.lim added here. If NULL, ok if y argument has values
 }else if(x.log != "no"){
-x.lim <- get(x.log)(x.lim)
+x.lim <- get(x.log)(x.lim) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
 if(x.log != "no"){
 if(any( ! is.finite(x.lim))){
@@ -11229,7 +11241,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 y.lim <- suppressWarnings(range(unlist(mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only. y.lim added here. If NULL, ok if y argument has values
 }else if(y.log != "no"){
-y.lim <- get(y.log)(y.lim)
+y.lim <- get(y.log)(y.lim) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
 if(y.log != "no"){
 if(any( ! is.finite(y.lim))){
