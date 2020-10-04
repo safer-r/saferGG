@@ -7966,7 +7966,6 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-# remain to solve the justification of the text
 # check s/lapply everywhere with get: done cute boxplot scatter
 # get() with env everywhere: done cute boxplot scatter
 # add the new NA and NULL check cute, boxplot, scatter: done boxplot, scatter
@@ -8011,7 +8010,7 @@ y.bottom.extra.margin = 0.05,
 stat.disp = "top", 
 stat.disp.mean = FALSE, 
 stat.size = 4, 
-stat.dist = 2, 
+stat.dist = 5, 
 stat.angle = 0, 
 vertical = TRUE, 
 text.size = 12, 
@@ -8091,7 +8090,7 @@ lib.path = NULL
 # stat.disp: add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box)
 # stat.disp.mean: logical. Display mean numbers instead of median numbers? Ignored if stat.disp is NULL
 # stat.size: numeric value of the stat font size in mm. Ignored if stat.disp is NULL
-# stat.dist: numeric value of the stat distance (in the unit of the hjust and vjust arguments of ggplot2::annotate() function). Increase the value to increase the distance from the box plot. Ignored if stat.disp is NULL or "top"
+# stat.dist: numeric value of the stat distance in percentage of the y-axis range (stat.dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat.disp is NULL or "top"
 # stat.angle: integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # vertical: logical. Vertical boxes? WARNING: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # text.size: numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm)
@@ -8142,8 +8141,7 @@ lib.path = NULL
 # $sup.whisker.edge: coordinates of top whisker edges (x and xend)
 # $inf.whisker.edge: coordinates of bottom whisker edges(x and xend)
 # $mean: diamond mean coordinates (only if box.mean argument is TRUE)
-# $stat.display.positive: coordinates of stat numbers when positive (only if stat.disp argument is TRUE)
-# $stat.display.negative: coordinates of stat numbers when negative (only if stat.disp argument is TRUE)
+# $stat.display: coordinates of stat numbers (only if stat.disp argument is not NULL)
 # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no")
 # y.second.tick.values: values of secondary ticks. NULL except if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no")
 # $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0
@@ -8155,7 +8153,7 @@ lib.path = NULL
 # DEBUGGING
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), Categ3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1", "Categ2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = "above" ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 arg.user.setting <- as.list(match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
@@ -9055,12 +9053,22 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-stat.just <- fun_gg_just(angle = stat.angle, pos = ifelse(vertical == TRUE, "top", "right"), kind = "text")
+if( ! is.null(stat.disp)){
+stat.just <- fun_gg_just(
+angle = stat.angle, 
+pos = ifelse(
+vertical == TRUE, 
+ifelse(stat.disp == "top", "bottom", "top"), # "bottom" because we want justification for text that are below the ref point which is the top of the graph. The opposite for "above"
+ifelse(stat.disp == "top", "left", "right") # "left" because we want justification for text that are on the left of the ref point which is the right border of the graph. The opposite for "above"
+), 
+kind = "text"
+)
+}
 # has in fact no interest because ggplot2 does not create room for geom_text()
 tempo.data.max <- data1[which.max(data1[, y]), ]
 tempo.data.max <- data.frame(tempo.data.max, label = formatC(tempo.data.max[, y], digit = 2, drop0trailing = TRUE, format = "f"))
 # end has in fact no interest because ggplot2 does not create room for geom_text()
-tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if( ! is.null(stat.disp)){' + ggplot2::geom_text(data = tempo.data.max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat.size, color = "black", angle = stat.angle, hjust = ifelse(vertical == TRUE, stat.just$hjust, stat.just$hjust - stat.dist), vjust = ifelse(vertical == TRUE, stat.just$vjust - stat.dist, stat.just$vjust))'})))) # added here to have room for annotation
+tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if( ! is.null(stat.disp)){' + ggplot2::geom_text(data = tempo.data.max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat.size, color = "black", angle = stat.angle, hjust = stat.just$hjust, vjust = stat.just$vjust)'})))) # added here to have room for annotation
 dot.coord <- tempo.graph.info.ini$data[[1]]
 dot.coord$x <- as.numeric(dot.coord$x) # because weird class
 dot.coord$PANEL <- as.numeric(dot.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
@@ -9698,8 +9706,8 @@ mapping = ggplot2::aes_string(x = "X", y = "Y", label = ifelse(stat.disp.mean ==
 size = stat.size, 
 color = "black", 
 angle = stat.angle, 
-hjust = ifelse(vertical == TRUE, 0.5, 1.1), 
-vjust = ifelse(vertical == TRUE, 1.1, 0.5)
+hjust = stat.just$hjust, 
+vjust = stat.just$vjust
 )) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
 coord.names <- c(coord.names, "stat.display")
 }else if(stat.disp == "above"){
@@ -9763,6 +9771,9 @@ tempo.center.ref <- "MEAN"
 # tempo.log.low <- if(diff(y.lim) > 0){stat.coord3[, tempo.center.ref] < 0}else{stat.coord3[, tempo.center.ref] >= 0}
 # stat.coord3$Y[tempo.log.high] <- stat.coord3[tempo.log.high, tempo.high.ref]
 # stat.coord3$Y[tempo.log.low] <- stat.coord3[tempo.log.low, tempo.low.ref]
+# add distance
+stat.coord3$Y <- stat.coord3$Y + diff(y.lim) * stat.dist / 100
+# end add distance
 # correct median or mean text format
 if(y.log != "no"){
 stat.coord3[, tempo.center.ref] <- ifelse(y.log == "log2", 2, 10)^(stat.coord3[, tempo.center.ref])
@@ -9777,10 +9788,10 @@ mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo.center.ref),
 size = stat.size, 
 color = "black", 
 angle = stat.angle, 
-hjust = ifelse(vertical == TRUE, stat.just$hjust, stat.just$hjust - stat.dist), 
-vjust = ifelse(vertical == TRUE, stat.just$vjust - stat.dist, stat.just$vjust)
+hjust = stat.just$hjust, 
+vjust = stat.just$vjust
 )) # WARNING: no need of order() for labels because box.coord$x set the order
-coord.names <- c(coord.names, "stat.display.positive")
+coord.names <- c(coord.names, "stat.display")
 # }
 # if(any(tempo.log.low) == TRUE){
 # tempo.stat <- stat.coord3[tempo.log.low,]
