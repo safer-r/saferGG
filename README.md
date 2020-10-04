@@ -4,16 +4,12 @@
 | usage | R dependencies |
 | --- | --- |
 | [![R Version](https://img.shields.io/badge/code-R-blue?style=plastic)](https://cran.r-project.org/mirrors.html) | [![Dependencies: R Version](https://img.shields.io/badge/R-v4.0.2-blue?style=plastic)](https://cran.r-project.org/mirrors.html) |
-| [![License: GPL-3.0](https://img.shields.io/badge/licence-GPL%20(%3E%3D3)-green?style=plastic)](https://www.gnu.org/licenses) | [![Dependencies: R Package](https://img.shields.io/badge/package-car%20v3.0.9-blue?style=plastic)](http://www.rforge.net/car/) |
-| | [![Dependencies: R Package](https://img.shields.io/badge/package-carData%20v3.0.4-blue?style=plastic)](http://www.rforge.net/carData/) |
-|  | [![Dependencies: R Package](https://img.shields.io/badge/package-emmeans%20v1.5.0-blue?style=plastic)](http://www.rforge.net/emmeans/) |
+| [![License: GPL-3.0](https://img.shields.io/badge/licence-GPL%20(%3E%3D3)-green?style=plastic)](https://www.gnu.org/licenses) | [![Dependencies: R Package](https://img.shields.io/badge/package-Cairo%20v1.5_12.2-blue?style=plastic)](https://cran.r-project.org/web/packages/Cairo/index.html) |
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-ggplot2%20v3.3.2-blue?style=plastic)](https://github.com/tidyverse/ggplot2) |
-|  | [![Dependencies: R Package](https://img.shields.io/badge/package-lemon%20v0.4.5-blue?style=plastic)](http://www.rforge.net/lemon/) |
-|  | [![Dependencies: R Package](https://img.shields.io/badge/package-lme4%20v1.1.23-blue?style=plastic)](http://www.rforge.net/lme4/) |
-|  | [![Dependencies: R Package](https://img.shields.io/badge/package-lmerTest%20v3.1.2-blue?style=plastic)](http://www.rforge.net/lmerTest/) |
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-lubridate%20v1.7.9-blue?style=plastic)](https://github.com/tidyverse/lubridate) |
-|  | [![Dependencies: R Package](https://img.shields.io/badge/package-Matrix%20v1.2.18-blue?style=plastic)](http://www.rforge.net/Matrix/) |
-|  | [![Dependencies: R Package](https://img.shields.io/badge/toolbox-cute%20little%20R%20functions%20v6.0.0-blue?style=plastic)](https://gitlab.pasteur.fr/gmillot/cute_little_R_functions) |
+|  | [![Dependencies: R Package](https://img.shields.io/badge/package-reshape2%20v1.4.4-blue?style=plastic)](https://cran.r-project.org/web/packages/reshape2/index.html) |
+|  | [![Dependencies: R Package](https://img.shields.io/badge/package-reticulate%20v1.16-blue?style=plastic)](https://cran.r-project.org/web/packages/reticulate/index.html)|
+|  | [![Dependencies: R Package](https://img.shields.io/badge/package-scales%20v1.1.1-blue?style=plastic)](https://cran.r-project.org/web/packages/scales/index.html) |
 
 
 ## TABLE OF CONTENTS
@@ -43,6 +39,10 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 **cute_little_R_functions.R** file that has to be sourced in R or RStudio
 
 **cute_little_R_functions.docx** same as cute_little_R_functions.R but for better reading (interactive outline at the beginning of the file)
+
+**fun_gg_boxplot.docx** for better reading of the argument description
+
+**fun_gg_scatter.docx** for better reading of the argument description
 
 **examples.R** examples of all the functions, except fun_gg_boxplot() and fun_gg_scatter(), that can be sourced or copied-pasted
 
@@ -135,7 +135,7 @@ For that:
 
 4) Source the file using the url address. Example:
 
-`source("https://gitlab.pasteur.fr/gmillot/cute_little_R_functions/-/raw/557976d693e37b499b89c76e4b2142846eb89d5b/cute_little_R_functions.R")`
+`  source("https://gitlab.pasteur.fr/gmillot/cute_little_R_functions/-/raw/557976d693e37b499b89c76e4b2142846eb89d5b/cute_little_R_functions.R")  `
 
 Description of the functions is at the beginning of the function body. To obtain it:
 
@@ -174,6 +174,11 @@ Gitlab developers
 
 
 ## WHAT'S NEW IN
+
+### v7.0.0
+
+1) Upgrade to R-4.0.2, among other things
+
 
 ### v6.0.0
 
