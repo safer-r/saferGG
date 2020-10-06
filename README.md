@@ -60,49 +60,49 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 | **fun_check()** | check class, type, length, etc., of objects |
 | **fun_secu()** | verif that local variables are not present in other envs |
 | **fun_info()** | recover object information |
-| **fun_head()** | head of the left or right of big 2D objects |
-| **fun_tail()** | tail of the left or right of big 2D objects |
+| **fun_head()** | head of the corners of big 2D objects |
+| **fun_tail()** | tail of the corners of big 2D objects |
 | **fun_comp_1d()** | comparison of two 1D datasets (vectors, factors, 1D tables) |
-| **fun_comp_2d()** | comparison of two 2D datasets (row & col names, dimensions, etc.) |
+| **fun_comp_2d()** | comparison of two 2D datasets (matrices, data.drames, tables) |
 | **fun_comp_list()** | comparison of two lists |
 | **fun_test()** | test combinations of argument values of a function and return errors (and graphs) |
 
 | Object modification | |
 | --- | --- |
 | **fun_name_change()** | check a vector of character strings and modify any string if present in another vector |
-| **fun_df_remod()** | remodeling a data frame to have column name as a qualitative values and vice-versa |
-| **fun_round()** | rounding number if decimal present |
+| **fun_df_remod()** | remodel a data frame to have column name as a qualitative values and vice-versa |
+| **fun_round()** | round numbers if decimals present |
 | **fun_mat_rotate()** | 90° clockwise matrix rotation |
 | **fun_mat_num2color()** | convert a numeric matrix into hexadecimal color matrix |
 | **fun_mat_op()** | assemble several matrices with operation |
 | **fun_mat_inv()** | return the inverse of a square matrix |
 | **fun_mat_fill()** | fill the empty half part of a symmetric square matrix |
-| **fun_permut()** | progressively breaks a vector order |
+| **fun_permut()** | progressively break a vector order |
 | **fun_slide()** | return a computation made on a vector using a sliding window |
 
 | Graphics management | |
 | --- | --- |
-| **fun_width()** | window width depending on classes to plot |
-| **fun_open()** | open a GUI or pdf graphic window |
-| **fun_prior_plot()** | set graph param before plotting (erase axes for instance) |
-| **fun_scale()** | select nice label numbers when setting number of ticks on an axis |
+| **fun_width()** | graphic device width depending on the number of classes to plot |
+| **fun_open()** | open a GUI or pdf graphic device |
+| **fun_prior_plot()** | set graphic parameters before plotting (erase axes for instance) |
+| **fun_scale()** | select nice labeling numbers when setting the number of ticks on an axis |
 | **fun_inter_ticks()** | define coordinates of secondary ticks |
-| **fun_post_plot()** | set graph param after plotting (axes redesign for instance) |
-| **fun_close()** | close specific graphic windows |
+| **fun_post_plot()** | set graphic parameters after plotting (axes redesign for instance) |
+| **fun_close()** | close specific graphic devices |
 
 | Standard graphics | |
 | --- | --- |
-| **fun_empty_graph()** | text to display for empty graphs |
+| **fun_empty_graph()** | generate an empty graphic device with text in the middle |
 
 | gg graphics | |
 | --- | --- |
-| **fun_gg_palette()** | ggplot2 default color palette |
+| **fun_gg_palette()** | select colors on the ggplot2 default color palette |
 | **fun_gg_just()** | ggplot2 justification of the axis labeling, depending on angle |
 | **fun_gg_get_legend()** | get the legend of ggplot objects |
 | **fun_gg_point_rast()** | ggplot2 raster scatterplot layer |
-| **fun_gg_boxplot()** | ggplot2 boxplot + background dots if required |
+| **fun_gg_boxplot()** | ggplot2 boxplot + dots + means + average values |
 | **fun_gg_scatter()** | ggplot2 scatterplot + lines (up to 6 overlays totally) |
-| **fun_gg_empty_graph()** | text to display for empty graphs |
+| **fun_gg_empty_graph()** | generate an empty graphic device with text in the middle |
 
 | Graphic extraction | |
 | --- | --- |
@@ -116,8 +116,8 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 
 | Print / Exporting results (text & tables) | |
 | --- | --- |
-| **fun_report()** | print string or data object into output file |
-| **fun_get_message()** | return error/warning/other messages of an expression (that can be exported) |
+| **fun_report()** | print strings or results into a log file |
+| **fun_get_message()** | catch the error/warning/other messages of an evaluated expression |
 
 
 ## HOW TO LOAD AND MANIPULATE cute_little_R_functions
@@ -137,9 +137,9 @@ For that:
 
 `  source("https://gitlab.pasteur.fr/gmillot/cute_little_R_functions/-/raw/557976d693e37b499b89c76e4b2142846eb89d5b/cute_little_R_functions.R")  `
 
-Description of the functions is at the beginning of the function body. To obtain it:
+Complete description of each function is at the beginning of the function body. To obtain it:
 
-1) Either read the cute_little_functions.docx (or open the cute_little_R_functions.R file).
+1) Either use the cute_little_R_functions.docx.
 
 2) Or in the R/RStudio console, type the name of the function without brackets. Example : `fun_info`.
 

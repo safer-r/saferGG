@@ -39,48 +39,48 @@
 ######## fun_head() #### head of the left or right of big 2D objects    15
 ######## fun_tail() #### tail of the left or right of big 2D objects    16
 ######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 17
-######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   21
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   22
 ######## fun_comp_list() #### comparison of two lists   29
-######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  31
-################ Object modification    46
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  46
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 47
-######## fun_round() #### rounding number if decimal present    50
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    52
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    53
-######## fun_mat_op() #### assemble several matrices with operation 56
-######## fun_mat_inv() #### return the inverse of a square matrix   59
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  60
-######## fun_permut() #### progressively breaks a vector order  64
-######## fun_slide() #### return a computation made on a vector using a sliding window  75
-################ Graphics management    83
-######## fun_width() #### window width depending on classes to plot 83
-######## fun_open() #### open a GUI or pdf graphic window   85
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    89
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 93
-######## fun_inter_ticks() #### define coordinates of secondary ticks   98
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   102
-######## fun_close() #### close specific graphic windows    114
-################ Standard graphics  116
-######## fun_empty_graph() #### text to display for empty graphs    116
-################ gg graphics    117
-######## fun_gg_palette() #### ggplot2 default color palette    117
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  119
-######## fun_gg_get_legend() #### get the legend of ggplot objects  124
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  126
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    129
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   129
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  130
-######## fun_gg_empty_graph() #### text to display for empty graphs 143
-################ Graphic extraction 145
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 145
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   154
-################ Import 188
-######## fun_pack() #### check if R packages are present and import into the working environment    188
-######## fun_python_pack() #### check if python packages are present    190
-################ Print / Exporting results (text & tables)  193
-######## fun_report() #### print string or data object into output file 193
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 196
+######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  32
+################ Object modification    47
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  47
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 48
+######## fun_round() #### rounding number if decimal present    51
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    53
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    54
+######## fun_mat_op() #### assemble several matrices with operation 58
+######## fun_mat_inv() #### return the inverse of a square matrix   60
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  62
+######## fun_permut() #### progressively breaks a vector order  65
+######## fun_slide() #### return a computation made on a vector using a sliding window  76
+################ Graphics management    85
+######## fun_width() #### window width depending on classes to plot 85
+######## fun_open() #### open a GUI or pdf graphic window   87
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    91
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 95
+######## fun_inter_ticks() #### define coordinates of secondary ticks   100
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   105
+######## fun_close() #### close specific graphic windows    117
+################ Standard graphics  118
+######## fun_empty_graph() #### text to display for empty graphs    118
+################ gg graphics    120
+######## fun_gg_palette() #### ggplot2 default color palette    120
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  122
+######## fun_gg_get_legend() #### get the legend of ggplot objects  127
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  129
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    133
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   133
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  133
+######## fun_gg_empty_graph() #### text to display for empty graphs 141
+################ Graphic extraction 143
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 143
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   152
+################ Import 187
+######## fun_pack() #### check if R packages are present and import into the working environment    187
+######## fun_python_pack() #### check if python packages are present    189
+################ Print / Exporting results (text & tables)  192
+######## fun_report() #### print string or data object into output file 192
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 195
 
 
 ################################ FUNCTIONS ################################
@@ -479,21 +479,25 @@ return(output)
 
 
 # Check OK: clear to go Apollo
-fun_info <- function(data){
+fun_info <- function(data, n = 20, full = FALSE, warn.print = TRUE){
 # AIM
-# provide a full description of an object
+# provide a complete description of an object. Using complete = TRUE allows data recovering. Using complete = FALSE is a convenient display feature (in case of large dataset)
 # ARGUMENTS
 # data: object to test
+# n: positive integer value indicating the number of element to display per compartment of the output list (i.e., head(..., n)). Ignored if full argument is TRUE. Also ignored for the STRUCTURE compartment output, corresponding to ls.str() information (because head() removes almost everything)
+# full: logical. Return the full information?
+# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
 # RETURN
 # a list containing information, depending on the class and type of data
 # if data is made of numerics, provide range, sum, mean, number of NA and number of Inf
-# please, use names(fun_info()) and remove what can be too big for easy analysis
 # REQUIRED PACKAGES
 # none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
-# none
+# fun_check()
 # EXAMPLES
 # fun_info(data = 1:3)
+# fun_info(data = 1:3, n = 2)
+# fun_info(data = 1:3, n = 2, full = TRUE)
 # fun_info(data.frame(a = 1:2, b = ordered(factor(c("A", "B"))), stringsAsFactors = TRUE))
 # fun_info(list(a = 1:3, b = ordered(factor(c("A", "B")))))
 # DEBUGGING
@@ -505,11 +509,39 @@ fun_info <- function(data){
 # data = ordered(factor(c("b", "a"))) # for function debugging
 # data = list(a = 1:3, b = factor(c("A", "B"))) # for function debugging
 # data = list(a = 1:3, b = ordered(factor(c("A", "B")))) # for function debugging
-# function name: no need because no check and no message
+# function name
+function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
+# end function name
+# required function checking
+if(length(utils::find("fun_check", mode = "function")) == 0){
+tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end required function checking
 # argument checking
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+arg.check <- NULL #
+text.check <- NULL #
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$fun.name))
+tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+if(tempo$problem == FALSE & n < 1){
+tempo.cat <- paste0("ERROR IN ", function.name, ": n ARGUMENT MUST BE A POSITIVE AND NON NULL INTEGER")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+tempo <- fun_check(data = full, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){
+stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+}
 # end argument checking
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # main code
+on.exit(
+exp = if(full == FALSE & warn.print == TRUE){
+warning(paste0("FROM ", function.name, ":\n\nSOME COMPARTMENTS CAN BE TRUNCATED (n ARGUMENT IS ", n, ")\n\n"), call. = FALSE)
+}
+)
 data.name <- deparse(substitute(data))
 output <- list("NAME" = data.name)
 tempo <- list("CLASS" = class(data))
@@ -578,6 +610,11 @@ tempo2 <- unlist(tempo.class)
 tempo[["COMPARTMENT_TYPE"]][grepl(x = tempo2, pattern = "factor")] <- tempo2[grepl(x = tempo2, pattern = "factor")]
 }
 output <- c(output, tempo)
+tempo <- list("STRUCTURE" = ls.str(data)) # str() print automatically, ls.str() not but does not give the order of the data.frame
+output <- c(output, tempo)
+}
+if(full == FALSE){
+output[names(output) != "STRUCTURE"] <- lapply(X = output[names(output) != "STRUCTURE"], FUN = head, n = n, simplify = FALSE)
 }
 return(output)
 }
@@ -8337,6 +8374,7 @@ lib.path = NULL
 # REQUIRED PACKAGES
 # ggplot2
 # gridExtra
+# lemon (if used in the add argument)
 # scales
 # REQUIRED FUNCTIONS FROM THE cute PACKAGE
 # fun_check()
@@ -8771,7 +8809,6 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 data1.ini <- data1 # strictly identical to data1 except that in data1 y is log converted if and only if y.log != "no"
 if(y.log != "no"){
-# just check for Inf and NaN created by log conversion but data1 not modified yet because I need the non log stat values as output
 tempo1 <- ! is.finite(data1[, y]) # where are initial NA and Inf
 data1[, y] <- suppressWarnings(get(y.log)(data1[, y]))# no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 if(any( ! (tempo1 | is.finite(data1[, y])))){
@@ -10375,6 +10412,8 @@ lib.path = NULL
 # lib.path: character string indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders
 # REQUIRED PACKAGES
 # ggplot2
+# gridExtra
+# lemon (if used in the add argument)
 # scales
 # if raster plots are drawn (see the raster and raster.threshold arguments):
 # Cairo
@@ -10481,6 +10520,11 @@ arg.check <- c(arg.check, TRUE)
 }
 }
 if( ! is.null(categ.class.order)){
+if(is.null(categ)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": categ.class.order ARGUMENT IS NOT NULL, BUT categ IS")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
 tempo1 <- fun_check(data = categ.class.order, class = "vector", mode = "character", fun.name = function.name)
 tempo2 <- fun_check(data = categ.class.order, class = "list", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
@@ -10685,6 +10729,8 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 }
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end primary argument checking
+
+
 # second round of checking and data preparation
 # dealing with NA arguments
 tempo.arg <- names(arg.user.setting) # values provided by the user
@@ -11021,6 +11067,52 @@ line.type <- list.line.type
 # data, x, y, geom, alpha, dot.size, shape, dot.border.size, line.size, line.type, legend.name are list now
 # if non-null, categ, categ.class.order, legend.name, color are list now
 # end conversion into lists
+# verif of add
+if( ! is.null(add)){
+if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
+tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+
+}else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
+tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}
+}
+# end verif of add
+# management of add containing facet
+facet.categ <- NULL
+if( ! is.null(add)){
+facet.check <- TRUE
+tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
+tempo <- sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
+tempo <- sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
+tempo <- sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
+if(length(data1) > 1 & (any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")) | grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid"))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nfacet PANELS CANNOT BE USED IF MORE THAN ONE DATA FRAME IN THE data1 ARGUMENT\nPLEASE REWRITE THE add STRING AND RERUN")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}else{
+if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"))){
+tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
+facet.categ <- list(names(tempo1$params$facets)) # list of length 1
+tempo.text <- "facet_wrap OR facet_rep_wrap"
+facet.check <- FALSE
+}else if(grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
+tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
+facet.categ <- list(c(names(tempo1$params$rows), names(tempo1$params$cols))) # list of length 1
+tempo.text <- "facet_grid OR facet_rep_grid"
+facet.check <- FALSE
+}
+if(facet.check == FALSE & ! all(facet.categ %in% names(data1[[1]]))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
+tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1[[1]]), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}
+}
+}
+# if facet.categ is not NULL, it is a list of length 1 now
+# end management of add containing facet
 # legend name filling
 if(is.null(legend.name) & ! is.null(categ)){
 legend.name <- categ
@@ -11065,11 +11157,11 @@ color[[i1]] <-tempo.color[color[[i1]]]
 }
 }
 # end integer colors into gg_palette
-
-
-# second round of argument checking
+# loop (checking inside list compartment)
 compart.null.color <- 0 # will be used to attribute a color when color is non-null but a compartment of color is NULL
-
+data1.ini <- data1 # to report NA removal
+removed.row.nb <- vector("list", length = length(data1)) # to report NA removal. Contains NULL
+removed.rows <- vector("list", length = length(data1)) # to report NA removal. Contains NULL
 for(i1 in 1:length(data1)){
 tempo <- fun_check(data = data1[[i1]], data.name = ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "data.frame", na.contain = TRUE, fun.name = function.name)
 if(tempo$problem == TRUE){
@@ -11199,7 +11291,7 @@ if(length(color[[i1]]) > 1){ # 0 means is.null(color[[i1]]) or is.null(color) an
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NULL ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ")), " ARGUMENT BUT CORRESPONDING COLORS IN ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " HAS LENGTH OVER 1\n", paste(color[[i1]], collapse = " "), "\nWHICH IS NOT COMPATIBLE WITH NULL CATEG -> COLOR RESET TO A SINGLE COLOR")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-color[[i1]] <- NULL # will provide a single color below
+color[i1] <- list(NULL) # will provide a single color below # Warning color[[i1]] <- NULL removes the compartment
 }
 categ[[i1]] <- "fake_categ"
 data1[[i1]] <- cbind(data1[[i1]], fake_categ = "", stringsAsFactors = TRUE)
@@ -11215,6 +11307,109 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 # OK: if categ is not NULL, all the non-null categ columns of data1 are factors from here
 
+# management of log scale and Inf removal
+if(x[[i1]] != "fake_x"){
+if(any(( ! is.finite(data1[[i1]][, x[[i1]]])) & ( ! is.na(data1[[i1]][, x[[i1]]])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") PRESENCE OF -Inf OR Inf VALUES IN ", ifelse(length(categ) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+if(y[[i1]] != "fake_y"){
+if(any(( ! is.finite(data1[[i1]][, y[[i1]]])) & ( ! is.na(data1[[i1]][, y[[i1]]])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") PRESENCE OF -Inf OR Inf VALUES IN ", ifelse(length(categ) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+# log conversion
+if(x.log != "no"){
+tempo1 <- ! is.finite(data1[[i1]][, x[[i1]]]) # where are initial NA and Inf
+data1[[i1]][, x[[i1]]] <- suppressWarnings(get(x.log)(data1[[i1]][, x[[i1]]]))# no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+if(any( ! (tempo1 | is.finite(data1[[i1]][, x[[i1]]])))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN ", ifelse(length(categ) == 1, "x", paste0("ELEMENT ", i1, " OF x ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+if(y.log != "no"){
+tempo1 <- ! is.finite(data1[[i1]][, y[[i1]]]) # where are initial NA and Inf
+data1[[i1]][, y[[i1]]] <- suppressWarnings(get(y.log)(data1[[i1]][, y[[i1]]]))# no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+if(any( ! (tempo1 | is.finite(data1[[i1]][, y[[i1]]])))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN ", ifelse(length(categ) == 1, "y", paste0("ELEMENT ", i1, " OF y ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+# Inf removal
+# removed.row.nb[[i1]] <- NULL # already NULL and Warning this removes the compartment
+removed.rows[[i1]] <- data.frame(stringsAsFactors = FALSE)
+if(any(( ! is.finite(data1[[i1]][, x[[i1]]])) & ( ! is.na(data1[[i1]][, x[[i1]]])))){ # is.finite also detects NA: ( ! is.finite(data1[[i1]][, x[[i1]]])) & ( ! is.na(data1[[i1]][, x[[i1]]])) detects only Inf
+removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], which(( ! is.finite(data1[[i1]][, x[[i1]]])) & ( ! is.na(data1[[i1]][, x[[i1]]]))))
+}
+if(any(( ! is.finite(data1[[i1]][, y[[i1]]])) & ( ! is.na(data1[[i1]][, y[[i1]]])))){ # is.finite also detects NA: ( ! is.finite(data1[[i1]][, y[[i1]]])) & ( ! is.na(data1[[i1]][, y[[i1]]])) detects only Inf
+removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], which(( ! is.finite(data1[[i1]][, y[[i1]]])) & ( ! is.na(data1[[i1]][, y[[i1]]]))))
+}
+if( ! is.null(removed.row.nb[[i1]])){
+removed.row.nb[[i1]] <- unique(removed.row.nb[[i1]]) # to remove the duplicated positions (NA in both x and y)
+removed.rows[[i1]] <- rbind(removed.rows[[i1]], data1.ini[removed.row.nb[[i1]], ]) # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
+data1[[i1]] <- data1[[i1]][-removed.row.nb[[i1]], ]
+data1.ini[[i1]] <- data1.ini[[i1]][-removed.row.nb[[i1]], ] #
+}
+# From here, data1 and data.ini have no more Inf
+# end Inf removal
+# x.lim and y.lim dealt later on, after the end f the loop
+# end management of log scale and Inf removal
+# management of log scale
+if(x.log != "no"){
+data1[[i1]][, x[[i1]]] <- suppressWarnings(get(x.log)(data1[[i1]][, x[[i1]]])) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+}
+if(y.log != "no"){
+data1[[i1]][, y[[i1]]] <- suppressWarnings(get(y.log)(data1[[i1]][, y[[i1]]])) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+}
+# end management of log scale
+# na detection and removal
+column.check <- unique(unlist(c( # unlist because creates a list
+if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, 
+if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]}, 
+if( ! is.null(categ)){if(is.null(categ[[i1]])){NULL}else{categ[[i1]]}}, 
+if( ! is.null(facet.categ)){if(is.null(facet.categ[[i1]])){NULL}else{facet.categ[[i1]]}}
+))) # dot.categ because can be a 3rd column of data1
+if(any(is.na(data1[[i1]][, column.check]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMNS ", paste(column.check, collapse = " "), " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+for(i3 in 1:length(column.check)){
+if(any(is.na(data1[[i1]][, column.check[i3]]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("NA REMOVAL DUE TO COLUMN ", column.check[i3], " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
+}
+tempo <- unique(unlist(lapply(lapply(c(data1[[i1]][column.check]), FUN = is.na), FUN = which)))
+removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], tempo)
+removed.rows[[i1]] <- rbind(removed.rows[[i1]], data1.ini[[i1]][tempo, ]) #  # tempo used because removed.row.nb is not empty. Here data1.ini used to have the non NA rows that will be removed because of NAN creation after log transformation (neg values for instance)
+column.check <- column.check[ ! (column.check == x[[i1]] | column.check == y[[i1]])] # remove x and y to keep quali columns
+if(length(tempo) != 0){
+data1[[i1]] <- data1[[i1]][-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
+data1.ini[[i1]] <- data1.ini[[i1]][-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers than the former
+for(i4 in 1:length(column.check)){
+if(any( ! unique(removed.rows[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]]))){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") IN COLUMN ", column.check[i4], " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA REMOVAL\n(IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", paste(unique(removed.rows[[i1]][, column.check[i4]])[ ! unique(removed.rows[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])], collapse = " "))
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+tempo.levels <- levels(data1[[i1]][, column.check[i4]])[levels(data1[[i1]][, column.check[i4]]) %in% unique(as.character(data1[[i1]][, column.check[i4]]))]
+data1[[i1]][, column.check[i4]] <- factor(as.character(data1[[i1]][, column.check[i4]]), levels = tempo.levels)
+if(column.check[i4] %in% categ[[i1]] & ! is.null(categ.class.order)){
+categ.class.order[[i1]] <- levels(data1[[i1]][, column.check[i4]])[levels(data1[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])] # remove the absent class in the categ.class.order vector
+data1[[i1]][, column.check[i4]] <- factor(as.character(data1[[i1]][, column.check[i4]]), levels = unique(categ.class.order[[i1]]))
+}
+}
+}
+}
+}
+# end na detection and removal
+# From here, data1 and data.ini have no more NA or NaN in x, y, categ (if categ != NULL) and facet.categ (if categ != NULL)
 if( ! is.null(categ.class.order)){
 # the following check will be done several times but I prefer to keep it here, after the creation of categ
 if(is.null(categ[[i1]]) & ! is.null(categ.class.order[[i1]])){
@@ -11311,7 +11506,7 @@ warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", COLOR HAS LENGTH 1 MEANING THAT ALL THE DIFFERENT CLASSES OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), "\n", paste(levels(factor(data1[[i1]][, categ[[i1]]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(color[[i1]], collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }else{
-tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE\n(1) LENGTH 1\nOR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES\nOR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])))
+tempo.cat <- paste0("ERROR IN ", function.name, ": ", ifelse(length(color) == 1, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE\n(1) LENGTH 1\nOR (2) THE LENGTH OF ", ifelse(length(categ) == 1, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " COLUMN VALUES\nOR (3) THE LENGTH OF THE CLASSES IN THIS COLUMN\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LENGTH ", length(data1[[i1]][, categ[[i1]]]), " AND CATEG CLASS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\nPRESENCE OF NA IN THE COLUMN x, y OR categ OF data1 COULD BE THE PROBLEME")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
@@ -11325,15 +11520,8 @@ tempo <- fun_check(data = alpha[[i1]], data.name = ifelse(length(alpha) == 1, "a
 if(tempo$problem == TRUE){
 stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
-# management of log scale
-if(x.log != "no"){
-data1[[i1]][, x[[i1]]] <- suppressWarnings(get(x.log)(data1[[i1]][, x[[i1]]])) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
 }
-if(y.log != "no"){
-data1[[i1]][, y[[i1]]] <- suppressWarnings(get(y.log)(data1[[i1]][, y[[i1]]])) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
-}
-# end management of log scale
-}
+# end loop (checking inside list compartment)
 if(length(data1) > 1){
 if(length(unique(unlist(x)[ ! x == "fake_x"])) > 1){
 warn.count <- warn.count + 1
@@ -11355,12 +11543,13 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT CANNOT HAVE MORE THAN THREE LINE ELEMENTS")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
+# x.lim management before transfo by x.log
 if(x.log != "no" & ! is.null(x.lim)){
 if(any(x.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE x.log ARGUMENT SET TO ", x.log, ":\n", paste(x.lim, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(any( ! is.finite(if(x.log == "log10"){log10(x.lim)}else{log2(x.lim)}))){
-tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lim ARGUMENT RETURNS INF WITH THE x.log ARGUMENT SET TO ", x.log, "\nAS SCALE COMPUTATION IS ", ifelse(x.log == "log10", "log10", "log2"), ":\n", paste(if(x.log == "log10"){log10(x.lim)}else{log2(x.lim)}, collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lim ARGUMENT RETURNS INF/NA WITH THE x.log ARGUMENT SET TO ", x.log, "\nAS SCALE COMPUTATION IS ", ifelse(x.log == "log10", "log10", "log2"), ":\n", paste(if(x.log == "log10"){log10(x.lim)}else{log2(x.lim)}, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
@@ -11370,12 +11559,14 @@ tempo.warn <- paste0("(", warn.count,") x.log ARGUMENT SET TO ", x.log, " AND x.
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 x.include.zero <- FALSE
 }
+# end x.lim management before transfo by x.log
+# y.lim management before transfo by y.log
 if(y.log != "no" & ! is.null(y.lim)){
 if(any(y.lim <= 0)){
 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", paste(y.lim, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(any( ! is.finite(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}))){
-tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT RETURNS INF/NA WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", ifelse(y.log == "log10", "log10", "log2"), ":\n", paste(if(y.log == "log10"){log10(y.lim)}else{log2(y.lim)}, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }
 }
@@ -11385,54 +11576,7 @@ tempo.warn <- paste0("(", warn.count,") y.log ARGUMENT SET TO ", y.log, " AND y.
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 y.include.zero <- FALSE
 }
-# end management of log scale
-# verif of add
-if( ! is.null(add)){
-if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-
-}else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
-tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-}else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-}
-}
-# end verif of add
-# management of add containing facet
-facet.categ <- NULL
-if( ! is.null(add)){
-facet.check <- TRUE
-tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
-tempo <- sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
-tempo <- sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
-tempo <- sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
-if(length(data1) > 1 & (any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")) | grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid"))){
-tempo.cat <- paste0("ERROR IN ", function.name, "\nfacet PANELS CANNOT BE USED IF MORE THAN ONE DATA FRAME IN THE data1 ARGUMENT\nPLEASE REWRITE THE add STRING AND RERUN")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-}else{
-if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"))){
-tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
-facet.categ <- list(names(tempo1$params$facets)) # list of length 1
-tempo.text <- "facet_wrap OR facet_rep_wrap"
-facet.check <- FALSE
-}else if(grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
-tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
-facet.categ <- list(c(names(tempo1$params$rows), names(tempo1$params$cols))) # list of length 1
-tempo.text <- "facet_grid OR facet_rep_grid"
-facet.check <- FALSE
-}
-if(facet.check == FALSE & ! all(facet.categ %in% names(data1[[1]]))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
-tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1[[1]]), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-}
-}
-}
-# if facet.categ is not NULL, it is a list of length 1 now
-# end management of add containing facet
-# end second round of argument checking
+# end y.lim management before transfo by y.log
 # end second round of checking and data preparation
 
 
@@ -11440,7 +11584,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 
 
 # package checking
-fun_pack(req.package = c("ggplot2", "gridExtra"), lib.path = lib.path)
+fun_pack(req.package = c("ggplot2", "gridExtra", "scales"), lib.path = lib.path)
 # packages Cairo and grid tested by fun_gg_point_rast()
 # end package checking
 
@@ -11582,56 +11726,6 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # color is not NULL anymore
 
 
-# na detection and removal
-data1.ini <- data1 # to report NA removal
-removed.row.nb <- vector("list", length = length(data1)) # to report NA removal
-removed.rows <- vector("list", length = length(data1)) # to report NA removal
-for(i1 in 1:length(data1)){
-column.check <- unlist(c( #unlist because creates a list
-if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, 
-if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]}, 
-if(is.null(categ[[i1]])){NULL}else{categ[[i1]]}, 
-if(is.null(facet.categ)){NULL}else{facet.categ}
-)) # dot.categ because can be a 3rd column of data1
-if(any(is.na(data1[[i1]][, column.check]))){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NA DETECTED IN COLUMNS ", paste(column.check, collapse = " "), " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-for(i3 in 1:length(column.check)){
-if(any(is.na(data1[[i1]][, column.check[i3]]))){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NA REMOVAL DUE TO COLUMN ", column.check[i3], " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-}
-}
-removed.row.nb[[i1]] <- unlist(lapply(lapply(c(data1[[i1]][column.check]), FUN = is.na), FUN = which))
-removed.rows[[i1]] <- data1[[i1]][removed.row.nb[[i1]], ]
-column.check <- column.check[ ! (column.check == x[[i1]] | column.check == y[[i1]])] # remove x and y to keep quali columns
-if(length(removed.row.nb[[i1]]) != 0){
-data1[[i1]] <- data1[[i1]][-removed.row.nb[[i1]], ]
-for(i4 in 1:length(column.check)){
-if(any( ! unique(removed.rows[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]]))){
-warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") IN COLUMN ", column.check[i4], " OF ", ifelse(length(data1) == 1, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), ", THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA REMOVAL\n(IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", paste(unique(removed.rows[[i1]][, column.check[i4]])[ ! unique(removed.rows[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])], collapse = " "))
-warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-if(column.check[i4] %in% categ[[i1]]){
-categ.class.order[[i1]] <- levels(data1[[i1]][, column.check[i4]])[levels(data1[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])] # remove the absent class in the categ.class.order vector
-color[[i1]] <-color[[i1]][levels(data1[[i1]][, column.check[i4]]) %in% unique(data1[[i1]][, column.check[i4]])] # remove the absent color in the character vector
-data1[[i1]][, column.check[i4]] <- factor(as.character(data1[[i1]][, column.check[i4]]), levels = unique(categ.class.order[[i1]]))
-}
-if(column.check[i4] %in% facet.categ){ # works if facet.categ == NULL this method should keep the order of levels when removing some levels
-tempo.levels <- levels(data1[[i1]][, column.check[i4]])[levels(data1[[i1]][, column.check[i4]]) %in% unique(as.character(data1[[i1]][, column.check[i4]]))]
-data1[[i1]][, column.check[i4]] <- factor(as.character(data1[[i1]][, column.check[i4]]), levels = tempo.levels)
-}
-}
-}
-}
-}else{
-removed.row.nb[[i1]] <- NULL
-removed.rows[[i1]] <- NULL
-}
-}
-# end na detection and removal
 
 
 
