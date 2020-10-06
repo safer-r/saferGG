@@ -486,7 +486,7 @@ fun_info <- function(data, n = 20, full = FALSE, warn.print = TRUE){
 # data: object to test
 # n: positive integer value indicating the number of element to display per compartment of the output list (i.e., head(..., n)). Ignored if full argument is TRUE. Also ignored for the STRUCTURE compartment output, corresponding to ls.str() information (because head() removes almost everything)
 # full: logical. Return the full information?
-# warn.print: logical. Print warnings at the end of the execution? No print if no warning messages
+# warn.print: logical. Print potential warnings at the end of the execution? If FALSE the message or NULL (if no message) is added in the output as an additional compartment
 # RETURN
 # a list containing information, depending on the class and type of data
 # if data is made of numerics, provide range, sum, mean, number of NA and number of Inf
@@ -537,11 +537,10 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.2/r_debugging_tools-v1.2.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # main code
-on.exit(
-exp = if(full == FALSE & warn.print == TRUE){
-warning(paste0("FROM ", function.name, ":\n\nSOME COMPARTMENTS CAN BE TRUNCATED (n ARGUMENT IS ", n, ")\n\n"), call. = FALSE)
+warn <- NULL
+if(full == FALSE){
+warn <- paste0("FROM ", function.name, ":\n\nSOME COMPARTMENTS CAN BE TRUNCATED (n ARGUMENT IS ", n, ")\n\n")
 }
-)
 data.name <- deparse(substitute(data))
 output <- list("NAME" = data.name)
 tempo <- list("CLASS" = class(data))
@@ -615,6 +614,11 @@ output <- c(output, tempo)
 }
 if(full == FALSE){
 output[names(output) != "STRUCTURE"] <- lapply(X = output[names(output) != "STRUCTURE"], FUN = head, n = n, simplify = FALSE)
+}
+if(warn.print == FALSE){
+output <- c(output, WARNING = warn)
+}else if(warn.print == TRUE & ! is.null(warn)){
+on.exit(warning(warn, call. = FALSE))
 }
 return(output)
 }
@@ -1730,6 +1734,10 @@ fun_pack(req.package = c("parallel"), lib.path = lib.path)
 sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 # end declaration of special plot functions
 # main code
+ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
+warn <- NULL
+warn.count <- 0
 cat("\nfun_test JOB IGNITION\n")
 ini.date <- Sys.time()
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
@@ -2037,7 +2045,9 @@ rm(env.name) # optional, because should disappear at the end of the function exe
 output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
 save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(length(x) == 1, ".RData", paste0("-", x[length(x)], ".RData"))))
 if(plot.fun == TRUE & plot.count == 0){
-warning(paste0("\nWARNING FROM ", function.name, " IN PROCESS ", process.id, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n"), call. = FALSE)
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") IN PROCESS ", process.id, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
 }
 table.out <- as.matrix(output$data)
@@ -2107,7 +2117,9 @@ rm(env.name) # optional, because should disappear at the end of the function exe
 # output
 output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
 if(plot.fun == TRUE & plot.count == 0){
-warning(paste0("\nWARNING FROM ", function.name, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED\n"), call. = FALSE)
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") NO PDF PLOT BECAUSE ONLY ERRORS REPORTED")
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 file.remove(paste0(res.path, "/plots_from_fun_test_1", ifelse(total.comp.nb == 1, ".pdf", paste0("-", total.comp.nb, ".pdf"))))
 }
 if( ! is.null(expect.error)){
@@ -2122,6 +2134,10 @@ expect.data <- gsub(expect.data, pattern = "\n", replacement = "  ")
 write.table(expect.data, file = paste0(res.path, "/discrepancy_table_from_fun_test_1", ifelse(total.comp.nb == 1, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
 }
 }
+}
+if( ! is.null(warn)){
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+on.exit(exp = options(warning.length = ini.warning.length))
 }
 if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
@@ -2893,7 +2909,6 @@ empty.sector <- NULL
 full.sector <- NULL
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 for(i1 in 1:length(sector)){
@@ -2952,7 +2967,7 @@ eval(parse(text = paste0(diag.scan[4], " <- ", diag.scan[2])))
 # end matrix filling
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
 }
 return(list(mat = mat, warn = warn))
 }
@@ -3347,7 +3362,7 @@ tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 cat("\n\n")
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
 }
 output <- list(data = data1[tempo.pos], warn = warn, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
 return(output)
@@ -4565,7 +4580,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 output <- list(log = log, coordinates = tick.pos, values = tick.values, warn = warn)
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE) # to recover the warning messages, see $warn
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)) # to recover the warning messages, see $warn
 }
 return(output)
 }
@@ -6006,7 +6021,7 @@ tempo.warn <- paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -6777,7 +6792,6 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NO NA, NaN, -Inf OR Inf DETECTED IN COLUMN ", paste(c(x2, y2), collapse = " "), " OF data2. NO ROW REMOVED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-print(warn)
 }
 }
 # end na and Inf detection and removal (done now to be sure of the correct length of categ)
@@ -7433,7 +7447,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe), x = list(x1, "x", "x"), y = list(y1, "y", "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
@@ -7441,7 +7457,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.signif.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7455,7 +7473,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, vframe, data1.incon.dot), x = list(x1, "x", "x", x1), y = list(y1, "y", "y", y1), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME" , "VERT FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7469,7 +7489,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe , vframe), x = list(x1, x2, "x", "x"), y = list(y1, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
@@ -7477,7 +7499,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7491,7 +7515,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7506,7 +7532,9 @@ fun_open(pdf = FALSE)
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe , vframe), x = list(x1, x2, x2, "x", "x"), y = list(y1, y2, y2, "y", "y"), categ = list("kind", "kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "HORIZ FRAME" , "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7521,7 +7549,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe), x = list(x1, "x"), y = list(y1, "y"), categ = list("kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
@@ -7529,7 +7559,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7543,7 +7575,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, hframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "HORIZ FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7557,7 +7591,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, hframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
@@ -7565,7 +7601,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7579,7 +7617,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7593,7 +7633,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, hframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "HORIZ FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.1, 0.15), v = c(0.75, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7608,7 +7650,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe), x = list(x1, "x"), y = list(y1, "y"), categ = list("kind", "kind"), legend.name = list("DATASET", "VERT FRAME"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_path"), alpha = list(0.5, 0.5), title = "DATA1", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data1.signif.dot)){
 if(graph.in.file == FALSE){
@@ -7616,7 +7660,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.signif.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "VERT FRAME", "SIGNIF DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), "black"), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7630,7 +7676,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, vframe, data1.incon.dot), x = list(x1, "x", x1), y = list(y1, "y", y1), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "VERT FRAME", "INCONSISTENT DOTS"), color = list(fun_gg_palette(2)[2], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2), fun_gg_palette(7)[6]), geom = list("geom_point", "geom_path", "geom_point"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA1 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7644,7 +7692,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, vframe), x = list(x1, x2, "x"), y = list(y1, y2, "y"), categ = list("kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5), title = "DATA1 + DATA2", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if( ! is.null(data2.signif.dot)){
 if(graph.in.file == FALSE){
@@ -7652,7 +7702,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.signif.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "SIGNIF DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], "black", rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 SIGNIFICANT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7666,7 +7718,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.incon.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "INCONSISTENT DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[6], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 INCONSISTENT DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7680,7 +7734,9 @@ fun_open(pdf = FALSE)
 }
 tempo.graph <- fun_gg_scatter(data1 = list(data1, data2, data2.unknown.dot, vframe), x = list(x1, x2, x2, "x"), y = list(y1, y2, y2, "y"), categ = list("kind", "kind", "kind", "kind"), legend.name = list("DATASET", "DATASET", "UNKNOWN DOTS", "VERT FRAME"), color = list(fun_gg_palette(2)[2], fun_gg_palette(2)[1], fun_gg_palette(7)[5], rep(hsv(h = c(0.5, 0.6), v = c(0.9, 1)), 2)), geom = list("geom_point", "geom_point", "geom_point", "geom_path"), alpha = list(0.5, 0.5, 0.5, 0.5), title = "DATA1 + DATA2 + DATA2 UNKNOWN DOTS", x.lim = x.range.plot, y.lim = y.range.plot, raster = raster, return = TRUE)
 if( ! is.null(tempo.graph$warn)){
-warn <- paste0(ifelse(is.null(warn), tempo.graph$warn, paste0(warn, "\n", tempo.graph$warn)))
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") FROM fun_gg_scatter():\n", tempo.graph$warn)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }else{
 if(graph.in.file == FALSE){
@@ -7693,11 +7749,12 @@ fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size 
 }
 # end plot
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
 }
 tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, axes = axes, warn = warn)
 return(tempo.list)
 }
+
 
 
 ################ Import
@@ -8663,7 +8720,6 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end dealing with NULL arguments
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
@@ -10211,7 +10267,8 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
 # }
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+on.exit(exp = options(warning.length = ini.warning.length))
 }
 if(return == TRUE){
 tempo.output <- ggplot2::ggplot_build(fin.plot)
@@ -10787,7 +10844,6 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # check list lengths (and names of data1 compartments if present)
 ini.warning.length <- options()$warning.length
 options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 list.color <- NULL
@@ -11352,7 +11408,7 @@ removed.row.nb[[i1]] <- c(removed.row.nb[[i1]], which(( ! is.finite(data1[[i1]][
 }
 if( ! is.null(removed.row.nb[[i1]])){
 removed.row.nb[[i1]] <- unique(removed.row.nb[[i1]]) # to remove the duplicated positions (NA in both x and y)
-removed.rows[[i1]] <- rbind(removed.rows[[i1]], data1.ini[removed.row.nb[[i1]], ]) # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
+removed.rows[[i1]] <- rbind(removed.rows[[i1]], data1.ini[[i1]][removed.row.nb[[i1]], ]) # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
 data1[[i1]] <- data1[[i1]][-removed.row.nb[[i1]], ]
 data1.ini[[i1]] <- data1.ini[[i1]][-removed.row.nb[[i1]], ] #
 }
@@ -12398,7 +12454,8 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 
 # outputs
 if(warn.print == TRUE & ! is.null(warn)){
-warning(paste0("FROM ", function.name, " FUNCTION:\n\n", warn), call. = FALSE) # to recover the warning messages, use return = TRUE
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+on.exit(exp = options(warning.length = ini.warning.length))
 }
 if(return == TRUE){
 output <- suppressMessages(ggplot2::ggplot_build(fin.plot))
