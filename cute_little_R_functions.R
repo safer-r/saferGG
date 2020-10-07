@@ -1517,7 +1517,7 @@ cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\
 # cute.path: character string indicating the absolute path of the cute.R file. Will be remove when cute will be a package. Not considered if thread.nb is NULL
 # REQUIRED PACKAGES
 # lubridate
-# parallel if thread.nb argument is not NULL (included in the R installation packages)
+# parallel if thread.nb argument is not NULL (included in the R installation packages but not automatically loaded)
 # if the tested function is in a package, this package must be imported first (no parallelization) or must be in the classical R package folder indicated by the lib.path argument (parallelization)
 # RETURN
 # if export is FALSE a list containing:
@@ -3418,7 +3418,7 @@ cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\
 #$value : the computed value by the fun argument in each window)
 # REQUIRED PACKAGES
 # lubridate
-# parallel if parallelization is used (included in the R installation packages)
+# parallel if parallelization is used (included in the R installation packages but not automatically loaded)
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # fun_get_message
@@ -5558,7 +5558,7 @@ lib.path = NULL
 # a raster scatter plot
 # REQUIRED PACKAGES
 # ggplot2
-# grid (included in the R installation packages)
+# grid (included in the R installation packages but not automatically loaded)
 # Cairo
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
@@ -8006,7 +8006,7 @@ sep = 2
 # RETURN
 # nothing
 # REQUIRED PACKAGES
-# utils (included in the R installation packages)
+# none
 # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
 # fun_check()
 # EXAMPLES
@@ -9774,7 +9774,7 @@ names(tempo.polygon)[names(tempo.polygon) == "GROUPX"] <- dot.categ
 
 }
 }
-tempo.diamon.mean <- data.frame(X = c(t(stat[, c("X", "X_NOTCH_INF", "X", "X_NOTCH_SUP", "X")])), Y = c(t(cbind(stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] + (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio), stringsAsFactors = TRUE)), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), GROUP = c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX")])), stringsAsFactors = TRUE) # stringsAsFactors = TRUE for cbind() because stat["MEAN"] is a data frame. Otherwise, stringsAsFactors is not an argument for cbind() on vectors
+tempo.diamon.mean <- data.frame(X = c(t(stat[, c("X", "X_NOTCH_INF", "X", "X_NOTCH_SUP", "X")])), Y = c(t(cbind(stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] + (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stringsAsFactors = TRUE))), COLOR = c(t(stat[, c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), GROUP = c(t(stat[, c("BOX", "BOX", "BOX", "BOX", "BOX")])), stringsAsFactors = TRUE) # stringsAsFactors = TRUE for cbind() because stat["MEAN"] is a data frame. Otherwise, stringsAsFactors is not an argument for cbind() on vectors
 if( ! is.null(facet.categ)){
 for(i3 in 1:length(facet.categ)){
 tempo.diamon.mean <- data.frame(tempo.diamon.mean, c(t(stat[, c(facet.categ[i3], facet.categ[i3], facet.categ[i3], facet.categ[i3], facet.categ[i3])])), stringsAsFactors = TRUE)
