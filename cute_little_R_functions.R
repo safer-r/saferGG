@@ -3884,7 +3884,7 @@ return.output = FALSE
 # EXAMPLES
 # fun_open(pdf = FALSE, pdf.path = "C:/Users/Gael/Desktop", pdf.name = "graph", width = 7, height = 7, paper = "special", pdf.overwrite = FALSE, return.output = TRUE)
 # DEBUGGING
-# pdf = TRUE ; pdf.path = "C:/Users/Gael/Desktop" ; pdf.name = "graphs" ; width = 7 ; height = 7 ; paper = "special" ; pdf.overwrite = FALSE ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
+# pdf = TRUE ; pdf.path = "C:/Users/Gael/Desktop" ; pdf.name = "graphs" ; width = 7 ; height = 7 ; paper = "special" ; pdf.overwrite = FALSE ; rescale = "fixed" ; remove.read.only = TRUE ; return.output = TRUE # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 # end function name
@@ -3932,7 +3932,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # cannot use pdf(file = NULL), because some small differences between pdf() and other devices. For instance, differences with windows() for par()$fin, par()$pin and par()$plt
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
 open.fail <- NULL
-windows()
+grDevices::windows()
 ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
@@ -3941,7 +3941,7 @@ tempo.code <- 0
 while(file.exists(paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf")) == TRUE){
 tempo.code <- tempo.code + 1
 }
-pdf(width = width, height = height, file=paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
+grDevices::pdf(width = width, height = height, file=paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf"), paper = paper)
 ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the pdf window
 file.remove(paste0(pdf.path, "/recover_ini_par", tempo.code, ".pdf")) # remove the pdf file
@@ -3951,7 +3951,7 @@ if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 tempo.cat <- paste0("ERROR IN ", function.name, "\nTHIS FUNCTION CANNOT BE USED ON LINUX IF A Rplots.pdf FILE ALREADY EXISTS HERE\n", getwd())
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
-open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
+open.fail <- suppressWarnings(try(grDevices::X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
 if(is.null(open.fail)){
 ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
@@ -3964,7 +3964,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }else{
 open.fail <- NULL
-quartz()
+grDevices::quartz()
 ini.par <- par(no.readonly = remove.read.only) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }
@@ -3979,21 +3979,21 @@ if(file.exists(pdf.loc) == TRUE & pdf.overwrite == FALSE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\npdf.loc FILE ALREADY EXISTS AND CANNOT BE OVERWRITTEN DUE TO pdf.overwrite ARGUMENT SET TO TRUE\n", pdf.loc)
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
-pdf(width = width, height = height, file=pdf.loc, paper = paper)
+grDevices::pdf(width = width, height = height, file=pdf.loc, paper = paper)
 }
 }else if(pdf == FALSE){
 pdf.loc <- NULL
 if(Sys.info()["sysname"] == "Windows"){ # .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
-windows(width = width, height = height, rescale = rescale)
+grDevices::windows(width = width, height = height, rescale = rescale)
 }else if(Sys.info()["sysname"] == "Linux"){
 if( ! is.null(open.fail)){
 tempo.cat <- "ERROR IN fun_open()\nTHIS FUNCTION CANNOT OPEN GUI ON LINUX OR NON MACOS UNIX SYSTEM (X GRAPHIC INTERFACE HAS TO BE SET)\nTO OVERCOME THIS, PLEASE SET pdf ARGUMENT TO TRUE AND RERUN"
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
-X11(width = width, height = height)
+grDevices::X11(width = width, height = height)
 }
 }else{
-quartz(width = width, height = height)
+grDevices::quartz(width = width, height = height)
 }
 }
 if(return.output == TRUE){
@@ -4117,7 +4117,7 @@ active.wind.nb <- dev.cur()
 active.wind.nb <- 0
 }
 if(Sys.info()["sysname"] == "Windows"){ # Note that .Platform$OS.type() only says "unix" for macOS and Linux and "Windows" for Windows
-windows()
+grDevices::windows()
 ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
 }else if(Sys.info()["sysname"] == "Linux"){
@@ -4125,7 +4125,7 @@ if(file.exists(paste0(getwd(), "/Rplots.pdf"))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": THIS FUNCTION CANNOT BE USED ON LINUX WITH param.reinitial SET TO TRUE IF A Rplots.pdf FILE ALREADY EXISTS HERE: ", getwd())
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
-open.fail <- suppressWarnings(try(X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
+open.fail <- suppressWarnings(try(grDevices::X11(), silent = TRUE))[] # try to open a X11 window. If open.fail == NULL, no problem, meaning that the X11 window is opened. If open.fail != NULL, a pdf can be opened here paste0(getwd(), "/Rplots.pdf")
 if(is.null(open.fail)){
 ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
 invisible(dev.off()) # close the new window
@@ -4139,7 +4139,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 }else{ # macOS
-quartz()
+grDevices::quartz()
 ini.par <- par(no.readonly = FALSE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened)
 invisible(dev.off()) # close the new window
 }
