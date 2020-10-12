@@ -97,10 +97,10 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 | gg graphics | |
 | --- | --- |
 | **fun_gg_palette()** | select colors on the ggplot2 default color palette |
-| **fun_gg_just()** | ggplot2 justification of the axis labeling, depending on angle |
+| **fun_gg_just()** | ggplot2 justification of annotated text or axis labeling, depending on angle |
 | **fun_gg_get_legend()** | get the legend of ggplot objects |
 | **fun_gg_point_rast()** | ggplot2 raster scatterplot layer |
-| **fun_gg_boxplot()** | ggplot2 boxplot + dots + means + average values |
+| **fun_gg_boxplot()** | ggplot2 boxplot + dots + means + median/mean values |
 | **fun_gg_scatter()** | ggplot2 scatterplot + lines (up to 6 overlays totally) |
 | **fun_gg_empty_graph()** | generate an empty graphic device with text in the middle |
 

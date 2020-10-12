@@ -1735,7 +1735,6 @@ sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 # end declaration of special plot functions
 # main code
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 cat("\nfun_test JOB IGNITION\n")
@@ -2136,8 +2135,9 @@ write.table(expect.data, file = paste0(res.path, "/discrepancy_table_from_fun_te
 }
 }
 if( ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length))
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
@@ -2908,7 +2908,6 @@ tempo.list.diag <- list.diag
 empty.sector <- NULL
 full.sector <- NULL
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 for(i1 in 1:length(sector)){
@@ -2967,7 +2966,9 @@ eval(parse(text = paste0(diag.scan[4], " <- ", diag.scan[2])))
 # end matrix filling
 }
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 return(list(mat = mat, warn = warn))
 }
@@ -3087,7 +3088,7 @@ if( ! is.null(n)){
 tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(seed)){
-tempo <- fun_check(data = seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 }
 tempo <- fun_check(data = print.count, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = text.print, class = "character", length = 1, fun.name = function.name) ; eval(ee)
@@ -3121,10 +3122,8 @@ on.exit(assign(".Random.seed", tempo.random.seed, env = .GlobalEnv))
 }else{
 on.exit(set.seed(NULL)) # inactivate seeding -> return to complete randomness
 }
-# end code that protects set.seed() in the global environment
-if( ! is.null(seed)){
 set.seed(seed)
-}
+# end code that protects set.seed() in the global environment
 ini.date <- Sys.time() # time of process begin, converted into seconds
 ini.time <- as.numeric(ini.date) # time of process begin, converted into seconds
 ini.pos <- 1:length(data1) # positions of data1 before permutation loops
@@ -3132,8 +3131,6 @@ tempo.pos <- ini.pos # positions of data1 that will be modified during loops
 # pos.selec.seq <- ini.pos[-length(data1)] # selection of 1 position in initial position, without the last because always up permutation (pos -> pos+1 & pos+1 -> pos)
 pos.selec.seq.max <- length(ini.pos) - 1 # max position (used by sample.int() function). See  below for - 1
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 count <- 0
@@ -3362,7 +3359,9 @@ tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 cat("\n\n")
 if(warn.print == TRUE & ! is.null(warn)){
-on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+options(warning.length = 8170)
+on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE), add = TRUE)
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 output <- list(data = data1[tempo.pos], warn = warn, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
 return(output)
@@ -4527,8 +4526,6 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end second round of checking and data preparation
 # main code
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 lim.rank <- rank(lim) # to deal with inverse axis
@@ -4580,7 +4577,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 output <- list(log = log, coordinates = tick.pos, values = tick.values, warn = warn)
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)) # to recover the warning messages, see $warn
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 return(output)
 }
@@ -5933,8 +5932,6 @@ fun_pack(req.package = c("reshape2", "ggplot2"), lib.path = lib.path)
 # end package checking
 # main code
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 if(all(is.matrix(data1))){
@@ -6021,7 +6018,9 @@ tempo.warn <- paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
@@ -6568,8 +6567,6 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end required function checking
 # argument checking
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
-on.exit(exp = options(warning.length = ini.warning.length))
 warn <- NULL
 warn.count <- 0
 arg.check <- NULL #
@@ -7749,12 +7746,13 @@ fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size 
 }
 # end plot
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, axes = axes, warn = warn)
 return(tempo.list)
 }
-
 
 
 ################ Import
@@ -8314,6 +8312,7 @@ dot.size = 3,
 dot.alpha = 0.5, 
 dot.border.size = 0.5, 
 dot.border.color = NULL, 
+dot.seed = 2
 x.lab = NULL, 
 x.angle = 0, 
 y.lab = NULL, 
@@ -8355,6 +8354,7 @@ lib.path = NULL
 # The dot.alpha argument can alter the display of the color boxes when using pdf output
 # Size arguments (box.line.size, dot.size, dot.border.size, stat.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
 # Display seems to be done twice on Windows devices (like a blink). However, no double plots on pdf devices. Thus, the blink remains mysterious
+# To remove boxes and have only dots, use box.alpha = 0
 # ARGUMENTS
 # data1: data frame containing one column of quantitative values (see the y argument below) and one or two columns of categories (see the categ argument below). Duplicated column names are not allowed
 # y: character string of the data1 column name for y-axis (column containing numeric values). Numeric values will be split according to the classes of the column names indicated in the categ argument to generate the boxes and will also be used to plot the dots
@@ -8376,7 +8376,7 @@ lib.path = NULL
 # box.space: single numeric value (from 0 to 1) indicating the box separation inside grouped boxes, when categ argument has a two categ1 and categ2 elements. 0 means no space and 1 means boxes shrunk to a vertical line. Ignored if categ argument has a single categ1 element
 # box.line.size: single numeric value of line width of boxes and whiskers in mm
 # box.notch: logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences
-# box.alpha: single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). WARNING: work only for the filling of boxes, not for the frame. See https://github.com/tidyverse/ggplot2/issues/252
+# box.alpha: single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). To remove boxplots, use box.alpha = 0
 # box.mean: logical. Add mean value? If TRUE, a diamond-shaped dot, with the horizontal diagonal corresponding to the mean value, is displayed over each boxplot
 # box.whisker.kind: range of the whiskers. Either "no" (no whiskers), or "std" (length of each whisker equal to 1.5 x Inter Quartile Range (IQR)), or "max" (length of the whiskers up or down to the most distant dot)
 # box.whisker.width: single numeric value (from 0 to 1) of the whisker width, with 0 meaning no whiskers and 1 meaning a width equal to the box width
@@ -8394,6 +8394,7 @@ lib.path = NULL
 # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
 # dot.border.size: numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature)
 # dot.border.color: single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by fun_gg_palette()
+# dot.seed: integer value that set the random seed. Using the same number will generate the same dot jittering. Write NULL to have different jittering each time the same instruction is run. Ignored if dot.tidy is TRUE
 # x.lab: a character string or expression for x-axis legend. If NULL, character string of categ1 (see the categ argument for categ1 and categ2 description)
 # x.angle: integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # y.lab: a character string or expression for y-axis legend. If NULL, character string of the y argument
@@ -8470,9 +8471,9 @@ lib.path = NULL
 # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
 # EXAMPLE
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), Categ3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1", "Categ2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = "above" ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; dot.seed = 2 ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), Categ3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1", "Categ2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; dot.seed = 2 ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; dot.seed = 2 ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = "above" ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -8575,6 +8576,9 @@ if((tempo1$problem == TRUE & tempo2$problem == TRUE) | (tempo1$problem == FALSE 
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE\nHERE IT IS: ", paste(unique(dot.border.color), collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
+}
+if( ! is.null(dot.seed)){
+tempo <- fun_check(data = seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 }
 if( ! is.null(x.lab)){
 if(all(class(x.lab) %in% "expression")){ # to deal with math symbols
@@ -8718,8 +8722,17 @@ tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end dealing with NULL arguments
+# code that protects set.seed() in the global environment
+# see also Protocol 100-rev0 Parallelization in R.docx
+if(exists(".Random.seed", envir = .GlobalEnv)){ # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
+tempo.random.seed <- .Random.seed
+on.exit(assign(".Random.seed", tempo.random.seed, env = .GlobalEnv))
+}else{
+on.exit(set.seed(NULL)) # inactivate seeding -> return to complete randomness
+}
+set.seed(dot.seed)
+# end code that protects set.seed() in the global environment
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 if(any(duplicated(names(data1)))){
@@ -8846,9 +8859,11 @@ if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, "\n", paste0("categ NUMBER ", i1, " OF data1"), " MUST BE A FACTOR OR CHARACTER VECTOR")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(tempo1$problem == FALSE){ # character vector
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR, WITH LEVELS ACCORDING TO THE ALPHABETICAL ORDER")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }
 data1[, categ[i1]] <- factor(data1[, categ[i1]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
 }
@@ -8999,12 +9014,14 @@ categ.class.order[[i2]] <- levels(data1[, categ[i2]])
 names(categ.class.order)[i2] <- categ[i2]
 tempo.categ.class.order <- c(tempo.categ.class.order, ifelse(i2 != 1, "\n", ""), categ.class.order[[i2]])
 }
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") THE categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR BOX ORDERING:\n", paste(tempo.categ.class.order, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
+}
 # categ.class.order not NULL anymore (list)
-if(is.null(box.legend.name)){
+if(is.null(box.legend.name) & box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") THE box.legend.name SETTING IS NULL. NAMES OF categ WILL BE USED: ", paste(categ, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -9025,7 +9042,7 @@ if( ! (all(categ.color %in% colors() | grepl(pattern = "^#", categ.color)))){ # 
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors(): ", paste(unique(categ.color), collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if(any(is.na(categ.color))){
+if(any(is.na(categ.color)) & box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT CONTAINS NA")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
@@ -9037,9 +9054,11 @@ if(length(categ.color) == length(levels(data1[, categ[categ.len]]))){ # here len
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)  # no need stringsAsFactors here for stat.nolog as factors remain factors
 data1$categ.color <- factor(data1$categ.color, labels = categ.color)
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }else if(length(categ.color) == length(data1[, categ[categ.len]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, categ.color = categ.color, stringsAsFactors = TRUE)
 tempo.check <- unique(data1[ , c(categ[categ.len], "categ.color")])
@@ -9049,17 +9068,21 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 }else{
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 categ.color <- unique(data1$categ.color[order(data1[, categ[categ.len]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], " AS:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }
 }else if(length(categ.color) == 1){
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 data1 <- data.frame(data1, categ.color = categ.color, stringsAsFactors = TRUE)
 categ.color <- rep(categ.color, length(levels(data1[, categ[categ.len]])))
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", paste(categ.color, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }else{
 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", length(categ.color), " VERSUS CATEG LENGTH ", length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -9070,9 +9093,11 @@ categ.len <- length(categ) # if only categ1, then colors for classes of categ1, 
 categ.color <- fun_gg_palette(length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)
 data1$categ.color <- factor(data1$categ.color, labels = categ.color)
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[categ.len], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[categ.len]]), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }
 # categ.color not NULL anymore
 categ.color <- as.character(categ.color)
@@ -9221,9 +9246,11 @@ if(length(dot.color) == length(levels(data1[, categ[categ.len]]))){ # here lengt
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 data1 <- data.frame(data1, dot.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)
 data1$dot.color <- factor(data1$dot.color, labels = dot.color)
+if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }else if(length(dot.color) == length(data1[, categ[categ.len]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
 }else if(length(dot.color) == 1 & ! all(dot.color == "same")){
@@ -9681,10 +9708,8 @@ if(nrow(dot.coord.rd1) != nrow(dot.coord)){
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd1 DATA FRAME. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-set.seed(1)
 sampled.dot.jitter <- if(nrow(dot.coord.rd1) == 1){runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2)}else{sample(x = runif(n = nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2), size = nrow(dot.coord.rd1), replace = FALSE)}
 dot.coord.rd2 <- data.frame(dot.coord.rd1, dot.x = dot.coord.rd1$x.y + sampled.dot.jitter, stringsAsFactors = TRUE) # set the dot.jitter thanks to runif and dot.jitter range. Then, send the coord of the boxes into the coord data.frame of the dots (in the column x.y)
-set.seed(NULL)
 if(length(categ) == 1){
 tempo.data1 <- unique(data.frame(data1[categ[1]], group = as.integer(data1[, categ[1]]), stringsAsFactors = TRUE)) # categ[1] is factor
 names(tempo.data1)[names(tempo.data1) == categ[1]] <- paste0(categ[1], ".check")
@@ -9789,7 +9814,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 data = tempo.polygon, 
 mapping = ggplot2::aes_string(x = "X", y = "Y", group = "BOX", fill = categ[length(categ)], color = categ[length(categ)]), 
 size = box.line.size, 
-alpha = box.alpha
+alpha = box.alpha # works only for fill, not for color
 ))
 coord.names <- c(coord.names, "main.box")
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
@@ -9809,7 +9834,7 @@ data = tempo.diamon.mean,
 mapping = ggplot2::aes(x = X, y = Y, group = GROUP), 
 fill = tempo.diamon.mean[, "COLOR"], 
 color = hsv(0, 0, 0, alpha = box.alpha), # outline of the polygon in black but with alpha
-size = box.line.size * 2, 
+size = box.line.size, 
 alpha = box.alpha
 ))
 coord.names <- c(coord.names, "mean")
@@ -9965,8 +9990,9 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 
 # boxplot display (if box.fill = FALSE, otherwise, already plotted above)
 if(box.fill == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color) == 1){rep(categ.color, length(unique(data1[, categ[length(categ)]])))}else{categ.color})) #, guide = ggplot2::guide_legend(override.aes = list(fill = levels(tempo.polygon$COLOR), color = "black")))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box.legend.name, values = rep(hsv(0, 0, 0, alpha = box.alpha), length(unique(data1[, categ[length(categ)]]))))) # , guide = ggplot2::guide_legend(override.aes = list(color = "black", alpha = box.alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor # outline of the polygon in black but with alpha
+# overcome "work only for the filling of boxes, not for the frame. See https://github.com/tidyverse/ggplot2/issues/252"
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color) == 1){rep(categ.color, length(unique(data1[, categ[length(categ)]])))}else{categ.color}, guide = ggplot2::guide_legend(order = 1))) #, guide = ggplot2::guide_legend(override.aes = list(fill = levels(tempo.polygon$COLOR), color = "black")))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box.legend.name, values = rep(hsv(0, 0, 0, alpha = box.alpha), length(unique(data1[, categ[length(categ)]]))), guide = ggplot2::guide_legend(order = 1))) # , guide = ggplot2::guide_legend(override.aes = list(color = "black", alpha = box.alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor # outline of the polygon in black but with alpha
 }else{
 # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[length(categ)], fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, size = box.line.size, notch = box.notch, alpha = box.alpha, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}, outlier.shape = if( ! is.null(dot.color)){NA}else{21}, outlier.color = if( ! is.null(dot.color)){NA}else{if(dot.border.size == 0){NA}else{dot.border.color}}, outlier.fill = if( ! is.null(dot.color)){NA}else{NULL}, outlier.size = if( ! is.null(dot.color)){NA}else{dot.size}, outlier.stroke = if( ! is.null(dot.color)){NA}else{dot.border.size}, outlier.alpha = if( ! is.null(dot.color)){NA}else{dot.alpha})) # the color, size, etc. of the outliers are dealt here. outlier.color = NA to do not plot outliers when dots are already plotted
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_path(
@@ -9996,7 +10022,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 data = tempo.diamon.mean, 
 mapping = ggplot2::aes(x = X, y = Y, group = GROUP), 
 color = tempo.diamon.mean[, "COLOR"], 
-size = box.line.size * 2, 
+size = box.line.size, 
 alpha = box.alpha, 
 lineend = "round", 
 linejoin = "round"
@@ -10012,6 +10038,10 @@ tempo.warn <- paste0("(", warn.count,") GRAPHIC DEVICE USED ON A WINDOWS SYSTEM 
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 }
+if(box.alpha == 0){ # remove box legend because no boxes drawn
+# add this after the scale_xxx_manual() for boxplots
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = FALSE, color = FALSE)) # inactivate the legend
+}
 # end boxplot display (if box.fill = FALSE, otherwise, already plotted above)
 
 
@@ -10021,7 +10051,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # layer after dots but ok, behind dots on the plot
 if( ! is.null(stat.disp)){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NUMBERS ABOVE BOXES ARE ", ifelse(stat.disp.mean == FALSE, "MEDIANS", "MEANS"))
+tempo.warn <- paste0("(", warn.count,") NUMBERS DISPLAYED ARE ", ifelse(stat.disp.mean == FALSE, "MEDIANS", "MEANS"))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 if(stat.disp == "top"){
 tempo.stat <- data.frame(stat, Y = y.lim[2], stringsAsFactors = TRUE) # I had to create a data frame for geom_tex() so that facet is taken into account, (ggplot2::annotate() does not deal with facet because no data and mapping arguments). Of note, facet.categ is in tempo.stat, via tempo.mean, via dot.coord
@@ -10267,8 +10297,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
 # }
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length))
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 if(return == TRUE){
 tempo.output <- ggplot2::ggplot_build(fin.plot)
@@ -10843,7 +10874,6 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end dealing with NULL arguments
 # check list lengths (and names of data1 compartments if present)
 ini.warning.length <- options()$warning.length
-options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 list.color <- NULL
@@ -12454,8 +12484,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 
 # outputs
 if(warn.print == TRUE & ! is.null(warn)){
+options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length))
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
 if(return == TRUE){
 output <- suppressMessages(ggplot2::ggplot_build(fin.plot))
