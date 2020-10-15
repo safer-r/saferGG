@@ -46,9 +46,9 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 
 **examples.R** examples of all the functions, except fun_gg_boxplot() and fun_gg_scatter(), that can be sourced or copied-pasted
 
-**boxplot_examples.R** examples of fun_gg_boxplot() that can be sourced or copied-pasted
+**examples_gg_boxplot.R** examples of fun_gg_boxplot() that can be sourced or copied-pasted
 
-**scatter_examples.R** examples of fun_gg_scatter() that can be sourced or copied-pasted
+**examples_gg_scatter.R** examples of fun_gg_scatter() that can be sourced or copied-pasted
 
 **other** folder containing avorted developments
 
