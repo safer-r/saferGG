@@ -175,6 +175,13 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v8.0.0
+
+1) Examples improved
+
+2) Some functions debugged
+
+
 ### v7.0.0
 
 1) Upgrade to R-4.0.2, among other things
