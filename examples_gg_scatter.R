@@ -420,7 +420,60 @@ gridExtra::grid.arrange(res2$gtable[1,2])
 
 
 
-
+### All the arguments
+fun_gg_scatter(
+data1 = obs1, 
+x = "Km", 
+y = "Time",
+categ = NULL, 
+categ.class.order = NULL, 
+color = NULL, 
+geom = "geom_point", 
+geom.step.dir = "hv", 
+alpha = 0.5, 
+dot.size = 2, 
+dot.shape = 21, 
+dot.border.size = 0.5, 
+dot.border.color = NULL, 
+line.size = 0.5, 
+line.type = "solid", 
+x.lim = NULL, 
+x.lab = NULL, 
+x.log = "no", 
+x.tick.nb = NULL, 
+x.second.tick.nb = NULL, 
+x.include.zero = FALSE, 
+x.left.extra.margin = 0.05, 
+x.right.extra.margin = 0.05, 
+x.text.angle = 0, 
+y.lim = NULL, 
+y.lab = NULL, 
+y.log = "no", 
+y.tick.nb = NULL, 
+y.second.tick.nb = NULL, 
+y.include.zero = FALSE, 
+y.top.extra.margin = 0.05, 
+y.bottom.extra.margin = 0.05, 
+y.text.angle = 0, 
+raster = FALSE, 
+raster.ratio = 1, 
+raster.threshold = NULL, 
+text.size = 12, 
+title = "", 
+title.text.size = 12, 
+legend.show = TRUE, 
+legend.width = 0.5, 
+legend.name = NULL, 
+article = TRUE, 
+grid = FALSE, 
+add = NULL, 
+return = FALSE, 
+return.ggplot = FALSE,
+return.gtable = TRUE,
+plot = TRUE, 
+warn.print = FALSE, 
+lib.path = NULL
+)
 
 
 

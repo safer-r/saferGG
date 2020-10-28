@@ -6,20 +6,20 @@
 vec1 <- -1:3 # vector of integers
 vec2 <- 1:3 / 3 # vector of proportions
 vec3 <- c(1, 2, 3) # vector of integers but stored as "double"
-vec4 <- "pearson"
-vec5 <- c("a", "b","a", "b")
+vec4 <- "pearson" # vector of characters
+vec5 <- c("a", "b","a", "b") # vector of characters
 mat1 <- matrix(vec1) # matrix of integers
 mat2 <- matrix(c(1:3 / 3, NA)) # matrix of proportions with NA
 
 
 ### Datasets info
-vec1
-vec2
-vec3
-vec4
-vec5
-mat1
-mat2
+vec1 # vector of integers
+vec2 # vector of proportions
+vec3 # vector of integers but stored as "double"
+vec4 # vector of characters
+vec5 # vector of characters
+mat1 # matrix of integers
+mat2 # matrix of proportions with NA
 
 
 ### Simple examples
@@ -149,3 +149,55 @@ fun_check(
 )
 
 
+
+
+
+
+
+######## fun_info() #### recover object information
+
+### Datasets
+vec1 <- -1:3 # vector of integers
+vec2 <- 1:3 / 3 # vector of proportions
+vec3 <- c(1, 2, NA) # vector of integers but stored as "double", with NA
+vec4 <- "pearson" # vector of characters
+vec5 <- c("a", "b","a", NA) # vector of characters with NA
+mat1 <- matrix(vec1) # 1D matrix of integers
+mat2 <- matrix(c(1:5, NA), ncol = 2, dimnames = list(c("ROW1", "ROW2", "ROW3"), c("M1", "M2"))) # 2D matrix of floats with NA
+df1 <- as.data.frame(mat2) # data.frame
+l1 <- list(L1 = 1:3, L2 = letters[1:3]) # list
+fac1 <- factor(rep(letters[4:6], c(4:6))) # factor
+tab1 <- table(fac1) # 1D table
+tab2 <- table(fac1, fac1) # 2D table
+fun1 <- mean # function
+
+### Datasets info
+vec1 # vector of integers
+vec2 # vector of proportions
+vec3 # vector of integers but stored as "double", with NA
+vec4 # vector of characters
+vec5 # vector of characters with NA
+mat1 # 1D matrix of integers
+mat2 # 2D matrix of floats with NA
+df1 # data.frame
+l1 # list
+fac1 # factor
+tab1 # 1D table
+tab2 # 2D table
+fun1 # function
+
+### Simple example
+fun_info(data = 1:3) # vector of integers
+fun_info(data = matrix("a")) # matrix of character
+fun_info(data = data.frame(C1 = 1:3, C2 = letters[1:3])) # data frame
+fun_info(data = list(L1 = 1:3, L2 = letters[1:3])) # data frame
+fun_info(data = factor(rep(letters[1:3], 3))) # factor
+fun_info(data = table(factor(rep(letters[1:3], 3)))) # table
+
+### All the arguments
+fun_check(
+    data , 
+    n = 20, # number of element to display per compartment of the output list (i.e., head(..., n))
+    full = FALSE, # Return the full information?
+    warn.print = TRUE
+)
