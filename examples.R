@@ -187,17 +187,24 @@ tab2 # 2D table
 fun1 # function
 
 ### Simple example
-fun_info(data = 1:3) # vector of integers
-fun_info(data = matrix("a")) # matrix of character
-fun_info(data = data.frame(C1 = 1:3, C2 = letters[1:3])) # data frame
-fun_info(data = list(L1 = 1:3, L2 = letters[1:3])) # data frame
-fun_info(data = factor(rep(letters[1:3], 3))) # factor
-fun_info(data = table(factor(rep(letters[1:3], 3)))) # table
+fun_info(data = vec1) # vector of integers
+fun_info(data = vec2) # vector of proportions
+fun_info(data = vec3) # vector of integers but stored as "double", with NA
+fun_info(data = vec4) # vector of characters
+fun_info(data = vec5) # vector of characters with NA
+fun_info(data = mat1) # 1D matrix of integers
+fun_info(data = mat2) # 2D matrix of floats with NA
+fun_info(data = df1) # data.frame
+fun_info(data = l1) # list
+fun_info(data = fac1) # factor
+fun_info(data = tab1) # 1D table
+fun_info(data = tab2) # 2D table
+fun_info(data = fun1) # function
 
 ### All the arguments
 fun_check(
-    data , 
-    n = 20, # number of element to display per compartment of the output list (i.e., head(..., n))
+    data = vec1, 
+    n = 1, # number of element to display per compartment of the output list (i.e., head(..., n))
     full = FALSE, # Return the full information?
     warn.print = TRUE
 )
