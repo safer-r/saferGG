@@ -159,7 +159,7 @@ fun_check(
 ### Datasets
 vec1 <- -1:3 # vector of integers
 vec2 <- 1:3 / 3 # vector of proportions
-vec3 <- c(1, 2, NA) # vector of integers but stored as "double", with NA
+vec3 <- c(1, 2, NA, -Inf) # vector of integers but stored as "double", with NA and Inf
 vec4 <- "pearson" # vector of characters
 vec5 <- c("a", "b","a", NA) # vector of characters with NA
 mat1 <- matrix(vec1) # 1D matrix of integers
@@ -189,7 +189,7 @@ fun1 # function
 ### Simple example
 fun_info(data = vec1) # vector of integers
 fun_info(data = vec2) # vector of proportions
-fun_info(data = vec3) # vector of integers but stored as "double", with NA
+fun_info(data = vec3) # vector of integers but stored as "double", with NA and Inf
 fun_info(data = vec4) # vector of characters
 fun_info(data = vec5) # vector of characters with NA
 fun_info(data = mat1) # 1D matrix of integers
@@ -202,9 +202,12 @@ fun_info(data = tab2) # 2D table
 fun_info(data = fun1) # function
 
 ### All the arguments
-fun_check(
+fun_info(
     data = vec1, 
     n = 1, # number of element to display per compartment of the output list (i.e., head(..., n))
-    full = FALSE, # Return the full information?
-    warn.print = TRUE
+    warn.print = FALSE
 )
+
+
+
+
