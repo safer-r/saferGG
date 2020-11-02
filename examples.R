@@ -131,6 +131,7 @@ fun1(arg1 = vec4)
 
 
 ### All the arguments
+# See the examples of fun_info() to test different classes of objects
 fun_check(
     data = vec1, 
     class = "integer", 
@@ -174,7 +175,7 @@ exp1 <- expression("a") # expression
 name1 <- substitute(exp1) # object of class "name", mode "name" & type "symbol"
 fun1 <- mean # function type "closure"
 fun2 <- sum # function primitive type "builtin"
-fun3 <- get("+") # function primitive type "special"
+fun3 <- get("<-") # function primitive type "special"
 env1 <- new.env() # environment
 s4 <- show # S4 object
 
