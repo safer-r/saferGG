@@ -224,7 +224,7 @@ fun.name = NULL
 # test <- matrix(1:3) ; fun_check(data = test, print = TRUE, class = "vector", mode = "numeric")
 # see http
 # DEBUGGING
-# data = expression(TEST) ; class = "vector" ; typeof = NULL ; mode = NULL ; length = 1 ; prop = FALSE ; double.as.integer.allowed = FALSE ; options = NULL ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; data.name = NULL ; fun.name = NULL
+# data = mean ; class = NULL ; typeof = NULL ; mode = NULL ; length = NULL ; prop = FALSE ; double.as.integer.allowed = FALSE ; options = "a" ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; data.name = NULL ; fun.name = NULL
 # function name
 # no used in this function for the error message, to avoid env colliding
 # end function name
@@ -301,8 +301,8 @@ if(neg.values == FALSE & is.null(class) & is.null(typeof) & is.null(mode)){
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE neg.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! is.null(class)){
-if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built") & any(is.na(class)) != TRUE & length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0
+if( ! is.null(class)){ # may add "formula" and "Date" as in https://renenyffenegger.ch/notes/development/languages/R/functions/class
+if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built", "call") & any(is.na(class)) != TRUE & length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -311,8 +311,8 @@ tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
-if( ! is.null(typeof)){
-if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "name", "symbol", "closure", "special", "builtin", "environment", "S4")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){
+if( ! is.null(typeof)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
+if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "symbol", "closure", "special", "builtin", "environment", "S4", "language")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){ # "language" is the type of object of class "call"
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -321,9 +321,9 @@ tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
-if( ! is.null(mode)){
-if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
-tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\"")
+if( ! is.null(mode)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
+if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4", "call")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\", , \"language\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & mode != "numeric"){
@@ -386,17 +386,17 @@ if(is.null(data.name)){
 data.name <- deparse(substitute(data))
 }
 problem <- FALSE
-text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER")
-if( ! is.null(options)){
+text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT")
+if(( ! is.null(options)) & all(typeof(data) == "character")){
 text <- ""
 if( ! all(data %in% options, na.rm = TRUE)){
 problem <- TRUE
-text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF ", data.name, " ARE: ", paste(unique(data[ ! (data %in% options)]), collapse = " "))
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE PROBLEMATIC ELEMENTS OF ", data.name, " ARE: ", paste(unique(data[ ! (data %in% options)]), collapse = " "))
 }
 if(all.options.in.data == TRUE){
 if( ! all(options %in% data)){ # no need of na.rm = TRUE for all because %in% does not output NA
 problem <- TRUE
-text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE MADE OF ALL THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE MISSING ELEMENTS OF THE options ARGUMENT ARE: ",  paste(unique(options[ ! (options %in% data)]), collapse = " "))
+text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE MADE OF ALL THESE OPTIONS: ", paste(options, collapse = " "), "\nTHE MISSING ELEMENTS OF THE options ARGUMENT ARE: ",  paste(unique(options[ ! (options %in% data)]), collapse = " "))
 }
 }
 if( ! is.null(length)){
@@ -406,8 +406,11 @@ text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.na
 }
 }
 if(text == ""){
-text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER")
+text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT")
 }
+}else if( ! is.null(options)){
+problem <- TRUE
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nBUT IS NOT EVEN TYPE CHARACTER")
 }
 arg.names <- c("class", "typeof", "mode", "length")
 if( ! is.null(class)){
@@ -423,8 +426,8 @@ if( ! is.null(get(arg.names[i2], env = sys.nframe(), inherit = FALSE))){
 # script to execute
 tempo.script <- '
 problem <- TRUE ;
-if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
-text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " PARAMETER MUST BE ") ;
+if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE ") ;
 }else{
 text <- paste0(text, " AND ") ; 
 }
@@ -445,16 +448,24 @@ eval(parse(text = tempo.script)) # execute tempo.script
 }
 }
 }
-if(prop == TRUE){
-if(is.null(data) | any(data < 0 | data > 1, na.rm = TRUE)){
+if(prop == TRUE & all(typeof(data) == "double")){
+if(is.null(data) | any(data < 0 | data > 1, na.rm = TRUE)){ # works if data is NULL
 problem <- TRUE
-if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
+if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
 }else{
 text <- paste0(text, " AND ")
 }
-text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
+text <- paste0(text, "THE ", data.name, " OBJECT MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
 }
+}else if(prop == TRUE){
+problem <- TRUE
+if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
+}else{
+text <- paste0(text, " AND ")
+}
+text <- paste0(text, "THE ", data.name, " OBJECT MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
 }
 if(all(class(data) %in% "expression")){  # no need of na.rm = TRUE for all because %in% does not output NA
 data <- as.character(data) # to evaluate the presence of NA
@@ -462,24 +473,32 @@ data <- as.character(data) # to evaluate the presence of NA
 if(na.contain == FALSE & (mode(data) %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol"))){ # before it was ! (class(data) %in% c("function", "environment"))
 if(any(is.na(data)) == TRUE){ # not on the same line because when data is class envir or function , do not like that
 problem <- TRUE
-if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
+if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
 }else{
 text <- paste0(text, " AND ")
 }
-text <- paste0(text, "THE ", data.name, " PARAMETER CONTAINS NA WHILE NOT AUTHORIZED")
+text <- paste0(text, "THE ", data.name, " OBJECT CONTAINS NA WHILE NOT AUTHORIZED")
 }
 }
-if(neg.values == FALSE){
+if(neg.values == FALSE & all(typeof(data) %in% c("integer", "double"))){
 if(any(data < 0, na.rm = TRUE)){
 problem <- TRUE
-if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " PARAMETER"))){
+if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
 }else{
 text <- paste0(text, " AND ")
 }
-text <- paste0(text, "THE ", data.name, " PARAMETER MUST BE NON NEGATIVE NUMERIC VALUES")
+text <- paste0(text, "THE ", data.name, " OBJECT MUST BE NON NEGATIVE NUMERIC VALUES")
 }
+}else if(neg.values == FALSE){
+problem <- TRUE
+if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
+}else{
+text <- paste0(text, " AND ")
+}
+text <- paste0(text, "THE ", data.name, " OBJECT MUST BE NON NEGATIVE BUT IS NOT EVEN MODE NUMERIC")
 }
 if(print == TRUE & problem == TRUE){
 cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
@@ -1784,6 +1803,7 @@ cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\
 # fun = "unique" ; arg = c("x", "incomparables") ; val = list(x = list(1:10, c(1,1,2,8), NA), incomparable = c(TRUE, FALSE, NA)) ; expect.error = NULL ; thread.nb = 2 ; plot.fun = FALSE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 10 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # fun = "plot" ; arg = c("x", "y") ; val = list(x = list(1:10, 12:13, NA), y = list(1:10, NA, NA)) ; expect.error = list(x = list(FALSE, FALSE, TRUE, FALSE), y = list(FALSE, TRUE, TRUE)) ; print.count = 10 ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Group1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; fun = "fun_gg_boxplot" ; arg = c("data1", "y", "categ") ; val = list(L1 = list(L1 = obs1), L2 = list(L1 = "Time"), L3 = list(L1 = "Group1")) ; expect.error = NULL ; print.count = 10 ; thread.nb = NULL ; plot.fun = TRUE ; export = TRUE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL # for function debugging
+# fun = "unique" ; arg = "x" ; val = list(list(1:3, mean)) ; expect.error = NULL ; thread.nb = NULL ; plot.fun = FALSE ; export = FALSE ; res.path = "C:\\Users\\Gael\\Desktop\\" ; lib.path = NULL ; print.count = 1 ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R" # for function debugging
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 instruction <- match.call()
@@ -2102,7 +2122,14 @@ code <- paste(
 loop.string, '
 count <- count + 1
 print.count.loop <- print.count.loop + 1
-data <- rbind(data, as.character(sapply(eval(parse(text = arg.values)), FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
+arg.values.print <- eval(parse(text = arg.values)) # recover the list of the i1 compartment
+for(i3 in 1:length(arg.values.print)){
+tempo.error <- fun_get_message(data =  paste0("paste(arg.values.print[[", i3, "]])"), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE)) # collapsing arg.values sometimes does not work (with function for instance)
+if( ! is.null(tempo.error)){
+arg.values.print[[i3]] <- paste0("SPECIAL VALUE OF CLASS ", class(arg.values.print[[i3]]), " AND TYPE ", typeof(arg.values.print[[i3]]))
+}
+}
+data <- rbind(data, as.character(sapply(arg.values.print, FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
 tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE)) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
 tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE), print.no = TRUE) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
 if( ! is.null(expect.error)){

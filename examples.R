@@ -162,6 +162,7 @@ vec2 <- 1:3 / 3 # vector of proportions
 vec3 <- c(1, 2, NA, -Inf) # vector of integers but stored as "double", with NA and Inf
 vec4 <- "pearson" # vector of characters
 vec5 <- c("a", "b","a", NA) # vector of characters with NA
+cpx <- as.complex(1) # complex
 mat1 <- matrix(vec1) # 1D matrix of integers
 mat2 <- matrix(c(1:5, NA), ncol = 2, dimnames = list(c("ROW1", "ROW2", "ROW3"), c("M1", "M2"))) # 2D matrix of floats with NA
 df1 <- as.data.frame(mat2) # data.frame
@@ -169,7 +170,14 @@ l1 <- list(L1 = 1:3, L2 = letters[1:3]) # list
 fac1 <- factor(rep(letters[4:6], c(4:6))) # factor
 tab1 <- table(fac1) # 1D table
 tab2 <- table(fac1, fac1) # 2D table
-fun1 <- mean # function
+exp1 <- expression("a") # expression
+name1 <- substitute(exp1) # object of class "name", mode "name" & type "symbol"
+fun1 <- mean # function type "closure"
+fun2 <- sum # function primitive type "builtin"
+fun3 <- get("+") # function primitive type "special"
+env1 <- new.env() # environment
+s4 <- show # S4 object
+
 
 ### Datasets info
 vec1 # vector of integers
@@ -184,7 +192,13 @@ l1 # list
 fac1 # factor
 tab1 # 1D table
 tab2 # 2D table
-fun1 # function
+exp1 # expression
+name1 # object of class "name", mode "name" & type "symbol"
+fun1 # function type "closure"
+fun2 # function primitive type "builtin"
+fun3 # function primitive type "special"
+env1 # environment
+s4 # S4 object
 
 ### Simple example
 fun_info(data = vec1) # vector of integers
@@ -199,7 +213,14 @@ fun_info(data = l1) # list
 fun_info(data = fac1) # factor
 fun_info(data = tab1) # 1D table
 fun_info(data = tab2) # 2D table
-fun_info(data = fun1) # function
+fun_info(data = exp1) # expression
+fun_info(data = name1) # object of class "name", mode "name" & type "symbol"
+fun_info(data = fun1) # function type "closure"
+fun_info(data = fun2) # function primitive type "builtin"
+fun_info(data = fun3) # function primitive type "special"
+fun_info(data = env1) # environment
+fun_info(data = s4) # S4 object
+
 
 ### All the arguments
 fun_info(
