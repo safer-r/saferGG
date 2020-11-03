@@ -255,7 +255,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 # end arg with no default values
 # argument primary checking
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -566,7 +566,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -720,12 +720,16 @@ checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
 if( ! is.null(n)){
 tempo <- fun_check(data = n, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = n, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){ # normally no NA
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -943,7 +947,7 @@ tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = fu
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
@@ -1008,7 +1012,7 @@ tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = fu
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
@@ -1107,7 +1111,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A 
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
 # main code
 same.class <- FALSE
@@ -1330,7 +1334,7 @@ if( ! (any(class(data2) %in% c("data.frame", "table")) | all(class(data2) %in% c
 tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
 # main code
 same.class <- NULL
@@ -1667,7 +1671,7 @@ if( ! any(class(data2) %in% "list")){
 tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A LIST")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
 # main code
 same.length <- NULL
@@ -1944,7 +1948,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA
@@ -2477,7 +2481,7 @@ tempo <- fun_check(data = added.string, class = "vector", mode = "character", le
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 ini <- NULL
@@ -2572,7 +2576,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 tempo.factor <- unlist(lapply(data, class))
@@ -2690,7 +2694,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
@@ -2758,7 +2762,7 @@ tempo <- fun_check(data = data, class = "matrix", fun.name = function.name) ; ev
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 for (i in 1:ncol(data)){data[,i] <- rev(data[,i])}
@@ -2842,7 +2846,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 problem <- NULL
@@ -2991,7 +2995,7 @@ ident.col.names <- FALSE
 }
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 output <- mat.list[[1]]
@@ -3067,7 +3071,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUA
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(any(grepl(x = try(solve(mat), silent = TRUE)[], pattern = "[Ee]rror"))){
@@ -3156,7 +3160,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MATRIX MUST HAVE
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 list.diag <- vector("list", length = nrow(mat) - 1)
@@ -3375,7 +3379,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = "lubridate", lib.path = lib.path)
@@ -3769,7 +3773,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA
@@ -4089,7 +4093,7 @@ tempo <- fun_check(data = boundarie.space, class = "vector", mode = "numeric", l
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 range.max <- class.nb + boundarie.space # the max range of the future plot
@@ -4177,7 +4181,7 @@ tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(pdf.path == "working.dir"){
@@ -4365,7 +4369,7 @@ tempo <- fun_check(data = return.par, class = "logical", length = 1, fun.name = 
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(is.null(dev.list())){
@@ -4537,7 +4541,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 lim.rank <- rank(lim) # to deal with inverted axis
@@ -4744,7 +4748,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA
@@ -5036,7 +5040,7 @@ tempo <- fun_check(data = custom.par, typeof = "list", length = 1, fun.name = fu
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- NULL
@@ -5285,7 +5289,7 @@ tempo <- fun_check(data = return.text, class = "logical", length = 1, fun.name =
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- paste0("THE REQUIRED KIND OF GRAPHIC DEVICES TO CLOSE ARE ", paste(kind, collapse = " "))
@@ -5388,7 +5392,7 @@ tempo <- fun_check(data = title.size, class = "vector", mode = "numeric", length
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
@@ -5467,7 +5471,7 @@ tempo <- fun_check(data = kind, options = c("std", "dark", "light"), length = 1,
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 hues = seq(15, 375, length = n + 1)
@@ -5541,7 +5545,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -5729,7 +5733,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 }
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking
 # management of NA
@@ -5879,7 +5883,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = c("ggplot2"), lib.path = lib.path)
@@ -6180,7 +6184,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = c("reshape2", "ggplot2"), lib.path = lib.path)
@@ -6355,7 +6359,7 @@ tempo <- fun_check(data = title.size, class = "vector", mode = "numeric", length
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = c("ggplot2"), lib.path = lib.path)
@@ -6522,7 +6526,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 if(all(is.na(data) | ! is.finite(data))){
 tempo.cat <- paste0("ERROR IN fun_trim FUNCTION\ndata ARGUMENT CONTAINS ONLY NA OR Inf")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -6948,7 +6952,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # other required function checking
 if(plot == TRUE){
@@ -8066,7 +8070,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(is.null(lib.path)){
@@ -8185,7 +8189,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = "reticulate", lib.path = R.lib.path)
@@ -8298,7 +8302,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # the 4 next lines are inactivated but kept because at a time, I might have a problem with data (solved with data = NULL). These 4 lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
 # arg.user.list <- as.list(match.call(expand.dots = FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
 # default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
@@ -8425,7 +8429,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
@@ -8530,8 +8534,8 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
-# add the new NA and NULL: remain all (slitherine, cute, anova, comat)
-# complete the fun_check(): slitherine anova, comat
+
+
 
 fun_gg_boxplot <- function(
 data1, 
@@ -8649,7 +8653,7 @@ lib.path = NULL
 # y.lim: 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used. 
 # y.log: either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # y.tick.nb: approximate number of desired values labeling the y-axis (i.e., main ticks, see the n argument of the the cute::fun_scale() function). If NULL and if y.log is "no", then the number of labeling values is set by ggplot2. If NULL and if y.log is "log2" or "log10", then the number of labeling values corresponds to all the exposant integers in the y.lim range (e.g., 10^1, 10^2 and 10^3, meaning 3 main ticks for y.lim = c(9, 1200)). WARNING: if non-NULL and if y.log is "log2" or "log10", labeling can be difficult to read (e.g., ..., 10^2, 10^2.5, 10^3, ...)
- # y.second.tick.nb: number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks
+# y.second.tick.nb: number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks
 # y.include.zero: logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10"
 # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis
 # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
@@ -8719,10 +8723,9 @@ lib.path = NULL
 # fun_scale()
 # EXAMPLE
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1")
+# see http
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; box.legend.name = NULL ; categ.color = c("green") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1"; dot.categ.class.order = c("G", "H") ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; dot.seed = 2 ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), Categ3 = rep(c("I", "J"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1", "Categ2") ; categ.class.order = list(c("G", "H"), c("A", "B")); box.legend.name = NULL ; categ.color = c("green", "blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = FALSE ; box.line.size = 0.5 ; box.alpha = 0.5 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0.5 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; dot.seed = 2 ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = NULL ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), Categ2 = rep(c("A", "B"), time = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = list(c("H", "G")); box.legend.name = NULL ; categ.color = c("blue") ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.notch = TRUE ; box.line.size = 1 ; box.alpha = 1 ; box.mean = FALSE ; box.whisker.kind = "max" ; box.whisker.width = 0 ; dot.color = "black" ; dot.categ = "Categ1" ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = TRUE ; dot.tidy.bin.nb = 30 ; dot.jitter = 0.25 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; dot.seed = 2 ; y.lim = NULL ; y.log = "log10" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = "above" ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 2 ; stat.angle = 0 ; x.lab = NULL ; y.lab = NULL ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.width = 0.5 ; legend.show = TRUE ; x.angle = 0 ; article = FALSE ; grid = FALSE ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; categ.color = NULL ; box.legend.name = NULL ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.line.size = 0.75 ; box.notch = FALSE ; box.alpha = 1 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0 ; dot.color = grey(0.25) ; dot.categ = NULL ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = FALSE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.5 ; dot.seed = 2 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; x.lab = NULL ; x.angle = 0 ; y.lab = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = 1 ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = "top" ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 5 ; stat.angle = 0 ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -8776,13 +8779,22 @@ tempo <- fun_check(data = y, class = "vector", mode = "character", length = 1, f
 tempo <- fun_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if( ! is.null(categ.class.order)){
 tempo <- fun_check(data = categ.class.order, class = "list", fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = categ.class.order, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(box.legend.name)){
 tempo <- fun_check(data = box.legend.name, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = box.legend.name, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(categ.color)){
 tempo1 <- fun_check(data = categ.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = categ.color, class = "factor", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.check.color <- fun_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem
 if(tempo.check.color == TRUE){
@@ -8791,6 +8803,10 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = categ.color, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = box.fill, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = box.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -8804,6 +8820,7 @@ tempo <- fun_check(data = box.whisker.width, prop = TRUE, length = 1, fun.name =
 if( ! is.null(dot.color)){
 tempo1 <- fun_check(data = dot.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = dot.color, class = "factor", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.check.color <- fun_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem
 if(tempo.check.color == TRUE){
@@ -8812,21 +8829,41 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.color, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(dot.categ)){
 tempo <- fun_check(data = dot.categ, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.categ, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(dot.categ.class.order)){
 tempo <- fun_check(data = dot.categ.class.order, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.categ.class.order, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(dot.legend.name)){
 tempo <- fun_check(data = dot.legend.name, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.legend.name, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = dot.tidy, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = dot.tidy.bin.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(dot.seed)){
 tempo <- fun_check(data = dot.seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.seed, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = dot.alpha, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -8834,10 +8871,15 @@ tempo <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", l
 if( ! is.null(dot.border.color)){
 tempo1 <- fun_check(data = dot.border.color, class = "vector", mode = "character", length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if((tempo1$problem == TRUE & tempo2$problem == TRUE) | (tempo1$problem == FALSE & tempo2$problem == TRUE & ! (all(dot.border.color %in% colors() | grepl(pattern = "^#", dot.border.color))))){ # check that all strings of low.color start by #
 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE\nHERE IT IS: ", paste(unique(dot.border.color), collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.border.color, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(x.lab)){
 if(all(class(x.lab) %in% "expression")){ # to deal with math symbols
@@ -8845,6 +8887,10 @@ tempo <- fun_check(data = x.lab, class = "expression", length = 1, fun.name = fu
 }else{
 tempo <- fun_check(data = x.lab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = x.lab, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = x.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.lab)){
@@ -8853,6 +8899,10 @@ tempo <- fun_check(data = y.lab, class = "expression", length = 1, fun.name = fu
 }else{
 tempo <- fun_check(data = y.lab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.lab, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(y.lim)){
 tempo <- fun_check(data = y.lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
@@ -8861,6 +8911,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y.lim ARGUMENT CANNOT CONTAIN
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.lim, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = y.log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.tick.nb)){
@@ -8870,6 +8924,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y.tick.nb ARGUMENT MUST BE A 
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.tick.nb, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(y.second.tick.nb)){
 tempo <- fun_check(data = y.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
@@ -8878,12 +8936,20 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y.second.tick.nb ARGUMENT MUS
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.second.tick.nb, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(stat.disp)){
 tempo <- fun_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = stat.disp, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = stat.disp.mean, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
@@ -8896,11 +8962,19 @@ tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", l
 tempo <- fun_check(data = legend.show, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(legend.width)){
 tempo <- fun_check(data = legend.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = legend.width, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = article, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
 tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = add, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.ggplot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -8916,11 +8990,15 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = lib.path, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -8949,14 +9027,17 @@ tempo.arg <-c(
 "dot.tidy", 
 "dot.tidy.bin.nb", 
 "dot.jitter", 
+# "dot.seed", # inactivated because can be null
 "dot.size", 
 "dot.alpha", 
 "dot.border.size", 
 "x.angle", 
 "y.log", 
+# "y.second.tick.nb", # inactivated because can be null
 "y.include.zero", 
 "y.top.extra.margin", 
 "y.bottom.extra.margin", 
+# "stat.disp", # inactivated because can be null
 "stat.disp.mean", 
 "stat.size", 
 "stat.dist", 
@@ -10798,9 +10879,7 @@ lib.path = NULL
 # EXAMPLES
 # set.seed(1) ; obs1 <- data.frame(Km = c(2, 1, 6, 5, 4, 7), Time = c(2, 1, 6, 5, 4, 7)^2, Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"), Color1 = rep(c("coral", "lightblue"), each = 3), stringsAsFactors = TRUE) ; fun_gg_scatter(data1 = obs1, x = "Km", y = "Time")
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500), stringsAsFactors = TRUE) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; categ.class.order = NULL ; legend.name = NULL ; color = list(L1 = 4:5, L2 = 7:8) ; geom = list(L1 = "geom_point", L2 = "geom_point") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5) ; dot.size = 3 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = NULL ; x.lab = "KM" ; x.log = "no" ; x.tick.nb = 10 ; x.second.tick.nb = 1 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(1, 25) ; y.lab = "TIME (s)" ; y.log = "no" ; y.tick.nb = 5 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = TRUE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
-# data1 <- list(L1 = data.frame(a = 1:6, b = (1:6)^2, group = c("A", "A", "A", "B", "B", "B"), stringsAsFactors = TRUE), L2 = data.frame(a = (1:6)*2, b = ((1:6)^2)*2, group = c("A1", "A1", "A1", "B1", "B1", "B1"), stringsAsFactors = TRUE), L3 = data.frame(a = (1:6)*3, b = ((1:6)^2)*3, group3 = c("A4", "A5", "A6", "A7", "B4", "B5"), stringsAsFactors = TRUE)) ; data1$L1$a[3] <- NA ; data1$L1$group[5] <- NA ; data1$L3$group3[4] <- NA ; data1 ; x = list(L1 = names(data1$L1)[1], L2 = names(data1$L2)[1], L3 = NULL) ; y = list(L1 = names(data1$L1)[2], L2 = names(data1$L2)[2], L3 = "a") ; categ = list(L1 = "group", L2 = NULL, L3 = NULL) ; categ.class.order = NULL ; legend.name = NULL ; color = NULL ; geom = list(L1 = "geom_point", L2 = "geom_point", L3 = "geom_hline") ; geom.step.dir = "hv" ; alpha = list(L1 = 0.5, L2 = 0.5, L3 = 0.5) ; dot.size = 1 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = c(14, 4) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = c(60, 5) ; y.lab = NULL ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
-# data1 <- data.frame(km = 2:7, time = (2:7)^2, group = c("A", "A", "A", "B", "B", "B"), stringsAsFactors = TRUE) ; data1 ; x = "km"; y = "time"; categ = "group" ; categ.class.order = NULL ; legend.name = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; alpha = 0.1 ; dot.size = 3 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = c(1,10) ; x.lab = NULL ; x.log = "log10" ; x.tick.nb = 10 ; x.second.tick.nb = 4 ; x.left.extra.margin = 0 ; x.right.extra.margin = 0 ; y.lim = NULL ; y.lab = expression(paste("TIME (", 10^-20, " s)")) ; y.log = "log10" ; y.tick.nb = 10 ; y.second.tick.nb = 2 ; y.top.extra.margin = 0 ; y.bottom.extra.margin = 0 ; x.include.zero = TRUE ; y.include.zero = TRUE ; x.text.angle = 0 ; y.text.angle = 0 ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = FALSE ; grid = FALSE ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500), stringsAsFactors = TRUE) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; categ = NULL ; categ.class.order = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; alpha = 0.5 ; dot.size = 2 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = NULL ; x.lab = NULL ; x.log = "no" ; x.tick.nb = NULL ; x.second.tick.nb = NULL ; x.include.zero = FALSE ; x.left.extra.margin = 0.05 ; x.right.extra.margin = 0.05 ; x.text.angle = 0 ; y.lim = NULL ; y.lab = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; y.text.angle = 0 ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; text.size = 12 ; title = "" ; title.text.size = 12 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -10851,6 +10930,7 @@ checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
 tempo1 <- fun_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = data1, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": data1 ARGUMENT MUST BE A DATA FRAME OR A LIST OF DATA FRAMES")
 text.check <- c(text.check, tempo.cat)
@@ -10859,29 +10939,44 @@ arg.check <- c(arg.check, TRUE)
 if( ! is.null(x)){
 tempo1 <- fun_check(data = x, class = "vector", mode = "character", na.contain = TRUE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = x, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": x ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = x, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(y)){
 tempo1 <- fun_check(data = y, class = "vector", mode = "character", na.contain = TRUE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = y, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": y ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(categ)){
 tempo1 <- fun_check(data = categ, class = "vector", mode = "character", length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = categ, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": categ ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = categ, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(categ.class.order)){
 if(is.null(categ)){
@@ -10891,34 +10986,50 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = categ.class.order, class = "vector", mode = "character", fun.name = function.name)
 tempo2 <- fun_check(data = categ.class.order, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": categ.class.order ARGUMENT MUST BE A VECTOR OF CHARACTER STRINGS OR A LIST OF VECTOR OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = categ.class.order, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(legend.name)){
 tempo1 <- fun_check(data = legend.name, class = "vector", mode = "character", na.contain = TRUE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = legend.name, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": legend.name ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = legend.name, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(color)){
 tempo1 <- fun_check(data = color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = color, class = "factor", na.contain = TRUE, fun.name = function.name)
 tempo3 <- fun_check(data = color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)
 tempo4 <- fun_check(data = color, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo4$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE & tempo4$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": color ARGUMENT MUST BE A VECTOR (OF CHARACTER STRINGS OR INTEGERS) OR A FACTOR OR A LIST OF THESE POSSIBILITIES")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = color, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo1 <- fun_check(data = geom, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = geom, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": geom ARGUMENT MUST BE A SINGLE CHARACTER STRING OR A LIST OF CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
@@ -10926,6 +11037,7 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = geom.step.dir, options = c("vh", "hv", "mid"), na.contain = FALSE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = geom.step.dir, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": geom.step.dir ARGUMENT MUST BE A SINGLE CHARACTER STRING (\"vh\" OR \"hv\" OR \"mid\") OR A LIST OF THESE CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
@@ -10933,6 +11045,7 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = alpha, prop = TRUE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = alpha, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": alpha ARGUMENT MUST BE A SINGLE NUMERIC VALUE BETWEEN 0 AND 1 OR A LIST OF SUCH VALUES")
 text.check <- c(text.check, tempo.cat)
@@ -10940,6 +11053,7 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = dot.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
 tempo2 <- fun_check(data = dot.size, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
 text.check <- c(text.check, tempo.cat)
@@ -10947,6 +11061,7 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = dot.shape, class = "vector", length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = dot.shape, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.shape ARGUMENT MUST BE A SINGLE SHAPE VALUE OR A LIST OF SINGLE SHAPE VALUES (SEE https://ggplot2.tidyverse.org/articles/ggplot2-specs.html)")
 text.check <- c(text.check, tempo.cat)
@@ -10954,6 +11069,7 @@ arg.check <- c(arg.check, TRUE)
 }
 tempo1 <- fun_check(data = dot.border.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
 tempo2 <- fun_check(data = dot.border.size, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
 text.check <- c(text.check, tempo.cat)
@@ -10962,15 +11078,21 @@ arg.check <- c(arg.check, TRUE)
 if( ! is.null(dot.border.color)){
 tempo1 <- fun_check(data = dot.border.color, class = "vector", mode = "character", length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = dot.border.color, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 # integer colors -> gg_palette
 tempo.cat <- paste0("ERROR IN ", function.name, ": dot.border.color MUST BE A SINGLE CHARACTER STRING OF COLOR OR A SINGLE INTEGER VALUE")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = dot.border.color, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo1 <- fun_check(data = line.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name)
 tempo2 <- fun_check(data = line.size, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": line.size ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
 text.check <- c(text.check, tempo.cat)
@@ -10979,6 +11101,7 @@ arg.check <- c(arg.check, TRUE)
 tempo1 <- fun_check(data = line.type, class = "vector", typeof = "integer", double.as.integer.allowed = FALSE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = line.type, class = "vector", mode = "character", length = 1, fun.name = function.name)
 tempo3 <- fun_check(data = line.type, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo3$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": line.type ARGUMENT MUST BE A SINGLE LINE KIND VALUE OR A LIST OF SINGLE LINE KIND VALUES (SEE https://ggplot2.tidyverse.org/articles/ggplot2-specs.html)")
 text.check <- c(text.check, tempo.cat)
@@ -10991,6 +11114,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": x.lim ARGUMENT CANNOT CONTAIN
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = x.lim, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(x.lab)){
 if(all(class(x.lab) %in% "expression")){ # to deal with math symbols
@@ -10998,6 +11125,10 @@ tempo <- fun_check(data = x.lab, class = "expression", length = 1, fun.name = fu
 }else{
 tempo <- fun_check(data = x.lab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = x.lab, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = x.log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(x.tick.nb)){
@@ -11007,6 +11138,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": x.tick.nb ARGUMENT MUST BE A 
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = x.tick.nb, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(x.second.tick.nb)){
 tempo <- fun_check(data = x.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
@@ -11015,6 +11150,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": x.second.tick.nb ARGUMENT MUS
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = x.second.tick.nb, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = x.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = x.left.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -11027,6 +11166,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y.lim ARGUMENT CANNOT CONTAIN
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.lim, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(y.lab)){
 if(all(class(y.lab) %in% "expression")){ # to deal with math symbols
@@ -11034,6 +11177,10 @@ tempo <- fun_check(data = y.lab, class = "expression", length = 1, fun.name = fu
 }else{
 tempo <- fun_check(data = y.lab, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.lab, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = y.log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(y.tick.nb)){
@@ -11043,6 +11190,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y.tick.nb ARGUMENT MUST BE A 
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.tick.nb, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if( ! is.null(y.second.tick.nb)){
 tempo <- fun_check(data = y.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
@@ -11051,6 +11202,10 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": y.second.tick.nb ARGUMENT MUS
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = y.second.tick.nb, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -11060,6 +11215,10 @@ tempo <- fun_check(data = raster, class = "logical", length = 1, fun.name = func
 tempo <- fun_check(data = raster.ratio, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 if( ! is.null(raster.threshold)){
 tempo <- fun_check(data = raster.threshold, class = "vector", typeof = "integer", neg.values = FALSE, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = raster.threshold, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
@@ -11067,11 +11226,19 @@ tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", l
 tempo <- fun_check(data = legend.show, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(legend.width)){
 tempo <- fun_check(data = legend.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = legend.width, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = article, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = grid, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 if( ! is.null(add)){
 tempo <- fun_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = add, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo <- fun_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = return.ggplot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -11087,11 +11254,15 @@ text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = lib.path, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.4/r_debugging_tools-v1.4.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 
 
