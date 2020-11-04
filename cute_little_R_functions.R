@@ -255,7 +255,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 # end arg with no default values
 # argument primary checking
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -566,7 +566,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -729,7 +729,7 @@ tempo <- fun_check(data = warn.print, class = "logical", length = 1, fun.name = 
 if(any(arg.check) == TRUE){ # normally no NA
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -947,7 +947,7 @@ tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = fu
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
@@ -1012,7 +1012,7 @@ tempo <- fun_check(data = side, options = c("l", "r"), length = 1, fun.name = fu
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
@@ -1111,7 +1111,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A 
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
 # main code
 same.class <- FALSE
@@ -1334,7 +1334,7 @@ if( ! (any(class(data2) %in% c("data.frame", "table")) | all(class(data2) %in% c
 tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
 # main code
 same.class <- NULL
@@ -1671,7 +1671,7 @@ if( ! any(class(data2) %in% "list")){
 tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A LIST")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument checking
 # main code
 same.length <- NULL
@@ -1948,7 +1948,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA
@@ -2481,7 +2481,7 @@ tempo <- fun_check(data = added.string, class = "vector", mode = "character", le
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 ini <- NULL
@@ -2576,7 +2576,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 tempo.factor <- unlist(lapply(data, class))
@@ -2694,7 +2694,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
@@ -2762,7 +2762,7 @@ tempo <- fun_check(data = data, class = "matrix", fun.name = function.name) ; ev
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 for (i in 1:ncol(data)){data[,i] <- rev(data[,i])}
@@ -2846,7 +2846,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 problem <- NULL
@@ -2995,7 +2995,7 @@ ident.col.names <- FALSE
 }
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 output <- mat.list[[1]]
@@ -3071,7 +3071,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT CANNOT BE A SQUA
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(any(grepl(x = try(solve(mat), silent = TRUE)[], pattern = "[Ee]rror"))){
@@ -3160,7 +3160,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MATRIX MUST HAVE
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end argument checking without fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 list.diag <- vector("list", length = nrow(mat) - 1)
@@ -3379,7 +3379,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = "lubridate", lib.path = lib.path)
@@ -3773,7 +3773,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA
@@ -4093,7 +4093,7 @@ tempo <- fun_check(data = boundarie.space, class = "vector", mode = "numeric", l
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 range.max <- class.nb + boundarie.space # the max range of the future plot
@@ -4181,7 +4181,7 @@ tempo <- fun_check(data = return.output, class = "logical", length = 1, fun.name
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(pdf.path == "working.dir"){
@@ -4369,7 +4369,7 @@ tempo <- fun_check(data = return.par, class = "logical", length = 1, fun.name = 
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(is.null(dev.list())){
@@ -4541,7 +4541,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 lim.rank <- rank(lim) # to deal with inverted axis
@@ -4748,7 +4748,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA
@@ -5040,7 +5040,7 @@ tempo <- fun_check(data = custom.par, typeof = "list", length = 1, fun.name = fu
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- NULL
@@ -5289,7 +5289,7 @@ tempo <- fun_check(data = return.text, class = "logical", length = 1, fun.name =
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 text <- paste0("THE REQUIRED KIND OF GRAPHIC DEVICES TO CLOSE ARE ", paste(kind, collapse = " "))
@@ -5392,7 +5392,7 @@ tempo <- fun_check(data = title.size, class = "vector", mode = "numeric", length
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 ini.par <- par(no.readonly = TRUE) # to recover the initial graphical parameters if required (reset). BEWARE: this command alone opens a pdf of GUI window if no window already opened. But here, protected with the code because always a tempo window opened
@@ -5471,7 +5471,7 @@ tempo <- fun_check(data = kind, options = c("std", "dark", "light"), length = 1,
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 hues = seq(15, 375, length = n + 1)
@@ -5545,7 +5545,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -5733,7 +5733,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 }
 }
 # end using fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking
 # management of NA
@@ -5883,7 +5883,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = c("ggplot2"), lib.path = lib.path)
@@ -6184,7 +6184,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = c("reshape2", "ggplot2"), lib.path = lib.path)
@@ -6359,7 +6359,7 @@ tempo <- fun_check(data = title.size, class = "vector", mode = "numeric", length
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = c("ggplot2"), lib.path = lib.path)
@@ -6526,7 +6526,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 if(all(is.na(data) | ! is.finite(data))){
 tempo.cat <- paste0("ERROR IN fun_trim FUNCTION\ndata ARGUMENT CONTAINS ONLY NA OR Inf")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -6952,7 +6952,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # other required function checking
 if(plot == TRUE){
@@ -8070,7 +8070,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 if(is.null(lib.path)){
@@ -8189,7 +8189,7 @@ arg.check <- c(arg.check, TRUE)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # package checking
 fun_pack(req.package = "reticulate", lib.path = R.lib.path)
@@ -8302,7 +8302,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # the 4 next lines are inactivated but kept because at a time, I might have a problem with data (solved with data = NULL). These 4 lines are just to know how to detect a missing argument. Important here because if data is not provided, print the code of the data function
 # arg.user.list <- as.list(match.call(expand.dots = FALSE))[-1] # recover all the arguments provided by the function user (excluding the argument with defaults values not provided by the user. Thus, it is really the list indicated by the user)
 # default.arg.list <- formals(fun = sys.function(sys.parent())) # list of all the arguments of the function with their default values (not the values of the user !). It seems that ls() as first line of the function provide the names of the arguments (empty, called, etc., or not)
@@ -8429,7 +8429,7 @@ if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
 # end argument checking with fun_check()
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
@@ -8998,7 +8998,7 @@ checked.arg.names <- c(checked.arg.names, tempo$object.name)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 # second round of checking and data preparation
 # management of NA arguments
@@ -11262,7 +11262,7 @@ checked.arg.names <- c(checked.arg.names, tempo$object.name)
 if(any(arg.check) == TRUE){
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
 }
-# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.5/r_debugging_tools-v1.5.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument primary checking
 
 
