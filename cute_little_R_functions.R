@@ -212,7 +212,7 @@ fun.name = NULL
 # options: a vector of character strings indicating all the possible option values for the data argument, or NULL
 # all.options.in.data: logical. If TRUE, all of the options must be present at least once in the data argument, and nothing else. If FALSE, some or all of the options must be present in the data argument, and nothing else. Ignored if options is NULL
 # na.contain: logical. Can the data argument contain NA?
-# neg.values: logical. Are negative numeric values authorized? Warning: the default setting is TRUE, meaning that, in that case, no check is performed for the presence of negative values. The neg.values argument is activated only when set to FALSE. In addition, neg.values = FALSE can only be used when class, typeof or mode arguments are not NULL, otherwise return an error message
+# neg.values: logical. Are negative numeric values authorized? Warning: the default setting is TRUE, meaning that, in that case, no check is performed for the presence of negative values. The neg.values argument is activated only when set to FALSE. In addition, (1) neg.values = FALSE can only be used when class, typeof or mode arguments are not NULL, otherwise return an error message, (2) the presence of negative values is not checked with neg.values = FALSE if the tested object is a factor and the following checking message is returned "OBJECT MUST BE MADE OF NON NEGATIVE VALUES BUT IS A FACTOR"
 # print: logical. Print the message if $problem is TRUE? Warning: set by default to FALSE, which facilitates the control of the checking message output when using fun_check() inside functions. See the example section
 # data.name: character string indicating the name of the object to test. If NULL, use what is assigned to the data argument for the returned message
 # fun.name: character string indicating the name of the function checked (i.e., when fun_check() is used to check the arguments of this function). If non-null, the value of fun.name will be added into the message returned by fun_check()
@@ -380,7 +380,7 @@ if( ! is.null(options) & ( ! is.null(class) | ! is.null(typeof) | ! is.null(mode
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE class, typeof, mode ARGUMENTS MUST BE NULL, AND prop FALSE, IF THE options ARGUMENT IS SPECIFIED\nTHE options ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(base::class(neg.values) == "logical") & base::length(neg.values) == 1 & any(is.na(neg.values)) != TRUE)){ # all() without na.rm -> ok because class(NA) is "logical"  # normally no NA with is.na()
+if( ! (all(base::class(neg.values) == "logical") & base::length(neg.values) == 1)){ # all() without na.rm -> ok because class(NA) is "logical" 
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -389,8 +389,8 @@ tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(class)){ # may add "formula" and "Date" as in https://renenyffenegger.ch/notes/development/languages/R/functions/class
-if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built", "call") & any(is.na(class)) != TRUE & base::length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0  # all() without na.rm -> ok because class cannot be NA (tested above) # normally no NA with is.na()
-tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\"")
+if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built", "call") & base::length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0  # all() without na.rm -> ok because class cannot be NA (tested above)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\", \"call\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){ # no need of na.rm = TRUE for any() because %in% does not output NA
@@ -399,8 +399,8 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(typeof)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
-if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "symbol", "closure", "special", "builtin", "environment", "S4", "language")) & base::length(typeof) == 1 & any(is.na(typeof)) != TRUE)){ # "language" is the type of object of class "call" # all() without na.rm -> ok because typeof cannot be NA (tested above) # normally no NA with is.na()
-tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\"")
+if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "symbol", "closure", "special", "builtin", "environment", "S4", "language")) & base::length(typeof) == 1)){ # "language" is the type of object of class "call" # all() without na.rm -> ok because typeof cannot be NA (tested above)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\", \"language\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & ! typeof %in% c("double", "integer")){
@@ -409,8 +409,8 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(mode)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
-if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4", "call")) & base::length(mode) == 1 & any(is.na(mode)) != TRUE)){ # all() without na.rm -> ok because mode cannot be NA (tested above) # normally no NA with is.na()
-tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\", , \"language\"")
+if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4", "call")) & base::length(mode) == 1)){ # all() without na.rm -> ok because mode cannot be NA (tested above)
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\", \"call\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if(neg.values == FALSE & mode != "numeric"){
@@ -419,12 +419,12 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(length)){
-if( ! (is.numeric(length) & base::length(length) == 1 & ! grepl(length, pattern = "\\.") & any(is.na(length)) != TRUE)){ # normally no NA with is.na()
+if( ! (is.numeric(length) & base::length(length) == 1 & ! grepl(length, pattern = "\\."))){
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": length ARGUMENT MUST BE A SINGLE INTEGER VALUE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
-if( ! (is.logical(prop) | (base::length(prop) == 1 & any(is.na(prop)) != TRUE))){ # normally no NA with is.na()
+if( ! (is.logical(prop) & base::length(prop) == 1)){ # is.na() already checked for prop
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": prop ARGUMENT MUST BE TRUE OR FALSE ONLY")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(prop == TRUE){
@@ -447,19 +447,19 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 }
-if( ! (all(base::class(double.as.integer.allowed) == "logical") & base::length(double.as.integer.allowed) == 1 & any(is.na(double.as.integer.allowed)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
+if( ! (all(base::class(double.as.integer.allowed) == "logical") & base::length(double.as.integer.allowed) == 1)){ # all() without na.rm -> ok because class() never returns NA
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (is.logical(all.options.in.data) & base::length(all.options.in.data) == 1 & any(is.na(all.options.in.data)) != TRUE)){# normally no NA with is.na()
+if( ! (is.logical(all.options.in.data) & base::length(all.options.in.data) == 1)){
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(base::class(na.contain) == "logical") & base::length(na.contain) == 1 & any(is.na(na.contain)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
+if( ! (all(base::class(na.contain) == "logical") & base::length(na.contain) == 1)){ # all() without na.rm -> ok because class() never returns NA
 tempo.cat <- paste0("ERROR IN fun_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(base::class(print) == "logical") & base::length(print) == 1 & any(is.na(print)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
+if( ! (all(base::class(print) == "logical") & base::length(print) == 1)){ # all() without na.rm -> ok because class() never returns NA
 tempo.cat <- paste0("ERROR IN fun_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -521,7 +521,7 @@ text <- paste0(text, " AND ") ;
 text <- paste0(text, toupper(arg.names[i2]), " ", if(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("matrix", "array"))){"matrix"}else if(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("factor", "ordered"))){"factor"}else{get(arg.names[i2], env = sys.nframe(), inherit = FALSE)})
 ' # no need of na.rm = TRUE for all() because %in% does not output NA
 # end script to execute
-if(base::typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")))){ # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names
+if(base::typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")))){ # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names # typeof(data) == "double" means no factor allowed
 if( ! all(data %% 1 == 0, na.rm = TRUE)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result. Warning: na.rm = TRUE required here for all()
 eval(parse(text = tempo.script)) # execute tempo.script
 }
@@ -536,7 +536,7 @@ eval(parse(text = tempo.script)) # execute tempo.script
 }
 }
 if(prop == TRUE & all(base::typeof(data) == "double")){ # all() without na.rm -> ok because typeof(NA) is "logical"
-if(is.null(data) | any(data < 0 | data > 1, na.rm = TRUE)){ # works if data is NULL # Warning: na.rm = TRUE required here for any()
+if(is.null(data) | any(data < 0 | data > 1, na.rm = TRUE)){ # works if data is NULL # Warning: na.rm = TRUE required here for any() # typeof(data) == "double" means no factor allowed
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
@@ -557,7 +557,7 @@ text <- paste0(text, "THE ", data.name, " OBJECT MUST BE DECIMAL VALUES BETWEEN 
 if(all(base::class(data) %in% "expression")){ # no need of na.rm = TRUE for all() because %in% does not output NA
 data <- as.character(data) # to evaluate the presence of NA
 }
-if(na.contain == FALSE & (base::mode(data) %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol"))){ # before it was ! (class(data) %in% c("function", "environment"))
+if(na.contain == FALSE & (base::mode(data) %in% c("logical", "numeric", "complex", "character", "list"))){ # before it was ! (class(data) %in% c("function", "environment"))
 if(any(is.na(data)) == TRUE){ # not on the same line because when data is class envir or function , do not like that # normally no NA with is.na()
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
@@ -568,7 +568,7 @@ text <- paste0(text, " AND ")
 text <- paste0(text, "THE ", data.name, " OBJECT CONTAINS NA WHILE NOT AUTHORIZED")
 }
 }
-if(neg.values == FALSE & all(base::mode(data) %in% "numeric")){ # no need of na.rm = TRUE for all() because %in% does not output NA
+if(neg.values == FALSE & all(base::mode(data) %in% "numeric") & ! any(base::class(data) %in% "factor")){ # no need of na.rm = TRUE for all() because %in% does not output NA
 if(any(data < 0, na.rm = TRUE)){ # Warning: na.rm = TRUE required here for any()
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
@@ -585,7 +585,7 @@ text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name))
 }else{
 text <- paste0(text, " AND ")
 }
-text <- paste0(text, "THE ", data.name, " OBJECT MUST BE NON NEGATIVE BUT IS NOT EVEN MODE NUMERIC")
+text <- paste0(text, "THE ", data.name, " OBJECT MUST BE MADE OF NON NEGATIVE VALUES BUT IS ", ifelse(any(base::class(data) %in% "factor"), "A FACTOR", "NOT EVEN MODE NUMERIC"))
 }
 if(print == TRUE & problem == TRUE){
 cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
