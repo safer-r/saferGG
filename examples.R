@@ -23,7 +23,7 @@ mat2 # matrix of proportions with NA
 
 
 ### Simple examples
-# Check that vec1 is of class integer (means that it is also a vector) -> okdensity(x, bw = bandwidth)
+# Check that vec1 is of class integer (means that it is also a vector) -> ok
 fun_check(data = vec1, class = "integer")
 # Check that vec1 is a numeric vector -> error because vec1 is a vector of integers
 fun_check(data = vec1, class = "numeric")
@@ -32,8 +32,10 @@ fun_check(data = vec1, class = "vector", typeof = "integer", length = 3, neg.val
 # No result displayed because the output list is assigned into res (see below the print argument)
 res <- fun_check(data = vec1, class = "integer")
 res
+# with NULL, the function systematically report a checking problem
+fun_check(data = NULL, class = "integer")
 
-### Argument class, typeof, mode and length are the same as the corresponding R function, except class which 1) has also "vector" and 2) remains "matrix" for matrices
+### Argument class, typeof, mode and length are the same as the corresponding R function, except class which 1) has also "vector" and 2) remains "matrix" for matrices and not "matrix" "array"
 # Example
 fun_check(data = vec1, 
     class = "vector", 
@@ -41,7 +43,7 @@ fun_check(data = vec1,
     mode = "numeric", 
     length = 5, 
 )
-# Warning: the function odes not check for inconsistencies between arguments. It just checks if everything is ok between arguments values and data
+# Warning: the function does not check for inconsistencies between arguments. It just checks if everything is ok between arguments values and data
 fun_check(data = vec1, 
     typeof = "integer", 
     mode = "character", # the mode "character" exists but is inconsistant with typeof "integer". However, this aspect is not signaled by the function
@@ -95,15 +97,15 @@ fun_check(data = mat1, class = "matrix",
 )
 
 ### Argument print
-# No error message because print is FALSE
+# No error message printed because print is FALSE
 res <- fun_check(data = mat1, class = "data.frame",
     print = FALSE
 )
-# Error message
+# Error message printed
 res <- fun_check(data = mat1, class = "data.frame",
     print = TRUE
 )
-# No error message because no error
+# Even if print is TRUE, no error message printed because no error
 res <- fun_check(data = mat1, class = "matrix",
     print = TRUE
 )
@@ -126,7 +128,7 @@ fun1 <- function(arg1){
         cat(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n"))
     }
 }
-fun1(arg1 = vec4)
+fun1(arg1 = vec4) # error message because arg1 requires a vector of integers
 
 
 

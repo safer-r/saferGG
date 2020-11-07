@@ -199,6 +199,7 @@ fun.name = NULL
 # If options is non-null, then class, type and mode must be NULL, and length can be NULL or specified
 # WARNINGS
 # The function tests what is written in its arguments, even if what is written is incoherent. For instance, fun_check(data = factor(1), class = "factor", mode = "character") will return a problem, whatever the object tested in the data argument, because no object can be class "factor" and mode "character" (factors are class "factor" and mode "numeric"). Of note, length of object of class "environment" is always 0
+# If the tested object is NULL, then the function will always return a checking problem
 # Since R >= 4.0.0, class(matrix()) returns "matrix" "array", and not "matrix" alone as before. However, use argument class = "matrix" to check for matrix object (of class "matrix" "array" in R >= 4.0.0) and use argument class = "array" to check for array object (of class "array" in R >= 4.0.0)
 # ARGUMENTS
 # data: object to test
@@ -207,12 +208,12 @@ fun.name = NULL
 # mode: character string. Either one of the mode() result (for non-vector object) or NULL
 # length: numeric value indicating the length of the object. Not considered if NULL
 # prop: logical. Are the numeric values between 0 and 1 (proportion)? If TRUE, can be used alone, without considering class, etc.
-# double.as.integer.allowed: logical. If TRUE, no error is reported if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers strictly have zero as modulo (remainder of a division). This means that i <- 1, which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE. WARNING: data%%1 == 0 but not isTRUE(all.equal(data%%1, 0)) is used here because the argument checks for integers stored as double (does not check for decimal numbers that are approximate integers)
-# options: a vector of character strings indicating all the possible option values for the data argument
+# double.as.integer.allowed: logical. If TRUE, no error is reported in the cheking message if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers strictly have zero as modulo (remainder of a division). This means that i <- 1, which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE. WARNING: data%%1 == 0 but not isTRUE(all.equal(data%%1, 0)) is used here because the argument checks for integers stored as double (does not check for decimal numbers that are approximate integers)
+# options: a vector of character strings indicating all the possible option values for the data argument, or NULL
 # all.options.in.data: logical. If TRUE, all of the options must be present at least once in the data argument, and nothing else. If FALSE, some or all of the options must be present in the data argument, and nothing else. Ignored if options is NULL
 # na.contain: logical. Can the data argument contain NA?
-# neg.values: logical. Are negative numeric values authorized? Warning: only considered if set to FALSE, to check for non-negative values when class is set to "vector", "numeric", "matrix", "array", "data.frame", "table", or typeof is set to "double", "integer", or mode is set to "numeric". Ignored in other cases, notably with prop argument (which checks for values between 0 and 1 anyhow)
-# print: logical. Print the error message if $problem is TRUE? Warning: set by default to FALSE, which facilitates the control of the error message output when using fun_check() inside functions. See the example section
+# neg.values: logical. Are negative numeric values authorized? Warning: the default setting is TRUE, meaning that, in that case, no check is performed for the presence of negative values. The neg.values argument is activated only when set to FALSE. In addition, neg.values = FALSE can only be used when class, typeof or mode arguments are not NULL, otherwise return an error message
+# print: logical. Print the message if $problem is TRUE? Warning: set by default to FALSE, which facilitates the control of the checking message output when using fun_check() inside functions. See the example section
 # data.name: character string indicating the name of the object to test. If NULL, use what is assigned to the data argument for the returned message
 # fun.name: character string indicating the name of the function checked (i.e., when fun_check() is used to check the arguments of this function). If non-null, the value of fun.name will be added into the message returned by fun_check()
 # RETURN
@@ -237,13 +238,17 @@ fun.name = NULL
 # reserved words
 # end reserved words
 # fun.name checked first because required next
-if( ! is.null(fun.name)){
-if(any(is.na(fun.name))){ # normally no NA with is.na()
+if( ! is.null(fun.name)){ # I have to use this way to deal with every kind of class for fun.name
+if(all(base::class(fun.name) == "character")){ # all() without na.rm -> ok because class(NA) is "logical"
+if(base::length(fun.name) != 1){
+tempo.cat <- paste0("ERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else if(any(is.na(fun.name))){ # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check(): NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENT IS fun.name")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(class(fun.name) == "character") & length(fun.name) == 1)){ # all() without na.rm -> ok because class(NA) is "logical"
-tempo.cat <- paste0("ERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1: ", paste(fun.name, collapse = " "))
+}else{
+tempo.cat <- paste0("ERROR IN fun_check(): THE fun.name ARGUMENT MUST BE A CHARACTER VECTOR OF LENGTH 1") # paste(fun.name, collapse = " ") removed here because does not work with objects like function
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
@@ -258,9 +263,83 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
 # end argument primary checking
 # second round of checking and data preparation
+# management of special classes
+basic.class <- c(
+"NULL", # because class(NULL) is "NULL". The NULL aspect will be dealt later
+"logical", 
+"integer", 
+"numeric", 
+# "complex", 
+"character"
+# "matrix", 
+# "array", 
+# "data.frame", 
+# "list", 
+# "factor", 
+# "table", 
+# "expression", 
+# "name", 
+# "symbol", 
+# "function", 
+# "uneval", 
+# "environment", 
+# "ggplot2", 
+# "ggplot_built", 
+# "call"
+)
+tempo.arg.base <-c( # no names(formals(fun = sys.function(sys.parent(n = 2)))) used with fun_check() to be sure to deal with the correct environment
+"class", 
+"typeof", 
+"mode", 
+"length", 
+"prop", 
+"double.as.integer.allowed", 
+"options", 
+"all.options.in.data", 
+"na.contain", 
+"neg.values", 
+"print", 
+"data.name", 
+"fun.name"
+)
+tempo.class <-list( # no get() used to be sure to deal with the correct environment
+base::class(class), 
+base::class(typeof), 
+base::class(mode), 
+base::class(length), 
+base::class(prop), 
+base::class(double.as.integer.allowed), 
+base::class(options), 
+base::class(all.options.in.data), 
+base::class(na.contain), 
+base::class(neg.values), 
+base::class(print), 
+base::class(data.name), 
+base::class(fun.name)
+)
+# tempo.cat1 <- NULL
+# tempo.cat2 <- NULL
+tempo <- ! sapply(lapply(tempo.class, FUN = "%in%", basic.class), FUN = all)
+# for(i1 in tempo.arg.base){
+# tempo.class <- base::class(get(i1, env = sys.nframe(), inherit = FALSE))
+# if( ! all(tempo.class %in% basic.classes)){
+# tempo.cat1 <- c(tempo.cat1, i1)
+# tempo.cat2 <- c(tempo.cat2, paste0(tempo.class, collapse = " "))
+# }
+# }
+# if( ! is.null(tempo.cat1)){
+if(any(tempo)){
+tempo.cat1 <- tempo.arg.base[tempo]
+tempo.cat2 <- sapply(tempo.class[tempo], FUN = paste0, collapse = " ")
+tempo.sep <- sapply(mapply(" ", max(nchar(tempo.cat1)) - nchar(tempo.cat1) + 3, FUN = rep, SIMPLIFY = FALSE), FUN = paste0, collapse = "")
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": ANY ARGUMENT EXCEPT data MUST HAVE A BASIC CLASS\nPROBLEMATIC ARGUMENT", ifelse(base::length(tempo.cat1) > 1, "S", ""), " AND ASSOCIATED CLASS", ifelse(base::length(tempo.cat1) > 1, "ES ARE", " IS"), ":\n", paste0(tempo.cat1, tempo.sep, tempo.cat2, collapse = "\n")) # normally no NA with is.na()
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end management of special classes
 # management of NA arguments
 if(any(is.na(data.name)) | any(is.na(class)) | any(is.na(typeof)) | any(is.na(mode)) | any(is.na(length)) | any(is.na(prop)) | any(is.na(double.as.integer.allowed)) | any(is.na(all.options.in.data)) | any(is.na(na.contain)) | any(is.na(neg.values)) | any(is.na(print)) | any(is.na(fun.name))){ # normally no NA with is.na()
-tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENTS ARE: ", paste(c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(print)), any(is.na(fun.name)))], collapse = " ")) # normally no NA with is.na()
+tempo <- c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(print)), any(is.na(fun.name)))]
+tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENT", ifelse(length(tempo) > 1, "S ARE", " IS"), ":\n", paste(tempo, collapse = "\n")) # normally no NA with is.na()
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NA arguments
@@ -275,7 +354,7 @@ tempo.arg <-c(
 )
 tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
 if(any(tempo.log) == TRUE){ # normally no NA with is.null()
-tempo.cat <- paste0("ERROR IN fun.check():\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+tempo.cat <- paste0("ERROR IN fun.check():\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS", "THIS ARGUMENT"), " CANNOT BE NULL:\n", paste0(tempo.arg[tempo.log], collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NULL arguments
@@ -288,7 +367,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end warning initiation
 # other checkings
 if( ! is.null(data.name)){
-if( ! (length(data.name) == 1 & all(class(data.name) == "character"))){ # all() without na.rm -> ok because class(NA) is "logical"
+if( ! (base::length(data.name) == 1 & all(base::class(data.name) == "character"))){ # all() without na.rm -> ok because class(NA) is "logical"
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": data.name ARGUMENT MUST BE A SINGLE CHARACTER ELEMENT AND NOT ", paste(data.name, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -301,7 +380,7 @@ if( ! is.null(options) & ( ! is.null(class) | ! is.null(typeof) | ! is.null(mode
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE class, typeof, mode ARGUMENTS MUST BE NULL, AND prop FALSE, IF THE options ARGUMENT IS SPECIFIED\nTHE options ARGUMENT MUST BE NULL IF THE class AND/OR typeof AND/OR mode AND/OR prop ARGUMENT IS SPECIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(class(neg.values) == "logical") & length(neg.values) == 1 & any(is.na(neg.values)) != TRUE)){ # all() without na.rm -> ok because class(NA) is "logical"  # normally no NA with is.na()
+if( ! (all(base::class(neg.values) == "logical") & base::length(neg.values) == 1 & any(is.na(neg.values)) != TRUE)){ # all() without na.rm -> ok because class(NA) is "logical"  # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE neg.values ARGUMENT MUST BE TRUE OR FALSE ONLY")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -310,7 +389,7 @@ tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 if( ! is.null(class)){ # may add "formula" and "Date" as in https://renenyffenegger.ch/notes/development/languages/R/functions/class
-if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built", "call") & any(is.na(class)) != TRUE & length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0  # all() without na.rm -> ok because class cannot be NA (tested above) # normally no NA with is.na()
+if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built", "call") & any(is.na(class)) != TRUE & base::length(class) == 1)){ # length == 1 here because of class(matrix()) since R4.0.0  # all() without na.rm -> ok because class cannot be NA (tested above) # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -320,7 +399,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(typeof)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
-if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "symbol", "closure", "special", "builtin", "environment", "S4", "language")) & length(typeof) == 1 & any(is.na(typeof)) != TRUE)){ # "language" is the type of object of class "call" # all() without na.rm -> ok because typeof cannot be NA (tested above) # normally no NA with is.na()
+if( ! (all(typeof %in% c("logical", "integer", "double", "complex", "character", "list", "expression", "symbol", "closure", "special", "builtin", "environment", "S4", "language")) & base::length(typeof) == 1 & any(is.na(typeof)) != TRUE)){ # "language" is the type of object of class "call" # all() without na.rm -> ok because typeof cannot be NA (tested above) # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": typeof ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"integer\", \"double\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"closure\", \"special\", \"builtin\", \"environment\", \"S4\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -330,7 +409,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(mode)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
-if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4", "call")) & length(mode) == 1 & any(is.na(mode)) != TRUE)){ # all() without na.rm -> ok because mode cannot be NA (tested above) # normally no NA with is.na()
+if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4", "call")) & base::length(mode) == 1 & any(is.na(mode)) != TRUE)){ # all() without na.rm -> ok because mode cannot be NA (tested above) # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT MUST BE ONE OF THESE VALUE:\n\"logical\", \"numeric\", \"complex\", \"character\", \"list\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"S4\", , \"language\"")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -340,12 +419,12 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(length)){
-if( ! (is.numeric(length) & length(length) == 1 & ! grepl(length, pattern = "\\.") & any(is.na(length)) != TRUE)){ # normally no NA with is.na()
+if( ! (is.numeric(length) & base::length(length) == 1 & ! grepl(length, pattern = "\\.") & any(is.na(length)) != TRUE)){ # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": length ARGUMENT MUST BE A SINGLE INTEGER VALUE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
-if( ! (is.logical(prop) | (length(prop) == 1 & any(is.na(prop)) != TRUE))){ # normally no NA with is.na()
+if( ! (is.logical(prop) | (base::length(prop) == 1 & any(is.na(prop)) != TRUE))){ # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": prop ARGUMENT MUST BE TRUE OR FALSE ONLY")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if(prop == TRUE){
@@ -368,19 +447,19 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 }
-if( ! (all(class(double.as.integer.allowed) == "logical") & length(double.as.integer.allowed) == 1 & any(is.na(double.as.integer.allowed)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
+if( ! (all(base::class(double.as.integer.allowed) == "logical") & base::length(double.as.integer.allowed) == 1 & any(is.na(double.as.integer.allowed)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE double.as.integer.allowed ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(double.as.integer.allowed, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (is.logical(all.options.in.data) & length(all.options.in.data) == 1 & any(is.na(all.options.in.data)) != TRUE)){# normally no NA with is.na()
+if( ! (is.logical(all.options.in.data) & base::length(all.options.in.data) == 1 & any(is.na(all.options.in.data)) != TRUE)){# normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": all.options.in.data ARGUMENT MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY): ", paste(all.options.in.data, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(class(na.contain) == "logical") & length(na.contain) == 1 & any(is.na(na.contain)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
+if( ! (all(base::class(na.contain) == "logical") & base::length(na.contain) == 1 & any(is.na(na.contain)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check(): THE na.contain ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(na.contain, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (all(class(print) == "logical") & length(print) == 1 & any(is.na(print)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
+if( ! (all(base::class(print) == "logical") & base::length(print) == 1 & any(is.na(print)) != TRUE)){ # all() without na.rm -> ok because class() never returns NA # normally no NA with is.na()
 tempo.cat <- paste0("ERROR IN fun_check(): THE print ARGUMENT MUST BE TRUE OR FALSE ONLY: ", paste(print, collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -395,7 +474,7 @@ data.name <- deparse(substitute(data))
 }
 problem <- FALSE
 text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT")
-if(( ! is.null(options)) & all(typeof(data) == "character")){ # all() without na.rm -> ok because typeof() never returns NA
+if(( ! is.null(options)) & all(base::typeof(data) == "character")){ # all() without na.rm -> ok because typeof() never returns NA
 text <- ""
 if( ! all(data %in% options)){ # no need of na.rm = TRUE for all() because %in% does not output NA
 problem <- TRUE
@@ -408,9 +487,9 @@ text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.na
 }
 }
 if( ! is.null(length)){
-if(length(data) != length){
+if(base::length(data) != length){
 problem <- TRUE
-text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE LENGTH OF ", data.name, " MUST BE ", length, " AND NOT ", length(data))
+text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE LENGTH OF ", data.name, " MUST BE ", length, " AND NOT ", base::length(data))
 }
 }
 if(text == ""){
@@ -424,12 +503,12 @@ arg.names <- c("class", "typeof", "mode", "length")
 if( ! is.null(class)){
 if(class == "matrix"){ # because of class(matric()) since R4.0.0
 class <- c("matrix", "array")
-}else if(class == "factor" & all(class(data) %in% c("factor", "ordered"))){ # to deal with ordered factors # all() without na.rm -> ok because class(NA) is "logical"
+}else if(class == "factor" & all(base::class(data) %in% c("factor", "ordered"))){ # to deal with ordered factors # all() without na.rm -> ok because class(NA) is "logical"
 class <- c("factor", "ordered")
 }
 }
 if(is.null(options)){
-for(i2 in 1:length(arg.names)){
+for(i2 in 1:base::length(arg.names)){
 if( ! is.null(get(arg.names[i2], env = sys.nframe(), inherit = FALSE))){
 # script to execute
 tempo.script <- '
@@ -442,21 +521,21 @@ text <- paste0(text, " AND ") ;
 text <- paste0(text, toupper(arg.names[i2]), " ", if(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("matrix", "array"))){"matrix"}else if(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("factor", "ordered"))){"factor"}else{get(arg.names[i2], env = sys.nframe(), inherit = FALSE)})
 ' # no need of na.rm = TRUE for all() because %in% does not output NA
 # end script to execute
-if(typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")))){ # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names
+if(base::typeof(data) == "double" & double.as.integer.allowed == TRUE & ((arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")) | (arg.names[i2] == "typeof" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "integer")))){ # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names
 if( ! all(data %% 1 == 0, na.rm = TRUE)){ # to check integers (use %%, meaning the remaining of a division): see the precedent line. isTRUE(all.equal(data%%1, rep(0, length(data)))) not used because we strictly need zero as a result. Warning: na.rm = TRUE required here for all()
 eval(parse(text = tempo.script)) # execute tempo.script
 }
 }else if( ! any(all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) %in% c("vector", "ggplot2"))) & ! all(eval(parse(text = paste0(arg.names[i2], "(data)"))) %in% get(arg.names[i2], env = sys.nframe(), inherit = FALSE))){ # test the four c("class", "typeof", "mode", "length") arguments with their corresponding function. No need of na.rm = TRUE for all() because %in% does not output NA # no need of na.rm = TRUE for all() because %in% does not output NA # no need of na.rm = TRUE for any() because get get(arg.names) does not contain NA
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "vector") & ! (all(class(data) %in% "numeric") | all(class(data) %in% "integer") | all(class(data) %in% "character") | all(class(data) %in% "logical"))){ # test class == "vector". No need of na.rm = TRUE for all() because %in% does not output NA # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names
+}else if(arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "vector") & ! (all(base::class(data) %in% "numeric") | all(base::class(data) %in% "integer") | all(base::class(data) %in% "character") | all(base::class(data) %in% "logical"))){ # test class == "vector". No need of na.rm = TRUE for all() because %in% does not output NA # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names
 eval(parse(text = tempo.script)) # execute tempo.script
-}else if(arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "ggplot2") & ! all(class(data) %in% c("gg", "ggplot"))){ # test ggplot object # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names # no need of na.rm = TRUE for all() because %in% does not output NA
+}else if(arg.names[i2] == "class" & all(get(arg.names[i2], env = sys.nframe(), inherit = FALSE) == "ggplot2") & ! all(base::class(data) %in% c("gg", "ggplot"))){ # test ggplot object # no need of na.rm = TRUE for all() because == does not output NA if no NA in left of ==, which is the case for arg.names # no need of na.rm = TRUE for all() because %in% does not output NA
 eval(parse(text = tempo.script)) # execute tempo.script
 }
 }
 }
 }
-if(prop == TRUE & all(typeof(data) == "double")){ # all() without na.rm -> ok because typeof(NA) is "logical"
+if(prop == TRUE & all(base::typeof(data) == "double")){ # all() without na.rm -> ok because typeof(NA) is "logical"
 if(is.null(data) | any(data < 0 | data > 1, na.rm = TRUE)){ # works if data is NULL # Warning: na.rm = TRUE required here for any()
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
@@ -475,10 +554,10 @@ text <- paste0(text, " AND ")
 }
 text <- paste0(text, "THE ", data.name, " OBJECT MUST BE DECIMAL VALUES BETWEEN 0 AND 1")
 }
-if(all(class(data) %in% "expression")){ # no need of na.rm = TRUE for all() because %in% does not output NA
+if(all(base::class(data) %in% "expression")){ # no need of na.rm = TRUE for all() because %in% does not output NA
 data <- as.character(data) # to evaluate the presence of NA
 }
-if(na.contain == FALSE & (mode(data) %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol"))){ # before it was ! (class(data) %in% c("function", "environment"))
+if(na.contain == FALSE & (base::mode(data) %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol"))){ # before it was ! (class(data) %in% c("function", "environment"))
 if(any(is.na(data)) == TRUE){ # not on the same line because when data is class envir or function , do not like that # normally no NA with is.na()
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
@@ -489,7 +568,7 @@ text <- paste0(text, " AND ")
 text <- paste0(text, "THE ", data.name, " OBJECT CONTAINS NA WHILE NOT AUTHORIZED")
 }
 }
-if(neg.values == FALSE & all(typeof(data) %in% c("integer", "double"))){ # no need of na.rm = TRUE for all() because %in% does not output NA
+if(neg.values == FALSE & all(base::mode(data) %in% "numeric")){ # no need of na.rm = TRUE for all() because %in% does not output NA
 if(any(data < 0, na.rm = TRUE)){ # Warning: na.rm = TRUE required here for any()
 problem <- TRUE
 if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
@@ -497,7 +576,7 @@ text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name))
 }else{
 text <- paste0(text, " AND ")
 }
-text <- paste0(text, "THE ", data.name, " OBJECT MUST BE NON NEGATIVE NUMERIC VALUES")
+text <- paste0(text, "THE ", data.name, " OBJECT MUST BE MADE OF NON NEGATIVE NUMERIC VALUES")
 }
 }else if(neg.values == FALSE){
 problem <- TRUE
@@ -546,7 +625,7 @@ arg.user.setting <- as.list(match.call(expand.dots = FALSE))[-1] # list of the a
 # end function name
 # required function checking
 if(length(utils::find("fun_check", mode = "function")) == 0){
-tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED fun_check() FUNCTION IS MISSING IN THE R ENVIRONMENT")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
@@ -573,7 +652,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 tempo.arg <- names(arg.user.setting) # values provided by the user
 tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1 # no argument provided by the user can be just NA
 if(any(tempo.log) == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
+tempo.cat <- paste0("ERROR IN ", function.name, "\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS", "THIS ARGUMENT"), " CANNOT JUST BE NA:", paste0(tempo.arg[tempo.log], collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NA arguments
@@ -583,7 +662,7 @@ tempo.arg <- c(
 )
 tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
 if(any(tempo.log) == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+tempo.cat <- paste0("ERROR IN ", function.name, "\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS", "THIS ARGUMENT"), " CANNOT BE NULL:", paste0(tempo.arg[tempo.log], collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NULL arguments
@@ -697,7 +776,7 @@ tempo <- c(tempo, i1)
 }
 }
 if( ! is.null(tempo)){
-tempo.cat <- paste0("ERROR IN ", function.name, ". REQUIRED\n", paste0(tempo, collapse = "()\n"), "()\nFUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED cute FUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT:\n", paste0(tempo, collapse = "()\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
@@ -709,7 +788,7 @@ mandat.args <- c(
 )
 tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
 if(any(tempo)){ # normally no NA for missing() output
-tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENT", ifelse(length(mandat.args) > 1, paste0("S\n", paste0(mandat.args, collapse = "\n")), paste0("\n", mandat.args)), "\nHAVE NO DEFAULT VALUE AND REQUIRE ONE")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(length(mandat.args) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args, collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
@@ -1834,7 +1913,7 @@ req.function <- c(
 "fun_pack"
 )
 for(i1 in req.function){
-if(length(find(i1, mode = "function")) == 0){
+if(base::length(find(i1, mode = "function")) == 0){
 tempo.cat <- paste0("ERROR IN ", function.name, ": REQUIRED ", i1, "() FUNCTION IS MISSING IN THE R ENVIRONMENT")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -1861,21 +1940,21 @@ if( ! exists(fun)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": CHARACTER STRING IN fun ARGUMENT DOES NOT EXIST IN THE R WORKING ENVIRONMENT: ", paste(fun, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
-}else if( ! all(class(get(fun)) == "function")){ # here no env = sys.nframe(), inherit = FALSE for get() because fun is a function in the classical scope
-tempo.cat <- paste0("ERROR IN ", function.name, ": fun ARGUMENT IS NOT CLASS \"function\" BUT: ", paste(class(get(fun)), collapse = "\n"), "\nCHECK IF ANY CREATED OBJECT WOULD HAVE THE NAME OF THE TESTED FUNCTION")
+}else if( ! all(base::class(get(fun)) == "function")){ # here no env = sys.nframe(), inherit = FALSE for get() because fun is a function in the classical scope
+tempo.cat <- paste0("ERROR IN ", function.name, ": fun ARGUMENT IS NOT CLASS \"function\" BUT: ", paste(base::class(get(fun)), collapse = "\n"), "\nCHECK IF ANY CREATED OBJECT WOULD HAVE THE NAME OF THE TESTED FUNCTION")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 }
 tempo <- fun_check(data = arg, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
-if(tempo$problem == FALSE & length(arg) == 0){
+if(tempo$problem == FALSE & base::length(arg) == 0){
 tempo.cat <- paste0("ERROR IN ", function.name, ": arg ARGUMENT CANNOT BE LENGTH 0")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
 tempo <- fun_check(data = val, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
-for(i2 in 1:length(val)){
+for(i2 in 1:base::length(val)){
 tempo1 <- fun_check(data = val[[i2]], class = "vector", na.contain = TRUE, fun.name = function.name)
 tempo2 <- fun_check(data = val[[i2]], class = "list", na.contain = TRUE, fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
@@ -1883,14 +1962,14 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": COMPARTMENT ", i2, " OF val A
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo1$problem == FALSE){ # vector split into list compartments
-val[[i2]] <- split(x = val[[i2]], f = 1:length(val[[i2]]))
+val[[i2]] <- split(x = val[[i2]], f = 1:base::length(val[[i2]]))
 }
 }
 }
 if( ! is.null(expect.error)){
 tempo <- fun_check(data = expect.error, class = "list", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
-for(i3 in 1:length(expect.error)){
+for(i3 in 1:base::length(expect.error)){
 tempo1 <- fun_check(data = expect.error[[i3]], class = "vector",  mode = "logical", fun.name = function.name)
 tempo2 <- fun_check(data =  expect.error[[i3]], class = "list", fun.name = function.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
@@ -1898,7 +1977,7 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": COMPARTMENT ", i3, " OF expec
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }else if(tempo1$problem == FALSE){ # vector split into list compartments
-expect.error[[i3]] <- split(x = expect.error[[i3]], f = 1:length(expect.error[[i3]]))
+expect.error[[i3]] <- split(x = expect.error[[i3]], f = 1:base::length(expect.error[[i3]]))
 }
 }
 }
@@ -1963,8 +2042,8 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": THESE ARGUMENTS\nfun\narg\nva
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NULL
-if(length(arg) != length(val)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF arg ARGUMENT MUST BE IDENTICAL TO LENGTH OF val ARGUMENT:\nHERE IT IS: ", length(arg), " VERSUS ", length(val))
+if(base::length(arg) != base::length(val)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF arg ARGUMENT MUST BE IDENTICAL TO LENGTH OF val ARGUMENT:\nHERE IT IS: ", base::length(arg), " VERSUS ", base::length(val))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 args <- names(formals(get(fun))) # here no env = sys.nframe(), inherit = FALSE for get() because fun is a function in the classical scope
@@ -1977,8 +2056,8 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": CANNOT TEST MORE THAN 43 ARGU
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 if( ! is.null(expect.error)){
-if(length(val) != length(expect.error)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF val ARGUMENT MUST BE IDENTICAL TO LENGTH OF expect.error ARGUMENT:\nHERE IT IS: ", length(val), " VERSUS ", length(expect.error))
+if(base::length(val) != base::length(expect.error)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": LENGTH OF val ARGUMENT MUST BE IDENTICAL TO LENGTH OF expect.error ARGUMENT:\nHERE IT IS: ", base::length(val), " VERSUS ", base::length(expect.error))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE)
 }
 }
@@ -2006,7 +2085,7 @@ fun_pack(req.package = c("parallel"), lib.path = lib.path)
 sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 # end declaration of special plot functions
 # main code
-ini.warning.length <- options()$warning.length
+ini.warning.length <- base::options()$warning.length
 warn <- NULL
 warn.count <- 0
 cat("\nfun_test JOB IGNITION\n")
@@ -2030,10 +2109,10 @@ fun.args <- NULL
 fun.args2 <- NULL
 error.values <- NULL
 arg.values <- "list("
-for(i1 in 1:length(arg)){
+for(i1 in 1:base::length(arg)){
 if(is.null(thread.nb)){
-if(length(val[[i1]]) > 1){ # loop only if more than one value in length(val[[i1]])
-loop.string <- paste0(loop.string, "for(i", i1, " in 1:", length(val[[i1]]), "){")
+if(base::length(val[[i1]]) > 1){ # loop only if more than one value in base::length(val[[i1]])
+loop.string <- paste0(loop.string, "for(i", i1, " in 1:", base::length(val[[i1]]), "){")
 end.loop.string <- paste0(end.loop.string, "}")
 }
 }else{
@@ -2048,7 +2127,7 @@ arg[i1],
 i1, 
 "]][[", 
 if(is.null(thread.nb)){
-if(length(val[[i1]]) > 1){
+if(base::length(val[[i1]]) > 1){
 paste0("i", i1)
 }else{
 "1" # a unique element in val[[i1]]
@@ -2066,7 +2145,7 @@ arg[i1],
 i1, 
 "]][[', ", 
 if(is.null(thread.nb)){
-if(length(val[[i1]]) > 1){
+if(base::length(val[[i1]]) > 1){
 paste0("i", i1)
 }else{
 "1" # a unique element in val[[i1]]
@@ -2080,7 +2159,7 @@ arg.values <- paste0(
 arg.values, 
 "val[[", i1, "]][[", 
 if(is.null(thread.nb)){
-if(length(val[[i1]]) > 1){
+if(base::length(val[[i1]]) > 1){
 paste0("i", i1)
 }else{
 "1" # a unique element in val[[i1]]
@@ -2089,14 +2168,14 @@ paste0("i", i1)
 paste0("i.list[[", i1, "]][i]")
 }, 
 "]]", 
-ifelse(i1 == length(arg), "", ", ")
+ifelse(i1 == base::length(arg), "", ", ")
 )
 error.values <- paste0(
 error.values, 
 ifelse(i1 == 1, "", " | "), 
 "expect.error[[", i1, "]][[", 
 if(is.null(thread.nb)){
-if(length(expect.error[[i1]]) > 1){
+if(base::length(expect.error[[i1]]) > 1){
 paste0("i", i1)
 }else{
 "1" # a unique element in expect.error[[i1]]
@@ -2132,25 +2211,25 @@ res <- character()
 count <- 0
 print.count.loop <- 0
 plot.count <- 0
-if(length(arg) == 1){
+if(base::length(arg) == 1){
 data <- data.frame()
-}else{ # length(arg) == 0 already tested above
-data <- data.frame(t(vector("character", length(arg))), stringsAsFactors = FALSE)[-1, ] # -1 to remove the single row created and to have an empty data frame with length(arg) columns
+}else{ # base::length(arg) == 0 already tested above
+data <- data.frame(t(vector("character", base::length(arg))), stringsAsFactors = FALSE)[-1, ] # -1 to remove the single row created and to have an empty data frame with base::length(arg) columns
 }
 code <- paste(
 loop.string, '
 count <- count + 1
 print.count.loop <- print.count.loop + 1
 arg.values.print <- eval(parse(text = arg.values)) # recover the list of the i1 compartment
-for(j3 in 1:length(arg.values.print)){ # WARNING: do not use i1, i2 etc., here because already in loop.string
-tempo.error <- fun_get_message(data =  paste0("paste(arg.values.print[[", j3, "]])"), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE)) # collapsing arg.values sometimes does not work (with function for instance)
+for(j3 in 1:base::length(arg.values.print)){ # WARNING: do not use i1, i2 etc., here because already in loop.string
+tempo.capt <- capture.output(tempo.error <- fun_get_message(data =  paste0("paste(arg.values.print[[", j3, "]])"), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE))) # collapsing arg.values sometimes does not work (with function for instance)
 if( ! is.null(tempo.error)){
-arg.values.print[[j3]] <- paste0("SPECIAL VALUE OF CLASS ", class(arg.values.print[[j3]]), " AND TYPE ", typeof(arg.values.print[[j3]]))
+arg.values.print[[j3]] <- paste0("SPECIAL VALUE OF CLASS ", base::class(arg.values.print[[j3]]), " AND TYPE ", base::typeof(arg.values.print[[j3]]))
 }
 }
 data <- rbind(data, as.character(sapply(arg.values.print, FUN = "paste", collapse = " ")), stringsAsFactors = FALSE) # each colum is a test
-tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE)) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
-tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE), print.no = TRUE) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
+tempo.capt <- capture.output(tempo.try.error <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE))) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
+tempo.capt <- capture.output(tempo.try.warning <- fun_get_message(data = eval(parse(text = fun.test2)), kind = "warning", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE), print.no = TRUE)) # data argument needs a character string but eval(parse(text = fun.test2)) provides it (eval parse replace the i1, i2, etc., by the correct values, meaning that only val is required in the env.name environment)
 if( ! is.null(expect.error)){
 expected.error <- c(expected.error, eval(parse(text = error.values)))
 }
@@ -2187,14 +2266,14 @@ if(print.count.loop == print.count){
 print.count.loop <- 0
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-final.loop <- (tempo.time - ini.time) / count * ifelse(is.null(thread.nb), total.comp.nb, length(x)) # expected duration in seconds # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
+final.loop <- (tempo.time - ini.time) / count * ifelse(is.null(thread.nb), total.comp.nb, base::length(x)) # expected duration in seconds # intra nb.compar loop lapse: time lapse / cycles done * cycles remaining
 final.exp <- as.POSIXct(final.loop, origin = ini.date)
-cat(paste0(ifelse(is.null(thread.nb), "\n", paste0("\nIN PROCESS ", process.id, " | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
+cat(paste0(ifelse(is.null(thread.nb), "\n", paste0("\nIN PROCESS ", process.id, " | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, base::length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, " | EXPECTED END: ", final.exp))
 }
-if(count == ifelse(is.null(thread.nb), total.comp.nb, length(x))){
+if(count == ifelse(is.null(thread.nb), total.comp.nb, base::length(x))){
 tempo.time <- as.numeric(Sys.time())
 tempo.lapse <- round(lubridate::seconds_to_period(tempo.time - ini.time))
-cat(paste0(ifelse(is.null(thread.nb), "\nLOOP PROCESS ENDED | ", paste0("\nPROCESS ", process.id, " ENDED | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, "\n\n"))
+cat(paste0(ifelse(is.null(thread.nb), "\nLOOP PROCESS ENDED | ", paste0("\nPROCESS ", process.id, " ENDED | ")), "LOOP ", format(count, big.mark=","), " / ", format(ifelse(is.null(thread.nb), total.comp.nb, base::length(x)), big.mark=","), " | TIME SPENT: ", tempo.lapse, "\n\n"))
 }
 ', 
 end.loop.string
@@ -2202,16 +2281,16 @@ end.loop.string
 # end creation of the txt instruction that includes several loops
 if( ! is.null(thread.nb)){
 # list of i numbers that will be split
-i.list <- vector("list", length(val)) # positions to split in parallel jobs
-for(i2 in 1:length(arg)){
+i.list <- vector("list", base::length(val)) # positions to split in parallel jobs
+for(i2 in 1:base::length(arg)){
 if(i2 == 1){
-tempo.divisor <- total.comp.nb / length(val[[i2]])
-i.list[[i2]] <- rep(1:length(val[[i2]]), each = as.integer(tempo.divisor))
-tempo.multi <- length(val[[i2]])
+tempo.divisor <- total.comp.nb / base::length(val[[i2]])
+i.list[[i2]] <- rep(1:base::length(val[[i2]]), each = as.integer(tempo.divisor))
+tempo.multi <- base::length(val[[i2]])
 }else{
-tempo.divisor <- tempo.divisor / length(val[[i2]])
-i.list[[i2]] <- rep(rep(1:length(val[[i2]]), each = as.integer(tempo.divisor)), time = as.integer(tempo.multi))
-tempo.multi <- tempo.multi * length(val[[i2]])
+tempo.divisor <- tempo.divisor / base::length(val[[i2]])
+i.list[[i2]] <- rep(rep(1:base::length(val[[i2]]), each = as.integer(tempo.divisor)), time = as.integer(tempo.multi))
+tempo.multi <- tempo.multi * base::length(val[[i2]])
 }
 }
 # end list of i numbers that will be split
@@ -2281,13 +2360,13 @@ cute.path
 ){
 # check again: very important because another R
 process.id <- Sys.getpid()
-cat(paste0("\nPROCESS ID ", process.id, " -> TESTS ", x[1], " TO ", x[length(x)], "\n"))
+cat(paste0("\nPROCESS ID ", process.id, " -> TESTS ", x[1], " TO ", x[base::length(x)], "\n"))
 source(cute.path, local = .GlobalEnv)
 fun_pack(req.package = "lubridate", lib.path = lib.path, load = TRUE) # load = TRUE to be sure that functions are present in the environment. And this prevent to use R.lib.path argument of fun_python_pack()
 # end check again: very important because another R
 # plot management
 if(plot.fun == TRUE){
-pdf(file = paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
+pdf(file = paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(base::length(x) == 1, ".pdf", paste0("-", x[base::length(x)], ".pdf"))))
 }else{
 pdf(file = NULL) # send plots into a NULL file, no pdf file created
 }
@@ -2321,24 +2400,24 @@ invisible(dev.off(window.nb))
 rm(env.name) # optional, because should disappear at the end of the function execution
 # output
 output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
-save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(length(x) == 1, ".RData", paste0("-", x[length(x)], ".RData"))))
+save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(base::length(x) == 1, ".RData", paste0("-", x[base::length(x)], ".RData"))))
 if(plot.fun == TRUE & plot.count == 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN PROCESS ", process.id, ": NO PDF PLOT BECAUSE ONLY ERRORS REPORTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(length(x) == 1, ".pdf", paste0("-", x[length(x)], ".pdf"))))
+file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(base::length(x) == 1, ".pdf", paste0("-", x[base::length(x)], ".pdf"))))
 }
 table.out <- as.matrix(output$data)
 # table.out[table.out == ""] <- " " # does not work # because otherwise read.table() converts "" into NA
 table.out <- gsub(table.out, pattern = "\n", replacement = " ")
-write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(length(x) == 1, ".txt", paste0("-", x[length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(base::length(x) == 1, ".txt", paste0("-", x[base::length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
 }
 )
 parallel::stopCluster(Clust)
 # txt files assembly
-if(length(cluster.list) > 1){
-for(i2 in 1:length(cluster.list)){
-tempo.name <- paste0(res.path, "/table_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(length(cluster.list[[i2]]) == 1, ".txt", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".txt")))
+if(base::length(cluster.list) > 1){
+for(i2 in 1:base::length(cluster.list)){
+tempo.name <- paste0(res.path, "/table_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(base::length(cluster.list[[i2]]) == 1, ".txt", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".txt")))
 tempo <- read.table(file = tempo.name, header = TRUE, stringsAsFactors = FALSE, sep = "\t", row.names = 1, comment.char = "", colClasses = "character") #  row.names = 1 (1st column) because now read.table() adds a NA in the header if the header starts by a tabulation, comment.char = "" because colors with #, colClasses = "character" otherwise convert "" (from NULL) into NA
 file.remove(tempo.name)
 if(i2 == 1){
@@ -2414,9 +2493,9 @@ write.table(expect.data, file = paste0(res.path, "/discrepancy_table_from_fun_te
 }
 }
 if( ! is.null(warn)){
-options(warning.length = 8170)
+base::options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
+on.exit(exp = base::options(warning.length = ini.warning.length), add = TRUE)
 }
 if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
@@ -2587,11 +2666,11 @@ data[, i] <- as.character(data[, i])
 }
 tempo.factor <- unlist(lapply(data, mode))
 if(length(data) == 2){
-if( ! ((mode(data[, 1]) == "character" & mode(data[, 2]) == "numeric") | mode(data[, 2]) == "character" & mode(data[, 1]) == "numeric" | mode(data[, 2]) == "numeric" & mode(data[, 1]) == "numeric") ){
+if( ! ((base::mode(data[, 1]) == "character" & base::mode(data[, 2]) == "numeric") | base::mode(data[, 2]) == "character" & base::mode(data[, 1]) == "numeric" | base::mode(data[, 2]) == "numeric" & base::mode(data[, 1]) == "numeric") ){
 tempo.cat <- paste0("ERROR IN ", function.name, ": IF data ARGUMENT IS A DATA FRAME MADE OF 2 COLUMNS, EITHER A COLUMN MUST BE NUMERIC AND THE OTHER CHARACTER, OR THE TWO COLUMNS MUST BE NUMERIC")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if((mode(data[, 1]) == "character" | mode(data[, 2]) == "character") & (quanti.col.name != "quanti" | quali.col.name != "quali")){
+if((base::mode(data[, 1]) == "character" | base::mode(data[, 2]) == "character") & (quanti.col.name != "quanti" | quali.col.name != "quali")){
 tempo.cat <- paste0("ERROR IN ", function.name, ": IMPROPER quanti.col.name OR quali.col.name RESETTINGS. THESE ARGUMENTS ARE RESERVED FOR DATA FRAMES MADE OF n NUMERIC COLUMNS ONLY")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -2698,7 +2777,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 # end argument checking
 # main code
 tempo <- grepl(x = data, pattern = "\\.") # detection of decimal numbers
-ini.mode <- mode(data)
+ini.mode <- base::mode(data)
 data <- as.character(data) # to really truncate decimal digits
 for(i in 1:length(data)){ # scan all the numbers of the vector
 if(tempo[i] == TRUE){ # means decimal number
@@ -3147,7 +3226,7 @@ if(ncol(mat) != nrow(mat)){
 tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MUST BE A SQUARE MATRIX")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! (mode(mat) %in% c("numeric", "character"))){
+if( ! (base::mode(mat) %in% c("numeric", "character"))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": mat ARGUMENT MUST BE A NUMERIC OR CHARACTER MATRIX")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -6479,7 +6558,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end required function checking
 # argument checking
 # argument checking without fun_check()
-if( ! (all(class(data) == "numeric") | all(class(data) == "integer") | (all(class(data) %in% c("matrix", "array")) & mode(data) == "numeric"))){
+if( ! (all(class(data) == "numeric") | all(class(data) == "integer") | (all(class(data) %in% c("matrix", "array")) & base::mode(data) == "numeric"))){
 tempo.cat <- paste0("ERROR IN ", function.name, ": data ARGUMENT MUST BE A NUMERIC VECTOR OR NUMERIC MATRIX")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -8336,7 +8415,7 @@ cat(noquote(data), file= paste0(path, "/", output), append = no.overwrite)
 }else{
 cat(data, file= paste0(path, "/", output), append = no.overwrite)
 }
-}else if(all(mode(data) == "character")){ # characters (array, list, factor or vector with vector.cat = FALSE)
+}else if(all(base::mode(data) == "character")){ # characters (array, list, factor or vector with vector.cat = FALSE)
 if(noquote == TRUE){
 utils::capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
 }else{
@@ -8368,6 +8447,7 @@ env = NULL
 # WARNINGS
 # Only the first message is returned
 # Always use the env argument when fun_get_message() is used inside functions
+# The function does not prevent printing if print() is used inside the instruction tested. To prevent that, use tempo <- capture.output(error <- fun_get_message(data = "fun_check(data = 'a', class = mean, neg.values = FALSE, print = TRUE)")). The return of fun_get_message() is assigned into error and the printed messages are captured by capture.output() and assigned into tempo. See the examples
 # ARGUMENTS
 # data: character string to evaluate
 # kind: character string. Either "error" to get error messages, or "warning" to get warning messages, or "message" to get non error and non warning messages
@@ -8750,7 +8830,7 @@ tempo <- c(tempo, i1)
 }
 }
 if( ! is.null(tempo)){
-tempo.cat <- paste0("ERROR IN ", function.name, ". REQUIRED\n", paste0(tempo, collapse = "()\n"), "()\nFUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED cute FUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT:\n", paste0(tempo, collapse = "()\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
@@ -8765,7 +8845,7 @@ mandat.args <- c(
 )
 tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
 if(any(tempo)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENT", ifelse(length(mandat.args) > 1, paste0("S\n", paste0(mandat.args, collapse = "\n")), paste0("\n", mandat.args)), "\nHAVE NO DEFAULT VALUE AND REQUIRE ONE")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(length(mandat.args) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args, collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
@@ -8798,7 +8878,7 @@ checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.check.color <- fun_check(data = categ.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem
 if(tempo.check.color == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ": categ.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR") # integer possible because dealt above
+tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR") # integer possible because dealt above
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8824,7 +8904,7 @@ checked.arg.names <- c(checked.arg.names, tempo2$object.name)
 if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.check.color <- fun_check(data = dot.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, fun.name = function.name)$problem
 if(tempo.check.color == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ": dot.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR") # integer possible because dealt above
+tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR") # integer possible because dealt above
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8907,7 +8987,7 @@ checked.arg.names <- c(checked.arg.names, tempo$object.name)
 if( ! is.null(y.lim)){
 tempo <- fun_check(data = y.lim, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & any(y.lim %in% c(Inf, -Inf))){
-tempo.cat <- paste0("ERROR IN ", function.name, ": y.lim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8920,7 +9000,7 @@ tempo <- fun_check(data = y.log, options = c("no", "log2", "log10"), length = 1,
 if( ! is.null(y.tick.nb)){
 tempo <- fun_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.tick.nb < 0){
-tempo.cat <- paste0("ERROR IN ", function.name, ": y.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8932,7 +9012,7 @@ checked.arg.names <- c(checked.arg.names, tempo$object.name)
 if( ! is.null(y.second.tick.nb)){
 tempo <- fun_check(data = y.second.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE & y.second.tick.nb <= 0){
-tempo.cat <- paste0("ERROR IN ", function.name, ": y.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
+tempo.cat <- paste0("ERROR IN ", function.name, "\ny.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -8985,7 +9065,7 @@ if( ! is.null(lib.path)){
 tempo <- fun_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
 if(tempo$problem == FALSE){
 if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
+tempo.cat <- paste0("ERROR IN ", function.name, "\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
 }
@@ -9005,7 +9085,7 @@ stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = 
 tempo.arg <- names(arg.user.setting) # values provided by the user
 tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1 # no argument provided by the user can be just NA
 if(any(tempo.log) == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
+tempo.cat <- paste0("ERROR IN ", function.name, "\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NA arguments
@@ -9058,7 +9138,7 @@ tempo.arg <-c(
 )
 tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
 if(any(tempo.log) == TRUE){
-tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+tempo.cat <- paste0("ERROR IN ", function.name, "\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end management of NULL arguments
@@ -9158,13 +9238,13 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # verif of add
 if( ! is.null(add)){
 if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
-tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
-tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
+tempo.cat <- paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 }
@@ -10904,7 +10984,7 @@ tempo <- c(tempo, i1)
 }
 }
 if( ! is.null(tempo)){
-tempo.cat <- paste0("ERROR IN ", function.name, ". REQUIRED\n", paste0(tempo, collapse = "()\n"), "()\nFUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED cute FUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT:\n", paste0(tempo, collapse = "()\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end required function checking
@@ -10919,7 +10999,7 @@ mandat.args <- c(
 )
 tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
 if(any(tempo)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": ARGUMENT", ifelse(length(mandat.args) > 1, paste0("S\n", paste0(mandat.args, collapse = "\n")), paste0("\n", mandat.args)), "\nHAVE NO DEFAULT VALUE AND REQUIRE ONE")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(length(mandat.args) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args, collapse = "\n"))
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end arg with no default values
