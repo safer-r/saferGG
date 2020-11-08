@@ -171,7 +171,7 @@
 
 # todo list check OK
 # Check r_debugging_tools-v1.4.R OK
-# Check fun_test() (see cute_checks.docx) OK
+# Check fun_test() 20201107 (see cute_checks.docx) OK
 # example sheet OK 
 # check all and any OK
 # -> clear to go Apollo
@@ -317,17 +317,7 @@ base::class(print),
 base::class(data.name), 
 base::class(fun.name)
 )
-# tempo.cat1 <- NULL
-# tempo.cat2 <- NULL
 tempo <- ! sapply(lapply(tempo.class, FUN = "%in%", basic.class), FUN = all)
-# for(i1 in tempo.arg.base){
-# tempo.class <- base::class(get(i1, env = sys.nframe(), inherit = FALSE))
-# if( ! all(tempo.class %in% basic.classes)){
-# tempo.cat1 <- c(tempo.cat1, i1)
-# tempo.cat2 <- c(tempo.cat2, paste0(tempo.class, collapse = " "))
-# }
-# }
-# if( ! is.null(tempo.cat1)){
 if(any(tempo)){
 tempo.cat1 <- tempo.arg.base[tempo]
 tempo.cat2 <- sapply(tempo.class[tempo], FUN = paste0, collapse = " ")
@@ -726,7 +716,7 @@ warn.print = TRUE
 # warn.print: logical. Print potential warnings at the end of the execution? If FALSE the warning messages are added in the output list as an additional compartment (or NULL if no message).
 # RETURN
 # A list containing information, depending on the class and type of data. The backbone is generally:
-# $NAME: the name of the object
+# $NAME: name of the object
 # $CLASS: class of the object (class() value)
 # $TYPE: type of the object (typeof() value)
 # $LENGTH: length of the object (length() value)
@@ -843,10 +833,11 @@ if( ! is.null(n)){
 if(n < 1){
 tempo.cat <- paste0("ERROR IN ", function.name, ": n ARGUMENT MUST BE A POSITIVE AND NON NULL INTEGER")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-}
+}else if(is.finite(n)){
 # warn.count <- warn.count + 1
 tempo.warn <- paste0("SOME COMPARTMENTS CAN BE TRUNCATED (n ARGUMENT IS ", n, ")")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 }
 # end other checkings
 # reserved word checking
