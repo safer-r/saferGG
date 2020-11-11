@@ -825,6 +825,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end code that protects set.seed() in the global environment
 # warning initiation
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 # warn.count <- 0 # not required
 # end warning initiation
@@ -961,10 +962,9 @@ output[names(output) != "STRUCTURE"] <- lapply(X = output[names(output) != "STRU
 if(warn.print == FALSE){
 output <- c(output, WARNING = warn)
 }else if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 return(output)
 # end output
 # end main code
@@ -2077,6 +2077,7 @@ sp.plot.fun <- c("fun_gg_scatter", "fun_gg_bar", "fun_gg_boxplot")
 # end declaration of special plot functions
 # main code
 ini.warning.length <- base::options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 cat("\nfun_test JOB IGNITION\n")
@@ -2486,8 +2487,8 @@ write.table(expect.data, file = paste0(res.path, "/discrepancy_table_from_fun_te
 if( ! is.null(warn)){
 base::options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = base::options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = base::options(warning.length = ini.warning.length), add = TRUE)
 if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1, ".RData", paste0("-", total.comp.nb, ".RData"))))
 table.out <- as.matrix(output$data)
@@ -2497,6 +2498,7 @@ write.table(table.out, file = paste0(res.path, "/table_from_fun_test_1", ifelse(
 return(output)
 }
 }
+# after return() ?
 end.date <- Sys.time()
 end.time <- as.numeric(end.date)
 total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
@@ -3249,6 +3251,7 @@ tempo.list.diag <- list.diag
 empty.sector <- NULL
 full.sector <- NULL
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 for(i1 in 1:length(sector)){
@@ -3307,10 +3310,9 @@ eval(parse(text = paste0(diag.scan[4], " <- ", diag.scan[2])))
 # end matrix filling
 }
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 return(list(mat = mat, warn = warn))
 }
 
@@ -3472,6 +3474,7 @@ tempo.pos <- ini.pos # positions of data1 that will be modified during loops
 # pos.selec.seq <- ini.pos[-length(data1)] # selection of 1 position in initial position, without the last because always up permutation (pos -> pos+1 & pos+1 -> pos)
 pos.selec.seq.max <- length(ini.pos) - 1 # max position (used by sample.int() function). See  below for - 1
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 count <- 0
@@ -3700,10 +3703,9 @@ tempo.cor <- ifelse(neg.cor == TRUE, -tempo.cor, tempo.cor)
 }
 cat("\n\n")
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE), add = TRUE)
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 output <- list(data = data1[tempo.pos], warn = warn, cor = if(is.null(data2)){cor(ini.pos, tempo.pos, method = "spearman")}else{tempo.cor}, count = count)
 return(output)
 }
@@ -4863,6 +4865,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end second round of checking and data preparation
 # main code
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 lim.rank <- rank(lim) # to deal with inverse axis
@@ -4914,10 +4917,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 }
 output <- list(log = log, coordinates = tick.pos, values = tick.values, warn = warn)
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE)) # to recover the warning messages, see $warn
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 return(output)
 }
 
@@ -6261,6 +6263,7 @@ fun_pack(req.package = c("reshape2", "ggplot2"), lib.path = lib.path)
 # end package checking
 # main code
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 if(all(is.matrix(data1))){
@@ -6347,10 +6350,9 @@ tempo.warn <- paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 if(return == TRUE){
 output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
 output <- output$data
@@ -8074,8 +8076,8 @@ fun_gg_empty_graph(text = "NO PLOT\nBECAUSE\nNO DATA2\nUNKNOWN DOTS", text.size 
 if(warn.print == TRUE & ! is.null(warn)){
 options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 tempo.list <- list(data1.removed.row.nb = data1.removed.row.nb, data1.removed.rows = data1.removed.rows, data2.removed.row.nb = data2.removed.row.nb, data2.removed.rows = data2.removed.rows, hframe = hframe, vframe = vframe, data1.signif.dot = data1.signif.dot, data1.non.signif.dot = data1.non.signif.dot, data1.inconsistent.dot = data1.incon.dot, data2.signif.dot = data2.signif.dot, data2.non.signif.dot = data2.non.signif.dot, data2.unknown.dot = data2.unknown.dot, data2.inconsistent.dot = data2.incon.dot, axes = axes, warn = warn)
 return(tempo.list)
 }
@@ -8601,8 +8603,6 @@ output <- paste0("NO STANDARD (NON ERROR AND NON WARNING) MESSAGE REPORTED", ife
 invisible(dev.off(window.nb)) # end send plots into a NULL file
 return(output) # do not use cat() because the idea is to reuse the message
 }
-
-
 
 
 
@@ -9145,6 +9145,7 @@ set.seed(dot.seed)
 # end code that protects set.seed() in the global environment
 # warning initiation
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 # end warning initiation
@@ -10599,7 +10600,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::gui
 # the oob argument of scale_y_continuous() https://ggplot2.tidyverse.org/reference/scale_continuous.html
 # see also https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
 # secondary ticks
-bef.final.plot <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none)}else{ggplot2::coord_flip(ylim = y.lim)}')))) # here I do not need the x-axis and y-axis orientation, I just need the number of main ticks and the legend
+bef.final.plot <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none)}else{ggplot2::coord_flip(ylim = y.lim)}')))) # here I do not need the x-axis and y-axis orientation, I just need the number of main ticks and the legend. I DI NOT UNDERSTAND THE COMMENT HERE BECAUSE WE NEED COORD_FLiP
 tempo.coord <- bef.final.plot$layout$panel_params[[1]]
 # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non NULL or if y.log argument is different from "no")
 if(y.log != "no"){ # integer main ticks for log2 and log10
@@ -10626,7 +10627,15 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ann
 coord.names <- c(coord.names, "y.second.tick.positions")
 }else if(( ! is.null(y.second.tick.nb)) & y.log == "no"){
 # if(y.second.tick.nb > 0){ #inactivated because already checked before
+if(length(tempo.scale) < 2){
+tempo.cat1 <- c("y.tick.nb", "y.second.tick.nb")
+tempo.cat2 <- sapply(list(y.tick.nb, y.second.tick.nb), FUN = paste0, collapse = " ")
+tempo.sep <- sapply(mapply(" ", max(nchar(tempo.cat1)) - nchar(tempo.cat1) + 3, FUN = rep, SIMPLIFY = FALSE), FUN = paste0, collapse = "")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE NUMBER OF GENERATED TICKS FOR THE Y-AXIS IS NOT CORRECT: ", length(tempo.scale), "\nUSING THESE ARGUMENT SETTINGS (NO DISPLAY MEANS NULL VALUE):\n", paste0(tempo.cat1, tempo.sep, tempo.cat2, collapse = "\n"), "\nPLEASE, TEST OTHER VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else{
 tempo <- fun_inter_ticks(lim = y.lim, log = y.log, breaks = tempo.scale, n = y.second.tick.nb)
+}
 y.second.tick.values <- tempo$values
 y.second.tick.pos <- tempo$coordinates
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
@@ -10650,9 +10659,9 @@ oob = scales::rescale_none,
 trans = ifelse(diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
 ))
 if(vertical == TRUE){
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) #problem of ggplot2::ylim() is taht it redraw new breaks # coord_cartesian(ylim = y.lim)) not used because bug -> y-axis label disappearance with y.lim decreasing # clip = "off" to have secondary ticks outside plot region does not work
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) # problem of ggplot2::ylim() is that it redraws new breaks # coord_cartesian(ylim = y.lim)) not used because bug -> y-axis label disappearance with y.lim decreasing I DO NOT UNDERSTAND THIS MESSAGE WHILE I USE COORD_CARTESIAN # clip = "off" to have secondary ticks outside plot region does not work
 }else{
-assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing
+assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing. IDEM ABOVE
 
 }
 # end y scale management (cannot be before dot plot management)
@@ -10714,10 +10723,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
 # }
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 if(return == TRUE){
 tempo.output <- ggplot2::ggplot_build(fin.plot)
 tempo.output$data <- tempo.output$data[-1] # remove the first data because corresponds to the initial empty boxplot
@@ -11394,6 +11402,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # end code that protects set.seed() in the global environment
 # warning initiation
 ini.warning.length <- options()$warning.length
+options(warning.length = 8170)
 warn <- NULL
 warn.count <- 0
 # end warning initiation
@@ -12901,7 +12910,15 @@ yend = if(diff(y.lim) > 0){tempo.coord$y.range[1] + abs(diff(tempo.coord$y.range
 coord.names <- c(coord.names, "x.second.tick.positions")
 }else if(( ! is.null(x.second.tick.nb)) & x.log == "no"){
 # if(x.second.tick.nb > 0){ #inactivated because already checked before
+if(length(tempo.scale) < 2){
+tempo.cat1 <- c("x.tick.nb", "x.second.tick.nb")
+tempo.cat2 <- sapply(list(x.tick.nb, x.second.tick.nb), FUN = paste0, collapse = " ")
+tempo.sep <- sapply(mapply(" ", max(nchar(tempo.cat1)) - nchar(tempo.cat1) + 3, FUN = rep, SIMPLIFY = FALSE), FUN = paste0, collapse = "")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE NUMBER OF GENERATED TICKS FOR THE X-AXIS IS NOT CORRECT: ", length(tempo.scale), "\nUSING THESE ARGUMENT SETTINGS (NO DISPLAY MEANS NULL VALUE):\n", paste0(tempo.cat1, tempo.sep, tempo.cat2, collapse = "\n"), "\nPLEASE, TEST OTHER VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else{
 tempo <- fun_inter_ticks(lim = x.lim, log = x.log, breaks = tempo.scale, n = x.second.tick.nb)
+}
 x.second.tick.values <- tempo$values
 x.second.tick.pos <- tempo$coordinates
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
@@ -12960,7 +12977,15 @@ xend = if(diff(x.lim) > 0){tempo.coord$x.range[1] + abs(diff(tempo.coord$x.range
 coord.names <- c(coord.names, "y.second.tick.positions")
 }else if(( ! is.null(y.second.tick.nb)) & y.log == "no"){
 # if(y.second.tick.nb > 0){ #inactivated because already checked before
+if(length(tempo.scale) < 2){
+tempo.cat1 <- c("y.tick.nb", "y.second.tick.nb")
+tempo.cat2 <- sapply(list(y.tick.nb, y.second.tick.nb), FUN = paste0, collapse = " ")
+tempo.sep <- sapply(mapply(" ", max(nchar(tempo.cat1)) - nchar(tempo.cat1) + 3, FUN = rep, SIMPLIFY = FALSE), FUN = paste0, collapse = "")
+tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE NUMBER OF GENERATED TICKS FOR THE Y-AXIS IS NOT CORRECT: ", length(tempo.scale), "\nUSING THESE ARGUMENT SETTINGS (NO DISPLAY MEANS NULL VALUE):\n", paste0(tempo.cat1, tempo.sep, tempo.cat2, collapse = "\n"), "\nPLEASE, TEST OTHER VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else{
 tempo <- fun_inter_ticks(lim = y.lim, log = y.log, breaks = tempo.scale, n = y.second.tick.nb)
+}
 y.second.tick.values <- tempo$values
 y.second.tick.pos <- tempo$coordinates
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
@@ -13009,10 +13034,9 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 
 # output
 if(warn.print == TRUE & ! is.null(warn)){
-options(warning.length = 8170)
 on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
-on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 }
+on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
 if(return == TRUE){
 output <- suppressMessages(ggplot2::ggplot_build(fin.plot))
 # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
