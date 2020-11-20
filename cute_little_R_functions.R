@@ -10778,6 +10778,7 @@ categ.class.order = NULL,
 color = NULL, 
 geom = "geom_point", 
 geom.step.dir = "hv", 
+geom.stick.base = NULL, 
 alpha = 0.5, 
 dot.size = 2, 
 dot.shape = 21, 
@@ -10876,6 +10877,11 @@ lib.path = NULL
 # If data1 is a list, then geom.step.dir must be either:
 # (1) a list of single character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. The value in compartments related to other geom values than "geom_step" will be ignored
 # (2) a single character string, which will be used for all the "geom_step" values of the geom argument, whatever the data1 list
+# geom.stick.base: either (1) NULL or (2) a single numeric value or (3) a list of single numeric values, setting the base of the sticks when using "geom_stick" of the geom argument
+# If geom.stick.base is NULL, the bottom limit of the y-axis is taken as the base
+# If data1 is a list, then geom.stick.base must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value. With a list (former possibility), the values in compartments related to other geom values than "geom_stick" will be ignored. With a single value (latter possibility), the same base will be used for all the sticks, whatever the data1 list
+# Warning: the y-axis limits are not modified by the value of geom.stick.base, meaning that this value can be outside of the range of y.lim. Add the value of geom.stick.base also in the y.lim argument if required
+# Warning: if geom.stick.base is NULL, the bottom limit of the y-axis is taken as the base. Thus, be careful with inverted y-axis
 # alpha: single numeric value (from 0 to 1) of transparency. If data1 is a list, then alpha must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value. In that case the same transparency will apply for the different compartments of the data1 list
 # dot.size: single numeric value of dot shape radius? in mm. If data1 is a list, then dot.size must be either (1) a list of single numeric values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single numeric value. With a list (former possibility), the value in compartments related to lines will be ignored. With a single value (latter possibility), the same dot.size will be used for all the dots, whatever the data1 list
 # dot.shape: value indicating the shape of the dots (see https://ggplot2.tidyverse.org/articles/ggplot2-specs.html) If data1 is a list, then dot.shape must be either (1) a list of single shape values, of same size as data1, with compartment 1 related to compartment 1 of data1, etc., or (2) a single shape value. With a list (former possibility), the value in compartments related to lines will be ignored. With a single value (latter possibility), the same dot.shape will be used for all the dots, whatever the data1 list
@@ -10958,7 +10964,7 @@ lib.path = NULL
 # EXAMPLES
 # set.seed(1) ; obs1 <- data.frame(Km = c(2, 1, 6, 5, 4, 7), Time = c(2, 1, 6, 5, 4, 7)^2, Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"), Color1 = rep(c("coral", "lightblue"), each = 3), stringsAsFactors = TRUE) ; fun_gg_scatter(data1 = obs1, x = "Km", y = "Time")
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500), stringsAsFactors = TRUE) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; categ = NULL ; categ.class.order = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; alpha = 0.5 ; dot.size = 2 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = NULL ; x.lab = NULL ; x.log = "no" ; x.tick.nb = NULL ; x.second.tick.nb = NULL ; x.include.zero = FALSE ; x.left.extra.margin = 0.05 ; x.right.extra.margin = 0.05 ; x.text.angle = 0 ; y.lim = NULL ; y.lab = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; y.text.angle = 0 ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; text.size = 12 ; title = "" ; title.text.size = 12 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(km = rnorm(1000, 10, 3), time = rnorm(1000, 10, 3), group1 = rep(c("A1", "A2"), 500), stringsAsFactors = TRUE) ; obs2 <-data.frame(km = rnorm(1000, 15, 3), time = rnorm(1000, 15, 3), group2 = rep(c("G1", "G2"), 500), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$km[2:3] <- NA ; data1 = list(L1 = obs1, L2 = obs2) ; x = list(L1 = "km", L2 = "km") ; y = list(L1 = "time", L2 = "time") ; categ = list(L1 = "group1", L2 = "group2") ; categ = NULL ; categ.class.order = NULL ; color = NULL ; geom = "geom_point" ; geom.step.dir = "hv" ; geom.stick.base = NULL, alpha = 0.5 ; dot.size = 2 ; dot.shape = 21 ; dot.border.size = 0.5 ; dot.border.color = NULL ; line.size = 0.5 ; line.type = "solid" ; x.lim = NULL ; x.lab = NULL ; x.log = "no" ; x.tick.nb = NULL ; x.second.tick.nb = NULL ; x.include.zero = FALSE ; x.left.extra.margin = 0.05 ; x.right.extra.margin = 0.05 ; x.text.angle = 0 ; y.lim = NULL ; y.lab = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = NULL ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; y.text.angle = 0 ; raster = FALSE ; raster.ratio = 1 ; raster.threshold = NULL ; text.size = 12 ; title = "" ; title.text.size = 12 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
 arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -11121,6 +11127,20 @@ if(tempo1$problem == TRUE & tempo2$problem == TRUE){
 tempo.cat <- paste0("ERROR IN ", function.name, ": geom.step.dir ARGUMENT MUST BE A SINGLE CHARACTER STRING (\"vh\" OR \"hv\" OR \"mid\") OR A LIST OF THESE CHARACTER STRINGS")
 text.check <- c(text.check, tempo.cat)
 arg.check <- c(arg.check, TRUE)
+}
+if( ! is.null(geom.stick.base)){
+tempo1 <- fun_check(data = geom.stick.base, class = "vector", mode = "numeric", na.contain = FALSE, length = 1, fun.name = function.name)
+tempo2 <- fun_check(data = color, class = "list", na.contain = TRUE, fun.name = function.name)
+checked.arg.names <- c(checked.arg.names, tempo2$object.name)
+if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom.stick.base ARGUMENT MUST BE A SINGLE NUMERIC VALUE OR A LIST OF SINGLE NUMERIC VALUES")
+text.check <- c(text.check, tempo.cat)
+arg.check <- c(arg.check, TRUE)
+}
+}else{
+# no fun_check test here, it is just for checked.arg.names
+tempo <- fun_check(data = geom.stick.base, class = "vector")
+checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
 tempo1 <- fun_check(data = alpha, prop = TRUE, length = 1, fun.name = function.name)
 tempo2 <- fun_check(data = alpha, class = "list", na.contain = TRUE, fun.name = function.name)
@@ -11361,6 +11381,7 @@ tempo.arg <-c(
 # "y", # inactivated because of hline or vline
 "geom", 
 "geom.step.dir", 
+# "geom.stick.base", # inactivated because can be null
 "alpha", 
 "dot.size", 
 "dot.shape", 
@@ -11411,6 +11432,7 @@ warn.count <- 0
 list.color <- NULL
 list.geom <- NULL
 list.geom.step.dir <- NULL
+list.geom.stick.base <- NULL
 list.alpha <- NULL
 list.dot.size <- NULL
 list.dot.shape <- NULL
@@ -11479,6 +11501,15 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 }else if(all(mode(geom.step.dir) == "character") & length(geom.step.dir) == 1){ # convert the single value into a list of single value
 list.geom.step.dir <- vector(mode = "list", length = length(data1))
 list.geom.step.dir[] <- geom.step.dir
+}
+if( ! is.null(geom.stick.base)){
+if( ! ((all(class(geom.stick.base) == "list") & length(data1) == length(geom.stick.base)) | (all(mode(geom.stick.base) == "numeric") & length(geom.stick.base) == 1))){ # list of same length as data1 or single value
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom.stick.base ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}else if(all(mode(geom.stick.base) == "numeric") & length(geom.stick.base) == 1){ # convert the single value into a list of single value
+list.geom.stick.base <- vector(mode = "list", length = length(data1))
+list.geom.stick.base[] <- geom.stick.base
+}
 }
 if( ! ((all(class(alpha) == "list") & length(data1) == length(alpha)) | (all(mode(alpha) == "numeric") & length(alpha) == 1))){ # list of same length as data1 or single value
 tempo.cat <- paste0("ERROR IN ", function.name, ": alpha ARGUMENT MUST BE A LIST OF SAME LENGTH AS data1 IF data1 IS A LIST, OR A SINGLE NUMERIC VALUE")
@@ -11590,6 +11621,14 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 }else{
 geom.step.dir <- list(L1 = geom.step.dir)
 }
+if( ! is.null(geom.stick.base)){
+if(all(class(geom.stick.base) == "list")){
+tempo.cat <- paste0("ERROR IN ", function.name, ": geom.stick.base ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}else{
+geom.stick.base <- list(L1 = geom.stick.base)
+}
+}
 if(all(class(alpha) == "list")){
 tempo.cat <- paste0("ERROR IN ", function.name, ": alpha ARGUMENT CANNOT BE A LIST IF data1 IS A DATA FRAME")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
@@ -11657,6 +11696,11 @@ geom <- list.geom
 }
 if( ! is.null(list.geom.step.dir)){
 geom.step.dir <- list.geom.step.dir
+}
+if( ! is.null(geom.stick.base)){
+if( ! is.null(list.geom.stick.base)){
+geom.stick.base <- list.geom.stick.base
+}
 }
 if( ! is.null(list.alpha)){
 alpha <- list.alpha
@@ -11813,6 +11857,14 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 tempo <- fun_check(data = geom.step.dir[[i1]], data.name = ifelse(length(geom.step.dir) == 1, "geom.step.dir", paste0("geom.step.dir NUMBER ", i1)), options = c("vh", "hv", "mid"), length = 1, fun.name = function.name)
 if(tempo$problem == TRUE){
 stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}
+}
+if( ! (is.null(geom.stick.base))){
+if(geom[[i1]] == "geom_stick" & ! is.null(geom.stick.base[[i1]])){
+tempo <- fun_check(data = geom.stick.base[[i1]], data.name = ifelse(length(geom.stick.base) == 1, "geom.stick.base", paste0("geom.stick.base NUMBER ", i1)), mode = "numeric", length = 1, na.contain = FALSE, fun.name = function.name)
+if(tempo$problem == TRUE){
+stop(paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+}
 }
 }
 # end check of geom now because required for y argument
@@ -12642,7 +12694,7 @@ ifelse(geom[[i1]] == 'geom_stick', 'geom_segment', geom[[i1]]), # geom_segment b
 x[[i1]], 
 ifelse(geom[[i1]] == 'geom_stick', ", yend = ", ", y = "), 
 y[[i1]], 
-if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', y.lim[1])}, 
+if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', ifelse(is.null(geom.stick.base), y.lim[1], geom.stick.base[[i1]]))}, 
 ", linetype = ", 
 categ[[i1]], 
 "), color = \"", 
@@ -12684,7 +12736,7 @@ ifelse(geom[[i1]] == 'geom_stick', 'geom_segment', geom[[i1]]), # geom_segment b
 x[[i1]], 
 ifelse(geom[[i1]] == 'geom_stick', ", yend = ", ", y = "), 
 y[[i1]], 
-if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', y.lim[1])}, 
+if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', ifelse(is.null(geom.stick.base), y.lim[1], geom.stick.base[[i1]]))}, 
 ", alpha = ", 
 categ[[i1]], 
 "), color = \"", 
@@ -12726,7 +12778,7 @@ ifelse(geom[[i1]] == 'geom_stick', 'geom_segment', geom[[i1]]), # geom_segment b
 x[[i1]], 
 ifelse(geom[[i1]] == 'geom_stick', ", yend = ", ", y = "), 
 y[[i1]], 
-if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', y.lim[1])}, 
+if(geom[[i1]] == 'geom_stick'){paste0(', xend = ', x[[i1]], ', y = ', ifelse(is.null(geom.stick.base), y.lim[1], geom.stick.base[[i1]]))}, 
 ", size = ", 
 categ[[i1]], 
 "), color = \"", 

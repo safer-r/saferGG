@@ -111,8 +111,8 @@ fun_gg_scatter(
     categ = list(
         L1 = "Beast",
         L2 = "Animal"
-    ), 
-
+    )
+)
 
 ### Order of classes in each layer
 ### single dataset
@@ -205,7 +205,8 @@ fun_gg_scatter(data1 = obs1[c(1, 4), ], x = "Km", categ = "Car", # c(1, 4) becau
 )
 # stick: dots as vertical bars
 fun_gg_scatter(data1 = obs1, x = "Km", y = "Time", categ = "Car", 
-    geom = "geom_stick"
+    geom = "geom_stick", 
+    geom.stick.base = 20 # set the base of the sticks when using "geom_stick" of the geom argument. if NULL, use the bottom of the y-axis
 )
 ### multiple dataset
 fun_gg_scatter(data1 = list(obs2, obs3), x = list("Km", "Distance"), y = list("Time", "Time_lapse"), categ = list("Animal", "Beast"), 
@@ -430,6 +431,7 @@ categ.class.order = NULL,
 color = NULL, 
 geom = "geom_point", 
 geom.step.dir = "hv", 
+geom.stick.base = NULL, 
 alpha = 0.5, 
 dot.size = 2, 
 dot.shape = 21, 
