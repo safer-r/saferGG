@@ -1861,18 +1861,19 @@ cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\
 # REQUIRED PACKAGES
 # lubridate
 # parallel if thread.nb argument is not NULL (included in the R installation packages but not automatically loaded)
-# if the tested function is in a package, this package must be imported first (no parallelization) or must be in the classical R package folder indicated by the lib.path argument (parallelization)
+# pdftools if thread.nb argument is not NULL (included in the R installation packages but not automatically loaded)
+# If the tested function is in a package, this package must be imported first (no parallelization) or must be in the classical R package folder indicated by the lib.path argument (parallelization)
 # RETURN
 # if export is FALSE a list containing:
 # $fun: the tested function
+# $instruction: the initial instruction
+# $sys.info: system and packages info
 # $data: a data frame of all the combination tested, containing the following columns:
 # the different values tested, named by arguments
 # $kind: a vector of character strings indicating the kind of test result: either "ERROR", or "WARNING", or "OK"
 # $problem: a logical vector indicating if error or not
 # $expected.error: optional logical vector indicating the expected error specified in the expect.error argument
 # $message: either NULL if $kind is always "OK", or the messages
-# $instruction: the initial instruction
-# $sys.info: system and packages info
 # if export is TRUE 1) the same list object into a .RData file, 2) also the $data data frame into a .txt file, and 3) if expect.error is non NULL and if any discrepancy, the $data data frame into a .txt file but containing only the rows with discrepancies between expected and observed errors
 # one or several pdf if a plotting function is tested and if the plot.fun argument is TRUE
 # REQUIRED PACKAGES
@@ -2069,7 +2070,7 @@ warning(paste0("\n", tempo.cat, "\n"), call. = FALSE)
 }
 # end second round of checking and data preparation
 # package checking
-fun_pack(req.package = c("lubridate"), lib.path = lib.path)
+fun_pack(req.package = c("lubridate", "pdftools"), lib.path = lib.path)
 if( ! is.null(thread.nb)){
 fun_pack(req.package = c("parallel"), lib.path = lib.path)
 }
@@ -2368,6 +2369,8 @@ window.nb <- dev.cur()
 invisible(dev.set(window.nb))
 # end plot management
 # new environment
+ini.date <- Sys.time()
+ini.time <- as.numeric(ini.date) # time of process begin, converted into 
 env.name <- paste0("env", ini.time)
 if(exists(env.name, where = -1)){ # verify if still ok when fun_test() is inside a function
 tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
@@ -2377,8 +2380,6 @@ assign(env.name, new.env())
 assign("val", val, envir = get(env.name, env = sys.nframe(), inherit = FALSE)) # var replaced by val
 }
 # end new environment
-ini.date <- Sys.time()
-ini.time <- as.numeric(ini.date) # time of process begin, converted into 
 print.count.loop <- 0
 suppressMessages(suppressWarnings(eval(parse(text = code))))
 colnames(data) <- arg
@@ -2393,7 +2394,7 @@ sys.info$loadedOnly <- sys.info$loadedOnly[order(names(sys.info$loadedOnly))] # 
 invisible(dev.off(window.nb))
 rm(env.name) # optional, because should disappear at the end of the function execution
 # output
-output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
+output <- list(fun = fun, instruction = instruction, sys.info = sys.info) # data = data finally removed from the output list, because everything combined in a RData file at the end
 save(output, file = paste0(res.path, "/fun_test_", x[1], ifelse(base::length(x) == 1L, ".RData", paste0("-", x[base::length(x)], ".RData"))))
 if(plot.fun == TRUE & plot.count == 0L){
 warn.count <- warn.count + 1
@@ -2401,26 +2402,90 @@ tempo.warn <- paste0("(", warn.count,") IN PROCESS ", process.id, ": NO PDF PLOT
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(base::length(x) == 1L, ".pdf", paste0("-", x[base::length(x)], ".pdf"))))
 }
-table.out <- as.matrix(output$data)
+table.out <- as.matrix(data)
 # table.out[table.out == ""] <- " " # does not work # because otherwise read.table() converts "" into NA
 table.out <- gsub(table.out, pattern = "\n", replacement = " ")
 write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(base::length(x) == 1L, ".txt", paste0("-", x[base::length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
 }
 )
 parallel::stopCluster(Clust)
-# txt files assembly
+# files assembly
 if(base::length(cluster.list) > 1){
 for(i2 in 1:base::length(cluster.list)){
-tempo.name <- paste0(res.path, "/table_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(base::length(cluster.list[[i2]]) == 1L, ".txt", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".txt")))
-tempo <- read.table(file = tempo.name, header = TRUE, stringsAsFactors = FALSE, sep = "\t", row.names = 1, comment.char = "", colClasses = "character") #  row.names = 1 (1st column) because now read.table() adds a NA in the header if the header starts by a tabulation, comment.char = "" because colors with #, colClasses = "character" otherwise convert "" (from NULL) into NA
-file.remove(tempo.name)
+tempo.file <- paste0(res.path, "/table_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(base::length(cluster.list[[i2]]) == 1L, ".txt", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".txt"))) # txt file
+tempo <- read.table(file = tempo.file, header = TRUE, stringsAsFactors = FALSE, sep = "\t", row.names = 1, comment.char = "", colClasses = "character") #  row.names = 1 (1st column) because now read.table() adds a NA in the header if the header starts by a tabulation, comment.char = "" because colors with #, colClasses = "character" otherwise convert "" (from NULL) into NA
+if(file.exists(paste0(res.path, "/plots_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(base::length(cluster.list[[i2]]) == 1L, ".pdf", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".pdf"))))){
+tempo.pdf <- paste0(res.path, "/plots_from_fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(base::length(cluster.list[[i2]]) == 1L, ".pdf", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".pdf"))) # pdf file
+}else{
+tempo.pdf <- NULL
+}
+tempo.rdata <- paste0(res.path, "/fun_test_", min(cluster.list[[i2]], na.rm = TRUE), ifelse(base::length(cluster.list[[i2]]) == 1L, ".RData", paste0("-", max(cluster.list[[i2]], na.rm = TRUE), ".RData"))) # RData file
 if(i2 == 1L){
 final.file <- tempo
+final.pdf <- tempo.pdf
+# new env for RData combining
+env.name <- paste0("env", ini.time)
+if(exists(env.name, where = -1)){ # verify if still ok when fun_test() is inside a function
+tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+# end new env for RData combining
+}else{
+assign(env.name, new.env())
+load(tempo.rdata, envir = get(env.name))
+tempo.rdata1 <- tempo.rdata
+assign("final.output", get("output", envir = get(env.name)), envir = get(env.name))
+}
 }else{
 final.file <- rbind(final.file, tempo, stringsAsFactors = TRUE)
+final.pdf <- c(final.pdf, tempo.pdf)
+load(tempo.rdata, envir = get(env.name))
+if( ! identical(get("final.output", envir = get(env.name))[c("R.version", "locale", "platform")], get("output", envir = get(env.name))[c("R.version", "locale", "platform")])){
+tempo.cat <- paste0("ERROR IN ", function.name, ": DIFFERENCE BETWEEN OUTPUTS WHILE THEY SHOULD BE IDENTICAL\nPLEASE CHECK\n", tempo.rdata1, "\n", tempo.rdata)
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else{
+# add the differences in RData $sysinfo into final.output
+tempo.base1 <- sort(get("final.output", envir = get(env.name))$sys.info$basePkgs)
+tempo.base2 <- sort(get("output", envir = get(env.name))$sys.info$basePkgs)
+tempo.other1 <- names(get("final.output", envir = get(env.name))$sys.info$otherPkgs)
+tempo.other2 <- names(get("output", envir = get(env.name))$sys.info$otherPkgs)
+tempo.loaded1 <- names(get("final.output", envir = get(env.name))$sys.info$loadedOnly)
+tempo.loaded2 <- names(get("output", envir = get(env.name))$sys.info$loadedOnly)
+assign("final.output", {
+x <- get("final.output", envir = get(env.name))
+y <- get("output", envir = get(env.name))
+x$sys.info$basePkgs <- sort(unique(tempo.base1, tempo.base2))
+if( ! all(tempo.other2 %in% tempo.other1)){
+x$sys.info$otherPkgs <- c(x$sys.info$otherPkgs, y$sys.info$otherPkgs[ ! (tempo.other2 %in% tempo.other1)])
+x$sys.info$otherPkgs <- x$sys.info$otherPkgs[order(names(x$sys.info$otherPkgs))]
+}
+if( ! all(tempo.loaded2 %in% tempo.loaded1)){
+x$sys.info$loadedOnly <- c(x$sys.info$loadedOnly, y$sys.info$loadedOnly[ ! (tempo.loaded2 %in% tempo.loaded1)])
+x$sys.info$loadedOnly <- x$sys.info$loadedOnly[order(names(x$sys.info$loadedOnly))]
+}
+x
+}, envir = get(env.name))
+# add the differences in RData $sysinfo into final.output
 }
 }
+file.remove(c(tempo.file, tempo.rdata))
+}
+# combine pdf and save
+if( ! is.null(final.pdf)){
+pdftools::pdf_combine(
+input = final.pdf,
+output = paste0(res.path, "/plots_from_fun_test_1-", total.comp.nb, ".pdf")
+)
+file.remove(final.pdf)
+}
+# end combine pdf and save
+# save RData
+assign("output", c(get("final.output", envir = get(env.name)), data = list(final.file)), envir = get(env.name))
+save(output, file = paste0(res.path, "/fun_test__1-", total.comp.nb, ".RData"), envir = get(env.name))
+rm(env.name) # optional, because should disappear at the end of the function execution
+# end save RData
+# save txt
 write.table(final.file, file = paste0(res.path, "/table_from_fun_test_1-", total.comp.nb, ".txt"), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+# end save txt
 if( ! is.null(expect.error)){
 final.file <- final.file[ ! final.file$problem == final.file$expected.error, ]
 if(nrow(final.file) == 0L){
@@ -2431,7 +2496,7 @@ write.table(final.file, file = paste0(res.path, "/discrepancy_table_from_fun_tes
 }
 }
 }
-# end txt files assembly
+# end files assembly
 }else{
 # plot management
 if(plot.fun == TRUE){
@@ -2466,7 +2531,7 @@ sys.info$loadedOnly <- sys.info$loadedOnly[order(names(sys.info$loadedOnly))] # 
 invisible(dev.off(window.nb))
 rm(env.name) # optional, because should disappear at the end of the function execution
 # output
-output <- list(fun = fun, data = data, instruction = instruction, sys.info = sys.info)
+output <- list(fun = fun, instruction = instruction, sys.info = sys.info, data = data)
 if(plot.fun == TRUE & plot.count == 0L){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NO PDF PLOT BECAUSE ONLY ERRORS REPORTED")
