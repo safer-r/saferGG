@@ -1849,7 +1849,7 @@ cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\
 # ARGUMENTS
 # fun: character string indicating the name of the function tested (without brackets)
 # arg: vector of character strings of arguments of fun. At least arguments that do not have default values must be present in this vector
-# val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA)
+# val: list with number of compartments equal to length of arg, each compartment containing values of the corresponding argument in arg. Each different value must be in a list or in a vector. For instance, argument 3 in arg is a logical argument (values accepted TRUE, FALSE, NA). Thus, compartment 3 of val can be either list(TRUE, FALSE, NA), or c(TRUE, FALSE, NA). NULL value alone must be written list(NULL)
 # expect.error: list of exactly the same structure as val argument, but containing FALSE or TRUE, depending on whether error is expected (TRUE) or not (FALSE) for each corresponding value of val. A message is returned depending on discrepancies between the expected and observed errors. BEWARE: not always possible to write the expected errors for all the combination of argument values. Ignored if NULL
 # thread.nb: numeric value indicating the number of available threads. Write NULL if no parallelization wanted
 # print.count: interger value. Print a working progress message every print.count during loops. BEWARE: can increase substentially the time to complete the process using a small value, like 10 for instance. Use Inf is no loop message desired
@@ -2405,7 +2405,7 @@ file.remove(paste0(res.path, "/plots_from_fun_test_", x[1], ifelse(base::length(
 table.out <- as.matrix(data)
 # table.out[table.out == ""] <- " " # does not work # because otherwise read.table() converts "" into NA
 table.out <- gsub(table.out, pattern = "\n", replacement = " ")
-write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(base::length(x) == 1L, ".txt", paste0("-", x[base::length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+write.table(table.out, file = paste0(res.path, "/table_from_fun_test_", x[1], ifelse(base::length(x) == 1L, ".txt", paste0("-", x[base::length(x)], ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n", na = "")
 }
 )
 parallel::stopCluster(Clust)
@@ -2484,7 +2484,7 @@ save(output, file = paste0(res.path, "/fun_test__1-", total.comp.nb, ".RData"), 
 rm(env.name) # optional, because should disappear at the end of the function execution
 # end save RData
 # save txt
-write.table(final.file, file = paste0(res.path, "/table_from_fun_test_1-", total.comp.nb, ".txt"), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+write.table(final.file, file = paste0(res.path, "/table_from_fun_test_1-", total.comp.nb, ".txt"), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n", na = "")
 # end save txt
 if( ! is.null(expect.error)){
 final.file <- final.file[ ! final.file$problem == final.file$expected.error, ]
@@ -2492,7 +2492,7 @@ if(nrow(final.file) == 0L){
 cat(paste0("NO DISCREPANCY BETWEEN EXPECTED AND OBSERVED ERRORS\n\n"))
 }else{
 cat(paste0("DISCREPANCIES BETWEEN EXPECTED AND OBSERVED ERRORS (SEE THE discrepancy_table_from_fun_test_1-", total.comp.nb, ".txt FILE)\n\n"))
-write.table(final.file, file = paste0(res.path, "/discrepancy_table_from_fun_test_1-", total.comp.nb, ".txt"), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+write.table(final.file, file = paste0(res.path, "/discrepancy_table_from_fun_test_1-", total.comp.nb, ".txt"), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n", na = "")
 }
 }
 }
@@ -2547,7 +2547,7 @@ cat(paste0("DISCREPANCIES BETWEEN EXPECTED AND OBSERVED ERRORS (SEE THE ", if(ex
 if(export == TRUE){
 expect.data <- as.matrix(expect.data)
 expect.data <- gsub(expect.data, pattern = "\n", replacement = "  ")
-write.table(expect.data, file = paste0(res.path, "/discrepancy_table_from_fun_test_1", ifelse(total.comp.nb == 1L, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+write.table(expect.data, file = paste0(res.path, "/discrepancy_table_from_fun_test_1", ifelse(total.comp.nb == 1L, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n", na = "")
 }
 }
 }
@@ -2560,7 +2560,7 @@ if(export == TRUE){
 save(output, file = paste0(res.path, "/fun_test_1", ifelse(total.comp.nb == 1L, ".RData", paste0("-", total.comp.nb, ".RData"))))
 table.out <- as.matrix(output$data)
 table.out <- gsub(table.out, pattern = "\n", replacement = "  ")
-write.table(table.out, file = paste0(res.path, "/table_from_fun_test_1", ifelse(total.comp.nb == 1L, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n")
+write.table(table.out, file = paste0(res.path, "/table_from_fun_test_1", ifelse(total.comp.nb == 1L, ".txt", paste0("-", total.comp.nb, ".txt"))), row.names = TRUE, col.names = NA, append = FALSE, quote = FALSE, sep = "\t", eol = "\n", na = "")
 }else{
 return(output)
 }
@@ -8673,6 +8673,9 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
+# Error: class order not good when a class is removed due to NA
+# Error: line 136 in check 20201126 with add argument
 
 
 fun_gg_boxplot <- function(
