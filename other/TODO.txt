@@ -1,0 +1,19 @@
+L'investissement dans le projet Cute:
+1) Terminer les pages d'exemple de chaque fonction (c'est long)
+2) Checker les functions existantes (les utiliser, les challenger)
+3) Créer: fun_gg_dot(), fun_gg_violin(), fun_gg_line(), fun_gg_bar() sur le modèle de fun_gg_boxplot()
+4) Améliorer fun_gg_heatmap()
+5) Passer en package
+6) Passer de gitlab à github (à discuter mais j'aime bien le coté issues de github) ou synchro
+7) Faire les pages internet des exemples comme https://ggplot2.tidyverse.org/reference/geom_point.html
+8) Publier
+9) Maintenir les packages (ça va être du travail)
+
+Voilou.
+
+Il faudrait que je sache qui souhaite s'investir, sachant que c'est un vrai projet (donc du travail).
+
+Merci beaucoup.
+
+Gael.
+

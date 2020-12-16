@@ -211,7 +211,7 @@ fun.name = NULL
 # length: numeric value indicating the length of the object. Not considered if NULL
 # prop: logical. Are the numeric values between 0 and 1 (proportion)? If TRUE, can be used alone, without considering class, etc.
 # double.as.integer.allowed: logical. If TRUE, no error is reported in the cheking message if argument is set to typeof == "integer" or class == "integer", while the reality is typeof == "double" or class == "numeric" but the numbers strictly have zero as modulo (remainder of a division). This means that i <- 1, which is typeof(i) -> "double" is considered as integer with double.as.integer.allowed = TRUE. WARNING: data%%1 == 0L but not isTRUE(all.equal(data%%1, 0)) is used here because the argument checks for integers stored as double (does not check for decimal numbers that are approximate integers)
-# options: a vector of character strings indicating all the possible option values for the data argument, or NULL
+# options: a vector of character strings or integers indicating all the possible option values for the data argument, or NULL. Numbers of type "double" are accepted if they have a 0 modulo
 # all.options.in.data: logical. If TRUE, all of the options must be present at least once in the data argument, and nothing else. If FALSE, some or all of the options must be present in the data argument, and nothing else. Ignored if options is NULL
 # na.contain: logical. Can the data argument contain NA?
 # neg.values: logical. Are negative numeric values authorized? Warning: the default setting is TRUE, meaning that, in that case, no check is performed for the presence of negative values. The neg.values argument is activated only when set to FALSE. In addition, (1) neg.values = FALSE can only be used when class, typeof or mode arguments are not NULL, otherwise return an error message, (2) the presence of negative values is not checked with neg.values = FALSE if the tested object is a factor and the following checking message is returned "OBJECT MUST BE MADE OF NON NEGATIVE VALUES BUT IS A FACTOR"
@@ -466,7 +466,13 @@ data.name <- deparse(substitute(data))
 }
 problem <- FALSE
 text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT")
-if(( ! is.null(options)) & all(base::typeof(data) == "character")){ # all() without na.rm -> ok because typeof() never returns NA
+if(( ! is.null(options)) & (all(base::typeof(data) == "character") | all(base::typeof(data) == "integer") | all(base::typeof(data) == "double"))){ # all() without na.rm -> ok because typeof() never returns NA
+if(all(base::typeof(data) == "double")){
+if( ! all(data %% 1 == 0L, na.rm = TRUE)){
+problem <- TRUE
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nBUT IS NOT EVEN TYPE CHARACTER OR INTEGER")
+}
+}else{
 text <- ""
 if( ! all(data %in% options)){ # no need of na.rm = TRUE for all() because %in% does not output NA
 problem <- TRUE
@@ -487,9 +493,10 @@ text <- paste0(ifelse(text == "", "", paste0(text, "\n")), ifelse(is.null(fun.na
 if(text == ""){
 text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT")
 }
+}
 }else if( ! is.null(options)){
 problem <- TRUE
-text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nBUT IS NOT EVEN TYPE CHARACTER")
+text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nBUT IS NOT EVEN TYPE CHARACTER OR INTEGER")
 }
 arg.names <- c("class", "typeof", "mode", "length")
 if( ! is.null(class)){
@@ -759,7 +766,8 @@ arg.user.setting <- as.list(match.call(expand.dots = FALSE))[-1] # list of the a
 # end function name
 # required function checking
 req.function <- c(
-"fun_check"
+"fun_check", 
+"fun_get_message"
 )
 tempo <- NULL
 for(i1 in req.function){
@@ -2925,7 +2933,7 @@ forced.color = NULL
 # convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
 # ARGUMENTS:
 # mat1: matrix 1 of non negative numerical values that has to be colored (matrix class). NA allowed
-# mat.hsv.h: logical. Is mat1 the h of hsv colors ? (if TRUE, mat1 must be between zero and 1)
+# mat.hsv.h: logical. Is mat1 the h of hsv colors ? (if TRUE, mat1 must be between zero and 1). If FALSE, mat1 must be made of positive integer values without 0
 # notch: single value between 0 and 1 to shift the successive colors on the hsv circle by + notch
 # s: s argument of hsv(). Must be between 0 and 1
 # v: v argument of hsv(). Must be between 0 and 1
@@ -4979,7 +4987,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", i
 }
 if(length(tick.pos) == 0L){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NO INTER TICKS COMPUTED BETWEEN THEN LIMITS INDICATED: ", paste(lim, collapse = " "))
+tempo.warn <- paste0("(", warn.count,") NO INTER TICKS COMPUTED BETWEEN THE LIMITS INDICATED: ", paste(lim, collapse = " "))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 output <- list(log = log, coordinates = tick.pos, values = tick.values, warn = warn)
@@ -6525,7 +6533,8 @@ suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.
 
 ######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs
 
-
+# Add name of the variable in the graph
+# not max and min for boxplot but 1.5IQR
 fun_trim <- function(
 data, 
 displayed.nb = NULL, 
@@ -12527,7 +12536,7 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # last check
 for(i1 in 1:length(data1)){
 if(categ[[i1]] != "fake_categ" & length(color[[i1]]) != length(unique(data1[[i1]][, categ[[i1]]]))){
-tempo.cat <- paste0("ERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color)== 1L, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ)== 1L, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1)== 1L, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])))
+tempo.cat <- paste0("ERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color)== 1L, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", ifelse(length(categ)== 1L, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", ifelse(length(data1)== 1L, "data1 ARGUMENT", paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", length(unique(data1[[i1]][, categ[[i1]]])), "\nREMINDER: A SINGLE COLOR PER CLASS OF CATEG AND A SINGLE CLASS OF CATEG PER COLOR MUST BE RESPECTED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
 }else if(categ[[i1]] == "fake_categ" & length(color[[i1]]) != 1){
 tempo.cat <- paste0("ERROR IN ", function.name, " LAST CHECK: ", ifelse(length(color)== 1L, "color", paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE LENGTH 1 WHEN ", ifelse(length(categ)== 1L, "categ", paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\nHERE IT IS COLOR LENGTH ", length(color[[i1]]))

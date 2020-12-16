@@ -7,6 +7,7 @@
 | [![License: GPL-3.0](https://img.shields.io/badge/licence-GPL%20(%3E%3D3)-green?style=plastic)](https://www.gnu.org/licenses) | [![Dependencies: R Package](https://img.shields.io/badge/package-Cairo%20v1.5_12.2-blue?style=plastic)](https://cran.r-project.org/web/packages/Cairo/index.html) |
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-ggplot2%20v3.3.2-blue?style=plastic)](https://github.com/tidyverse/ggplot2) |
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-lubridate%20v1.7.9-blue?style=plastic)](https://github.com/tidyverse/lubridate) |
+|  | [![Dependencies: R Package](https://img.shields.io/badge/package-pdftools%20v2.3.1-blue?style=plastic)](https://cran.r-project.org/web/packages/pdftools/index.html) |
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-reshape2%20v1.4.4-blue?style=plastic)](https://cran.r-project.org/web/packages/reshape2/index.html) |
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-reticulate%20v1.16-blue?style=plastic)](https://cran.r-project.org/web/packages/reticulate/index.html)|
 |  | [![Dependencies: R Package](https://img.shields.io/badge/package-scales%20v1.1.1-blue?style=plastic)](https://cran.r-project.org/web/packages/scales/index.html) |
@@ -36,21 +37,14 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 
 ## REPOSITORY CONTENT
 
-**cute_little_R_functions.R** file that has to be sourced in R or RStudio
-
-**cute_little_R_functions.docx** same as cute_little_R_functions.R but for better reading (interactive outline at the beginning of the file)
-
-**fun_gg_boxplot.docx** for better reading of the argument description
-
-**fun_gg_scatter.docx** for better reading of the argument description
-
-**examples.R** examples of all the functions, except fun_gg_boxplot() and fun_gg_scatter(), that can be sourced or copied-pasted
-
-**examples_gg_boxplot.R** examples of fun_gg_boxplot() that can be sourced or copied-pasted
-
-**examples_gg_scatter.R** examples of fun_gg_scatter() that can be sourced or copied-pasted
-
-**other** folder containing avorted developments
+| **cute_little_R_functions.R** | file that has to be sourced in R or RStudio |
+| **cute_little_R_functions.docx** | same as cute_little_R_functions.R but for better reading (interactive outline at the beginning of the file) |
+| **fun_gg_boxplot.docx** | for better reading of the argument description |
+| **fun_gg_scatter.docx** | for better reading of the argument description |
+| **examples.R** | examples of all the functions, except fun_gg_boxplot() and fun_gg_scatter(), that can be sourced or copied-pasted |
+| **examples_gg_boxplot.R** | examples of fun_gg_boxplot() that can be sourced or copied-pasted |
+| **examples_gg_scatter.R** | examples of fun_gg_scatter() that can be sourced or copied-pasted |
+| **other** | folder containing avorted developments |
 
 
 ## DESCRIPTIONS OF THE FUNCTIONS
