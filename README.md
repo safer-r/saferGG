@@ -37,7 +37,7 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 
 ## REPOSITORY CONTENT
 
-| --- | --- |
+| | |
 | **cute_little_R_functions.R** | file that has to be sourced in R or RStudio |
 | **cute_little_R_functions.docx** | same as cute_little_R_functions.R but for better reading (interactive outline at the beginning of the file) |
 | **fun_gg_boxplot.docx** | for better reading of the argument description |
