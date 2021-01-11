@@ -43,10 +43,9 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 | **cute_little_R_functions.docx** | same as cute_little_R_functions.R but for better reading (interactive outline at the beginning of the file) |
 | **fun_gg_boxplot.docx** | for better reading of the argument description |
 | **fun_gg_scatter.docx** | for better reading of the argument description |
-| **examples.R** | examples of all the functions, except fun_gg_boxplot() and fun_gg_scatter(), that can be sourced or copied-pasted |
-| **examples_gg_boxplot.R** | examples of fun_gg_boxplot() that can be sourced or copied-pasted |
-| **examples_gg_scatter.R** | examples of fun_gg_scatter() that can be sourced or copied-pasted |
-| **other** | folder containing avorted developments |
+| **examples_xxx** | examples of the xxx cute function, that can be sourced or copied-pasted |
+| **check** | folder containing the files that challenge the cute functions |
+| **dev** | folder containing avorted or in progress developments |
 
 
 ## DESCRIPTIONS OF THE FUNCTIONS
