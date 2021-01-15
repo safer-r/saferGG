@@ -1,7 +1,7 @@
 
 
 
-######### fun_tail() #### tail of the left or right of big 2D objects
+######### fun_head() #### head of the left or right of big 2D objects
 
 ### Datasets
 vec1 <- 1:100 # vector of integers
@@ -14,20 +14,20 @@ mat1 # diagonal matrix 20 * 20 with row names and column names
 
 
 ### Simple example
-fun_tail(data1 = vec1) # fun_tail() works like tail() on non 2D objects
-fun_tail(data1 = mat1)
+fun_head(data1 = vec1) # fun_head() works like head() on non 2D objects
+fun_head(data1 = mat1)
 
 
 ### Argument n
-fun_tail(data1 = mat1, n = 5) # number of dimension to print (5 means 5 rows and columns)
+fun_head(data1 = mat1, n = 5) # number of dimension to print (5 means 5 rows and columns)
 
 
 ### Argument side
-fun_tail(data1 = mat1, side = "r") # left or right side of the 2D object (only for matrix, data frame or table)
+fun_head(data1 = mat1, side = "r") # left or right side of the 2D object (only for matrix, data frame or table)
 
 
 ### All the arguments
-fun_tail(
+fun_head(
     data1 = mat1, 
     n = 6, 
     side = "l"

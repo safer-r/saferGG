@@ -1004,9 +1004,7 @@ fun_head <- function(
     # fun_check()
     # EXAMPLES
     # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_head(obs1, 3)
-    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_head(obs1, 3, "right")
     # DEBUGGING
-    # data1 = matrix(1:30, ncol = 5) # for function debugging
     # data1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
     # function name
     function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
@@ -1051,7 +1049,7 @@ fun_head <- function(
 
 fun_tail <- function(
     data1, 
-    n = 10, 
+    n = 6, 
     side = "l"
 ){
     # AIM
@@ -1068,10 +1066,8 @@ fun_tail <- function(
     # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
     # fun_check()
     # EXAMPLES
-    # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_tail(obs1, 3)
     # obs1 = matrix(1:30, ncol = 5, dimnames = list(letters[1:6], LETTERS[1:5])) ; obs1 ; fun_tail(obs1, 3, "r")
     # DEBUGGING
-    # data1 = matrix(1:10, ncol = 5) # for function debugging
     # data1 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) # for function debugging
     # function name
     function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
@@ -1200,7 +1196,7 @@ fun_comp_1d <- function(data1, data2){
     length <- NULL
     same.levels <- NULL # not FALSE to deal with no factors
     levels <- NULL
-    any.id.levels <- NULL
+    any.id.levels <- FALSE
     same.levels.pos1 <- NULL
     same.levels.pos2 <- NULL
     common.levels <- NULL
@@ -8825,7 +8821,7 @@ fun_gg_boxplot <- function(
     # WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
     # If the character string contains the "ggplot2::theme" string, then the article argument of fun_gg_boxplot() (see above) is ignored with a warning
     # Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
-    # WARNING: the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the fun_gg_scatter() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
+    # WARNING: the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the fun_gg_boxplot() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
     # return: logical. Return the graph parameters?
     # return.ggplot: logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the fun_gg_boxplot() function (e.g., a <- fun_gg_boxplot()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
     # return.gtable: logical. Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details
@@ -10884,7 +10880,6 @@ fun_gg_boxplot <- function(
     # end output
     # end main code
 }
-
 
 
 
@@ -13256,6 +13251,7 @@ if(return == TRUE){
 # end output
 # end main code
 }
+
 
 
 
