@@ -10,6 +10,8 @@
 
 # color palette: see https://github.com/EmilHvitfeldt/r-color-palettes
 # https://usethis.r-lib.org/ and usethat also
+# ERROR: this line tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1L does not work is no argument provided. Example fun_secu(). Fiw it everywhere
+
 ## LAST ROUND OF FORMATTING:
 # 1) Arguments: one per line
 # 2) Description:
@@ -601,9 +603,9 @@ return(output)
 
 fun_secu <- function(pos = 1, name = NULL){
 # AIM
-# Verify that local variables are not present in other environments, in order to avoid scope preference usage. The fun_secu() function checks by default the parent environment. This means that when used inside a function, it checks the local environment of this function. When used in the Global environment, it would check this environment
+# Verify that variables in the environment defined by the pos parameter are not present in the above environment (following R Scope). This can be used to avoid R scope preference of functions like get()
 # ARGUMENTS
-# pos: single integer indicating the position of the environment checked (argument n of parent.frame()). Value 1 means one step above the fun_secu() local environment. Thus, if fun_secu() is used in the working environment, with pos ==1, variables of the working env will be checked if they also exist in the above envs (Scope of R). If fun_secu() is used in a function, with pos ==1, variables presents in the local env of the function will be checked if they also exist in the above envs (Scope of R, which includes the working environment (Global env))
+# pos: single integer indicating the position of the environment checked (argument n of parent.frame()). Value 1 means one step above the fun_secu() local environment (by default). This means that when fun_secu(pos = 1) is used inside a function A, it checks if variables in the local environment of this function A are also present in above environments (following R Scope). When fun_secu(pos = 1) is used in the Global environment, it checks the objects of this environment
 # name: single character string indicating the name of the function checked. If NULL, fun_secu() checks all the variables of the environment indicated by pos, as explained in the pos argument description. If non-null, fun_secu() checks all the variables presents in the local env of the function will be checked in the above envs (which includes the working environment (Global env)
 # RETURN
 # A character string of the local variables that match variables in the different environments of the R scope, or NULL if no match
@@ -614,7 +616,7 @@ fun_secu <- function(pos = 1, name = NULL){
 # EXAMPLES
 # fun_secu()
 # fun_secu(pos = 2)
-# mean <- 0 ; fun1 <- function(){sd <- 1 ; fun_secu(name = as.character(sys.calls()[[length(sys.calls())]]))} ; fun2 <- function(){cor <- 2 ; fun1()} ; fun1() ; fun2() ; rm(mean) # sys.calls() gives the the function name at top stack of the imbricated functions, sys.calls()[[length(sys.calls())]] the name of the just above function. This can also been used for the above function: as.character(sys.call(1))
+# mean <- 0 ; fun1 <- function(){sd <- 1 ; fun_secu(name = as.character(sys.calls()[[length(sys.calls())]]))} ; fun2 <- function(){cor <- 2 ; fun1()} ; fun1() ; fun2() ; rm(mean) # sys.calls() gives the function name at top stack of the imbricated functions, sys.calls()[[length(sys.calls())]] the name of the just above function. This can also been used for the above function: as.character(sys.call(1))
 # test.pos <- 2 ; mean <- 0 ; fun1 <- function(){sd <- 1 ; fun_secu(pos = test.pos, name = if(length(sys.calls()) >= test.pos){as.character(sys.calls()[[length(sys.calls()) + 1 - test.pos]])}else{search()[ (1:length(search()))[test.pos - length(sys.calls())]]})} ; fun2 <- function(){cor <- 2 ; fun1()} ; fun1() ; fun2() ; rm(mean) # for argument name, here is a way to have the name of the tested environment according to test.pos value
 # DEBUGGING
 # pos = 1 ; name = NULL # for function debugging
@@ -8685,7 +8687,7 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
-
+# Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
 
 fun_gg_boxplot <- function(
 data1, 
@@ -9586,10 +9588,15 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # end check the nature of color
 # check the length of color
 categ.len <- length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
+if(length(data1[, categ[categ.len]]) == length(levels(data1[, categ[categ.len]])) & length(categ.color) == length(data1[, categ[categ.len]])){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") THE NUMBER OF CLASSES OF THE COLUMN ", categ[categ.len], " THE NUMBER OF ROWS OF THIS COLUMN AND THE NUMBER OF COLORS OF THE categ.color ARGUMENT ARE ALL EQUAL. BOX COLORS WILL BE ATTRIBUTED ACCORDING THE LEVELS OF ", categ[categ.len], ", NOT ACCORDING TO THE ROWS OF ", categ[categ.len])
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+}
 if(length(categ.color) == length(levels(data1[, categ[categ.len]]))){ # here length(categ.color) is equal to the different number of categ
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)  # no need stringsAsFactors here for stat.nolog as factors remain factors
-data1$categ.color <- factor(data1$categ.color, labels = categ.color)
+data1$categ.color <- factor(data1$categ.color, labels = categ.color) # replace the characters of data1[, categ[categ.len]] put in the categ.color column by the categ.color (can be write like this because categ.color is length of levels of data1[, categ[categ.len]])
 if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", paste(levels(factor(data1[, categ[categ.len]])), collapse = " "))
@@ -9628,7 +9635,7 @@ categ.len <- length(categ) # if only categ1, then colors for classes of categ1, 
 # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
 categ.color <- fun_gg_palette(length(levels(data1[, categ[categ.len]])))
 data1 <- data.frame(data1, categ.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)
-data1$categ.color <- factor(data1$categ.color, labels = categ.color)
+data1$categ.color <- factor(data1$categ.color, labels = categ.color)  # replace the characters of data1[, categ[categ.len]] put in the categ.color column by the categ.color (can be write like this because categ.color is length of levels of data1[, categ[categ.len]])
 if(box.alpha != 0){
 warn.count <- warn.count + 1
 tempo.warn <- paste0("(", warn.count,") NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[categ.len], " IN data1:\n", paste(categ.color, collapse = " "), "\n", paste(levels(data1[, categ[categ.len]]), collapse = " "))
@@ -9752,14 +9759,22 @@ warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn
 # check the length of color
 if( ! is.null(dot.categ)){
 # optional legend of dot colors
-if(length(dot.color) > 1 & length(unique(data1[, dot.categ])) != length(dot.color)){
-tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT IS NOT THE SAME LENGTH AS LEVELS OF dot.categ COLUMN (", dot.categ, "):\ndot.color: ", paste(dot.color, collapse = " "), "\ndot.categ LEVELS: ", paste(levels(data1[, dot.categ]), collapse = " "))
-stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-}else if(length(dot.color)== 1L & length(dot.categ.class.order) > 1){ # to deal with single color
-dot.color <- rep(dot.color, length(dot.categ.class.order))
+if(length(data1[, dot.categ]) == length(levels(data1[, dot.categ])) & length(dot.color) == length(data1[, dot.categ])){
+warn.count <- warn.count + 1
+tempo.warn <- paste0("(", warn.count,") THE NUMBER OF CLASSES OF THE COLUMN ", dot.categ, " THE NUMBER OF ROWS OF THIS COLUMN AND THE NUMBER OF COLORS OF THE dot.color ARGUMENT ARE ALL EQUAL. DOT COLORS WILL BE ATTRIBUTED ACCORDING THE LEVELS OF ", dot.categ, ", NOT ACCORDING TO THE ROWS OF ", dot.categ)
+warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
+if(length(dot.color) > 1 & ! (length(dot.color) == length(unique(data1[, dot.categ])) | length(dot.color) == length(data1[, dot.categ]))){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nWHEN LENGTH OF THE dot.color ARGUMENT IS MORE THAN 1, IT MUST BE EQUAL TO THE NUMBER OF 1) ROWS OR 2) LEVELS OF dot.categ COLUMN (", dot.categ, "):\ndot.color: ", paste(dot.color, collapse = " "), "\ndot.categ LEVELS: ", paste(levels(data1[, dot.categ]), collapse = " "))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else if(length(dot.color) > 1 & length(dot.color) == length(unique(data1[, dot.categ]))){
 data1 <- data.frame(data1, dot.color = data1[, dot.categ], stringsAsFactors = TRUE)
 data1$dot.color <- factor(data1$dot.color, labels = dot.color) # do not use labels = unique(dot.color). Otherwise, we can have green1 green2 when dot.color is c("green", "green")
+}else if(length(dot.color) > 1 & length(dot.color) == length(data1[, dot.categ])){
+data1 <- data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
+}else if(length(dot.color)== 1L & length(dot.categ.class.order) > 1){ # to deal with single color
+data1 <- data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
+}
 dot.color <- as.character(unique(data1$dot.color[order(data1[, dot.categ])])) # reorder the dot.color character vector
 if(length(dot.color)== 1L & length(dot.categ.class.order) > 1){ # to deal with single color
 dot.color <- rep(dot.color, length(dot.categ.class.order))
@@ -10884,6 +10899,7 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end output
 # end main code
 }
+
 
 
 
