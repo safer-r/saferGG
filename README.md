@@ -170,6 +170,15 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v9.0.0
+
+1) bug fixed in fun_pack. Now really load using load = TRUE
+
+2) bug fixed for the dot colors of fun_gg_boxplot
+
+3) some of the functions improved (see commits)
+
+
 ### v8.0.0
 
 1) Examples improved
