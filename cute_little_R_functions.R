@@ -1131,18 +1131,24 @@ fun_comp_1d <- function(data1, data2){
 # $same.levels: logical. Are levels identical? NULL if data1 and data2 are not factors
 # $levels: levels of the 2 datasets if identical (NULL otherwise or NULL if data1 and data2 are not factors)
 # $any.id.levels: logical. Is there any identical levels? (NULL if data1 and data2 are not factors)
-# $same.levels.pos1: position, in data1, of the levels identical in data2 (NULL if data1 and data2 are not factors)
-# $same.levels.pos2: position, in data2, of the levels identical in data1 (NULL if data1 and data2 are not factors)
+# $same.levels.pos1: positions, in data1, of the levels identical in data2 (NULL otherwise or NULL if data1 and data2 are not factors)
+# $same.levels.pos2: positions, in data2, of the levels identical in data1 (NULL otherwise or NULL if data1 and data2 are not factors)
+# $same.levels.match1: positions, in data2, of the levels that match the levels in data1, as given by match(data1, data2) (NULL otherwise or NULL if data1 and data2 are not factors)
+# $same.levels.match2: positions, in data1, of the levels that match the levels in data2, as given by match(data1, data2) (NULL otherwise or NULL if data1 and data2 are not factors)
 # $common.levels: common levels between data1 and data2 (can be a subset of $levels or not). NULL if no common levels or if data1 and data2 are not factors
-# $same.name: logical. Are element names identical? NULL if data1 and data2 have no names
+# $same.names: logical. Are element names identical? NULL if data1 and data2 have no names
 # $name: name of elements of the 2 datasets if identical (NULL otherwise)
 # $any.id.name: logical. Is there any element names identical ?
-# $same.name.pos1: position, in data1, of the element names identical in data2. NULL if no identical names
-# $same.name.pos2: position, in data2, of the elements names identical in data1. NULL if no identical names
+# $same.names.pos1: positions, in data1, of the element names identical in data2. NULL if no identical names
+# $same.names.pos2: positions, in data2, of the elements names identical in data1. NULL if no identical names
+# $same.names.match1: positions, in data2, of the names that match the names in data1, as given by match(data1, data2) (NULL otherwise)
+# $same.names.match2: positions, in data1, of the names that match the names in data2, as given by match(data1, data2) (NULL otherwise or NULL if data1 and data2 are not factors)
 # $common.names: common element names between data1 and data2 (can be a subset of $name or not). NULL if no common element names
 # $any.id.element: logical. is there any identical elements ?
-# $same.element.pos1: position, in data1, of the elements identical in data2. NULL if no identical elements
-# $same.element.pos2: position, in data2, of the elements identical in data1. NULL if no identical elements
+# $same.elements.pos1: positions, in data1, of the elements identical in data2. NULL if no identical elements
+# $same.elements.pos2: positions, in data2, of the elements identical in data1. NULL if no identical elements
+# $same.elements.match1: positions, in data2, of the elements that match the elements in data1, as given by match(data1, data2) (NULL otherwise)
+# $same.elements.match2: positions, in data1, of the elements that match the elements in data2, as given by match(data1, data2) (NULL otherwise or NULL if data1 and data2 are not factors)
 # $common.elements: common elements between data1 and data2. NULL if no common elements
 # $same.order: logical. Are all elements in the same order? TRUE or FALSE if elements of data1 and data2 are identical but not necessary in the same order. NULL otherwise (different length for instance)
 # $order1: order of all elements of data1. NULL if $same.order is FALSE
@@ -1201,16 +1207,22 @@ levels <- NULL
 any.id.levels <- FALSE
 same.levels.pos1 <- NULL
 same.levels.pos2 <- NULL
+same.levels.match1 <- NULL
+same.levels.match2 <- NULL
 common.levels <- NULL
-same.name <- NULL # not FALSE to deal with absence of name
+same.names <- NULL # not FALSE to deal with absence of name
 name <- NULL
 any.id.name <- FALSE
-same.name.pos1 <- NULL
-same.name.pos2 <- NULL
+same.names.pos1 <- NULL
+same.names.pos2 <- NULL
+same.names.match1 <- NULL
+same.names.match2 <- NULL
 common.names <- NULL
 any.id.element <- FALSE
-same.element.pos1 <- NULL
-same.element.pos2 <- NULL
+same.elements.pos1 <- NULL
+same.elements.pos2 <- NULL
+same.elements.match1 <- NULL
+same.elements.match2 <- NULL
 common.elements <- NULL
 same.order <- NULL
 order1 <- NULL
@@ -1228,19 +1240,25 @@ levels <- levels(data1)
 any.id.levels <- TRUE
 same.levels.pos1 <- 1:length(levels(data1))
 same.levels.pos2 <- 1:length(levels(data2))
+same.levels.match1 <- 1:length(levels(data1))
+same.levels.match2 <- 1:length(levels(data2))
 common.levels <- levels(data1)
 }
 if( ! is.null(names(data1))){
-same.name <- TRUE
+same.names <- TRUE
 name <- names(data1)
 any.id.name <- TRUE
-same.name.pos1 <- 1:length(data1)
-same.name.pos2 <- 1:length(data2)
+same.names.pos1 <- 1:length(data1)
+same.names.pos2 <- 1:length(data2)
+same.names.match1 <- 1:length(data1)
+same.names.match2 <- 1:length(data2)
 common.names <- names(data1)
 }
 any.id.element <- TRUE
-same.element.pos1 <- 1:length(data1)
-same.element.pos2 <- 1:length(data2)
+same.elements.pos1 <- 1:length(data1)
+same.elements.pos2 <- 1:length(data2)
+same.elements.match1 <- 1:length(data1)
+same.elements.match2 <- 1:length(data2)
 common.elements <- data1
 same.order <- TRUE
 order1 <- order(data1)
@@ -1266,10 +1284,12 @@ same.levels <- FALSE
 if(any(levels(data1) %in% levels(data2))){
 any.id.levels <- TRUE
 same.levels.pos1 <- which(levels(data1) %in% levels(data2))
+same.levels.match1 <- match(levels(data1), levels(data2))
 }
 if(any(levels(data2) %in% levels(data1))){
 any.id.levels <- TRUE
 same.levels.pos2 <- which(levels(data2) %in% levels(data1))
+same.levels.match2 <- match(levels(data2), levels(data1))
 }
 if(any.id.levels == TRUE){
 common.levels <- unique(c(levels(data1)[same.levels.pos1], levels(data2)[same.levels.pos2]))
@@ -1283,35 +1303,39 @@ data2 <- as.character(data2)
 }
 if( ! (is.null(names(data1)) & is.null(names(data2)))){
 if(identical(names(data1), names(data2))){
-same.name <- TRUE
+same.names <- TRUE
 name <- names(data1)
 }else{
-same.name <- FALSE
+same.names <- FALSE
 }
 if(any(names(data1) %in% names(data2))){
 any.id.name <- TRUE
-same.name.pos1 <- which(names(data1) %in% names(data2))
+same.names.pos1 <- which(names(data1) %in% names(data2))
+same.names.match1 <- match(names(data1), names(data2))
 }
 if(any(names(data2) %in% names(data1))){
 any.id.name <- TRUE
-same.name.pos2 <- which(names(data2) %in% names(data1))
+same.names.pos2 <- which(names(data2) %in% names(data1))
+same.names.match2 <- match(names(data2), names(data1))
 }
 if(any.id.name == TRUE){
-common.names <- unique(c(names(data1)[same.name.pos1], names(data2)[same.name.pos2]))
+common.names <- unique(c(names(data1)[same.names.pos1], names(data2)[same.names.pos2]))
 }
 }
 names(data1) <- NULL # names solved -> to do not be disturbed by names
 names(data2) <- NULL # names solved -> to do not be disturbed by names
 if(any(data1 %in% data2)){
 any.id.element <- TRUE
-same.element.pos1 <- which(data1 %in% data2)
+same.elements.pos1 <- which(data1 %in% data2)
+same.elements.match1 <- match(data1, data2)
 }
 if(any(data2 %in% data1)){
 any.id.element <- TRUE
-same.element.pos2 <- which(data2 %in% data1)
+same.elements.pos2 <- which(data2 %in% data1)
+same.elements.match2 <- match(data2, data1)
 }
 if(any.id.element == TRUE){
-common.elements <- unique(c(data1[same.element.pos1], data2[same.element.pos2]))
+common.elements <- unique(c(data1[same.elements.pos1], data2[same.elements.pos2]))
 }
 if(identical(data1, data2)){
 identical.content <- TRUE
@@ -1322,14 +1346,14 @@ order1 <- order(data1)
 order2 <- order(data2)
 }
 }
-output <- list(same.class = same.class, class = class, same.length = same.length, length = length, same.levels = same.levels, levels = levels, any.id.levels = any.id.levels, same.levels.pos1 = same.levels.pos1, same.levels.pos2 = same.levels.pos2, common.levels = common.levels, same.name = same.name, name = name, any.id.name = any.id.name, same.name.pos1 = same.name.pos1, same.name.pos2 = same.name.pos2, common.names = common.names, any.id.element = any.id.element, same.element.pos1 = same.element.pos1, same.element.pos2 = same.element.pos2, common.elements = common.elements, same.order = same.order, order1 = order1, order2 = order2, identical.object = identical.object, identical.content = identical.content)
+output <- list(same.class = same.class, class = class, same.length = same.length, length = length, same.levels = same.levels, levels = levels, any.id.levels = any.id.levels, same.levels.pos1 = same.levels.pos1, same.levels.pos2 = same.levels.pos2, same.levels.match1 = same.levels.match1, same.levels.match2 = same.levels.match2, common.levels = common.levels, same.names = same.names, name = name, any.id.name = any.id.name, same.names.pos1 = same.names.pos1, same.names.pos2 = same.names.pos2, same.names.match1 = same.names.match1, same.names.match2 = same.names.match2, common.names = common.names, any.id.element = any.id.element, same.elements.pos1 = same.elements.pos1, same.elements.pos2 = same.elements.pos2, same.elements.match1 = same.elements.match1, same.elements.match2 = same.elements.match2, common.elements = common.elements, same.order = same.order, order1 = order1, order2 = order2, identical.object = identical.object, identical.content = identical.content)
 return(output)
 }
 
 
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
 
-
+# add match as in fun_comp_1d
 fun_comp_2d <- function(data1, data2){
 # AIM
 # compare two 2D datasets of the same class or not. Check and report in a list if the 2 datasets have:
@@ -1356,18 +1380,18 @@ fun_comp_2d <- function(data1, data2){
 # $same.row.name: logical. Are row names identical ? NULL if no row names in the two 2D datasets
 # $row.name: name of rows of the 2 datasets if identical (NULL otherwise)
 # $any.id.row.name: logical. Is there any row names identical ? NULL if no row names in the two 2D datasets
-# $same.row.name.pos1: position, in data1, of the row names identical in data2
-# $same.row.name.pos2: position, in data2, of the row names identical in data1
+# $same.row.name.pos1: positions, in data1, of the row names identical in data2
+# $same.row.name.pos2: positions, in data2, of the row names identical in data1
 # $common.row.names: common row names between data1 and data2 (can be a subset of $name or not). NULL if no common row names
 # $same.col.name: logical. Are column names identical ? NULL if no col names in the two 2D datasets
 # $col.name: name of columns of the 2 datasets if identical (NULL otherwise)
 # $any.id.col.name: logical. Is there any column names identical ? NULL if no col names in the two 2D datasets
-# $same.col.name.pos1: position, in data1, of the column names identical in data2
-# $same.col.name.pos2: position, in data2, of the column names identical in data1
+# $same.col.name.pos1: positions, in data1, of the column names identical in data2
+# $same.col.name.pos2: positions, in data2, of the column names identical in data1
 # $common.col.names: common column names between data1 and data2 (can be a subset of $name or not). NULL if no common column names
 # $any.id.row: logical. is there identical rows (not considering row names)? NULL if nrow(data1) * nrow(data2) > 1e10
-# $same.row.pos1: position, in data1, of the rows identical in data2 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
-# $same.row.pos2: position, in data2, of the rows identical in data1 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
+# $same.row.pos1: positions, in data1, of the rows identical in data2 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
+# $same.row.pos2: positions, in data2, of the rows identical in data1 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
 # $any.id.col: logical. is there identical columns (not considering column names)? NULL if ncol(data1) * ncol(data2) > 1e10
 # $same.col.pos1: position in data1 of the cols identical in data2 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
 # $same.col.pos2: position in data2 of the cols identical in data1 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
@@ -1719,14 +1743,14 @@ fun_comp_list <- function(data1, data2){
 # a list containing:
 # $same.length: logical. Are number of elements identical?
 # $length: number of elements in the 2 datasets (NULL otherwise)
-# $same.name: logical. Are element names identical ?
+# $same.names: logical. Are element names identical ?
 # $name: name of elements of the 2 datasets if identical (NULL otherwise)
 # $any.id.name: logical. Is there any element names identical ?
-# $same.name.pos1: position, in data1, of the element names identical in data2
-# $same.name.pos2: position, in data2, of the compartment names identical in data1
+# $same.names.pos1: positions, in data1, of the element names identical in data2
+# $same.names.pos2: positions, in data2, of the compartment names identical in data1
 # $any.id.compartment: logical. is there any identical compartments ?
-# $same.compartment.pos1: position, in data1, of the compartments identical in data2
-# $same.compartment.pos2: position, in data2, of the compartments identical in data1
+# $same.compartment.pos1: positions, in data1, of the compartments identical in data2
+# $same.compartment.pos2: positions, in data2, of the compartments identical in data1
 # $identical.object: logical. Are objects identical (kind of object, compartment names and content)?
 # $identical.content: logical. Are content objects identical (identical compartments excluding compartment names)?
 # REQUIRED PACKAGES
@@ -1758,11 +1782,11 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # main code
 same.length <- NULL
 length <- NULL
-same.name <- NULL
+same.names <- NULL
 name <- NULL
 any.id.name <- NULL
-same.name.pos1 <- NULL
-same.name.pos2 <- NULL
+same.names.pos1 <- NULL
+same.names.pos2 <- NULL
 any.id.compartment <- NULL
 same.compartment.pos1 <- NULL
 same.compartment.pos2 <- NULL
@@ -1772,11 +1796,11 @@ if(identical(data1, data2)){
 same.length <- TRUE
 length <- length(data1)
 if( ! is.null(names(data1))){
-same.name <- TRUE
+same.names <- TRUE
 name <- names(data1)
 any.id.name <- TRUE
-same.name.pos1 <- 1:length(data1)
-same.name.pos2 <- 1:length(data2)
+same.names.pos1 <- 1:length(data1)
+same.names.pos2 <- 1:length(data2)
 }
 any.id.compartment <- TRUE
 same.compartment.pos1 <- 1:length(data1)
@@ -1793,19 +1817,19 @@ length <- length(data1)
 }
 if( ! (is.null(names(data1)) & is.null(names(data2)))){
 if( ! identical(names(data1), names(data2))){
-same.name <- FALSE
+same.names <- FALSE
 }else{
-same.name <- TRUE
+same.names <- TRUE
 name <- names(data1)
 }
 any.id.name <- FALSE
 if(any(names(data1) %in% names(data2))){
 any.id.name <- TRUE
-same.name.pos1 <- which(names(data1) %in% names(data2))
+same.names.pos1 <- which(names(data1) %in% names(data2))
 }
 if(any(names(data2) %in% names(data1))){
 any.id.name <- TRUE
-same.name.pos2 <- which(names(data2) %in% names(data1))
+same.names.pos2 <- which(names(data2) %in% names(data1))
 }
 }
 names(data1) <- NULL
@@ -1829,7 +1853,7 @@ identical.content <- FALSE
 identical.content <- FALSE
 }
 }
-output <- list(same.length = same.length, length = length, same.name = same.name, name = name, any.id.name = any.id.name, same.name.pos1 = same.name.pos1, same.name.pos2 = same.name.pos2, any.id.compartment = any.id.compartment, same.compartment.pos1 = same.compartment.pos1, same.compartment.pos2 = same.compartment.pos2, identical.object = identical.object, identical.content = identical.content)
+output <- list(same.length = same.length, length = length, same.names = same.names, name = name, any.id.name = any.id.name, same.names.pos1 = same.names.pos1, same.names.pos2 = same.names.pos2, any.id.compartment = any.id.compartment, same.compartment.pos1 = same.compartment.pos1, same.compartment.pos2 = same.compartment.pos2, identical.object = identical.object, identical.content = identical.content)
 return(output)
 }
 
@@ -8692,6 +8716,7 @@ return(output) # do not use cat() because the idea is to reuse the message
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
 # add dot.shape ? See with available aesthetic layers
+# rasterise: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
 
 fun_gg_boxplot <- function(
 data1, 
@@ -10909,6 +10934,7 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 
 
 # add density
+# rasterise all kind: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
 
 
 fun_gg_scatter <- function(
