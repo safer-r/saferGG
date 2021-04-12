@@ -1142,13 +1142,13 @@ fun_comp_1d <- function(data1, data2){
 # $same.names.pos1: positions, in data1, of the element names identical in data2. NULL if no identical names
 # $same.names.pos2: positions, in data2, of the elements names identical in data1. NULL if no identical names
 # $same.names.match1: positions, in data2, of the names that match the names in data1, as given by match(data1, data2) (NULL otherwise)
-# $same.names.match2: positions, in data1, of the names that match the names in data2, as given by match(data1, data2) (NULL otherwise or NULL if data1 and data2 are not factors)
+# $same.names.match2: positions, in data1, of the names that match the names in data2, as given by match(data1, data2) (NULL otherwise)
 # $common.names: common element names between data1 and data2 (can be a subset of $name or not). NULL if no common element names
 # $any.id.element: logical. is there any identical elements ?
 # $same.elements.pos1: positions, in data1, of the elements identical in data2. NULL if no identical elements
 # $same.elements.pos2: positions, in data2, of the elements identical in data1. NULL if no identical elements
 # $same.elements.match1: positions, in data2, of the elements that match the elements in data1, as given by match(data1, data2) (NULL otherwise)
-# $same.elements.match2: positions, in data1, of the elements that match the elements in data2, as given by match(data1, data2) (NULL otherwise or NULL if data1 and data2 are not factors)
+# $same.elements.match2: positions, in data1, of the elements that match the elements in data2, as given by match(data1, data2) (NULL otherwise)
 # $common.elements: common elements between data1 and data2. NULL if no common elements
 # $same.order: logical. Are all elements in the same order? TRUE or FALSE if elements of data1 and data2 are identical but not necessary in the same order. NULL otherwise (different length for instance)
 # $order1: order of all elements of data1. NULL if $same.order is FALSE
@@ -1353,7 +1353,7 @@ return(output)
 
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)
 
-# add match as in fun_comp_1d
+
 fun_comp_2d <- function(data1, data2){
 # AIM
 # compare two 2D datasets of the same class or not. Check and report in a list if the 2 datasets have:
@@ -1382,19 +1382,27 @@ fun_comp_2d <- function(data1, data2){
 # $any.id.row.name: logical. Is there any row names identical ? NULL if no row names in the two 2D datasets
 # $same.row.name.pos1: positions, in data1, of the row names identical in data2
 # $same.row.name.pos2: positions, in data2, of the row names identical in data1
+# $same.row.names.match1: positions, in data2, of the row names that match the row names in data1, as given by match(data1, data2) (NULL otherwise)
+# $same.row.names.match2: positions, in data1, of the row names that match the row names in data2, as given by match(data1, data2) (NULL otherwise)
 # $common.row.names: common row names between data1 and data2 (can be a subset of $name or not). NULL if no common row names
 # $same.col.name: logical. Are column names identical ? NULL if no col names in the two 2D datasets
 # $col.name: name of columns of the 2 datasets if identical (NULL otherwise)
 # $any.id.col.name: logical. Is there any column names identical ? NULL if no col names in the two 2D datasets
 # $same.col.name.pos1: positions, in data1, of the column names identical in data2
 # $same.col.name.pos2: positions, in data2, of the column names identical in data1
+# $same.col.names.match1: positions, in data2, of the column names that match the column names in data1, as given by match(data1, data2) (NULL otherwise)
+# $same.col.names.match2: positions, in data1, of the column names that match the column names in data2, as given by match(data1, data2) (NULL otherwise)
 # $common.col.names: common column names between data1 and data2 (can be a subset of $name or not). NULL if no common column names
 # $any.id.row: logical. is there identical rows (not considering row names)? NULL if nrow(data1) * nrow(data2) > 1e10
 # $same.row.pos1: positions, in data1, of the rows identical in data2 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
 # $same.row.pos2: positions, in data2, of the rows identical in data1 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
+# $same.row.match1: positions, in data2, of the rows that match the rows in data1, as given by match(data1, data2) (NULL otherwise)
+# $same.row.match2: positions, in data1, of the rows that match the rows in data2, as given by match(data1, data2) (NULL otherwise)
 # $any.id.col: logical. is there identical columns (not considering column names)? NULL if ncol(data1) * ncol(data2) > 1e10
 # $same.col.pos1: position in data1 of the cols identical in data2 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
 # $same.col.pos2: position in data2 of the cols identical in data1 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
+# $same.col.match1: positions, in data2, of the columns that match the columns in data1, as given by match(data1, data2) (NULL otherwise)
+# $same.row.match2: positions, in data1, of the columns that match the columns in data2, as given by match(data1, data2) (NULL otherwise)
 # $identical.object: logical. Are objects identical (including row & column names)?
 # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
 # REQUIRED PACKAGES
@@ -1452,19 +1460,27 @@ row.name <- NULL
 any.id.row.name <- NULL
 same.row.name.pos1 <- NULL
 same.row.name.pos2 <- NULL
+same.row.name.match1 <- NULL
+same.row.name.match2 <- NULL
 common.row.names <- NULL
 same.col.name <- NULL
 any.id.col.name <- NULL
 same.col.name.pos1 <- NULL
 same.col.name.pos2 <- NULL
+same.col.name.match1 <- NULL
+same.col.name.match2 <- NULL
 common.col.names <- NULL
 col.name <- NULL
 any.id.row <- NULL
 same.row.pos1 <- NULL
 same.row.pos2 <- NULL
+same.row.match1 <- NULL
+same.row.match2 <- NULL
 any.id.col <- NULL
 same.col.pos1 <- NULL
 same.col.pos2 <- NULL
+same.col.match1 <- NULL
+same.col.match2 <- NULL
 identical.object <- NULL
 identical.content <- NULL
 if(identical(data1, data2) & (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
@@ -1481,19 +1497,27 @@ row.name <- dimnames(data1)[[1]]
 any.id.row.name <- TRUE
 same.row.name.pos1 <- 1:row.nb
 same.row.name.pos2 <- 1:row.nb
+same.row.name.match1 <- 1:row.nb
+same.row.name.match2 <- 1:row.nb
 common.row.names <- dimnames(data1)[[1]]
 same.col.name <- TRUE
 col.name <- dimnames(data1)[[2]]
 any.id.col.name <- TRUE
 same.col.name.pos1 <- 1:col.nb
 same.col.name.pos2 <- 1:col.nb
+same.col.name.match1 <- 1:col.nb
+same.col.name.match2 <- 1:col.nb
 common.col.names <- dimnames(data1)[[2]]
 any.id.row <- TRUE
 same.row.pos1 <- 1:row.nb
 same.row.pos2 <- 1:row.nb
+same.row.match1 <- 1:row.nb
+same.row.match2 <- 1:row.nb
 any.id.col <- TRUE
 same.col.pos1 <- 1:col.nb
 same.col.pos2 <- 1:col.nb
+same.col.match1 <- 1:col.nb
+same.col.match2 <- 1:col.nb
 identical.object <- TRUE
 identical.content <- TRUE
 }else{
@@ -1535,53 +1559,83 @@ col.nb <- ncol(data1)
 }
 # row and col names
 if(is.null(dimnames(data1)) & is.null(dimnames(data2))){
-same.row.name <- NULL
-same.col.name <- NULL
-# row and col names remain NULL
+same.row.name <- NULL # but already NULL
+same.col.name <- NULL # but already NULL
+# other row names param remain NULL
 }else if((is.null(dimnames(data1)) & ! is.null(dimnames(data2))) | ( ! is.null(dimnames(data1)) & is.null(dimnames(data2)))){
 same.row.name <- FALSE
 same.col.name <- FALSE
-# row and col names remain NULL
+any.id.row.name <- FALSE
+any.id.col.name <- FALSE
+# other row names param remain NULL
 }else{
-if( ! identical(dimnames(data1)[[1]], dimnames(data2)[[1]])){
+# row names
+if(is.null(dimnames(data1)[[1]]) & is.null(dimnames(data2)[[1]])){
+same.row.name <- NULL # but already NULL
+# other row names param remain NULL
+}else if((is.null(dimnames(data1)[[1]]) & ! is.null(dimnames(data2)[[1]])) | ( ! is.null(dimnames(data1)[[1]]) & is.null(dimnames(data2)[[1]]))){
 same.row.name <- FALSE
-# row names remain NULL
-}else{
+any.id.row.name <- FALSE
+# other row names param remain NULL
+}else if(identical(dimnames(data1)[[1]], dimnames(data2)[[1]])){
 same.row.name <- TRUE
 row.name <- dimnames(data1)[[1]]
-}
-# row names
+any.id.row.name <- TRUE
+same.row.name.pos1 <- 1:row.nb
+same.row.name.pos2 <- 1:row.nb
+same.row.name.match1 <- 1:row.nb
+same.row.name.match2 <- 1:row.nb
+common.row.names <- dimnames(data1)[[1]]
+}else{
+same.row.name <- FALSE
 any.id.row.name <- FALSE
 if(any(dimnames(data1)[[1]] %in% dimnames(data2)[[1]])){
 any.id.row.name <- TRUE
 same.row.name.pos1 <- which(dimnames(data1)[[1]] %in% dimnames(data2)[[1]])
+same.row.names.match1 <- match(dimnames(data1)[[1]], dimnames(data2)[[1]])
 }
 if(any(dimnames(data2)[[1]] %in% dimnames(data1)[[1]])){
 any.id.row.name <- TRUE
 same.row.name.pos2 <- which(dimnames(data2)[[1]] %in% dimnames(data1)[[1]])
+same.row.names.match2 <- match(dimnames(data2)[[1]], dimnames(data1)[[1]])
 }
 if(any.id.row.name == TRUE){
 common.row.names <- unique(c(dimnames(data1)[[1]][same.row.name.pos1], dimnames(data2)[[1]][same.row.name.pos2]))
 }
+}
 # col names
+if(is.null(dimnames(data1)[[2]]) & is.null(dimnames(data2)[[2]])){
+same.col.name <- NULL # but already NULL
+# other col names param remain NULL
+}else if((is.null(dimnames(data1)[[2]]) & ! is.null(dimnames(data2)[[2]])) | ( ! is.null(dimnames(data1)[[2]]) & is.null(dimnames(data2)[[2]]))){
+same.col.name <- FALSE
+any.id.col.name <- FALSE
+# other col names param remain NULL
+}else if(identical(dimnames(data1)[[2]], dimnames(data2)[[2]])){
+same.col.name <- TRUE
+col.name <- dimnames(data1)[[2]]
+any.id.col.name <- TRUE
+same.col.name.pos1 <- 1:col.nb
+same.col.name.pos2 <- 1:col.nb
+same.col.name.match1 <- 1:col.nb
+same.col.name.match2 <- 1:col.nb
+common.col.names <- dimnames(data1)[[2]]
+}else{
+same.col.name <- FALSE
 any.id.col.name <- FALSE
 if(any(dimnames(data1)[[2]] %in% dimnames(data2)[[2]])){
 any.id.col.name <- TRUE
 same.col.name.pos1 <- which(dimnames(data1)[[2]] %in% dimnames(data2)[[2]])
+same.col.names.match1 <- match(dimnames(data1)[[2]], dimnames(data2)[[2]])
 }
 if(any(dimnames(data2)[[2]] %in% dimnames(data1)[[2]])){
 any.id.col.name <- TRUE
 same.col.name.pos2 <- which(dimnames(data2)[[2]] %in% dimnames(data1)[[2]])
+same.col.names.match2 <- match(dimnames(data2)[[2]], dimnames(data1)[[2]])
 }
 if(any.id.col.name == TRUE){
 common.col.names <- unique(c(dimnames(data1)[[2]][same.col.name.pos1], dimnames(data2)[[2]][same.col.name.pos2]))
 }
-if( ! identical(dimnames(data1)[[2]], dimnames(data2)[[2]])){
-same.col.name <- FALSE
-# col names remain NULL
-}else{
-same.col.name <- TRUE
-col.name <- dimnames(data1)[[2]]
 }
 }
 # identical row and col content
@@ -1603,33 +1657,45 @@ row.names(data1) <- paste0("A", 1:nrow(data1))
 row.names(data2) <- paste0("A", 1:nrow(data2))
 if(same.col.nb == TRUE){ # because if not the same col nb, the row cannot be identical
 if(all(sapply(data1, FUN = typeof) == "integer") & all(sapply(data2, FUN = typeof) == "integer") & as.double(nrow(data1)) * nrow(data2) <= 1e10){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
-same.row.pos1 <- which(c(as.data.frame(t(data1), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data2), stringsAsFactors = FALSE))) # this work fast with only integers (because 32 bits)
-same.row.pos2 <- which(c(as.data.frame(t(data2), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data1), stringsAsFactors = FALSE)))
+tempo1 <- c(as.data.frame(t(data1), stringsAsFactors = FALSE)) # this work fast with only integers (because 32 bits)
+tempo2 <- c(as.data.frame(t(data2), stringsAsFactors = FALSE))
+same.row.pos1 <- which(tempo1 %in% tempo2)
+same.row.pos2 <- which(tempo2 %in% tempo1)
+same.row.match1 <- match(tempo1, tempo2)
+same.row.match2 <- match(tempo2, tempo1)
 }else if(as.double(nrow(data1)) * nrow(data2) <= 1e6){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
 if(col.nb <= 10){ # if ncol is not to big, the t() should not be that long
-same.row.pos1 <- which(c(as.data.frame(t(data1), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data2), stringsAsFactors = FALSE))) # this work fast with only integers (because 32 bits)
-same.row.pos2 <- which(c(as.data.frame(t(data2), stringsAsFactors = FALSE)) %in% c(as.data.frame(t(data1), stringsAsFactors = FALSE)))
+tempo1 <- c(as.data.frame(t(data1), stringsAsFactors = FALSE)) # this work fast with only integers (because 32 bits)
+tempo2 <- c(as.data.frame(t(data2), stringsAsFactors = FALSE))
+same.row.pos1 <- which(tempo1 %in% tempo2)
+same.row.pos2 <- which(tempo2 %in% tempo1)
+same.row.match1 <- match(tempo1, tempo2)
+same.row.match2 <- match(tempo2, tempo1)
 }else{ # very long computation
 same.row.pos1 <- logical(length = nrow(data1)) # FALSE by default
 same.row.pos1[] <- FALSE # security
+same.row.pos2 <- logical(length = nrow(data2)) # FALSE by default
+same.row.pos2[] <- FALSE # security
+same.row.match1 <- rep(NA, nrow(data1))
+same.row.match2 <- rep(NA, nrow(data2))
 for(i3 in 1:nrow(data1)){
 for(i4 in 1:nrow(data2)){
-same.row.pos1[i3] <- identical(data1[i3, ], data2[i4, ])
+if(identical(data1[i3, ], data2[i4, ])){
+same.row.pos1[i3] <- TRUE
+same.row.pos2[i4] <- TRUE
+same.row.match1[i3] <- i4
+same.row.match2[i4] <- i3
+}
 }
 }
 same.row.pos1 <- which(same.row.pos1)
-same.row.pos2 <- logical(length = nrow(data2)) # FALSE by default
-same.row.pos2[] <- FALSE # security
-for(i3 in 1:nrow(data2)){
-for(i4 in 1:nrow(data1)){
-same.row.pos2[i3] <- identical(data2[i3, ], data1[i4, ])
-}
-}
 same.row.pos2 <- which(same.row.pos2)
 }
 }else{
 same.row.pos1 <- "TOO BIG FOR EVALUATION"
 same.row.pos2 <- "TOO BIG FOR EVALUATION"
+same.row.match1 <- "TOO BIG FOR EVALUATION"
+same.row.match2 <- "TOO BIG FOR EVALUATION"
 }
 
 names(same.row.pos1) <- NULL
@@ -1659,25 +1725,30 @@ any.id.row <- FALSE
 }
 if(same.row.nb == TRUE){ # because if not the same row nb, the col cannot be identical
 if(all(sapply(data1, FUN = typeof) == "integer") & all(sapply(data2, FUN = typeof) == "integer") & as.double(ncol(data1)) * ncol(data2) <= 1e10){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
-same.col.pos1 <- which(c(data1) %in% c(data2))
-same.col.pos2 <- which(c(data2) %in% c(data1))
+tempo1 <- c(data1)
+tempo2 <- c(data2)
+same.col.pos1 <- which(tempo1 %in% tempo2)
+same.col.pos2 <- which(tempo2 %in% tempo1)
+same.col.match1 <- match(tempo1, tempo2)
+same.col.match2 <- match(tempo2, tempo1)
 }else if(as.double(ncol(data1)) * ncol(data2) <= 1e6){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
 same.col.pos1 <- logical(length = ncol(data1)) # FALSE by default
 same.col.pos1[] <- FALSE # security
+same.col.pos2 <- logical(length = ncol(data2)) # FALSE by default
+same.col.pos2[] <- FALSE # security
+same.col.match1 <- rep(NA, ncol(data1))
+same.col.match2 <- rep(NA, ncol(data2))
 for(i3 in 1:ncol(data1)){
 for(i4 in 1:ncol(data2)){
-same.col.pos1[i3] <- identical(data1[ , i3], data2[ ,i4])
+if(identical(data1[ , i3], data2[ , i4])){
+same.col.pos1[i3] <- TRUE
+same.col.pos2[i4] <- TRUE
+same.col.match1[i3] <- i4
+same.col.match2[i4] <- i3
+}
 }
 }
 same.col.pos1 <- which(same.col.pos1)
-
-same.col.pos2 <- logical(length = ncol(data2)) # FALSE by default
-same.col.pos2[] <- FALSE # security
-for(i3 in 1:ncol(data2)){
-for(i4 in 1:ncol(data1)){
-same.col.pos2[i3] <- identical(data2[ , i3], data1[ , i4])
-}
-}
 same.col.pos2 <- which(same.col.pos2)
 }else{
 same.col.pos1 <- "TOO BIG FOR EVALUATION"
@@ -1722,7 +1793,7 @@ identical.content <- FALSE
 identical.content <- FALSE
 }
 }
-output <- list(same.class = same.class, class = class, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.name.pos1 = same.row.name.pos1, same.row.name.pos2 = same.row.name.pos2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.name.pos1 = same.col.name.pos1, same.col.name.pos2 = same.col.name.pos2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, identical.object = identical.object, identical.content = identical.content)
+output <- list(same.class = same.class, class = class, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.name.pos1 = same.row.name.pos1, same.row.name.pos2 = same.row.name.pos2, same.row.name.match1 = same.row.name.match1, same.row.name.match2 = same.row.name.match2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.name.pos1 = same.col.name.pos1, same.col.name.pos2 = same.col.name.pos2, same.col.name.match1 = same.col.name.match1, same.col.name.match2 = same.col.name.match2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, same.row.match1 = same.row.match1, same.row.match2 = same.row.match2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, same.col.match1 = same.col.match1, same.col.match2 = same.col.match2, identical.object = identical.object, identical.content = identical.content)
 return(output)
 }
 
@@ -10935,7 +11006,7 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 
 # add density
 # rasterise all kind: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
-
+# log not good: do not convert as in boxplot
 
 fun_gg_scatter <- function(
 data1, 

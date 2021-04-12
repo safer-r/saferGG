@@ -170,6 +170,12 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+
+### v10.0.0
+
+1) in fun_comp_2d: bug fixed and match positions added
+
+
 ### v9.0.0
 
 1) bug fixed in fun_pack. Now really load using load = TRUE
