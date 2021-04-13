@@ -1380,16 +1380,16 @@ fun_comp_2d <- function(data1, data2){
 # $same.row.name: logical. Are row names identical ? NULL if no row names in the two 2D datasets
 # $row.name: name of rows of the 2 datasets if identical (NULL otherwise)
 # $any.id.row.name: logical. Is there any row names identical ? NULL if no row names in the two 2D datasets
-# $same.row.name.pos1: positions, in data1, of the row names identical in data2
-# $same.row.name.pos2: positions, in data2, of the row names identical in data1
+# $same.row.names.pos1: positions, in data1, of the row names identical in data2
+# $same.row.names.pos2: positions, in data2, of the row names identical in data1
 # $same.row.names.match1: positions, in data2, of the row names that match the row names in data1, as given by match(data1, data2) (NULL otherwise)
 # $same.row.names.match2: positions, in data1, of the row names that match the row names in data2, as given by match(data1, data2) (NULL otherwise)
 # $common.row.names: common row names between data1 and data2 (can be a subset of $name or not). NULL if no common row names
 # $same.col.name: logical. Are column names identical ? NULL if no col names in the two 2D datasets
 # $col.name: name of columns of the 2 datasets if identical (NULL otherwise)
 # $any.id.col.name: logical. Is there any column names identical ? NULL if no col names in the two 2D datasets
-# $same.col.name.pos1: positions, in data1, of the column names identical in data2
-# $same.col.name.pos2: positions, in data2, of the column names identical in data1
+# $same.col.names.pos1: positions, in data1, of the column names identical in data2
+# $same.col.names.pos2: positions, in data2, of the column names identical in data1
 # $same.col.names.match1: positions, in data2, of the column names that match the column names in data1, as given by match(data1, data2) (NULL otherwise)
 # $same.col.names.match2: positions, in data1, of the column names that match the column names in data2, as given by match(data1, data2) (NULL otherwise)
 # $common.col.names: common column names between data1 and data2 (can be a subset of $name or not). NULL if no common column names
@@ -1458,17 +1458,17 @@ col.nb <- NULL
 same.row.name <- NULL
 row.name <- NULL
 any.id.row.name <- NULL
-same.row.name.pos1 <- NULL
-same.row.name.pos2 <- NULL
-same.row.name.match1 <- NULL
-same.row.name.match2 <- NULL
+same.row.names.pos1 <- NULL
+same.row.names.pos2 <- NULL
+same.row.names.match1 <- NULL
+same.row.names.match2 <- NULL
 common.row.names <- NULL
 same.col.name <- NULL
 any.id.col.name <- NULL
-same.col.name.pos1 <- NULL
-same.col.name.pos2 <- NULL
-same.col.name.match1 <- NULL
-same.col.name.match2 <- NULL
+same.col.names.pos1 <- NULL
+same.col.names.pos2 <- NULL
+same.col.names.match1 <- NULL
+same.col.names.match2 <- NULL
 common.col.names <- NULL
 col.name <- NULL
 any.id.row <- NULL
@@ -1495,18 +1495,18 @@ col.nb <- ncol(data1)
 same.row.name <- TRUE
 row.name <- dimnames(data1)[[1]]
 any.id.row.name <- TRUE
-same.row.name.pos1 <- 1:row.nb
-same.row.name.pos2 <- 1:row.nb
-same.row.name.match1 <- 1:row.nb
-same.row.name.match2 <- 1:row.nb
+same.row.names.pos1 <- 1:row.nb
+same.row.names.pos2 <- 1:row.nb
+same.row.names.match1 <- 1:row.nb
+same.row.names.match2 <- 1:row.nb
 common.row.names <- dimnames(data1)[[1]]
 same.col.name <- TRUE
 col.name <- dimnames(data1)[[2]]
 any.id.col.name <- TRUE
-same.col.name.pos1 <- 1:col.nb
-same.col.name.pos2 <- 1:col.nb
-same.col.name.match1 <- 1:col.nb
-same.col.name.match2 <- 1:col.nb
+same.col.names.pos1 <- 1:col.nb
+same.col.names.pos2 <- 1:col.nb
+same.col.names.match1 <- 1:col.nb
+same.col.names.match2 <- 1:col.nb
 common.col.names <- dimnames(data1)[[2]]
 any.id.row <- TRUE
 same.row.pos1 <- 1:row.nb
@@ -1581,26 +1581,26 @@ any.id.row.name <- FALSE
 same.row.name <- TRUE
 row.name <- dimnames(data1)[[1]]
 any.id.row.name <- TRUE
-same.row.name.pos1 <- 1:row.nb
-same.row.name.pos2 <- 1:row.nb
-same.row.name.match1 <- 1:row.nb
-same.row.name.match2 <- 1:row.nb
+same.row.names.pos1 <- 1:nrow(data1)
+same.row.names.pos2 <- 1:nrow(data1)
+same.row.names.match1 <- 1:nrow(data1)
+same.row.names.match2 <- 1:nrow(data1)
 common.row.names <- dimnames(data1)[[1]]
 }else{
 same.row.name <- FALSE
 any.id.row.name <- FALSE
 if(any(dimnames(data1)[[1]] %in% dimnames(data2)[[1]])){
 any.id.row.name <- TRUE
-same.row.name.pos1 <- which(dimnames(data1)[[1]] %in% dimnames(data2)[[1]])
+same.row.names.pos1 <- which(dimnames(data1)[[1]] %in% dimnames(data2)[[1]])
 same.row.names.match1 <- match(dimnames(data1)[[1]], dimnames(data2)[[1]])
 }
 if(any(dimnames(data2)[[1]] %in% dimnames(data1)[[1]])){
 any.id.row.name <- TRUE
-same.row.name.pos2 <- which(dimnames(data2)[[1]] %in% dimnames(data1)[[1]])
+same.row.names.pos2 <- which(dimnames(data2)[[1]] %in% dimnames(data1)[[1]])
 same.row.names.match2 <- match(dimnames(data2)[[1]], dimnames(data1)[[1]])
 }
 if(any.id.row.name == TRUE){
-common.row.names <- unique(c(dimnames(data1)[[1]][same.row.name.pos1], dimnames(data2)[[1]][same.row.name.pos2]))
+common.row.names <- unique(c(dimnames(data1)[[1]][same.row.names.pos1], dimnames(data2)[[1]][same.row.names.pos2]))
 }
 }
 # col names
@@ -1615,26 +1615,26 @@ any.id.col.name <- FALSE
 same.col.name <- TRUE
 col.name <- dimnames(data1)[[2]]
 any.id.col.name <- TRUE
-same.col.name.pos1 <- 1:col.nb
-same.col.name.pos2 <- 1:col.nb
-same.col.name.match1 <- 1:col.nb
-same.col.name.match2 <- 1:col.nb
+same.col.names.pos1 <- 1:ncol(data1)
+same.col.names.pos2 <- 1:ncol(data1)
+same.col.names.match1 <- 1:ncol(data1)
+same.col.names.match2 <- 1:ncol(data1)
 common.col.names <- dimnames(data1)[[2]]
 }else{
 same.col.name <- FALSE
 any.id.col.name <- FALSE
 if(any(dimnames(data1)[[2]] %in% dimnames(data2)[[2]])){
 any.id.col.name <- TRUE
-same.col.name.pos1 <- which(dimnames(data1)[[2]] %in% dimnames(data2)[[2]])
+same.col.names.pos1 <- which(dimnames(data1)[[2]] %in% dimnames(data2)[[2]])
 same.col.names.match1 <- match(dimnames(data1)[[2]], dimnames(data2)[[2]])
 }
 if(any(dimnames(data2)[[2]] %in% dimnames(data1)[[2]])){
 any.id.col.name <- TRUE
-same.col.name.pos2 <- which(dimnames(data2)[[2]] %in% dimnames(data1)[[2]])
+same.col.names.pos2 <- which(dimnames(data2)[[2]] %in% dimnames(data1)[[2]])
 same.col.names.match2 <- match(dimnames(data2)[[2]], dimnames(data1)[[2]])
 }
 if(any.id.col.name == TRUE){
-common.col.names <- unique(c(dimnames(data1)[[2]][same.col.name.pos1], dimnames(data2)[[2]][same.col.name.pos2]))
+common.col.names <- unique(c(dimnames(data1)[[2]][same.col.names.pos1], dimnames(data2)[[2]][same.col.names.pos2]))
 }
 }
 }
@@ -1793,7 +1793,7 @@ identical.content <- FALSE
 identical.content <- FALSE
 }
 }
-output <- list(same.class = same.class, class = class, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.name.pos1 = same.row.name.pos1, same.row.name.pos2 = same.row.name.pos2, same.row.name.match1 = same.row.name.match1, same.row.name.match2 = same.row.name.match2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.name.pos1 = same.col.name.pos1, same.col.name.pos2 = same.col.name.pos2, same.col.name.match1 = same.col.name.match1, same.col.name.match2 = same.col.name.match2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, same.row.match1 = same.row.match1, same.row.match2 = same.row.match2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, same.col.match1 = same.col.match1, same.col.match2 = same.col.match2, identical.object = identical.object, identical.content = identical.content)
+output <- list(same.class = same.class, class = class, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.names.pos1 = same.row.names.pos1, same.row.names.pos2 = same.row.names.pos2, same.row.names.match1 = same.row.names.match1, same.row.names.match2 = same.row.names.match2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.names.pos1 = same.col.names.pos1, same.col.names.pos2 = same.col.names.pos2, same.col.names.match1 = same.col.names.match1, same.col.names.match2 = same.col.names.match2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, same.row.match1 = same.row.match1, same.row.match2 = same.row.match2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, same.col.match1 = same.col.match1, same.col.match2 = same.col.match2, identical.object = identical.object, identical.content = identical.content)
 return(output)
 }
 
