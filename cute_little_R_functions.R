@@ -2765,7 +2765,7 @@ quanti.col.name = "quanti",
 quali.col.name = "quali"
 ){
 # AIM
-# if the data frame is made of numeric columns, a new data frame is created, with the 1st column gathering all the numeric values, and the 2nd column being the name of the columns of the initial data frame. If row names were present in the initial data frame, then a new ini_rowname column is added with the names of the rows
+# if the data frame is made of n numeric columns, a new data frame is created, with the 1st column gathering all the numeric values, and the 2nd column being the name of the columns of the initial data frame. If row names were present in the initial data frame, then a new ini_rowname column is added with the names of the rows
 
  
 # If the data frame is made of one numeric column and one character or factor column, a new data frame is created, with the new columns corresponding to the split numeric values (according to the character column). NA are added a the end of each column to have the same number of rows. BEWARE: in such data frame, rows are not individuals. This means that in the example below, values 10 and 20 are associated on the same row but that means nothing in term of association
@@ -2855,7 +2855,7 @@ for(i in 1:length(data)){
 quanti <-c(quanti, data[, i])
 }
 quali <- rep(names(data), each = nrow(data))
-output.data <- data.frame(quanti, quali, stringsAsFactors = TRUE)
+output.data <- data.frame(quanti, quali, stringsAsFactors = TRUE, check.names = FALSE)
 names(output.data) <- c(quanti.col.name, quali.col.name)
 # add the ini_rowname column
 ini.rownames <- rownames(data)
@@ -2874,7 +2874,7 @@ nc.max <- max(table(data[, 2])) # effectif maximum des classes
 nb.na <- nc.max - table(data[,2]) # nombre de NA à ajouter pour réaliser la data frame
 tempo<-split(data[, 1], data[, 2])
 for(i in 1:length(tempo)){tempo[[i]] <- append(tempo[[i]], rep(NA, nb.na[i]))} # des NA doivent être ajoutés lorsque les effectifs sont différents entre les classes. C'est uniquement pour que chaque colonne ait le même nombre de lignes
-output.data<-data.frame(tempo, stringsAsFactors = TRUE)
+output.data<-data.frame(tempo, stringsAsFactors = TRUE, check.names = FALSE)
 }
 return(output.data)
 }
@@ -10999,6 +10999,8 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end output
 # end main code
 }
+
+
 
 
 
