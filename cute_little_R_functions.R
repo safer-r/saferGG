@@ -90,7 +90,6 @@
 
 
 
-# fun_mat_fill does not recognize half matrix anymore
 # package: 
 # Templates: https://prettydoc.statr.me/themes.html
 # http://r-pkgs.had.co.nz/
@@ -3407,9 +3406,9 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
 # end argument checking
 # main code
-list.diag <- vector("list", length = nrow(mat) - 1)
+list.diag <- vector("list", length = nrow(mat) - 1) 
 for(i1 in 1:(nrow(mat) - 1)){
-list.diag[[i1]] <- numeric(length = nrow(mat) - i1)
+list.diag[[i1]] <- numeric(length = nrow(mat) - i1) # list made of zero
 }
 sector <- c("topleft", "topright", "bottomright", "bottomleft")
 diag.scan <-c( # same order as sector. Recover each diag from center to corner
@@ -3419,7 +3418,6 @@ diag.scan <-c( # same order as sector. Recover each diag from center to corner
 "mat[as.matrix(as.data.frame(list((1 + i2):nrow(mat), 1:(ncol(mat) -i2)), stringsAsFactors = TRUE))]" # bottomleft part
 )
 # empty part detection
-tempo.list.diag <- list.diag
 empty.sector <- NULL
 full.sector <- NULL
 ini.warning.length <- options()$warning.length
@@ -3435,7 +3433,7 @@ full.sector <- c(full.sector, sector[i1])
 break
 }
 }
-if(i1 == nrow(mat) - 1){
+if(i2 == nrow(mat) - 1){
 if(all(unlist(lapply(tempo.list.diag, FUN = function(x){if(is.na(empty.cell.string)){is.na(x)}else{x == empty.cell.string}})), na.rm = TRUE)){
 empty.sector <- c(empty.sector, sector[i1])
 warn.count <- warn.count + 1
@@ -3468,7 +3466,7 @@ tempo.warn <- paste0("(", warn.count,") ", toupper(empty.sector), " SECTOR HAS B
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
 }
 # matrix filling
-for(i1 in 1:(nrow(mat) - 1)){
+for(i2 in 1:(nrow(mat) - 1)){
 if(empty.sector == "topleft"){
 eval(parse(text = paste0(diag.scan[1], " <- ", diag.scan[3])))
 }else if(empty.sector == "topright"){
@@ -10999,8 +10997,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end output
 # end main code
 }
-
-
 
 
 
