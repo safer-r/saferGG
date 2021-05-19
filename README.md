@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.2.0
+
+1) fun_codon2aa() added
+
+
 ### v10.1.0
 
 1) in fun_mat_fill: bug fixed. Now works again

@@ -10,7 +10,7 @@
 
 # color palette: see https://github.com/EmilHvitfeldt/r-color-palettes
 # https://usethis.r-lib.org/ and usethat also
-# ERROR: this line tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1L does not work is no argument provided. Example fun_secu(). Fiw it everywhere
+# ERROR: this line tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1L does not work if no argument provided. Example fun_secu(). Fix it everywhere
 
 ## LAST ROUND OF FORMATTING:
 # 1) Arguments: one per line
@@ -112,55 +112,56 @@
 ################################ OUTLINE ################################
 
 
-################ Object analysis    2
-######## fun_check() #### check class, type, length, etc., of objects   2
-######## fun_secu() #### verif that local variables are not present in other envs   11
-######## fun_info() #### recover object information 13
-######## fun_head() #### head of the left or right of big 2D objects    15
-######## fun_tail() #### tail of the left or right of big 2D objects    16
-######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 17
-######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   22
-######## fun_comp_list() #### comparison of two lists   29
-######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  32
-################ Object modification    47
-######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  47
-######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 48
-######## fun_round() #### rounding number if decimal present    51
-######## fun_mat_rotate() #### 90° clockwise matrix rotation    53
-######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    54
-######## fun_mat_op() #### assemble several matrices with operation 58
-######## fun_mat_inv() #### return the inverse of a square matrix   60
-######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  62
-######## fun_permut() #### progressively breaks a vector order  65
-######## fun_slide() #### return a computation made on a vector using a sliding window  76
-################ Graphics management    85
-######## fun_width() #### window width depending on classes to plot 85
-######## fun_open() #### open a GUI or pdf graphic window   87
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    91
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 95
-######## fun_inter_ticks() #### define coordinates of secondary ticks   100
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   105
-######## fun_close() #### close specific graphic windows    117
-################ Standard graphics  118
-######## fun_empty_graph() #### text to display for empty graphs    118
-################ gg graphics    120
-######## fun_gg_palette() #### ggplot2 default color palette    120
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  122
-######## fun_gg_get_legend() #### get the legend of ggplot objects  127
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  129
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    133
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   133
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  133
-######## fun_gg_empty_graph() #### text to display for empty graphs 141
-################ Graphic extraction 143
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 143
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   152
-################ Import 187
-######## fun_pack() #### check if R packages are present and import into the working environment    187
-######## fun_python_pack() #### check if python packages are present    189
-################ Print / Exporting results (text & tables)  192
-######## fun_report() #### print string or data object into output file 192
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 195
+################ Object analysis    3
+######## fun_check() #### check class, type, length, etc., of objects   3
+######## fun_secu() #### verif that local variables are not present in other envs   15
+######## fun_info() #### broad description of an object 18
+######## fun_head() #### head of the left or right of big 2D objects    23
+######## fun_tail() #### tail of the left or right of big 2D objects    25
+######## fun_comp_1d() #### comparison of two 1D datasets (vectors, factors, 1D tables) 26
+######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   31
+######## fun_comp_list() #### comparison of two lists   40
+######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  42
+################ Object modification    59
+######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  60
+######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 61
+######## fun_round() #### rounding number if decimal present    64
+######## fun_mat_rotate() #### 90° clockwise matrix rotation    66
+######## fun_mat_num2color() #### convert a numeric matrix into hexadecimal color matrix    67
+######## fun_mat_op() #### assemble several matrices with operation 70
+######## fun_mat_inv() #### return the inverse of a square matrix   73
+######## fun_mat_fill() #### fill the empty half part of a symmetric square matrix  74
+######## fun_permut() #### progressively breaks a vector order  78
+######## fun_slide() #### return a computation made on a vector using a sliding window  89
+######## fun_codon2aa() #### convert codon to amino acid using standard genetic code    98
+################ Graphics management    101
+######## fun_width() #### window width depending on classes to plot 101
+######## fun_open() #### open a GUI or pdf graphic window   102
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    106
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 111
+######## fun_inter_ticks() #### define coordinates of secondary ticks   116
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   120
+######## fun_close() #### close specific graphic windows    133
+################ Standard graphics  134
+######## fun_empty_graph() #### text to display for empty graphs    134
+################ gg graphics    136
+######## fun_gg_palette() #### ggplot2 default color palette    136
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  138
+######## fun_gg_get_legend() #### get the legend of ggplot objects  142
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  145
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    148
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   148
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  148
+######## fun_gg_empty_graph() #### text to display for empty graphs 157
+################ Graphic extraction 159
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 159
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   168
+################ Import 204
+######## fun_pack() #### check if R packages are present and import into the working environment    204
+######## fun_python_pack() #### check if python packages are present    205
+################ Print / Exporting results (text & tables)  208
+######## fun_report() #### print string or data object into output file 208
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 211
 
 
 ################################ FUNCTIONS ################################
@@ -412,7 +413,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 }
 }
 if( ! is.null(length)){
-if( ! (is.numeric(length) & base::length(length) == 1L & ! grepl(length, pattern = "\\."))){
+if( ! (is.numeric(length) & base::length(length) == 1L & all( ! grepl(length, pattern = "\\.")))){
 tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": length ARGUMENT MUST BE A SINGLE INTEGER VALUE")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
@@ -4257,6 +4258,160 @@ end.date <- Sys.time()
 end.time <- as.numeric(end.date)
 total.lapse <- round(lubridate::seconds_to_period(end.time - ini.time))
 cat(paste0("fun_slide JOB END\n\nTIME: ", end.date, "\n\nTOTAL TIME LAPSE: ", total.lapse, "\n\n\n"))
+}
+return(output)
+}
+
+
+
+
+######## fun_codon2aa() #### convert codon to amino acid using standard genetic code
+
+
+fun_codon2aa <- function(
+data,
+display = FALSE
+){
+# AIM
+# Convert codon to amino acid using standard genetic code indicated in https://en.wikipedia.org/wiki/DNA_and_RNA_codon_tables
+# WARNINGS
+# None
+# ARGUMENTS
+# data: single caracter string of three characters, or vector of three caracters, indicating the DNA codon (only "A", "T", "G" and "C" allowed). Case insensitive. Omitted if display argument is TRUE
+# display: logical. Display the whole genetic table? if TRUE, override data
+# RETURN
+# The 1 letter uppercase amino acid of the submitted codon or the whole table if display argument is TRUE
+# REQUIRED PACKAGES
+# None
+# REQUIRED FUNCTIONS FROM THE cute PACKAGE
+# fun_check()
+# EXAMPLE
+# fun_sgc(data = "ATC", display = TRUE)
+# see http
+# DEBUGGING
+# data = "atg" ; display = FALSE
+# function name
+function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
+arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
+arg.user.setting <- as.list(match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
+# end function name
+# required function checking
+req.function <- c(
+"fun_check"
+)
+tempo <- NULL
+for(i1 in req.function){
+if(length(find(i1, mode = "function")) == 0L){
+tempo <- c(tempo, i1)
+}
+}
+if( ! is.null(tempo)){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED cute FUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT:\n", paste0(tempo, collapse = "()\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end required function checking
+# reserved words
+# end reserved words
+# arg with no default values
+mandat.args <- c(
+"data"
+)
+tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
+if(any(tempo)){ # normally no NA for missing() output
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(length(mandat.args) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end arg with no default values
+# argument primary checking
+arg.check <- NULL #
+text.check <- NULL #
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
+tempo <- fun_check(data = data, class = "vector", typeof = "character", fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = display, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){ # normally no NA
+stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument primary checking
+# second round of checking and data preparation
+# management of NA arguments
+tempo.arg <- names(arg.user.setting) # values provided by the user
+tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1L # no argument provided by the user can be just NA
+if(any(tempo.log) == TRUE){ # normally no NA because is.na() used here
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end management of NA arguments
+# management of NULL arguments
+tempo.arg <-c(
+"data", 
+"display"
+)
+tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
+if(any(tempo.log) == TRUE){# normally no NA with is.null()
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end management of NULL arguments
+# code that protects set.seed() in the global environment
+# end code that protects set.seed() in the global environment
+# warning initiation
+# end warning initiation
+# other checkings
+if(length(data) == 1L){
+data <- unlist(strsplit(data, split = ""))
+}else if(length(data) != 3L){
+tempo.cat <- paste0("ERROR IN ", function.name, ": data ARGUMENT MUST BE A STRING OF THREE CHARACTERS OR A VECTOR OF THREE CHARACTERS, MADE OF \"A\", \"C\", \"G\", \"T\" ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+if( ! all(toupper(data) %in% c("A", "C", "G","T"))){
+tempo.cat <- paste0("ERROR IN ", function.name, ": data ARGUMENT MUST BE A STRING OF THREE CHARACTERS OR A VECTOR OF THREE CHARACTERS, MADE OF \"A\", \"C\", \"G\", \"T\" ONLY")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end other checkings
+# reserved word checking
+# end reserved word checking
+# end second round of checking and data preparation
+# package checking
+# end package checking
+# main code
+# standard genetic code
+sgc <- array(
+c(
+"F", "L", "I", "V",
+"S", "P", "T", "A",
+"Y", "H", "N", "D",
+"C", "R", "S", "G",
+
+"F", "L", "I", "V",
+"S", "P", "T", "A",
+"Y", "H", "N", "D",
+"C", "R", "S", "G",
+
+"L", "L", "I", "V",
+"S", "P", "T", "A",
+"stop", "Q", "K", "E",
+"stop", "R", "R", "G",
+
+"L", "L", "M", "V",
+"S", "P", "T", "A",
+"stop", "Q", "K", "E",
+"W", "R", "R", "G"
+), 
+dim = c(4, 4, 4),
+dimnames = list(
+first = c("T", "C", "A", "G"), 
+second = c("T", "C", "A", "G"), 
+third = c("T", "C", "A", "G")
+)
+)
+# end standard genetic code
+if(display == TRUE){
+output <- sgc
+}else{
+data <- toupper(data)
+output <- eval(parse(text = paste0("sgc['", paste0(data, collapse = "','"), "']")))
 }
 return(output)
 }
@@ -8781,11 +8936,13 @@ return(output) # do not use cat() because the idea is to reuse the message
 
 
 
+
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
 # add dot.shape ? See with available aesthetic layers
 # rasterise: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
+# add horizontal argument and deal any conflict with vertical argument. Start with horizontal = NULL as default. If ! is.null() -> convert vertical if required
 
 fun_gg_boxplot <- function(
 data1, 
@@ -10997,6 +11154,8 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end output
 # end main code
 }
+
+
 
 
 
