@@ -4286,7 +4286,7 @@ display = FALSE
 # REQUIRED FUNCTIONS FROM THE cute PACKAGE
 # fun_check()
 # EXAMPLE
-# fun_sgc(data = "ATC", display = TRUE)
+# fun_codon2aa(data = "ATC", display = TRUE)
 # see http
 # DEBUGGING
 # data = "atg" ; display = FALSE
@@ -4415,6 +4415,154 @@ output <- eval(parse(text = paste0("sgc['", paste0(data, collapse = "','"), "']"
 }
 return(output)
 }
+
+
+######## fun_codon_finder() #### gives the codon number and position in the codon of nucleotid positions
+
+
+fun_codon_finder <- function(
+pos, 
+start, 
+end
+){
+# AIM
+# gives the codon number and position in the codon of nucleotid positions
+# WARNINGS
+# Only for coding sequences (no introns): ((end - start) + 1) / 3 must be an integer (i.e., modulo zero)
+# Negatives positions allowed but this implies that one base has the position 0 in the sequence
+# ARGUMENTS
+# pos: vector of integers indicating the positions of nucleotids in a sequence. Must be between start and end arguments
+# start: single integer indicating the position of the first base of the coding sequence
+# end: single indicating the position of the last base of the coding sequence
+# RETURN
+# a matrix with row names corresponding to the pos argument input, each row being the result of each values of pos argument
+# Column names are
+# pos: values of the pos argument
+# codon_nb: the codon number in the CDS encompassing the pos input
+# codon_pos: the position of pos in the codon (either 1, 2 or 3)
+# codon_start: the first base position of the codon
+# codon_end: the last base position of the codon
+# REQUIRED PACKAGES
+# None
+# REQUIRED FUNCTIONS FROM THE cute PACKAGE
+# fun_check()
+# EXAMPLE
+# fun_codon_finder(c(5, 6, 8, 10), start = 5, end = 10)
+# fun_codon_finder(c(0, 5, 6, 8, 10), start = -2, end = 12)
+# see http
+# DEBUGGING
+# pos = c(5, 6, 8, 10) ; start = 5 ; end = 10
+# function name
+function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
+arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
+arg.user.setting <- as.list(match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
+# end function name
+# required function checking
+req.function <- c(
+"fun_check"
+)
+tempo <- NULL
+for(i1 in req.function){
+if(length(find(i1, mode = "function")) == 0L){
+tempo <- c(tempo, i1)
+}
+}
+if( ! is.null(tempo)){
+tempo.cat <- paste0("ERROR IN ", function.name, "\nREQUIRED cute FUNCTION", ifelse(length(tempo) > 1, "S ARE", " IS"), " MISSING IN THE R ENVIRONMENT:\n", paste0(tempo, collapse = "()\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end required function checking
+# reserved words
+# end reserved words
+# arg with no default values
+mandat.args <- c(
+"pos", 
+"start", 
+"end"
+)
+tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
+if(any(tempo)){ # normally no NA for missing() output
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(length(mandat.args) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end arg with no default values
+# argument primary checking
+arg.check <- NULL #
+text.check <- NULL #
+checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
+ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
+tempo <- fun_check(data = pos, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = start, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = end, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+if(any(arg.check) == TRUE){ # normally no NA
+stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
+}
+# source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using fun_check()
+# end argument primary checking
+# second round of checking and data preparation
+# management of NA arguments
+tempo.arg <- names(arg.user.setting) # values provided by the user
+tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length) == 1L # no argument provided by the user can be just NA
+if(any(tempo.log) == TRUE){ # normally no NA because is.na() used here
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT JUST BE NA")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end management of NA arguments
+# management of NULL arguments
+tempo.arg <-c(
+"pos", 
+"start", 
+"end"
+)
+tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
+if(any(tempo.log) == TRUE){# normally no NA with is.null()
+tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end management of NULL arguments
+# code that protects set.seed() in the global environment
+# end code that protects set.seed() in the global environment
+# warning initiation
+# end warning initiation
+# other checkings
+if(start >= end){
+tempo.cat <- paste0("ERROR IN ", function.name, ": end ARGUMENT MUST BE STRICTLY GREATER THAN start ARGUMENT")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+if((end - start + 1) %% 3 != 0L){
+tempo.cat <- paste0("ERROR IN ", function.name, ": ((end - start) + 1) / 3 MUST BE AN INTEGER (I.E., MODULO ZERO)")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+if(any(pos < start | pos > end)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": pos ARGUMENT VALUES MUST BE BETWEEN start AND end ARGUMENT VALUES")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
+# end other checkings
+# reserved word checking
+# end reserved word checking
+# end second round of checking and data preparation
+# package checking
+# end package checking
+# main code
+first <- seq.int(from = start, to = end, by = 3)
+last <- seq.int(from = start + 2, to = end, by = 3)
+tempo <- sapply(X = pos, FUN = function(x = X){
+tempo.log <- x >= first & x <= last
+if(sum(tempo.log, na.rm = TRUE) != 1){ # check that 1 possible TRUE
+tempo.cat <- paste0("ERROR IN ", function.name, ": INTERNAL ERROR. CODE HAS TO BE MODIFIED")
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}else{
+codon_nb <- which(tempo.log)
+codon_pos <- (x - (start + (codon_nb - 1) * 3) + 1)
+codon_start <- first[tempo.log]
+codon_end <- last[tempo.log]
+}
+return(list(codon_nb = codon_nb, codon_pos = codon_pos, codon_start = codon_start, codon_end = codon_end))
+})
+output <- data.frame(pos = pos, t(tempo))
+return(output)
+}
+
 
 
 ################ Graphics management

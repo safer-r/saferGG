@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.3.0
+
+1) fun_codon_finder() added
+
+
 ### v10.2.0
 
 1) fun_codon2aa() added
