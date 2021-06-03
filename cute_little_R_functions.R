@@ -4420,19 +4420,22 @@ return(output)
 ######## fun_codon_finder() #### gives the codon number and position in the codon of nucleotid positions
 
 
+######## fun_codon_finder() #### gives the codon number and position in the codon of nucleotid positions
+
+
 fun_codon_finder <- function(
 pos, 
-start, 
+begin, 
 end
 ){
 # AIM
 # gives the codon number and position in the codon of nucleotid positions
 # WARNINGS
-# Only for coding sequences (no introns): ((end - start) + 1) / 3 must be an integer (i.e., modulo zero)
+# Only for coding sequences (no introns): ((end - begin) + 1) / 3 must be an integer (i.e., modulo zero)
 # Negatives positions allowed but this implies that one base has the position 0 in the sequence
 # ARGUMENTS
-# pos: vector of integers indicating the positions of nucleotids in a sequence. Must be between start and end arguments
-# start: single integer indicating the position of the first base of the coding sequence
+# pos: vector of integers indicating the positions of nucleotids in a sequence. Must be between begin and end arguments
+# begin: single integer indicating the position of the first base of the coding sequence
 # end: single indicating the position of the last base of the coding sequence
 # RETURN
 # a matrix with row names corresponding to the pos argument input, each row being the result of each values of pos argument
@@ -4440,18 +4443,18 @@ end
 # pos: values of the pos argument
 # codon_nb: the codon number in the CDS encompassing the pos input
 # codon_pos: the position of pos in the codon (either 1, 2 or 3)
-# codon_start: the first base position of the codon
+# codon_begin: the first base position of the codon
 # codon_end: the last base position of the codon
 # REQUIRED PACKAGES
 # None
 # REQUIRED FUNCTIONS FROM THE cute PACKAGE
 # fun_check()
 # EXAMPLE
-# fun_codon_finder(c(5, 6, 8, 10), start = 5, end = 10)
-# fun_codon_finder(c(0, 5, 6, 8, 10), start = -2, end = 12)
+# fun_codon_finder(c(5, 6, 8, 10), begin = 5, end = 10)
+# fun_codon_finder(c(0, 5, 6, 8, 10), begin = -2, end = 12)
 # see http
 # DEBUGGING
-# pos = c(5, 6, 8, 10) ; start = 5 ; end = 10
+# pos = c(5, 6, 8, 10) ; begin = 5 ; end = 10
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -4477,7 +4480,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # arg with no default values
 mandat.args <- c(
 "pos", 
-"start", 
+"begin", 
 "end"
 )
 tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
@@ -4492,7 +4495,7 @@ text.check <- NULL #
 checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
 ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
 tempo <- fun_check(data = pos, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, fun.name = function.name) ; eval(ee)
-tempo <- fun_check(data = start, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = begin, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = end, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 if(any(arg.check) == TRUE){ # normally no NA
 stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between == #
@@ -4511,7 +4514,7 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # management of NULL arguments
 tempo.arg <-c(
 "pos", 
-"start", 
+"begin", 
 "end"
 )
 tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
@@ -4525,16 +4528,16 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # warning initiation
 # end warning initiation
 # other checkings
-if(start >= end){
-tempo.cat <- paste0("ERROR IN ", function.name, ": end ARGUMENT MUST BE STRICTLY GREATER THAN start ARGUMENT")
+if(begin >= end){
+tempo.cat <- paste0("ERROR IN ", function.name, ": end ARGUMENT MUST BE STRICTLY GREATER THAN begin ARGUMENT")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if((end - start + 1) %% 3 != 0L){
-tempo.cat <- paste0("ERROR IN ", function.name, ": ((end - start) + 1) / 3 MUST BE AN INTEGER (I.E., MODULO ZERO)")
+if((end - begin + 1) %% 3 != 0L){
+tempo.cat <- paste0("ERROR IN ", function.name, ": ((end - begin) + 1) / 3 MUST BE AN INTEGER (I.E., MODULO ZERO)")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if(any(pos < start | pos > end)){
-tempo.cat <- paste0("ERROR IN ", function.name, ": pos ARGUMENT VALUES MUST BE BETWEEN start AND end ARGUMENT VALUES")
+if(any(pos < begin | pos > end)){
+tempo.cat <- paste0("ERROR IN ", function.name, ": pos ARGUMENT VALUES MUST BE BETWEEN begin AND end ARGUMENT VALUES")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
 # end other checkings
@@ -4544,8 +4547,8 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # package checking
 # end package checking
 # main code
-first <- seq.int(from = start, to = end, by = 3)
-last <- seq.int(from = start + 2, to = end, by = 3)
+first <- seq.int(from = begin, to = end, by = 3)
+last <- seq.int(from = begin + 2, to = end, by = 3)
 tempo <- sapply(X = pos, FUN = function(x = X){
 tempo.log <- x >= first & x <= last
 if(sum(tempo.log, na.rm = TRUE) != 1){ # check that 1 possible TRUE
@@ -4553,15 +4556,17 @@ tempo.cat <- paste0("ERROR IN ", function.name, ": INTERNAL ERROR. CODE HAS TO B
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 codon_nb <- which(tempo.log)
-codon_pos <- (x - (start + (codon_nb - 1) * 3) + 1)
-codon_start <- first[tempo.log]
+codon_pos <- (x - (begin + (codon_nb - 1) * 3) + 1)
+codon_begin <- first[tempo.log]
 codon_end <- last[tempo.log]
 }
-return(list(codon_nb = codon_nb, codon_pos = codon_pos, codon_start = codon_start, codon_end = codon_end))
+return(list(codon_nb = codon_nb, codon_pos = codon_pos, codon_begin = codon_begin, codon_end = codon_end))
 })
 output <- data.frame(pos = pos, t(tempo))
 return(output)
 }
+
+
 
 
 

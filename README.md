@@ -172,6 +172,11 @@ Gitlab developers
 
 ### v10.3.0
 
+1) fun_codon_finder(): start argument replaced by begin
+
+
+### v10.3.0
+
 1) fun_codon_finder() added
 
 
