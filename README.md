@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.6.0
+
+1) fun_comp_2d() debugged : did not give good results when comparing rows of large data frames
+
+
 ### v10.5.0
 
 1) fun_codon_finder() improved
