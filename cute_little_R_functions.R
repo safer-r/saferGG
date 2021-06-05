@@ -122,7 +122,7 @@
 ######## fun_comp_2d() #### comparison of two 2D datasets (row & col names, dimensions, etc.)   31
 ######## fun_comp_list() #### comparison of two lists   40
 ######## fun_test() #### test combinations of argument values of a function and return errors (and graphs)  42
-################ Object modification    59
+################ Object modification    60
 ######## fun_name_change() #### check a vector of character strings and modify any string if present in another vector  60
 ######## fun_df_remod() #### remodeling a data frame to have column name as a qualitative values and vice-versa 61
 ######## fun_round() #### rounding number if decimal present    64
@@ -134,34 +134,35 @@
 ######## fun_permut() #### progressively breaks a vector order  78
 ######## fun_slide() #### return a computation made on a vector using a sliding window  89
 ######## fun_codon2aa() #### convert codon to amino acid using standard genetic code    98
-################ Graphics management    101
-######## fun_width() #### window width depending on classes to plot 101
-######## fun_open() #### open a GUI or pdf graphic window   102
-######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    106
-######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 111
-######## fun_inter_ticks() #### define coordinates of secondary ticks   116
-######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   120
-######## fun_close() #### close specific graphic windows    133
-################ Standard graphics  134
-######## fun_empty_graph() #### text to display for empty graphs    134
-################ gg graphics    136
-######## fun_gg_palette() #### ggplot2 default color palette    136
-######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  138
-######## fun_gg_get_legend() #### get the legend of ggplot objects  142
-######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  145
-######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    148
-######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   148
-######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  148
-######## fun_gg_empty_graph() #### text to display for empty graphs 157
-################ Graphic extraction 159
-######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 159
-######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   168
-################ Import 204
-######## fun_pack() #### check if R packages are present and import into the working environment    204
-######## fun_python_pack() #### check if python packages are present    205
-################ Print / Exporting results (text & tables)  208
-######## fun_report() #### print string or data object into output file 208
-######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 211
+######## fun_codon_finder() #### gives the codon number and position in the codon of nucleotid positions    101
+################ Graphics management    104
+######## fun_width() #### window width depending on classes to plot 104
+######## fun_open() #### open a GUI or pdf graphic window   105
+######## fun_prior_plot() #### set graph param before plotting (erase axes for instance)    110
+######## fun_scale() #### select nice label numbers when setting number of ticks on an axis 114
+######## fun_inter_ticks() #### define coordinates of secondary ticks   119
+######## fun_post_plot() #### set graph param after plotting (axes redesign for instance)   123
+######## fun_close() #### close specific graphic windows    136
+################ Standard graphics  137
+######## fun_empty_graph() #### text to display for empty graphs    137
+################ gg graphics    139
+######## fun_gg_palette() #### ggplot2 default color palette    139
+######## fun_gg_just() #### ggplot2 justification of the axis labeling, depending on angle  141
+######## fun_gg_get_legend() #### get the legend of ggplot objects  145
+######## fun_gg_point_rast() #### ggplot2 raster scatterplot layer  148
+######## fun_gg_boxplot() #### ggplot2 boxplot + background dots if required    151
+######## fun_gg_scatter() #### ggplot2 scatterplot + lines (up to 6 overlays totally)   151
+######## fun_gg_heatmap() #### ggplot2 heatmap + overlaid mask if required  151
+######## fun_gg_empty_graph() #### text to display for empty graphs 160
+################ Graphic extraction 162
+######## fun_trim() #### display values from a quantitative variable and trim according to defined cut-offs 162
+######## fun_segmentation() #### segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation   171
+################ Import 207
+######## fun_pack() #### check if R packages are present and import into the working environment    207
+######## fun_python_pack() #### check if python packages are present    208
+################ Print / Exporting results (text & tables)  211
+######## fun_report() #### print string or data object into output file 211
+######## fun_get_message() #### return error/warning/other messages of an expression (that can be exported) 214
 
 
 ################################ FUNCTIONS ################################
@@ -4420,9 +4421,6 @@ return(output)
 ######## fun_codon_finder() #### gives the codon number and position in the codon of nucleotid positions
 
 
-######## fun_codon_finder() #### gives the codon number and position in the codon of nucleotid positions
-
-
 fun_codon_finder <- function(
 pos, 
 begin, 
@@ -4438,10 +4436,9 @@ end
 # begin: single integer indicating the position of the first base of the coding sequence
 # end: single indicating the position of the last base of the coding sequence
 # RETURN
-# a matrix with row names corresponding to the pos argument input, each row being the result of each values of pos argument
-# Column names are
+# a data frame with column names:
 # pos: values of the pos argument
-# codon_nb: the codon number in the CDS encompassing the pos input
+# codon_nb: the codon number in the CDS encompassing the pos value
 # codon_pos: the position of pos in the codon (either 1, 2 or 3)
 # codon_begin: the first base position of the codon
 # codon_end: the last base position of the codon
@@ -4549,25 +4546,23 @@ stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), 
 # main code
 first <- seq.int(from = begin, to = end, by = 3)
 last <- seq.int(from = begin + 2, to = end, by = 3)
-tempo <- sapply(X = pos, FUN = function(x = X){
+tempo <- lapply(X = pos, FUN = function(x = X){
 tempo.log <- x >= first & x <= last
 if(sum(tempo.log, na.rm = TRUE) != 1){ # check that 1 possible TRUE
 tempo.cat <- paste0("ERROR IN ", function.name, ": INTERNAL ERROR. CODE HAS TO BE MODIFIED")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
 }else{
 codon_nb <- which(tempo.log)
-codon_pos <- (x - (begin + (codon_nb - 1) * 3) + 1)
-codon_begin <- first[tempo.log]
-codon_end <- last[tempo.log]
+codon_pos <- as.integer((x - (begin + (codon_nb - 1) * 3) + 1))
+codon_begin <- as.integer(first[tempo.log])
+codon_end <- as.integer(last[tempo.log])
 }
-return(list(codon_nb = codon_nb, codon_pos = codon_pos, codon_begin = codon_begin, codon_end = codon_end))
+return(data.frame(codon_nb = codon_nb, codon_pos = codon_pos, codon_begin = codon_begin, codon_end = codon_end))
 })
-output <- data.frame(pos = pos, t(tempo))
+tempo <- do.call("rbind", tempo)
+output <- data.frame(pos = as.integer(pos), tempo)
 return(output)
 }
-
-
-
 
 
 ################ Graphics management
@@ -11307,8 +11302,6 @@ return(output) # this plots the graph if return.ggplot is TRUE and if no assignm
 # end output
 # end main code
 }
-
-
 
 
 

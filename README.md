@@ -170,7 +170,12 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
-### v10.3.0
+### v10.5.0
+
+1) fun_codon_finder() improved
+
+
+### v10.4.0
 
 1) fun_codon_finder(): start argument replaced by begin
 
