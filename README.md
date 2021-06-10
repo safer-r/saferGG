@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.7.0
+
+1) fun_gg_boxplot : name of arguments stat.disp and stat.disp.mean changed to stat.pos and stat.mean
+
+
 ### v10.6.0
 
 1) fun_comp_2d() debugged : did not give good results when comparing rows of large data frames

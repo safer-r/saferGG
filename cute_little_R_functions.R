@@ -9150,8 +9150,8 @@ y.second.tick.nb = 1,
 y.include.zero = FALSE, 
 y.top.extra.margin = 0.05, 
 y.bottom.extra.margin = 0.05, 
-stat.disp = "top", 
-stat.disp.mean = FALSE, 
+stat.pos = "top", 
+stat.mean = FALSE, 
 stat.size = 4, 
 stat.dist = 5, 
 stat.angle = 0, 
@@ -9233,10 +9233,10 @@ lib.path = NULL
 # y.include.zero: logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10"
 # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis
 # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
-# stat.disp: add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box)
-# stat.disp.mean: logical. Display mean numbers instead of median numbers? Ignored if stat.disp is NULL
-# stat.size: numeric value of the stat font size in mm. Ignored if stat.disp is NULL
-# stat.dist: numeric value of the stat distance in percentage of the y-axis range (stat.dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat.disp is NULL or "top"
+# stat.pos: add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box)
+# stat.mean: logical. Display mean numbers instead of median numbers? Ignored if stat.pos is NULL
+# stat.size: numeric value of the stat font size in mm. Ignored if stat.pos is NULL
+# stat.dist: numeric value of the stat distance in percentage of the y-axis range (stat.dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat.pos is NULL or "top"
 # stat.angle: integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
 # vertical: logical. Vertical boxes? WARNING: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
 # text.size: numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm)
@@ -9273,7 +9273,7 @@ lib.path = NULL
 # $sup.whisker.edge: coordinates of top whisker edges (x and xend)
 # $inf.whisker.edge: coordinates of bottom whisker edges(x and xend)
 # $mean: diamond mean coordinates (only if box.mean argument is TRUE)
-# $stat.display: coordinates of stat numbers (only if stat.disp argument is not NULL)
+# $stat.pos: coordinates of stat numbers (only if stat.pos argument is not NULL)
 # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no")
 # y.second.tick.values: values of secondary ticks. NULL except if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no")
 # $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0
@@ -9301,7 +9301,7 @@ lib.path = NULL
 # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1")
 # see http
 # DEBUGGING
-# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; categ.color = NULL ; box.legend.name = NULL ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.line.size = 0.75 ; box.notch = FALSE ; box.alpha = 1 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0 ; dot.color = grey(0.25) ; dot.categ = NULL ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = FALSE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.5 ; dot.seed = 2 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; x.lab = NULL ; x.angle = 0 ; y.lab = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = 1 ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.disp = "top" ; stat.disp.mean = FALSE ; stat.size = 4 ; stat.dist = 5 ; stat.angle = 0 ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
+# set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; categ.color = NULL ; box.legend.name = NULL ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.line.size = 0.75 ; box.notch = FALSE ; box.alpha = 1 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0 ; dot.color = grey(0.25) ; dot.categ = NULL ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = FALSE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.5 ; dot.seed = 2 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; x.lab = NULL ; x.angle = 0 ; y.lab = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = 1 ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.pos = "top" ; stat.mean = FALSE ; stat.size = 4 ; stat.dist = 5 ; stat.angle = 0 ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
 # function name
 function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
 arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -9554,14 +9554,14 @@ checked.arg.names <- c(checked.arg.names, tempo$object.name)
 tempo <- fun_check(data = y.include.zero, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.top.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = y.bottom.extra.margin, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
-if( ! is.null(stat.disp)){
-tempo <- fun_check(data = stat.disp, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
+if( ! is.null(stat.pos)){
+tempo <- fun_check(data = stat.pos, options = c("top", "above"), length = 1, fun.name = function.name) ; eval(ee)
 }else{
 # no fun_check test here, it is just for checked.arg.names
-tempo <- fun_check(data = stat.disp, class = "vector")
+tempo <- fun_check(data = stat.pos, class = "vector")
 checked.arg.names <- c(checked.arg.names, tempo$object.name)
 }
-tempo <- fun_check(data = stat.disp.mean, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+tempo <- fun_check(data = stat.mean, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = stat.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = stat.dist, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
 tempo <- fun_check(data = stat.angle, class = "vector", typeof = "integer", double.as.integer.allowed = TRUE, length = 1, neg.values = TRUE, fun.name = function.name) ; eval(ee)
@@ -9647,8 +9647,8 @@ tempo.arg <-c(
 "y.include.zero", 
 "y.top.extra.margin", 
 "y.bottom.extra.margin", 
-# "stat.disp", # inactivated because can be null
-"stat.disp.mean", 
+# "stat.pos", # inactivated because can be null
+"stat.mean", 
 "stat.size", 
 "stat.dist", 
 "stat.angle", 
@@ -10381,13 +10381,13 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::sca
 tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, "\nCODE INCONSISTENCY 1")
 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
 }
-if( ! is.null(stat.disp)){
+if( ! is.null(stat.pos)){
 stat.just <- fun_gg_just(
 angle = stat.angle, 
 pos = ifelse(
 vertical == TRUE, 
-ifelse(stat.disp == "top", "bottom", "top"), # "bottom" because we want justification for text that are below the ref point which is the top of the graph. The opposite for "above"
-ifelse(stat.disp == "top", "left", "right") # "left" because we want justification for text that are on the left of the ref point which is the right border of the graph. The opposite for "above"
+ifelse(stat.pos == "top", "bottom", "top"), # "bottom" because we want justification for text that are below the ref point which is the top of the graph. The opposite for "above"
+ifelse(stat.pos == "top", "left", "right") # "left" because we want justification for text that are on the left of the ref point which is the right border of the graph. The opposite for "above"
 ), 
 kind = "text"
 )
@@ -10396,7 +10396,7 @@ kind = "text"
 tempo.data.max <- data1[which.max(data1[, y]), ]
 tempo.data.max <- data.frame(tempo.data.max, label = formatC(tempo.data.max[, y], digit = 2, drop0trailing = TRUE, format = "f"), stringsAsFactors = TRUE)
 # end has in fact no interest because ggplot2 does not create room for geom_text()
-tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if( ! is.null(stat.disp)){' + ggplot2::geom_text(data = tempo.data.max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat.size, color = "black", angle = stat.angle, hjust = stat.just$hjust, vjust = stat.just$vjust)'})))) # added here to have room for annotation
+tempo.graph.info.ini <- ggplot2::ggplot_build(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if( ! is.null(stat.pos)){' + ggplot2::geom_text(data = tempo.data.max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat.size, color = "black", angle = stat.angle, hjust = stat.just$hjust, vjust = stat.just$vjust)'})))) # added here to have room for annotation
 dot.coord <- tempo.graph.info.ini$data[[1]]
 dot.coord$x <- as.numeric(dot.coord$x) # because weird class
 dot.coord$PANEL <- as.numeric(dot.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
@@ -10596,7 +10596,7 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geo
 # graphic info recovery (including means)
 tempo.graph.info <- ggplot2::ggplot_build(eval(parse(text = paste0(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, notch = box.notch, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}) + ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color)== 1L){rep(categ.color, length(unique(data1[, categ[length(categ)]])))}else{categ.color})')))) # will be recovered later again, when ylim will be considered
 tempo.yx.ratio <- (tempo.graph.info$layout$panel_params[[1]]$y.range[2] - tempo.graph.info$layout$panel_params[[1]]$y.range[1]) / (tempo.graph.info$layout$panel_params[[1]]$x.range[2] - tempo.graph.info$layout$panel_params[[1]]$x.range[1])
-box.coord <- tempo.graph.info$data[[2]] # to have the summary statistics of the plot. Contrary to ini.box.plot, now integrates ylim Here because can be required for stat.disp when just box are plotted
+box.coord <- tempo.graph.info$data[[2]] # to have the summary statistics of the plot. Contrary to ini.box.plot, now integrates ylim Here because can be required for stat.pos when just box are plotted
 box.coord$x <- as.numeric(box.coord$x) # because x is of special class that block comparison of values using identical
 box.coord$PANEL <- as.numeric(box.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
 box.coord <- box.coord[order(box.coord$group, box.coord$PANEL), ]
@@ -11027,24 +11027,24 @@ assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::gui
 
 # stat display
 # layer after dots but ok, behind dots on the plot
-if( ! is.null(stat.disp)){
+if( ! is.null(stat.pos)){
 warn.count <- warn.count + 1
-tempo.warn <- paste0("(", warn.count,") NUMBERS DISPLAYED ARE ", ifelse(stat.disp.mean == FALSE, "MEDIANS", "MEANS"))
+tempo.warn <- paste0("(", warn.count,") NUMBERS DISPLAYED ARE ", ifelse(stat.mean == FALSE, "MEDIANS", "MEANS"))
 warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-if(stat.disp == "top"){
+if(stat.pos == "top"){
 tempo.stat <- data.frame(stat, Y = y.lim[2], stringsAsFactors = TRUE) # I had to create a data frame for geom_tex() so that facet is taken into account, (ggplot2::annotate() does not deal with facet because no data and mapping arguments). Of note, facet.categ is in tempo.stat, via tempo.mean, via dot.coord
-if(stat.disp.mean == FALSE){tempo.stat$MEDIAN <- formatC(stat.nolog$MEDIAN, digit = 2, drop0trailing = TRUE, format = "f")}else{tempo.stat$MEAN <- formatC(stat.nolog$MEAN, digit = 2, drop0trailing = TRUE, format = "f")}
+if(stat.mean == FALSE){tempo.stat$MEDIAN <- formatC(stat.nolog$MEDIAN, digit = 2, drop0trailing = TRUE, format = "f")}else{tempo.stat$MEAN <- formatC(stat.nolog$MEAN, digit = 2, drop0trailing = TRUE, format = "f")}
 assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
 data = tempo.stat, 
-mapping = ggplot2::aes_string(x = "X", y = "Y", label = ifelse(stat.disp.mean == FALSE, "MEDIAN", "MEAN")),
+mapping = ggplot2::aes_string(x = "X", y = "Y", label = ifelse(stat.mean == FALSE, "MEDIAN", "MEAN")),
 size = stat.size, 
 color = "black", 
 angle = stat.angle, 
 hjust = stat.just$hjust, 
 vjust = stat.just$vjust
 )) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
-coord.names <- c(coord.names, "stat.display")
-}else if(stat.disp == "above"){
+coord.names <- c(coord.names, "stat.pos")
+}else if(stat.pos == "above"){
 # stat coordinates
 if( ! is.null(dot.color)){ # for text just above max dot
 if(dot.tidy == FALSE){
@@ -11090,7 +11090,7 @@ stringsAsFactors = TRUE
 # end stat coordinates
 # stat display
 # performed twice: first for y values >=0, then y values < 0, because only a single value allowed for hjust anf vjust
-if(stat.disp.mean == FALSE){
+if(stat.mean == FALSE){
 tempo.center.ref <- "middle"
 }else{
 tempo.center.ref <- "MEAN"
@@ -11126,7 +11126,7 @@ angle = stat.angle,
 hjust = stat.just$hjust, 
 vjust = stat.just$vjust
 )) # WARNING: no need of order() for labels because box.coord$x set the order
-coord.names <- c(coord.names, "stat.display")
+coord.names <- c(coord.names, "stat.pos")
 # }
 # if(any(tempo.log.low) == TRUE){
 # tempo.stat <- stat.coord3[tempo.log.low,]
@@ -11138,7 +11138,7 @@ coord.names <- c(coord.names, "stat.display")
 # hjust = ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
 # vjust = ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5)
 # )) # WARNING: no need of order() for labels because box.coord$x set the order
-# coord.names <- c(coord.names, "stat.display.negative")
+# coord.names <- c(coord.names, "stat.pos.negative")
 # }
 # end stat display
 }else{

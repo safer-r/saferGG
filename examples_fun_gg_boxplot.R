@@ -178,8 +178,8 @@ fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1",
 
 ### Stat numbers above boxes
 fun_gg_boxplot(data1 = obs1, y = "Time", categ = "Categ1", 
-               stat.disp = "above", # try "top"
-               stat.disp.mean = FALSE, 
+               stat.pos = "above", # try "top"
+               stat.mean = FALSE, 
                stat.size = 4, 
                stat.dist = 2, 
                stat.angle = 90
@@ -310,8 +310,8 @@ fun_gg_boxplot(
     y.include.zero = FALSE, 
     y.top.extra.margin = 0.05, 
     y.bottom.extra.margin = 0.05, 
-    stat.disp = "top", 
-    stat.disp.mean = FALSE, 
+    stat.pos = "top", 
+    stat.mean = FALSE, 
     stat.size = 4, 
     stat.dist = 5, 
     stat.angle = 0, 
