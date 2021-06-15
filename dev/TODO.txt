@@ -1,3 +1,35 @@
+
+
+20210616
+
+Hello.
+
+
+J'ai créé un nouveau repo:
+git@gitlab.pasteur.fr:gmillot/cute.git
+que vous pouvez cloner en local:
+git clone git@gitlab.pasteur.fr:gmillot/cute.git
+
+Ensuite vous pourrez travailler dessus et puis vous effectuerez des demandes de merge auprès 
+de moi pour que j'incorpore votre travail.
+
+L'idée est que ce repo soit rapidement converti en package.
+On peut commencer avec une seule fonction provenant de l'ancien repo de dev cute_little_r_function
+et ensuite incorporer petit à petit les fonctions cleanées de cute_little_r_function
+
+Pour demain je vois 5 axes :
+1) piger le passage en package / le faire sur le repo cute et noter la procédure pour les autres
+2) Piger / créer les pages web de docu
+3) poursuivre les feuilles d'exemple
+4) tester les fonctions et basculer sur cute
+5) updater fun_gg_scatter
+
+A voir ce qui plait à qui.
+
+A demain
+
+
+20210301
 L'investissement dans le projet Cute:
 1) Terminer les pages d'exemple de chaque fonction (c'est long)
 2) Checker les functions existantes (les utiliser, les challenger)

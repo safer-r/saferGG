@@ -170,6 +170,15 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.8.0
+
+1) fun_check() and fun_info() removed from this repo and transferred into the cute package
+
+2) Warning: fun_check() must be conveted into cute::check() in all the functions of this repo
+
+3) Warning: fun_info() must be conveted into cute::info() in all the functions of this repo
+
+
 ### v10.7.0
 
 1) fun_gg_boxplot : name of arguments stat.disp and stat.disp.mean changed to stat.pos and stat.mean
