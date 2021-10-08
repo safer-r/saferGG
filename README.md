@@ -170,9 +170,14 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.8.2
+
+1) forgot to add fun_gg_scatter() and fun_gg_boxplot() to v10.8.1. Now ok
+
+
 ### v10.8.1
 
-1) fun_check() and fun_info() readded for pratical purposes but must not be changed. See the cute package for that
+1) fun_check() and fun_info() readded for practical purposes but must not be changed. See the cute package for that
 
 2) cute.path parameter improved for fun.test() and fun.slide()
 
