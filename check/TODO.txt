@@ -29,6 +29,14 @@ A voir ce qui plait à qui.
 A demain
 
 
+
+
+
+
+
+
+
+
 20210301
 L'investissement dans le projet Cute:
 1) Terminer les pages d'exemple de chaque fonction (c'est long)
@@ -48,4 +56,23 @@ Il faudrait que je sache qui souhaite s'investir, sachant que c'est un vrai proj
 Merci beaucoup.
 
 Gael.
+
+
+For Corinne :
+
+Corinne
+
+1) first capital
+all the section present
+Argument and return : leave it to me
+3) Corinne add all the comments of the missing sections and put it into the function but I have to complete it
+5) I have to do it
+7) I have to do it: create a nice file
+
+For packages :
+See mails with cuteathon
+
+
+
+
 

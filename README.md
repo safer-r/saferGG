@@ -170,6 +170,13 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.8.1
+
+1) fun_check() and fun_info() readded for pratical purposes but must not be changed. See the cute package for that
+
+2) cute.path parameter improved for fun.test() and fun.slide()
+
+
 ### v10.8.0
 
 1) fun_check() and fun_info() removed from this repo and transferred into the cute package
