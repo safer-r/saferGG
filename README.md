@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.8.3
+
+1) fun.test() and fun.slide() debbuged for cute.path
+
+
 ### v10.8.2
 
 1) forgot to add fun_gg_scatter() and fun_gg_boxplot() to v10.8.1. Now ok
