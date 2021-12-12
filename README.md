@@ -170,9 +170,14 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v10.9.0
+
+1) no.overwrite argument of fun_report() replaced by overwrite
+
+
 ### v10.8.3
 
-1) fun.test() and fun.slide() debbuged for cute.path
+1) fun_test() and fun_slide() debbuged for cute.path
 
 
 ### v10.8.2
@@ -184,7 +189,7 @@ Gitlab developers
 
 1) fun_check() and fun_info() readded for practical purposes but must not be changed. See the cute package for that
 
-2) cute.path parameter improved for fun.test() and fun.slide()
+2) cute.path parameter improved for fun_test() and fun_slide()
 
 
 ### v10.8.0

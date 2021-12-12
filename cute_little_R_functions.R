@@ -8740,7 +8740,7 @@ fun_report <- function(
     data, 
     output = "results.txt", 
     path = "C:/Users/Gael/Desktop/", 
-    no.overwrite = TRUE, 
+    overwrite = FALSE, 
     rownames.kept = FALSE, 
     vector.cat = FALSE, 
     noquote = TRUE, 
@@ -8752,7 +8752,7 @@ fun_report <- function(
     # data: object to print in the output file. If NULL, nothing is done, with no warning
     # output: name of the output file
     # path: location of the output file
-    # no.overwrite: (logical) if output file already exists, defines if the printing is appended (default TRUE) or if the output file content is erased before printing (FALSE)
+    # overwrite: (logical) if output file already exists, defines if the printing is appended (default FALSE) or if the output file content is erased before printing (TRUE)
     # rownames.kept: (logical) defines whether row names have to be removed or not in small tables (less than length.rows rows)
     # vector.cat (logical). If TRUE print a vector of length > 1 using cat() instead of capture.output(). Otherwise (default FALSE) the opposite
     # noquote: (logical). If TRUE no quote are present for the characters
@@ -8765,9 +8765,9 @@ fun_report <- function(
     # fun_check()
     # EXAMPLES
     # fun_report()
-    # fun_report(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", no.overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = FALSE, sep = 2)
+    # fun_report(data = 1:3, output = "results.txt", path = "C:/Users/Gael/Desktop", overwrite = TRUE, rownames.kept = FALSE, vector.cat = FALSE, noquote = FALSE, sep = 2)
     # DEBUGGING
-    # data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; no.overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; noquote = FALSE ; sep = 2 # for function debugging
+    # data = 1:3 ; output = "results.txt" ; path = "C:/Users/Gael/Desktop" ; overwrite = TRUE ; rownames.kept = FALSE ; vector.cat = FALSE ; noquote = FALSE ; sep = 2 # for function debugging
     # function name
     function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
     # end function name
@@ -8796,7 +8796,7 @@ fun_report <- function(
             arg.check <- c(arg.check, TRUE)
         }
     }
-    tempo <- fun_check(data = no.overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- fun_check(data = overwrite, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
     tempo <- fun_check(data = rownames.kept, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
     tempo <- fun_check(data = vector.cat, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
     tempo <- fun_check(data = noquote, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
@@ -8829,24 +8829,24 @@ fun_report <- function(
                 rownames(data) <- rep("", nrow(data)) # identical row names allowed in matrices and tables
             }
             if(noquote == TRUE){
-                utils::capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
+                utils::capture.output(noquote(data), file=paste0(path, "/", output), append = ! overwrite)
             }else{
-                utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+                utils::capture.output(data, file=paste0(path, "/", output), append = ! overwrite)
             }
         }else if(is.vector(data) & all(class(data) != "list") & (length(data) == 1L | vector.cat == TRUE)){
             if(noquote == TRUE){
-                cat(noquote(data), file= paste0(path, "/", output), append = no.overwrite)
+                cat(noquote(data), file= paste0(path, "/", output), append = ! overwrite)
             }else{
-                cat(data, file= paste0(path, "/", output), append = no.overwrite)
+                cat(data, file= paste0(path, "/", output), append = ! overwrite)
             }
         }else if(all(base::mode(data) == "character")){ # characters (array, list, factor or vector with vector.cat = FALSE)
             if(noquote == TRUE){
-                utils::capture.output(noquote(data), file=paste0(path, "/", output), append = no.overwrite)
+                utils::capture.output(noquote(data), file=paste0(path, "/", output), append = ! overwrite)
             }else{
-                utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+                utils::capture.output(data, file=paste0(path, "/", output), append = ! overwrite)
             }
         }else{ # other object (S4 for instance, which do not like noquote()
-            utils::capture.output(data, file=paste0(path, "/", output), append = no.overwrite)
+            utils::capture.output(data, file=paste0(path, "/", output), append = ! overwrite)
         }
         sep.final <- paste0(rep("\n", sep), collapse = "")
         write(sep.final, file= paste0(path, "/", output), append = TRUE) # add a sep
@@ -11260,8 +11260,6 @@ fun_gg_boxplot <- function(
 
 
 
-
-
 # add density
 # rasterise all kind: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
 # log not good: do not convert as in boxplot
@@ -13630,6 +13628,7 @@ if(return == TRUE){
 # end output
 # end main code
 }
+
 
 
 
