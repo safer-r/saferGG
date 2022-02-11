@@ -38,7 +38,7 @@ set.seed(NULL)
 fun_info(obs1)
 fun_info(obs2)
 fun_info(obs3)
-fun_open(pdf = FALSE, width = 5, height = 5, rescale = "R")
+fun_open(pdf.disp = FALSE, width = 5, height = 5)
 
 
 
