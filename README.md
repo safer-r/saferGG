@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.0.0
+
+1) fun_slide() debugged and fun_test() improved
+
+
 ### v10.9.0
 
 1) no.overwrite argument of fun_report() replaced by overwrite
