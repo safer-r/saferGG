@@ -10240,7 +10240,7 @@ fun_gg_boxplot <- function(
                 data1$dot.color <- factor(data1$dot.color, labels = dot.color) # do not use labels = unique(dot.color). Otherwise, we can have green1 green2 when dot.color is c("green", "green")
             }else if(length(dot.color) > 1 & length(dot.color) == length(data1[, dot.categ])){
                 data1 <- data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
-            }else if(length(dot.color)== 1L & length(dot.categ.class.order) > 1){ # to deal with single color
+            }else if(length(dot.color)== 1L){ # to deal with single color. Warning: & length(dot.categ.class.order) > 1 removed because otherwise, the data1 is not with dot.color column when length(dot.categ.class.order) == 1
                 data1 <- data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
             }
             dot.color <- as.character(unique(data1$dot.color[order(data1[, dot.categ])])) # reorder the dot.color character vector
@@ -11367,7 +11367,6 @@ fun_gg_boxplot <- function(
     # end output
     # end main code
 }
-
 
 
 
