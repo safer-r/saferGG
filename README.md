@@ -170,6 +170,16 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.2.0
+
+1) fun_open() improved for parallelization
+
+
+### v11.1.0
+
+1) bug removed in fun_gg_boxplot when having a single color in dot.plot argument
+
+
 ### v11.0.0
 
 1) fun_slide() debugged and fun_test() improved
