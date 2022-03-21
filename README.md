@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.3.0
+
+1) fun_gg_scatter() now correctly plot log2 and log10 scales, as in fun_gg_boxplot()
+
+
 ### v11.2.0
 
 1) fun_open() improved for parallelization
