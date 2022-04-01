@@ -3921,7 +3921,7 @@ fun_slide <- function(
     #$value : the computed value by the fun argument in each window)
     # REQUIRED PACKAGES
     # lubridate
-    # parallel if parall arguemtn is TRUE (included in the R installation packages but not automatically loaded)
+    # parallel if parall argument is TRUE (included in the R installation packages but not automatically loaded)
     # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
     # fun_check()
     # fun_get_message
@@ -3931,7 +3931,7 @@ fun_slide <- function(
     # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "right") # effect of boundary argument
     # fun_slide(data = c(1:10, 100:110, 500), window.size = 5, step = 2, fun = length, boundary = "left", parall = TRUE) # effect of parall argument
     # DEBUGGING
-    # data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; parall = FALSE ; thread.nb = NULL ; print.count = 100 ; res.path = NULL ; lib.path = NULL ; verbose = TRUE ; env = NULL ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
+    # data = c(1:10, 100:110, 500) ; window.size = 5 ; step = 2 ; from = NULL ; to = NULL ; fun = length ; args = NULL ; boundary = "left" ; parall = FALSE ; thread.nb = NULL ; print.count = 100 ; res.path = NULL ; lib.path = NULL ; verbose = TRUE ; cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
     # data = lag.pos; window.size = window.size; step = step; fun = length; from = min(a$pos); to = max(a$pos)
     # function name
     function.name <- paste0(as.list(match.call(expand.dots = FALSE))[[1]], "()")
@@ -4029,7 +4029,6 @@ fun_slide <- function(
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }else{
         assign(env.name, new.env())
-        assign("data", data, envir = get(env.name, env = sys.nframe(), inherit = FALSE)) # data assigned in a new envir for test
     }
     # end new environment
     # management of NA arguments
@@ -4155,19 +4154,10 @@ fun_slide <- function(
     
     # test if lapply can be used
     if(parall == FALSE){
-        # new environment
-        env.name <- paste0("env", ini.time)
-        if(exists(env.name, where = -1)){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": ENVIRONMENT env.name ALREADY EXISTS. PLEASE RERUN ONCE")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }else{
-            assign(env.name, new.env())
-            assign("wind", wind, envir = get(env.name, env = sys.nframe(), inherit = FALSE))
-            assign("data", data, envir = get(env.name, env = sys.nframe(), inherit = FALSE))
-        }
-        # end new environment
+        assign("wind", wind, envir = get(env.name, env = sys.nframe(), inherit = FALSE)) # wind assigned in a new envir for test
+        assign("data", data, envir = get(env.name, env = sys.nframe(), inherit = FALSE)) # data assigned in a new envir for test
         tempo.message <- fun_get_message(data="lapply(X = wind$left, Y = data, FUN = function(X, Y){res <- get(left)(Y, X) ; return(res)})", kind = "error", header = FALSE, env = get(env.name, env = sys.nframe(), inherit = FALSE), print.no = FALSE) # no env = sys.nframe(), inherit = FALSE in get(left) because look for function in the classical scope
-        rm(env.name) # optional, because should disappear at the end of the function execution
+        # rm(env.name) # optional, because should disappear at the end of the function execution
     }else{
         tempo.message <- "ERROR" # with this, force the parallelization by default
     }
@@ -4233,7 +4223,6 @@ fun_slide <- function(
             res.path = res.path, 
             lib.path = lib.path, 
             verbose = verbose, 
-            env = env, 
             cute.path = cute.path, 
             fun = function(
                 x, 
@@ -4249,7 +4238,6 @@ fun_slide <- function(
                 res.path, 
                 lib.path, 
                 verbose, 
-                env, 
                 cute.path
             ){
                 # check again: very important because another R
@@ -9156,7 +9144,6 @@ fun_get_message <- function(
 
 
 
-
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
@@ -11377,11 +11364,8 @@ fun_gg_boxplot <- function(
 
 
 
-
-
 # add density
 # rasterise all kind: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
-# log not good: do not convert as in boxplot
 
 
 fun_gg_scatter <- function(
@@ -13740,6 +13724,12 @@ if(return == TRUE){
 # end output
 # end main code
 }
+
+
+
+
+
+
 
 
 

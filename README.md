@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.4.0
+
+1) fun_slide() now correctly works (argument env removed from the parallelization)
+
+
 ### v11.3.0
 
 1) fun_gg_scatter() now correctly plot log2 and log10 scales, as in fun_gg_boxplot()
