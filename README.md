@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.5.0
+
+1) modification of ggplot2::guides() in fun_gg_boxplot() and fun_gg_scatter() to do not have the warning message about FALSE replaced by "none"
+
+
 ### v11.4.0
 
 1) fun_slide() now correctly works (argument env removed from the parallelization)
