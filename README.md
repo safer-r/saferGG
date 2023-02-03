@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.6.0
+
+1) bug fixed in fun_comp_2d, since identical(data1, data2) returns FALSE if both are identical but data1 is typeof double and data2 is typeof integer
+
+
 ### v11.5.0
 
 1) modification of ggplot2::guides() in fun_gg_boxplot() and fun_gg_scatter() to do not have the warning message about FALSE replaced by "none"

@@ -84,7 +84,8 @@ Argument and return : leave it to me
 For packages :
 See mails with cuteathon
 
-
+For speed, use rbenchmark :
+https://towardsdatascience.com/r-is-slow-and-its-your-fault-2fcedacc7abb
 
 
 
