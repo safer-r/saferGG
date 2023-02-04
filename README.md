@@ -170,6 +170,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.7.0
+
+1) fun_comp_2d modified such that now it compares 2D objects without considering the type od the elements
+
+
 ### v11.6.0
 
 1) bug fixed in fun_comp_2d, since identical(data1, data2) returns FALSE if both are identical but data1 is typeof double and data2 is typeof integer

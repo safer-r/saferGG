@@ -1283,6 +1283,7 @@ fun_comp_2d <- function(data1, data2){
     # AIM
     # compare two 2D datasets of the same class or not. Check and report in a list if the 2 datasets have:
     # same class
+    # same type
     # common row names
     # common column names
     # same row number
@@ -1290,16 +1291,33 @@ fun_comp_2d <- function(data1, data2){
     # potential identical rows between the 2 datasets
     # potential identical columns between the 2 datasets
     # WARNINGS
-    # For data frames: content are compared after conversion of content into characters. This means that the comparison of the content of data frame, either row to row, or column to column, does not take into account the mode in the different columns. This concern the results in $any.id.row, $same.row.pos1, $same.row.pos2, $same.row.match1, $same.row.match2, $any.id.col, $same.row.col1, $same.row.col2, $same.col.match1, $same.col.match2 and $identical.content result
-    # "TOO BIG FOR EVALUATION" returned in $same.row.pos1, $same.row.pos2, $same.row.match1 and $same.row.match2 when nrow(data1) * nrow(data2) > 1e6 and $any.id.row remains NULL
-    # "TOO BIG FOR EVALUATION" returned in $same.row.col1, $same.row.col2, $same.col.match1 and $same.col.match2 when ncol(data1) * ncol(data2) > 1e6 and $any.id.col remains NULL
+    # The results in:
+    # $any.id.row,
+    # $same.row.pos1,
+    # $same.row.pos2,
+    # $same.row.match1,
+    # $same.row.match2
+    # $any.id.col, 
+    # $same.col.pos1,
+    # $same.col.pos2,
+    # $same.col.match1,
+    # $same.col.match2,
+    # $identical.content
+    # $identical
+    # does not take into account the mode and type (integer, double, character, etc.) of the matrix, data frame and table content. Indeed, comparisons are performed after conversion of the content into characters. This allows the 2 by 2 comparisons of data frame rows. However, the same mode and same type information is provided with the $same.mode and $same.type result, which is convenient when dealing with matrices and tables. But the different modes and types between column of a data frame is never considered. Thus, be careful when concluding that columns of two different data frames are the same, because the values can be identical but not the mode or type (integer in the first data frame column, and double in the second data frame column, for instance)
+    # "TOO BIG FOR EVALUATION" returned in $same.row.pos1, $same.row.pos2, $same.row.match1 and $same.row.match2 when nrow(data1) * nrow(data2) > 1e6 and $any.id.row is returned NULL
+    # "TOO BIG FOR EVALUATION" returned in $same.col.pos1, $ame.col.pos2, $same.col.match1 and $same.col.match2 when ncol(data1) * ncol(data2) > 1e6 and $any.id.col is returned NULL
     # ARGUMENTS
     # data1: matrix, data frame or table
     # data2: matrix, data frame or table
     # RETURN
     # a list containing:
-    # $same.class: logical. Are class identical ?
-    # $class: classes of the 2 datasets (NULL otherwise)
+    # $same.class: logical. Are classes identical ?
+    # $class: identical class of the 2 datasets (NULL otherwise)
+    # $same.mode: logical. Are modes identical ?
+    # $mode: identical mode of the 2 datasets (NULL otherwise)
+    # $same.type: logical. Are types identical ?
+    # $type: identical type of the 2 datasets (NULL otherwise)
     # $same.dim: logical. Are dimension identical ?
     # $dim: dimension of the 2 datasets (NULL otherwise)
     # $same.row.nb: logical. Are number of rows identical ?
@@ -1322,18 +1340,18 @@ fun_comp_2d <- function(data1, data2){
     # $same.col.names.match1: positions, in data2, of the column names that match the column names in data1, as given by match(data1, data2) (NULL otherwise)
     # $same.col.names.match2: positions, in data1, of the column names that match the column names in data2, as given by match(data1, data2) (NULL otherwise)
     # $common.col.names: common column names between data1 and data2 (can be a subset of $name or not). NULL if no common column names
-    # $any.id.row: logical. is there identical rows (not considering row names)? NULL if nrow(data1) * nrow(data2) > 1e10
-    # $same.row.pos1: positions, in data1, of the rows identical in data2 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
-    # $same.row.pos2: positions, in data2, of the rows identical in data1 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e10
-    # $same.row.match1: positions, in data2, of the rows that match the rows in data1, as given by match(data1, data2) (NULL otherwise)
-    # $same.row.match2: positions, in data1, of the rows that match the rows in data2, as given by match(data1, data2) (NULL otherwise)
-    # $any.id.col: logical. is there identical columns (not considering column names)? NULL if ncol(data1) * ncol(data2) > 1e10
-    # $same.col.pos1: position in data1 of the cols identical in data2 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
-    # $same.col.pos2: position in data2 of the cols identical in data1 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e10
-    # $same.col.match1: positions, in data2, of the columns that match the columns in data1, as given by match(data1, data2) (NULL otherwise)
-    # $same.row.match2: positions, in data1, of the columns that match the columns in data2, as given by match(data1, data2) (NULL otherwise)
-    # $identical.object: logical. Are objects identical (including row & column names)?
-    # $identical.content: logical. Are content objects identical (identical excluding row & column names)?
+    # $any.id.row: logical. is there identical rows (not considering row names)? NULL if nrow(data1) * nrow(data2) > 1e6. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.row.pos1: positions, in data1, of the rows identical in data2 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e6. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.row.pos2: positions, in data2, of the rows identical in data1 (not considering row names). Return "TOO BIG FOR EVALUATION" if nrow(data1) * nrow(data2) > 1e6. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.row.match1: positions, in data2, of the rows that match the rows in data1, as given by match(data1, data2) (NULL otherwise). Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.row.match2: positions, in data1, of the rows that match the rows in data2, as given by match(data1, data2) (NULL otherwise). Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $any.id.col: logical. is there identical columns (not considering column names)? NULL if ncol(data1) * ncol(data2) > 1e6. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.col.pos1: position in data1 of the cols identical in data2 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e6. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.col.pos2: position in data2 of the cols identical in data1 (not considering column names). Return "TOO BIG FOR EVALUATION" if ncol(data1) * ncol(data2) > 1e6. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.col.match1: positions, in data2, of the columns that match the columns in data1, as given by match(data1, data2) (NULL otherwise). Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $same.row.match2: positions, in data1, of the columns that match the columns in data2, as given by match(data1, data2) (NULL otherwise). Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character
+    # $identical.content: logical. Are contents identical ? Row and column names are not considered. Warning: class, mode and type are not considered (comparison of content is performed after conversion of the elements into character)
+    # $identical: logical. Idem as $identical.content but including row & column names
     # REQUIRED PACKAGES
     # none
     # REQUIRED FUNCTIONS FROM CUTE_LITTLE_R_FUNCTION
@@ -1343,16 +1361,15 @@ fun_comp_2d <- function(data1, data2){
     # obs1 = matrix(101:110, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(1:10, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
     # large matrices
     # obs1 = matrix(1:1e6, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; obs2 = matrix(as.integer((1:1e6)+1e6/5), ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; head(obs1) ; head(obs2) ; fun_comp_2d(obs1, obs2)
-    # WARNING: when comparing content (rows, columns, or total), double and integer data are considered as different -> double(1) != integer(1)
     # obs1 = matrix(1:1e6, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; obs2 = matrix((1:1e6)+1e6/5, ncol = 5, dimnames = list(NULL, LETTERS[1:5])) ; head(obs1) ; head(obs2) ; fun_comp_2d(obs1, obs2)
-    # Matrices: same row conten tand same row names
+    # Matrices: same row content and same row names
     # obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
-    # Matrices: same row content but not same row names -> works: same content is identified
+    # Matrices: same row content but not same row names
     # obs1 = matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5])) ; obs2 = matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("x", "z", "y"), c(LETTERS[1:2], "k", LETTERS[5:4]))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
     # obs1 = t(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = t(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1 ; obs2 ; fun_comp_2d(obs1, obs2)
     # Data frames: same row content and same row names, not same mode between columns
     # obs1 = as.data.frame(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = as.data.frame(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("a", "z", "b"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1[, 5] <- as.character(obs1[, 5]) ; obs2[, 5] <- as.character(obs2[, 5]) ; obs1 ; obs2 ; str(obs1) ; str(obs2) ; fun_comp_2d(obs1, obs2)
-    # Data frames: same row content but not same row names -> works: same content is identified
+    # Data frames: same row content but not same row names
     # obs1 = as.data.frame(matrix(1:10, byrow = TRUE, ncol = 5, dimnames = list(letters[1:2], LETTERS[1:5]))) ; obs2 = as.data.frame(matrix(c(1:5, 101:105, 6:10), byrow = TRUE, ncol = 5, dimnames = list(c("x", "z", "y"), c(LETTERS[1:2], "k", LETTERS[5:4])))) ; obs1[, 5] <- as.character(obs1[, 5]) ; obs2[, 5] <- as.character(obs2[, 5]) ; obs1 ; obs2 ; str(obs1) ; str(obs2) ; fun_comp_2d(obs1, obs2)
     # DEBUGGING
     # data1 = matrix(1:10, ncol = 5) ; data2 = matrix(1:10, ncol = 5) # for function debugging
@@ -1380,11 +1397,23 @@ fun_comp_2d <- function(data1, data2){
         tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A MATRIX, DATA FRAME OR TABLE")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
+    if(all(class(data1) == "table") & length(dim(data1)) == 1L){
+        tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION")
+        stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    }
+    if(all(class(data2) == "table") & length(dim(data2)) == 1L){
+        tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION")
+        stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    }
     # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) # activate this line and use the function to check arguments status
     # end argument checking
     # main code
     same.class <- NULL
     class <- NULL
+    same.mode <- NULL
+    mode <- NULL
+    same.type <- NULL
+    type <- NULL
     same.dim <- NULL
     dim <- NULL
     same.row.nb <- NULL
@@ -1419,15 +1448,59 @@ fun_comp_2d <- function(data1, data2){
     same.col.match2 <- NULL
     identical.object <- NULL
     identical.content <- NULL
-    if(identical(data1, data2) & (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
+    # structure
+    if( ! identical(class(data1), class(data2))){
+        same.class <- FALSE
+    }else{
         same.class <- TRUE
         class <- class(data1)
+    }
+    if( ! identical(mode(data1), mode(data2))){
+        same.mode<- FALSE
+    }else{
+        same.mode<- TRUE
+        mode <- mode(data1)
+    }
+    if( ! identical(typeof(data1), typeof(data2))){
+        same.type <- FALSE
+    }else{
+        same.type <- TRUE
+        type<- typeof(data1)
+    }
+    if( ! identical(dim(data1), dim(data2))){
+        same.dim <- FALSE
+    }else{
         same.dim <- TRUE
         dim <- dim(data1)
+    }
+    if( ! identical(nrow(data1), nrow(data2))){
+        same.row.nb <- FALSE
+    }else{
         same.row.nb <- TRUE
         row.nb <- nrow(data1)
+    }
+    if( ! identical(ncol(data1), ncol(data2))){
+        same.col.nb <- FALSE
+    }else{
         same.col.nb <- TRUE
         col.nb <- ncol(data1)
+    }
+    # end structure
+    # conversion of object into matrix and content into characters
+    if(all(class(data1) %in% c("data.frame"))){
+        data1 <- apply(data1, 2, function(x){gsub('\\s+', '',x)}) # convert into matrix of character whitout space in the character strings, since as.matrix use format() to convert into characters
+    }else if(all(class(data1) %in% c("table"))){
+        data1 <- matrix(data1, ncol = ncol(data1), dimnames = dimnames(data1))
+        mode(data1) <- "character"
+    }
+    if(all(class(data2) %in% c("data.frame"))){
+        data2 <- apply(data2, 2, function(x){gsub('\\s+', '',x)}) # convert into matrix of character whitout space in the character strings, since as.matrix use format() to convert into characters
+    }else if(all(class(data2) %in% c("table"))){
+        data2 <- matrix(data2, ncol = ncol(data2), dimnames = dimnames(data2))
+        mode(data2) <- "character"
+    }
+    # end conversion of object into matrix and content into characters
+    if(identical(data1, data2)){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
         same.row.name <- TRUE
         row.name <- dimnames(data1)[[1]]
         any.id.row.name <- TRUE
@@ -1458,41 +1531,6 @@ fun_comp_2d <- function(data1, data2){
         identical.content <- TRUE
     }else{
         identical.object <- FALSE
-        if(all(class(data1) == "table") & length(dim(data1)) == 1L){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }
-        if(all(class(data2) == "table") & length(dim(data2)) == 1L){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT IS A 1D TABLE. USE THE fun_comp_1d FUNCTION")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }
-        if( ! identical(class(data1), class(data2))){
-            same.class <- FALSE
-        }else if( ! (any(class(data1) %in% c("data.frame", "table")) | all(class(data1) %in% c("matrix", "array")))){ # before R4.0.0, it was  ! any(class(data1) %in% c("matrix", "data.frame", "table"))
-            tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 AND data2 ARGUMENTS MUST BE EITHER MATRIX, DATA FRAME OR TABLE")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }else{
-            same.class <- TRUE
-            class <- class(data1)
-        }
-        if( ! identical(dim(data1), dim(data2))){
-            same.dim <- FALSE
-        }else{
-            same.dim <- TRUE
-            dim <- dim(data1)
-        }
-        if( ! identical(nrow(data1), nrow(data2))){
-            same.row.nb <- FALSE
-        }else{
-            same.row.nb <- TRUE
-            row.nb <- nrow(data1)
-        }
-        if( ! identical(ncol(data1), ncol(data2))){
-            same.col.nb <- FALSE
-        }else{
-            same.col.nb <- TRUE
-            col.nb <- ncol(data1)
-        }
         # row and col names
         if(is.null(dimnames(data1)) & is.null(dimnames(data2))){
             same.row.name <- NULL # but already NULL
@@ -1575,166 +1613,69 @@ fun_comp_2d <- function(data1, data2){
             }
         }
         # identical row and col content
-        if(all(class(data1) == "table")){
-            data1 <- as.data.frame(matrix(data1, ncol = ncol(data1)), stringsAsFactors = FALSE) # conversion of table into data frame to facilitate inter class comparison
-        }else if(all(class(data1) %in% c("matrix", "array"))){
-            data1 <- as.data.frame(data1, stringsAsFactors = FALSE) # conversion of matrix into data frame to facilitate inter class comparison
-        }else if(all(class(data1) == "data.frame")){
-            # data1 <- data.frame(lapply(data1, as.character), stringsAsFactors = FALSE) # conversion of columns into characters
-        }
-        if(all(class(data2) == "table")){
-            data2 <- as.data.frame(matrix(data2, ncol = ncol(data2)), stringsAsFactors = FALSE) # conversion of table into data frame to facilitate inter class comparison
-        }else if(all(class(data2) %in% c("matrix", "array"))){
-            data2 <- as.data.frame(data2, stringsAsFactors = FALSE) # conversion of matrix into data frame to facilitate inter class comparison
-        }else if(all(class(data2) == "data.frame")){
-            # data2 <- data.frame(lapply(data2, as.character), stringsAsFactors = FALSE) # conversion of columns into characters
-        }
         row.names(data1) <- paste0("A", 1:nrow(data1))
         row.names(data2) <- paste0("A", 1:nrow(data2))
+        colnames(data1) <- paste0("A", 1:ncol(data1))
+        colnames(data2) <- paste0("A", 1:ncol(data2))
         if(same.col.nb == TRUE){ # because if not the same col nb, the row cannot be identical
-            if(all(sapply(data1, FUN = typeof) == "integer") & all(sapply(data2, FUN = typeof) == "integer") & as.double(nrow(data1)) * nrow(data2) <= 1e10){ # fast method for integers (thus not data frames). as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
-                tempo1 <- c(as.data.frame(t(data1), stringsAsFactors = FALSE)) # conversion into list. This work fast with only integers (because 32 bits)
-                tempo2 <- c(as.data.frame(t(data2), stringsAsFactors = FALSE)) # conversion into list. This work fast with only integers (because 32 bits)
+            if(as.double(nrow(obs1)) * as.double(nrow(obs2)) <= 1e6){
+                tempo1 <- c(as.data.frame(t(data1), stringsAsFactors = FALSE)) # conversion into list. This work fast with characters
+                tempo2 <- c(as.data.frame(t(data2), stringsAsFactors = FALSE)) # conversion into list. This work fast with characters
                 same.row.pos1 <- which(tempo1 %in% tempo2)
                 same.row.pos2 <- which(tempo2 %in% tempo1)
-                same.row.match1 <- match(tempo1, tempo2)
-                same.row.match2 <- match(tempo2, tempo1)
-            }else if(as.double(nrow(data1)) * nrow(data2) <= 1e6){ # as.double(nrow(data1)) to prevent integer overflow because R is 32 bits for integers
-                # inactivated because I would like to keep the mode during comparisons
-                # if(col.nb <= 10){ # if ncol is not to big, the t() should not be that long
-                # tempo1 <- c(as.data.frame(t(data1), stringsAsFactors = FALSE)) # conversion into list. This work fast with only integers (because 32 bits)
-                # tempo2 <- c(as.data.frame(t(data2), stringsAsFactors = FALSE)) # conversion into list. 
-                # same.row.pos1 <- which(tempo1 %in% tempo2)
-                # same.row.pos2 <- which(tempo2 %in% tempo1)
-                # same.row.match1 <- match(tempo1, tempo2)
-                # same.row.match2 <- match(tempo2, tempo1)
-                # }else{
-                # very long computation
-                same.row.pos1 <- logical(length = nrow(data1)) # FALSE by default
-                same.row.pos1[] <- FALSE # security
-                same.row.pos2 <- logical(length = nrow(data2)) # FALSE by default
-                same.row.pos2[] <- FALSE # security
-                same.row.match1 <- rep(NA, nrow(data1))
-                same.row.match2 <- rep(NA, nrow(data2))
-                for(i3 in 1:nrow(data1)){
-                    for(i4 in 1:nrow(data2)){
-                        tempo1 <- data1[i3, ]
-                        tempo2 <- data2[i4, ]
-                        rownames(tempo1) <- NULL # to have same row and column names
-                        colnames(tempo1) <- NULL # to have same row and column names
-                        rownames(tempo2) <- NULL # to have same row and column names
-                        colnames(tempo2) <- NULL # to have same row and column names
-                        if(identical(tempo1, tempo2)){
-                            same.row.pos1[i3] <- TRUE
-                            same.row.pos2[i4] <- TRUE
-                            same.row.match1[i3] <- i4
-                            same.row.match2[i4] <- i3
-                        }
-                    }
+                if((length(same.row.pos1) == 0L & length(same.row.pos2) == 0L) | all(is.na(same.row.pos1)) | all(is.na(same.row.pos2))){
+                    any.id.row <- FALSE
+                    same.row.pos1 <- NULL
+                    same.row.pos2 <- NULL
+                    # same.row.match1 <- NULL # already NULL above
+                    # same.row.match2 <- NULL # already NULL above
+                }else{
+                    any.id.row <- TRUE
+                    same.row.pos1 <- same.row.pos1[ ! is.na(same.row.pos1)]
+                    same.row.pos2 <- same.row.pos2[ ! is.na(same.row.pos2)]
+                    same.row.match1 <- match(tempo1, tempo2)
+                    same.row.match2 <- match(tempo2, tempo1)
                 }
-                same.row.pos1 <- which(same.row.pos1)
-                same.row.pos2 <- which(same.row.pos2)
-                # }
             }else{
                 same.row.pos1 <- "TOO BIG FOR EVALUATION"
                 same.row.pos2 <- "TOO BIG FOR EVALUATION"
                 same.row.match1 <- "TOO BIG FOR EVALUATION"
                 same.row.match2 <- "TOO BIG FOR EVALUATION"
             }
-            
-            names(same.row.pos1) <- NULL
-            names(same.row.pos2) <- NULL
-            if(all(is.na(same.row.pos1))){
-                same.row.pos1 <- NULL
-            }else{
-                same.row.pos1 <- same.row.pos1[ ! is.na(same.row.pos1)]
-                any.id.row <- TRUE
-            }
-            if(all(is.na(same.row.pos2))){
-                same.row.pos2 <- NULL
-            }else{
-                same.row.pos2 <- same.row.pos2[ ! is.na(same.row.pos2)]
-                any.id.row <- TRUE
-            }
-            if(is.null(same.row.pos1) & is.null(same.row.pos2)){
-                any.id.row <- FALSE
-            }else if(length(same.row.pos1) == 0L & length(same.row.pos2) == 0L){
-                any.id.row <- FALSE
-            }else if(all(same.row.pos1 == "TOO BIG FOR EVALUATION") & all(same.row.pos2 == "TOO BIG FOR EVALUATION")){
-                any.id.row <- NULL
-            }
         }else{
             any.id.row <- FALSE
             # same.row.pos1 and 2 remain NULL
         }
         if(same.row.nb == TRUE){ # because if not the same row nb, the col cannot be identical
-            if(as.double(ncol(data1)) * ncol(data2) <= 1e10){ # comparison of data frame columns is much easier than rows because no need to use t() before converting to list for fast comparison. as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
-                # if(all(sapply(data1, FUN = typeof) == "integer") & all(sapply(data2, FUN = typeof) == "integer") & as.double(ncol(data1)) * ncol(data2) <= 1e10){ # fast method for integers (thus not data frames). as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
-                tempo1 <- c(data1)
-                tempo2 <- c(data2)
+            if(as.double(ncol(data1)) * as.double(ncol(data2)) <= 1e6){
+                tempo1 <- c(as.data.frame(data1, stringsAsFactors = FALSE))
+                tempo2 <- c(as.data.frame(data2, stringsAsFactors = FALSE))
                 same.col.pos1 <- which(tempo1 %in% tempo2)
                 same.col.pos2 <- which(tempo2 %in% tempo1)
-                same.col.match1 <- match(tempo1, tempo2)
-                same.col.match2 <- match(tempo2, tempo1)
-                # }else if(as.double(ncol(data1)) * ncol(data2) <= 1e6){ # as.double(ncol(data1)) to prevent integer overflow because R is 32 bits for integers
-                # same.col.pos1 <- logical(length = ncol(data1)) # FALSE by default
-                # same.col.pos1[] <- FALSE # security
-                # same.col.pos2 <- logical(length = ncol(data2)) # FALSE by default
-                # same.col.pos2[] <- FALSE # security
-                # same.col.match1 <- rep(NA, ncol(data1))
-                # same.col.match2 <- rep(NA, ncol(data2))
-                # for(i3 in 1:ncol(data1)){
-                # for(i4 in 1:ncol(data2)){
-                # if(identical(data1[ , i3], data2[ , i4])){
-                # same.col.pos1[i3] <- TRUE
-                # same.col.pos2[i4] <- TRUE
-                # same.col.match1[i3] <- i4
-                # same.col.match2[i4] <- i3
-                # }
-                # }
-                # }
-                # same.col.pos1 <- which(same.col.pos1)
-                # same.col.pos2 <- which(same.col.pos2)
+                if((length(same.col.pos1) == 0L & length(same.col.pos2) == 0L) | all(is.na(same.col.pos1)) | all(is.na(same.col.pos2))){
+                    any.id.col <- FALSE
+                    same.col.pos1 <- NULL
+                    same.col.pos2 <- NULL
+                    # same.col.match1 <- NULL # already NULL above
+                    # same.col.match2 <- NULL # already NULL above
+                }else{
+                    any.id.col <- TRUE
+                    same.col.pos1 <- same.col.pos1[ ! is.na(same.col.pos1)]
+                    same.col.pos2 <- same.col.pos2[ ! is.na(same.col.pos2)]
+                    same.col.match1 <- match(tempo1, tempo2)
+                    same.col.match2 <- match(tempo2, tempo1)
+                }
             }else{
                 same.col.pos1 <- "TOO BIG FOR EVALUATION"
                 same.col.pos2 <- "TOO BIG FOR EVALUATION"
-            }
-            names(same.col.pos1) <- NULL
-            names(same.col.pos2) <- NULL
-            if(all(is.na(same.col.pos1))){
-                same.col.pos1 <- NULL
-            }else{
-                same.col.pos1 <- same.col.pos1[ ! is.na(same.col.pos1)]
-                any.id.col <- TRUE
-            }
-            if(all(is.na(same.col.pos2))){
-                same.col.pos2 <- NULL
-            }else{
-                same.col.pos2 <- same.col.pos2[ ! is.na(same.col.pos2)]
-                any.id.col <- TRUE
-            }
-            if(is.null(same.col.pos1) & is.null(same.col.pos2)){
-                any.id.col <- FALSE
-            }else if(length(same.col.pos1) == 0L & length(same.col.pos2) == 0L){
-                any.id.col <- FALSE
-            }else if(all(same.col.pos1 == "TOO BIG FOR EVALUATION") & all(same.col.pos2 == "TOO BIG FOR EVALUATION")){
-                any.id.col <- NULL
+                same.col.match1 <- "TOO BIG FOR EVALUATION"
+                same.col.match2 <- "TOO BIG FOR EVALUATION"
             }
         }else{
             any.id.col <- FALSE
             # same.col.pos1 and 2 remain NULL
         }
         if(same.dim == TRUE){
-            # names(data1) <- NULL
-            # row.names(data1) <- NULL
-            # names(data2) <- NULL
-            # row.names(data2) <- NULL
-            # if(identical(data1, data2)){
-            # identical.content <- TRUE
-            # }else{
-            # identical.content <- FALSE
-            # }
-            # code above inactivated because integer dataset are sometimes imported into R as integer or as double, which is different for identical(data1, data2)
             if(all(data1 == data2)){
                 identical.content <- TRUE
             }else{
@@ -1744,7 +1685,7 @@ fun_comp_2d <- function(data1, data2){
             identical.content <- FALSE
         }
     }
-    output <- list(same.class = same.class, class = class, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.names.pos1 = same.row.names.pos1, same.row.names.pos2 = same.row.names.pos2, same.row.names.match1 = same.row.names.match1, same.row.names.match2 = same.row.names.match2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.names.pos1 = same.col.names.pos1, same.col.names.pos2 = same.col.names.pos2, same.col.names.match1 = same.col.names.match1, same.col.names.match2 = same.col.names.match2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, same.row.match1 = same.row.match1, same.row.match2 = same.row.match2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, same.col.match1 = same.col.match1, same.col.match2 = same.col.match2, identical.object = identical.object, identical.content = identical.content)
+    output <- list(same.class = same.class, class = class, same.mode = same.mode, mode = mode, same.type = same.type , type = type, same.dim = same.dim, dim = dim, same.row.nb = same.row.nb, row.nb = row.nb, same.col.nb = same.col.nb , col.nb = col.nb, same.row.name = same.row.name, row.name = row.name, any.id.row.name = any.id.row.name, same.row.names.pos1 = same.row.names.pos1, same.row.names.pos2 = same.row.names.pos2, same.row.names.match1 = same.row.names.match1, same.row.names.match2 = same.row.names.match2, common.row.names = common.row.names, same.col.name = same.col.name, col.name = col.name,any.id.col.name = any.id.col.name, same.col.names.pos1 = same.col.names.pos1, same.col.names.pos2 = same.col.names.pos2, same.col.names.match1 = same.col.names.match1, same.col.names.match2 = same.col.names.match2, common.col.names = common.col.names, any.id.row = any.id.row, same.row.pos1 = same.row.pos1, same.row.pos2 = same.row.pos2, same.row.match1 = same.row.match1, same.row.match2 = same.row.match2, any.id.col = any.id.col, same.col.pos1 = same.col.pos1, same.col.pos2 = same.col.pos2, same.col.match1 = same.col.match1, same.col.match2 = same.col.match2, identical.content = identical.content, identical = identical.object)
     return(output)
 }
 
@@ -9153,8 +9094,6 @@ fun_get_message <- function(
 
 
 
-
-
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
@@ -11373,6 +11312,8 @@ fun_gg_boxplot <- function(
     # end output
     # end main code
 }
+
+
 
 
 
@@ -13737,10 +13678,6 @@ if(return == TRUE){
 # end output
 # end main code
 }
-
-
-
-
 
 
 
