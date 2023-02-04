@@ -1618,7 +1618,7 @@ fun_comp_2d <- function(data1, data2){
         colnames(data1) <- paste0("A", 1:ncol(data1))
         colnames(data2) <- paste0("A", 1:ncol(data2))
         if(same.col.nb == TRUE){ # because if not the same col nb, the row cannot be identical
-            if(as.double(nrow(obs1)) * as.double(nrow(obs2)) <= 1e6){
+            if(as.double(nrow(data1)) * as.double(nrow(data2)) <= 1e6){
                 tempo1 <- c(as.data.frame(t(data1), stringsAsFactors = FALSE)) # conversion into list. This work fast with characters
                 tempo2 <- c(as.data.frame(t(data2), stringsAsFactors = FALSE)) # conversion into list. This work fast with characters
                 same.row.pos1 <- which(tempo1 %in% tempo2)
