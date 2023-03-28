@@ -170,6 +170,16 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.9.0
+
+Argument inf.values added in the check() function
+
+
+### v11.8.0
+
+1) fun_comp_2d debugged
+
+
 ### v11.7.0
 
 1) fun_comp_2d modified such that now it compares 2D objects without considering the type od the elements

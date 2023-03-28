@@ -109,6 +109,7 @@ fun_check <- function(
     all.options.in.data = FALSE, 
     na.contain = FALSE, 
     neg.values = TRUE, 
+    inf.values = TRUE, 
     print = FALSE, 
     data.name = NULL, 
     fun.name = NULL
@@ -135,6 +136,7 @@ fun_check <- function(
     # all.options.in.data: logical. If TRUE, all of the options must be present at least once in the data argument, and nothing else. If FALSE, some or all of the options must be present in the data argument, and nothing else. Ignored if options is NULL
     # na.contain: logical. Can the data argument contain NA?
     # neg.values: logical. Are negative numeric values authorized? Warning: the default setting is TRUE, meaning that, in that case, no check is performed for the presence of negative values. The neg.values argument is activated only when set to FALSE. In addition, (1) neg.values = FALSE can only be used when class, typeof or mode arguments are not NULL, otherwise return an error message, (2) the presence of negative values is not checked with neg.values = FALSE if the tested object is a factor and the following checking message is returned "OBJECT MUST BE MADE OF NON NEGATIVE VALUES BUT IS A FACTOR"
+    # inf.values: logical. Are infinite numeric values authorized (Inf or -Inf)? Identical remarks as for the neg.values argument
     # print: logical. Print the message if $problem is TRUE? Warning: set by default to FALSE, which facilitates the control of the checking message output when using fun_check() inside functions. See the example section
     # data.name: character string indicating the name of the object to test. If NULL, use what is assigned to the data argument for the returned message
     # fun.name: character string indicating the name of the function checked (i.e., when fun_check() is used to check the arguments of this function). If non-null, the value of fun.name will be added into the message returned by fun_check()
@@ -151,7 +153,7 @@ fun_check <- function(
     # test <- matrix(1:3) ; fun_check(data = test, print = TRUE, class = "vector", mode = "numeric")
     # see http
     # DEBUGGING
-    # data = mean ; class = NULL ; typeof = NULL ; mode = NULL ; length = NULL ; prop = FALSE ; double.as.integer.allowed = FALSE ; options = "a" ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; print = TRUE ; data.name = NULL ; fun.name = NULL
+    # data = mean ; class = NULL ; typeof = NULL ; mode = NULL ; length = NULL ; prop = FALSE ; double.as.integer.allowed = FALSE ; options = "a" ; all.options.in.data = FALSE ; na.contain = FALSE ; neg.values = TRUE ; inf.values = TRUE ; print = TRUE ; data.name = NULL ; fun.name = NULL
     # function name
     # no used in this function for the error message, to avoid env colliding
     # end function name
@@ -224,6 +226,7 @@ fun_check <- function(
         "all.options.in.data", 
         "na.contain", 
         "neg.values", 
+        "inf.values", 
         "print", 
         "data.name", 
         "fun.name"
@@ -239,6 +242,7 @@ fun_check <- function(
         base::class(all.options.in.data), 
         base::class(na.contain), 
         base::class(neg.values), 
+        base::class(inf.values), 
         base::class(print), 
         base::class(data.name), 
         base::class(fun.name)
@@ -253,8 +257,8 @@ fun_check <- function(
     }
     # end management of special classes
     # management of NA arguments
-    if(any(is.na(data.name)) | any(is.na(class)) | any(is.na(typeof)) | any(is.na(mode)) | any(is.na(length)) | any(is.na(prop)) | any(is.na(double.as.integer.allowed)) | any(is.na(all.options.in.data)) | any(is.na(na.contain)) | any(is.na(neg.values)) | any(is.na(print)) | any(is.na(fun.name))){ # normally no NA with is.na()
-        tempo <- c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(print)), any(is.na(fun.name)))]
+    if(any(is.na(data.name)) | any(is.na(class)) | any(is.na(typeof)) | any(is.na(mode)) | any(is.na(length)) | any(is.na(prop)) | any(is.na(double.as.integer.allowed)) | any(is.na(all.options.in.data)) | any(is.na(na.contain)) | any(is.na(neg.values)) | any(is.na(inf.values)) | any(is.na(print)) | any(is.na(fun.name))){ # normally no NA with is.na()
+        tempo <- c("data.name", "class", "typeof", "mode", "length", "prop", "double.as.integer.allowed", "all.options.in.data", "na.contain", "neg.values", "inf.values", "print", "fun.name")[c(any(is.na(data.name)), any(is.na(class)), any(is.na(typeof)), any(is.na(mode)), any(is.na(length)), any(is.na(prop)), any(is.na(double.as.integer.allowed)), any(is.na(all.options.in.data)), any(is.na(na.contain)), any(is.na(neg.values)), any(is.na(inf.values)), any(is.na(print)), any(is.na(fun.name)))]
         tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": NO ARGUMENT EXCEPT data AND options CAN HAVE NA VALUES\nPROBLEMATIC ARGUMENT", ifelse(length(tempo) > 1, "S ARE", " IS"), ":\n", paste(tempo, collapse = "\n")) # normally no NA with is.na()
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
@@ -266,6 +270,7 @@ fun_check <- function(
         "all.options.in.data", 
         "na.contain",
         "neg.values",
+        "inf.values",
         "print"
     )
     tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
@@ -304,6 +309,14 @@ fun_check <- function(
         tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE neg.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
+    if( ! (all(base::class(inf.values) == "logical") & base::length(inf.values) == 1L)){ # all() without na.rm -> ok because class(NA) is "logical" 
+        tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE inf.values ARGUMENT MUST BE TRUE OR FALSE ONLY")
+        stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    }
+    if(inf.values == FALSE & is.null(class) & is.null(typeof) & is.null(mode)){
+        tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": THE inf.values ARGUMENT CANNOT BE SWITCHED TO FALSE IF class, typeof AND mode ARGUMENTS ARE NULL")
+        stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    }
     if( ! is.null(class)){ # may add "formula" and "Date" as in https://renenyffenegger.ch/notes/development/languages/R/functions/class
         if( ! all(class %in% c("vector", "logical", "integer", "numeric", "complex", "character", "matrix", "array", "data.frame", "list", "factor", "table", "expression", "name", "symbol", "function", "uneval", "environment", "ggplot2", "ggplot_built", "call") & base::length(class) == 1L)){ # length == 1L here because of class(matrix()) since R4.0.0  # all() without na.rm -> ok because class cannot be NA (tested above)
             tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT MUST BE ONE OF THESE VALUE:\n\"vector\", \"logical\", \"integer\", \"numeric\", \"complex\", \"character\", \"matrix\", \"array\", \"data.frame\", \"list\", \"factor\", \"table\", \"expression\", \"name\", \"symbol\", \"function\", \"environment\", \"ggplot2\", \"ggplot_built\", \"call\"")
@@ -311,6 +324,10 @@ fun_check <- function(
         }
         if(neg.values == FALSE & ! any(class %in% c("vector", "numeric", "integer", "matrix", "array", "data.frame", "table"))){ # no need of na.rm = TRUE for any() because %in% does not output NA
             tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"integer\", \"matrix\", \"array\", \"data.frame\", \"table\" IF neg.values ARGUMENT IS SWITCHED TO FALSE")
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
+        if(inf.values == FALSE & ! any(class %in% c("vector", "numeric", "matrix", "array", "data.frame", "table"))){ # no need of na.rm = TRUE for any() because %in% does not output NA
+            tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": class ARGUMENT CANNOT BE OTHER THAN \"vector\", \"numeric\", \"matrix\", \"array\", \"data.frame\", \"table\" IF inf.values ARGUMENT IS SWITCHED TO FALSE. \"integer IS NOT ALLOWED BECAUSE IFINITE VALUES ARE NOT INTEGERS\"")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }
@@ -323,6 +340,10 @@ fun_check <- function(
             tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": typeof ARGUMENT CANNOT BE OTHER THAN \"double\" OR \"integer\" IF neg.values ARGUMENT IS SWITCHED TO FALSE")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
+        if(inf.values == FALSE & typeof != "double"){
+            tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": typeof ARGUMENT CANNOT BE OTHER THAN \"double\" IF inf.values ARGUMENT IS SWITCHED TO FALSE. \"integer IS NOT ALLOWED BECAUSE IFINITE VALUES ARE NOT INTEGERS\"")
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
     }
     if( ! is.null(mode)){ # all the types are here: https://renenyffenegger.ch/notes/development/languages/R/functions/typeof
         if( ! (all(mode %in% c("logical", "numeric", "complex", "character", "list", "expression", "name", "symbol", "function", "environment", "S4", "call")) & base::length(mode) == 1L)){ # all() without na.rm -> ok because mode cannot be NA (tested above)
@@ -331,6 +352,10 @@ fun_check <- function(
         }
         if(neg.values == FALSE & mode != "numeric"){
             tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF neg.values ARGUMENT IS SWITCHED TO FALSE")
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
+        if(inf.values == FALSE & mode != "numeric"){
+            tempo.cat <- paste0("ERROR IN fun_check()", ifelse(is.null(fun.name), "", paste0(" INSIDE ", fun.name)), ": mode ARGUMENT CANNOT BE OTHER THAN \"numeric\" IF inf.values ARGUMENT IS SWITCHED TO FALSE")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }
@@ -509,6 +534,25 @@ if(neg.values == FALSE & all(base::mode(data) %in% "numeric") & ! any(base::clas
         text <- paste0(text, " AND ")
     }
     text <- paste0(text, "THE ", data.name, " OBJECT MUST BE MADE OF NON NEGATIVE VALUES BUT IS ", ifelse(any(base::class(data) %in% "factor"), "A FACTOR", "NOT EVEN MODE NUMERIC"))
+}
+if(inf.values == FALSE & all(base::typeof(data) %in% "double") & ! any(base::class(data) %in% "factor")){ # no need of na.rm = TRUE for all() because %in% does not output NA
+    if(any(is.infinite(data), na.rm = TRUE)){ # Warning: na.rm = TRUE required here for any()
+        problem <- TRUE
+        if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
+            text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
+        }else{
+            text <- paste0(text, " AND ")
+        }
+        text <- paste0(text, "THE ", data.name, " OBJECT MUST BE MADE OF NON INFINITE NUMERIC VALUES")
+    }
+}else if(inf.values == FALSE){
+    problem <- TRUE
+    if(identical(text, paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT"))){
+        text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": ")
+    }else{
+        text <- paste0(text, " AND ")
+    }
+    text <- paste0(text, "THE ", data.name, " OBJECT MUST BE MADE OF NON INFINITE VALUES BUT IS ", ifelse(any(base::class(data) %in% "factor"), "A FACTOR", "NOT EVEN TYPE DOUBLE"))
 }
 if(print == TRUE & problem == TRUE){
     cat(paste0("\n\n================\n\n", text, "\n\n================\n\n"))
@@ -9094,13 +9138,17 @@ fun_get_message <- function(
 
 
 
+
+
+
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
 # add dot.shape ? See with available aesthetic layers
 # rasterise: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
 # add horizontal argument and deal any conflict with vertical argument. Start with horizontal = NULL as default. If ! is.null() -> convert vertical if required
-# time for excecution : microbenchmark package. See also in RStudio time per line of code
+# time for excecution : microbenchmark package. See also in RStudio time per line of code. See also https://stackoverflow.com/questions/7561362/what-can-cause-a-program-to-run-much-faster-the-second-time
+
 
 fun_gg_boxplot <- function(
     data1, 
@@ -11312,8 +11360,6 @@ fun_gg_boxplot <- function(
     # end output
     # end main code
 }
-
-
 
 
 
@@ -13678,6 +13724,10 @@ if(return == TRUE){
 # end output
 # end main code
 }
+
+
+
+
 
 
 
