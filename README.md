@@ -97,6 +97,7 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 | **fun_gg_point_rast()** | ggplot2 raster scatterplot layer |
 | **fun_gg_boxplot()** | ggplot2 boxplot + dots + means + median/mean values |
 | **fun_gg_scatter()** | ggplot2 scatterplot + lines (up to 6 overlays totally) |
+| **fun_gg_donut()** | ggplot2 donut |
 | **fun_gg_empty_graph()** | generate an empty graphic device with text in the middle |
 
 | Graphic extraction | |
@@ -172,7 +173,9 @@ Gitlab developers
 
 ### v11.9.0
 
-Argument inf.values added in the check() function
+1) Argument inf.values added in the check() function
+
+2) gg_donut added
 
 
 ### v11.8.0

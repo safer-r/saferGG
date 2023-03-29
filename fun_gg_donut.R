@@ -7,17 +7,18 @@ fun_gg_donut <- function(
     fill.palette = NULL,
     fill.color = NULL, 
     hole.size = 0.5, 
-    hole.text.size = 12, 
+    hole.text.size = 14, 
     border.color = "gray50", 
-    border.size = 12, 
+    border.size = 0.2, 
     title = "", 
     title.text.size = 12, 
     annotation = NULL,
+    annotation.distance = 0,
     annotation.size = 3,
     annotation.force = 1,
     annotation.force.pull = 100,
     legend.show = TRUE, 
-    legend.width = 0.5, 
+    legend.width = 0.25, 
     legend.name = NULL, 
     legend.limit = NULL, 
     legend.add.prop = FALSE,
@@ -30,7 +31,7 @@ fun_gg_donut <- function(
     lib.path = NULL
 ){
     # AIM
-    # Plot a ggplot2 donut using contingency data, with frequencies sorted from the hisgest to the lowest, starting at the top and turning clockwise
+    # Plot a ggplot2 donut using contingency data, systematically in the decreasing order of frequencies, starting at the top and turning clockwise
     # For ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
     # WARNINGS
     # Rows containing NA in data1[, c(freq, categ)] will be removed before processing, with a warning (see below)
@@ -40,29 +41,30 @@ fun_gg_donut <- function(
     # freq: single character string of the data1 column name of the frequencies
     # categ: single character string of the data1 column name of categories (qualitative variable)
     # fill.palette: single character string of a palette name (see ?ggplot2::scale_fill_brewer() for the list).Ignored if fill.color is not NULL
-    # fill.color: either (1) NULL, or (2) a vector of character strings or integers of same length as the number of classes in categ. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (see ?palette() in R). The order of the elements will be used according to the frequency values, from highest to lowest. An easy way to use this argument is to sort data1 according to the frequencies values, add a color column with the corresponding desired colors and use the content of this column as values of fill.color. If color is NULL and fill.palette is NULL, default colors of ggplot2 are used. If color is not NULL, it overrides fill.palette
+    # fill.color: either (1) NULL, or (2) a vector of character strings or integers of same length as the number of classes in categ. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (according to the ggplot2 palette). The order of the elements will be used according to the frequency values, from highest to lowest. An easy way to use this argument is to sort data1 according to the frequencies values, add a color column with the corresponding desired colors and use the content of this column as values of fill.color. If color is NULL and fill.palette is NULL, default colors of ggplot2 are used. If color is not NULL, it overrides fill.palette
     # hole.size: single positive proportion of donut central hole, 0 meaning no hole and 1 no donut
     # hole.text.size: single positive numeric value of the title font size in mm
-    # border.color: a single character string or integer. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (see ?palette() in R)
+    # border.color: a single character string or integer. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (according to the ggplot2 palette)
     # border.size: single numeric value of border tickness in mm. Write zero for no dot border
     # title: single character string of the graph title
     # title.text.size: single numeric value of the title font size in mm
     # annotation: single character string of the data1 column name of annotations. Values inside this column will be displayed over the corresponding slices of the donut. Write NULL if not required
+    # annotation.distance: single positive numeric value of the distance from the center of the slice. 0 means center of the slice, 0.5 means at the edge. Above 0.5, the donut will be reduced to make place for the annotation. Ignored if annotation is NULL
     # annotation.size: single positive numeric value of the annotation font size in mm. Ignored if annotation is NULL
     # annotation.force: single positive numeric value of the force of repulsion between overlapping text labels. See ?ggrepel::geom_text_repel() in R. Ignored if annotation is NULL
     # annotation.force.pull: single positive numeric value of the force of attraction between a text label and its corresponding data point. See ?ggrepel::geom_text_repel() in R. Ignored if annotation is NULL
     # legend.show: logical (either TRUE or FALSE). Show legend? 
     # legend.width: single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend
-    # legend.name: character string of the legend title. If legend.name is NULL then legend.name is the value of the categ argument
+    # legend.name: character string of the legend title. If legend.name is NULL then legend.name is the value of the categ argument. Write legend.name = "" to remove the legend
     # legend.limit: single positive proportion of the classes displayed in the legend for which the corresponding proportion is over legend.limit. Write NULL to display all the classes
     # legend.add.prop: logical (either TRUE or FALSE). add the proportion after the class names in the legend ?
     # add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
     # WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
-    # If the character string contains the "ggplot2::theme" string, then the article argument of fun_gg_scatter() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x.angle (check all the arguments)
+    # If the character string contains the "ggplot2::theme" string, then the article argument of fun_gg_donut() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x.angle (check all the arguments)
     # Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
-    # WARNING: the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the fun_gg_scatter() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
+    # WARNING: the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the fun_gg_donut() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
     # return: logical (either TRUE or FALSE). Return the graph parameters?
-    # return.ggplot: logical (either TRUE or FALSE). Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the fun_gg_scatter() function (e.g., a <- fun_gg_scatter()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
+    # return.ggplot: logical (either TRUE or FALSE). Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the fun_gg_donut() function (e.g., a <- fun_gg_donut()) into something if the return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
     # return.gtable: logical (either TRUE or FALSE). Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details
     # plot: logical (either TRUE or FALSE). Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
     # warn.print: logical (either TRUE or FALSE). Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
@@ -76,7 +78,7 @@ fun_gg_donut <- function(
     # $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0
     # $axes: the x-axis and y-axis info
     # $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE
-    # $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non-null $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
+    # $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Warning: the legend is not in $ggplot as it is in a separated grob (use $gtable to get it). Of note, a non-null $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
     # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
     # REQUIRED PACKAGES
     # ggplot2
@@ -90,9 +92,9 @@ fun_gg_donut <- function(
     # fun_pack()
     # fun_check()
     # EXAMPLES
-    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = fun_gg_palette(4), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
+    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
     # DEBUGGING
-    #
+    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
     # function name
     function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
     arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -150,12 +152,17 @@ fun_gg_donut <- function(
         tempo2 <- fun_check(data = fill.color, class = "factor", na.contain = TRUE, fun.name = function.name)
         tempo3 <- fun_check(data = fill.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, neg.values = FALSE, fun.name = function.name) # not need to test inf with integers
         if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": fill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) POSITIVE INTEGER VALUES")
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) POSITIVE INTEGER VALUES")
             text.check <- c(text.check, tempo.cat)
             arg.check <- c(arg.check, TRUE)
             checked.arg.names <- c(checked.arg.names, tempo1$object.name)
-        }else if(tempo3$problem == FALSE & ! is.finite(fill.color)){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": fill.color ARGUMENT CANNOT CONTAIN Inf VALUES AMONG POSITIVE INTEGER VALUES")
+        }else if(tempo3$problem == FALSE & any(is.infinite(fill.color))){ # is.infinite() deals with NA as FALSE
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT CANNOT CONTAIN Inf VALUES AMONG POSITIVE INTEGER VALUES")
+            text.check <- c(text.check, tempo.cat)
+            arg.check <- c(arg.check, TRUE)
+            checked.arg.names <- c(checked.arg.names, tempo1$object.name)
+        }else if(tempo3$problem == FALSE & any(fill.color == 0, na.rm = TRUE)){
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT CANNOT CONTAIN 0 AMONG POSITIVE INTEGER VALUES")
             text.check <- c(text.check, tempo.cat)
             arg.check <- c(arg.check, TRUE)
             checked.arg.names <- c(checked.arg.names, tempo1$object.name)
@@ -166,7 +173,7 @@ fun_gg_donut <- function(
     tempo1 <- fun_check(data = border.color, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name)
     tempo2 <- fun_check(data = border.color, class = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, na.contain = FALSE, length = 1, fun.name = function.name) # not need to test inf with integers
     if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-        tempo.cat <- paste0("ERROR IN ", function.name, ": border.color ARGUMENT MUST BE A SINGLE CHARACTER STRING OR POSITIVE INTEGER")
+        tempo.cat <- paste0("ERROR IN ", function.name, "\nborder.color ARGUMENT MUST BE A SINGLE CHARACTER STRING OR POSITIVE INTEGER")
         text.check <- c(text.check, tempo.cat)
         arg.check <- c(arg.check, TRUE)
         checked.arg.names <- c(checked.arg.names, tempo1$object.name)
@@ -176,16 +183,15 @@ fun_gg_donut <- function(
     tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
     if( ! is.null(annotation)){
             tempo <- fun_check(data = annotation, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+            tempo <- fun_check(data = annotation.distance, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+            tempo <- fun_check(data = annotation.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+            tempo <- fun_check(data = annotation.force, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+            tempo <- fun_check(data = annotation.force.pull, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
     }else{
         # no fun_check test here, it is just for checked.arg.names
         tempo <- fun_check(data = annotation, class = "vector")
         checked.arg.names <- c(checked.arg.names, tempo$object.name)
     }
-    tempo <- fun_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- fun_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, inf.values = FALSE, fun.name = function.name) ; eval(ee)
-    tempo <- fun_check(data = annotation.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- fun_check(data = annotation.force, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- fun_check(data = annotation.force.pull, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
     tempo <- fun_check(data = legend.show, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
     if( ! is.null(legend.width)){
         tempo <- fun_check(data = legend.width, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -238,7 +244,7 @@ fun_gg_donut <- function(
     tempo.arg <- names(arg.user.setting) # values provided by the user
     tempo.log <- suppressWarnings(sapply(lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.na), FUN = any)) & lapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = length)== 1L # no argument provided by the user can be just NA
     if(any(tempo.log) == TRUE){
-        tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE JUST NA")
+        tempo.cat <- paste0("ERROR IN ", function.name, "\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE JUST NA")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of NA arguments
@@ -256,6 +262,7 @@ fun_gg_donut <- function(
         "title", 
         "title.text.size", 
         # "annotation", # inactivated because can be null
+        "annotation.distance", 
         "annotation.size", 
         "annotation.force", 
         "annotation.force.pull", 
@@ -274,7 +281,7 @@ fun_gg_donut <- function(
     )
     tempo.log <- sapply(lapply(tempo.arg, FUN = get, env = sys.nframe(), inherit = FALSE), FUN = is.null)
     if(any(tempo.log) == TRUE){
-        tempo.cat <- paste0("ERROR IN ", function.name, ":\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+        tempo.cat <- paste0("ERROR IN ", function.name, "\n", ifelse(sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of NULL arguments
@@ -291,16 +298,16 @@ fun_gg_donut <- function(
     removed.rows <- data.frame(stringsAsFactors = FALSE)
     data1.ini <- data1 # strictly identical to data1
     if( ! freq %in% names(data1)){
-        tempo.cat <- paste0("ERROR IN ", function.name, ": freq ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT")
+        tempo.cat <- paste0("ERROR IN ", function.name, "\nfreq ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
     }else{
         if(all(is.na(data1[ , freq]) | is.infinite(data1[ , freq]))){
-            tempo.cat <- paste0("ERROR IN ", function.name, ":\nTHE freq COLUMN OF data1 CANNOT BE JUST NA OR Inf")
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE freq COLUMN OF data1 CANNOT BE JUST NA OR Inf")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
         tempo <- fun_check(data = data1[ , freq], mode = "numeric", neg.values = FALSE, fun.name = function.name)
         if(tempo$problem == TRUE){
-            tempo.cat <- paste0("ERROR IN ", function.name, ":\n", tempo$text)
+            tempo.cat <- paste0("ERROR IN ", function.name, "\n", tempo$text)
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
         # Inf and NA removal
@@ -328,17 +335,17 @@ fun_gg_donut <- function(
     }
 
     if( ! categ %in% names(data1)){
-        tempo.cat <- paste0("ERROR IN ", function.name, ": categ ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT")
+        tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
     }else{
         if(all(is.na(data1[ , categ]))){
-            tempo.cat <- paste0("ERROR IN ", function.name, ":\nTHE categ COLUMN OF data1 CANNOT BE JUST NA")
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE categ COLUMN OF data1 CANNOT BE JUST NA")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
         tempo1 <- fun_check(data = categ, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
         tempo2 <- fun_check(data = categ, class = "factor", na.contain = TRUE, fun.name = function.name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-            tempo.cat <- paste0("ERROR IN ", function.name, ":\nTHE categ COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"")
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE categ COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
         # NA removal
@@ -353,24 +360,24 @@ fun_gg_donut <- function(
         }
         # end Inf and NA removal
         if(any(duplicated(data1[, categ]))){
-            tempo.cat <- paste0("ERROR IN ", function.name, ":\nTHE categ COLUMN OF data1 CANNOT CONTAIN DUPLICATED VALUES\n", paste(data1[, categ][duplicated(data1[, categ])], collapse = " "))
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE categ COLUMN OF data1 CANNOT CONTAIN DUPLICATED VALUES\n", paste(data1[, categ][duplicated(data1[, categ])], collapse = " "))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
 
     if( ! is.null(annotation)){
         if( ! annotation %in% names(data1)){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": annotation ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT")
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nannotation ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }else{
             if(all(is.na(data1[ , annotation]))){
-                tempo.cat <- paste0("ERROR IN ", function.name, ":\nIF NON NULL, THE annotation COLUMN OF data1 CANNOT BE JUST NA")
+                tempo.cat <- paste0("ERROR IN ", function.name, "\nIF NON NULL, THE annotation COLUMN OF data1 CANNOT BE JUST NA")
                 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
             }
             tempo1 <- fun_check(data = annotation, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name)
             tempo2 <- fun_check(data = annotation, class = "factor", na.contain = TRUE, fun.name = function.name)
             if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-                tempo.cat <- paste0("ERROR IN ", function.name, ":\nTHE annotation COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"")
+                tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE annotation COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"")
                 stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
             }
             if(any(duplicated(data1[, annotation]))){
@@ -381,22 +388,26 @@ fun_gg_donut <- function(
         }
     }
     if(length(data1) == 0){
-        tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT IS EMPTY AFTER Inf, NA AND 0 REMOVAL IN THE ", freq, ifelse(is.null(annotation), " AND ", ", "), categ, ifelse(is.null(annotation), "", " AND "), " COLUMNS")
+        tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE data1 ARGUMENT IS EMPTY AFTER Inf, NA AND 0 REMOVAL IN THE ", freq, ifelse(is.null(annotation), " AND ", ", "), categ, ifelse(is.null(annotation), "", " AND "), " COLUMNS")
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
     }
-
-    if( ! is.numeric(fill.color)){
-        if( ! all(fill.color %in% colors() | grepl(pattern = "^#", fill.color), na.rm = TRUE)){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": fill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGER VALUES")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+    if( ! is.null(fill.color)){
+        if( ! is.numeric(fill.color)){
+            if( ! all(fill.color[ ! is.na(fill.color)] %in% colors() | grepl(pattern = "^#", fill.color[ ! is.na(fill.color)]), na.rm = TRUE)){
+                tempo.cat <- paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGER VALUES")
+                stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            }else{
+                fill.color <- as.character(fill.color) # remove class factor is any
+            }
         }
     }
     if( ! is.numeric(border.color)){
         if( ! (border.color %in% colors() | grepl(pattern = "^#", border.color))){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": fill.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE")
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+        }else{
+            border.color <- as.character(border.color) # remove class factor is any
         }
-
     }
     # legend name filling
     if(is.null(legend.name)){
@@ -407,14 +418,14 @@ fun_gg_donut <- function(
     # verif of add
     if( ! is.null(add)){
         if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
-            tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
             
         }else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
-            tempo.cat <- paste0("ERROR IN ", function.name, ": FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
-            tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
@@ -439,8 +450,8 @@ fun_gg_donut <- function(
             tempo.text <- "facet_grid OR facet_rep_grid"
             facet.check <- FALSE
         }
-        if(facet.check == FALSE & ! all(facet.categ %in% names(data1[[1]]))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
-            tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1[[1]]), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
+        if(facet.check == FALSE & ! all(facet.categ %in% names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
@@ -448,13 +459,58 @@ fun_gg_donut <- function(
     # end management of add containing facet
     if( ! is.null(lib.path)){
         if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-            tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
     # end other checkings
     # reserved word checking
-    #already done above
+    if( ! (is.null(add))){
+        if(any(sapply(X = arg.names, FUN = grepl, x = add), na.rm = TRUE)){
+            warn.count <- warn.count + 1
+            tempo.warn <- paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", paste(arg.names[sapply(X = arg.names, FUN = grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
+            warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+        }
+    }
+    # verif of add
+    if( ! is.null(add)){
+        if( ! grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }else if( ! grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }else if( ! grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
+    }
+    # end verif of add
+    # management of add containing facet
+    facet.categ <- NULL
+    if( ! is.null(add)){
+        facet.check <- TRUE
+        tempo <- unlist(strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
+        tempo <- sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
+        tempo <- sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
+        tempo <- sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
+        if(any(grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"), na.rm = TRUE)){
+            tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
+            facet.categ <- names(tempo1$params$facets)
+            tempo.text <- "facet_wrap OR facet_rep_wrap"
+            facet.check <- FALSE
+        }else if(grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
+            tempo1 <- suppressWarnings(eval(parse(text = tempo[grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
+            facet.categ <- c(names(tempo1$params$rows), names(tempo1$params$cols))
+            tempo.text <- "facet_grid OR facet_rep_grid"
+            facet.check <- FALSE
+        }
+        if(facet.check == FALSE & ! all(facet.categ %in% names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL # all() without na.rm -> ok because facet.categ cannot be NA (tested above)
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", paste(names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
+            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
+    }
+    # end management of add containing facet
     # end reserved word checking
     # end second round of checking and data preparation
 
@@ -471,48 +527,66 @@ fun_gg_donut <- function(
     # main code
     data1 <- data.frame(data1, prop = data1[ , freq] / sum(data1[ , freq]))
     if(legend.add.prop == TRUE){
-        data1[ , categ] <- paste0(data1[ , categ], " (", round(data$prop, 2), ")")
+        data1[ , categ] <- paste0(data1[ , categ], " (", round(data1$prop, 2), ")")
     }
     data1[ , categ] <- factor(data1[ , categ], levels = data1[ , categ][order(data1$prop, decreasing = TRUE)]) # reorder so that the donut is according to decreasing proportion starting at the top in a clockwise direction
     data1 <- data1[order(as.numeric(data1[ , categ]), decreasing = FALSE), ] # data1[ , categ] with rows in decreasing order, according to prop
     data1 <- data.frame(data1, x = 0) # staked bar at the origin of the donut set to x = 0
     tempo.gg.name <- "gg.indiv.plot."
     tempo.gg.count <- 0
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(
+    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), eval(parse(text = paste0("ggplot2::ggplot()", if(is.null(add)){""}else{add})))) # add added here to have the facets
+    bar_width = 1
+    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_col(
         data = data1,
         mapping = ggplot2::aes_string(x = "x", y = freq, fill = categ), 
-    ))
-    bar_width = 1
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_col(color = border.color, size = border.size, width = bar_width)) # size is size of the separation in the donut
+        color = border.color, 
+        size = border.size, 
+        width = bar_width
+    )) # size is size of the separation in the donut
     # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
     #     ggplot2::aes(label = Freq), 
     #     position = ggplot2::position_stack(vjust = 0.5)
     # ))
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
         expand = c(0, 0), # prevent extra limits in x axis
-        limits = c(- bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), bar_width / 2)
+        limits = c(- bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), max(bar_width / 2, annotation.distance))
     )) # must be centered on x = 0
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(c(0, max(cumsum(hole.size)))))
+    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(c(0, max(cumsum(data1[ , freq])))))
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
         geom = "text", 
         x = - bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), 
         y = 0, 
-        label = sum(hole.size), 
-        size = 12
+        label = sum(data1[ , freq]), 
+        size = hole.text.size
     ))
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_polar(theta = "y", direction = -1, start = 0, clip = "on"))
-    if( ! is.null(fill.palette)){
-        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_brewer(palette = fill.palette))
+    if(is.null(fill.color) & ! is.null(fill.palette)){
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_brewer(palette = fill.palette, name = legend.name))
+    }else if( ! is.null(fill.color)){
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(values = fill.color, name = legend.name, na.value = "white"))
+    }else if(! is.null(legend.name)){
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::labs(fill = legend.name))
     }
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(legend.title = ggplot2::element_blank()))
+
+    if( ! is.null(add)){ # if add is NULL, then = 0
+        if(grepl(pattern = "ggplot2\\s*::\\s*theme", add) == TRUE){
+            warn.count <- warn.count + 1
+            tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme_void() HAS BEEN INACTIVATED, SO THAT THE USER THEME CAN BE EFFECTIVE")
+            warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+            add.check <- FALSE
+        }else{
+            assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
+        }
+    }else{
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
+    }
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(
         fill = ggplot2::guide_legend(override.aes = list(color = "white", size  = 2, stroke = 1))
     )) # remove border of squares in legend
 
     # annotations on slices
     if( ! is.null(annotation)){
-        tempo <- rev(cumsum(rev(hole.size)))
+        tempo <- rev(cumsum(rev(data1[ , freq])))
         data1 <- data.frame(data1, text_y = tempo - (tempo - c(tempo[-1], 0)) / 2)
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggrepel::geom_text_repel(
             data = data1, 
@@ -524,7 +598,7 @@ fun_gg_donut <- function(
             size = annotation.size, 
             force = annotation.force, 
             force_pull = annotation.force.pull, 
-            nudge_x = bar_width / 2 + (bar_width - bar_width / 2) / 2, # add nudge_x to the center of the bar
+            nudge_x = annotation.distance, # knowing that the bar is centered on x = 0 and that the right edge is at bar_width / 2, 0 means center of the slice, 0.5 means at the edge if bar_width = 1
             show.legend = FALSE
         ))
     }
@@ -534,7 +608,7 @@ fun_gg_donut <- function(
     # removal of part of the legend 
     if( ! is.null(legend.limit)){
         if(sum(data1$prop >= legend.limit) == 0){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": THE legend.limit PARAMETER VALUE (", legend.limit, ") IS TOO HIGH FOR THE PROPORTIONS IN THE DONUT PLOT:\n", paste0(data1$prop, collapse = "\n"))
+            tempo.cat <- paste0("ERROR IN ", function.name, "\nTHE legend.limit PARAMETER VALUE (", legend.limit, ") IS TOO HIGH FOR THE PROPORTIONS IN THE DONUT PLOT:\n", paste0(data1$prop, collapse = "\n"))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }else{
             assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_discrete(
@@ -546,9 +620,9 @@ fun_gg_donut <- function(
     if(legend.show == FALSE){ # must be here because must be before bef.final.plot
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
     }
-    bef.final.plot <- suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
+    bef.final.plot <- suppressWarnings(suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))))
     if( ! is.null(legend.width)){
-        legend.final <- fun_gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path) # get legend
+        legend.final <- suppressWarnings(suppressMessages(fun_gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
         if(is.null(legend.final) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
             legend.final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
@@ -570,7 +644,7 @@ fun_gg_donut <- function(
             y = grid::unit(0, "lines"),
             hjust = 0,
             vjust = 0,
-            gp = grid::gpar(fontsize = 7)
+            gp = grid::gpar(fontsize = title.text.size)
         )
         pdf(NULL)
         final.plot <- suppressMessages(suppressWarnings(gridExtra::arrangeGrob(final.plot, top = title.grob, left = " ", right = " "))) # , left = " ", right = " " : trick to add margins in the plot. padding =  unit(0.5, "inch") is for top margin above the title
@@ -601,13 +675,6 @@ fun_gg_donut <- function(
     on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
     if(return == TRUE){
         output <- suppressMessages(ggplot2::ggplot_build(final.plot))
-        # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
-        if(length(output$data) != length(coord.names)){
-            tempo.cat <- paste0("INTERNAL CODE ERROR IN ", function.name, ": length(output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-        }else{
-            names(output$data) <- coord.names
-        }
         if(is.null(unlist(removed.row.nb))){
             removed.row.nb <- NULL
             removed.rows <- NULL
@@ -617,7 +684,7 @@ fun_gg_donut <- function(
             data = data1, 
             removed.row.nb = removed.row.nb, 
             removed.rows = removed.rows, 
-            plot = c(output$data, x.second.tick.values = list(x.second.tick.values), y.second.tick.values = list(y.second.tick.values)), 
+            plot = output$data, 
             panel = facet.categ, 
             axes = list(
                 x.range = tempo$x.range, 
