@@ -171,6 +171,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v11.10.0
+
+1) hole.text argument added in gg_donut()
+
+
 ### v11.9.0
 
 1) Argument inf.values added in the check() function

@@ -7,6 +7,7 @@ fun_gg_donut <- function(
     fill.palette = NULL,
     fill.color = NULL, 
     hole.size = 0.5, 
+    hole.text = TRUE, 
     hole.text.size = 14, 
     border.color = "gray50", 
     border.size = 0.2, 
@@ -43,7 +44,8 @@ fun_gg_donut <- function(
     # fill.palette: single character string of a palette name (see ?ggplot2::scale_fill_brewer() for the list).Ignored if fill.color is not NULL
     # fill.color: either (1) NULL, or (2) a vector of character strings or integers of same length as the number of classes in categ. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (according to the ggplot2 palette). The order of the elements will be used according to the frequency values, from highest to lowest. An easy way to use this argument is to sort data1 according to the frequencies values, add a color column with the corresponding desired colors and use the content of this column as values of fill.color. If color is NULL and fill.palette is NULL, default colors of ggplot2 are used. If color is not NULL, it overrides fill.palette
     # hole.size: single positive proportion of donut central hole, 0 meaning no hole and 1 no donut
-    # hole.text.size: single positive numeric value of the title font size in mm
+    # hole.text: logical (either TRUE or FALSE). Display the sum of frequencies (column of data1 indicated in the freq argument) ?
+    # hole.text.size: single positive numeric value of the title font size in mm. Ignored if hole.text is FALSE
     # border.color: a single character string or integer. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (according to the ggplot2 palette)
     # border.size: single numeric value of border tickness in mm. Write zero for no dot border
     # title: single character string of the graph title
@@ -94,7 +96,7 @@ fun_gg_donut <- function(
     # EXAMPLES
     # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
     # DEBUGGING
-    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
+    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text = TRUE ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
     # function name
     function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
     arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -169,6 +171,7 @@ fun_gg_donut <- function(
         }
     }
     tempo <- fun_check(data = hole.size, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- fun_check(data = hole.text, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
     tempo <- fun_check(data = hole.text.size, class = "vector", mode = "numeric", neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
     tempo1 <- fun_check(data = border.color, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name)
     tempo2 <- fun_check(data = border.color, class = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, na.contain = FALSE, length = 1, fun.name = function.name) # not need to test inf with integers
@@ -256,6 +259,7 @@ fun_gg_donut <- function(
         # "fill.palette", # inactivated because can be null
         # "fill.color", # inactivated because can be null
         "hole.size", 
+        "hole.text", 
         "hole.text.size", 
         "border.color", 
         "border.size", 
@@ -552,13 +556,15 @@ fun_gg_donut <- function(
         limits = c(- bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), max(bar_width / 2, annotation.distance))
     )) # must be centered on x = 0
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(c(0, max(cumsum(data1[ , freq])))))
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
-        geom = "text", 
-        x = - bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), 
-        y = 0, 
-        label = sum(data1[ , freq]), 
-        size = hole.text.size
-    ))
+    if(hole.text == TRUE){
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
+            geom = "text", 
+            x = - bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), 
+            y = 0, 
+            label = sum(data1[ , freq]), 
+            size = hole.text.size
+        ))
+    }
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_polar(theta = "y", direction = -1, start = 0, clip = "on"))
     if(is.null(fill.color) & ! is.null(fill.palette)){
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_brewer(palette = fill.palette, name = legend.name))
