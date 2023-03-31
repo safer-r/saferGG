@@ -109,51 +109,66 @@ fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car",
                add = "+ggplot2::theme_gray()"
 )
 fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
-               add = "+ggplot2::facet_wrap(facets = 'Country', labeller = 'label_both') + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'grey', size = 0.5), strip.text = ggplot2::element_text(size = 10, face = 'bold'), panel.spacing = ggplot2::unit(0.5, 'lines'))"  # or ggplot2::vars(Country) instead of 'Country'. See https://ggplot2.tidyverse.org/reference/labeller.html
+    add = "+ggplot2::facet_wrap(facets = 'Country', labeller = 'label_both') + ggplot2::theme(strip.background = ggplot2::element_rect(color = 'grey', size = 0.5), strip.text = ggplot2::element_text(size = 10, face = 'bold'), panel.spacing = ggplot2::unit(0.5, 'lines'))"  # or ggplot2::vars(Country) instead of 'Country'. See https://ggplot2.tidyverse.org/reference/labeller.html
 )
 
-
-## Other parameters
+## The return and plot arguments
+fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
+    return = FALSE,
+    plot = FALSE,
+)
+# nothing is returned and nothing is plotted
 res <- fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
-                      return = TRUE, # output returned and assigned into res. If FALSE, res is NULL
-                      return.ggplot = TRUE, # ggplot object added in res (without the legend
-                      return.gtable = TRUE, # ggplot object as gtable of grobs in res ($gtable is NULL if plot = FALSE)
-                      plot = TRUE, # plot displayed during asignation into res
-                      warn.print = TRUE, 
-                      lib.path = NULL
+    return = TRUE, # output returned and assigned into res. If FALSE, res is NULL
+    plot = TRUE, # plot displayed during assignation into res
 )
-# plot the result
-fun_open(pdf = FALSE)
-res$ggplot
+res # info of the plot are stored in the res object. The plot is also displayed during the assignation into res (plot = TRUE) 
+
+## The return.ggplot argument (return argument must be TRUE)
+res2 <- fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
+    return = TRUE,
+    return.ggplot = TRUE,
+    plot = FALSE
+)
+# Nothing plotted during the assignation into res2
+res2 # the pain with return.ggplot = TRUE is that each time res2 is called, a plot appears (because res2$ggplot is not NULL, as when return.ggplot = FALSE is used)
+res2$panel # however, calling a element of res2 does not plot the graph
+res2$ggplot #except when using $ggplot
 # The advantage of $ggplot is that it is easy to update the plot
 res$ggplot + ggplot2::annotate(geom = "text", x = -0.5, y = 0, label = "NOT GOOD", size = 20, angle = 45)
-# However, manipulation of res triggers plotting when $ggplot is not NULL (NULL $ggplot obtained using return.ggplot = FALSE), which is annoying, as explain in the function description. Thus, it is preferable to use return.ggplot = FALSE
 
-
-## Notes about the gtable output
-res2 <- fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
-                       return = TRUE, 
-                       return.ggplot = FALSE,
-                       return.gtable = TRUE, # return.gtable must be TRUE to have a non NULL $gtable output into res2
-                       plot = TRUE, # plot must be TRUE to have a non NULL $gtable output into res2
-                       warn.print = FALSE, 
-                       lib.path = NULL
+## The return.gtable argument (return argument must be TRUE)
+res3 <- fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
+    title = "DONUT",
+    return = TRUE,
+    return.gtable = TRUE, # gtable of the full graph
+    plot = FALSE
 )
-
-# display the results (does not plot the graph, contrary to $ggplot)
-fun_open(pdf = FALSE)
-res2
-
-# replot
-fun_open(pdf = FALSE)
-gridExtra::grid.arrange(res2$gtable) # Contrary to $ggplot, $gtable cannot be easily updated (see https://stackoverflow.com/questions/26499608/inverse-of-ggplotgrob)
+# Nothing plotted during the assignation into res3
+res3 # no plotting, contrary to with return.ggplot = TRUE
+# replotting
+gridExtra::grid.arrange(res3$gtable) # full graph
+# But contrary to $ggplot, $gtable cannot be easily updated (see https://stackoverflow.com/questions/26499608/inverse-of-ggplotgrob)
 # plot the first grob
-fun_open(pdf = FALSE)
-gridExtra::grid.arrange(res2$gtable[1,1])
+gridExtra::grid.arrange(res3$gtable[ ,1]) # made of the main plot + title
 # plot the second grob
-fun_open(pdf = FALSE)
-gridExtra::grid.arrange(res2$gtable[1,2])
+gridExtra::grid.arrange(res3$gtable[ ,2]) # legend
+# plot the main plot without the title
+gridExtra::grid.arrange(res3$gtable[,1]$grob[[1]][2])
+#plot the title
+gridExtra::grid.arrange(res3$gtable[,1]$grob[[1]][1])
 
+## The warn.print argument
+fun_gg_donut(data1 = obs1, freq = "Km", categ = "Country", 
+    warn.print = TRUE
+)
+# Warning messages shown
+res4 <- fun_gg_donut(data1 = obs1, freq = "Km", categ = "Country", 
+    return = TRUE,
+    warn.print = FALSE
+)
+# Warning messages not shown
+cat(res4$warn) # but can be recover this way using return = TRUE
 
 ## All the arguments
 fun_gg_donut(

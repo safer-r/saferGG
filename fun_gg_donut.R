@@ -28,7 +28,7 @@ fun_gg_donut <- function(
     return.ggplot = FALSE,
     return.gtable = TRUE,
     plot = TRUE, 
-    warn.print = FALSE, 
+    warn.print = TRUE, 
     lib.path = NULL
 ){
     # AIM
@@ -43,7 +43,7 @@ fun_gg_donut <- function(
     # categ: single character string of the data1 column name of categories (qualitative variable)
     # fill.palette: single character string of a palette name (see ?ggplot2::scale_fill_brewer() for the list).Ignored if fill.color is not NULL
     # fill.color: either (1) NULL, or (2) a vector of character strings or integers of same length as the number of classes in categ. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (according to the ggplot2 palette). The order of the elements will be used according to the frequency values, from highest to lowest. An easy way to use this argument is to sort data1 according to the frequencies values, add a color column with the corresponding desired colors and use the content of this column as values of fill.color. If color is NULL and fill.palette is NULL, default colors of ggplot2 are used. If color is not NULL, it overrides fill.palette
-    # hole.size: single positive proportion of donut central hole, 0 meaning no hole and 1 no donut
+    # hole.size: single positive proportion of donut central hole, 0 meaning no hole (pie chart) and 1 no plot (donut with a null thickness)
     # hole.text: logical (either TRUE or FALSE). Display the sum of frequencies (column of data1 indicated in the freq argument) ?
     # hole.text.size: single positive numeric value of the title font size in mm. Ignored if hole.text is FALSE
     # border.color: a single character string or integer. Colors can be color names (see ?colors() in R), hexadecimal color codes, or integers (according to the ggplot2 palette)
@@ -67,7 +67,7 @@ fun_gg_donut <- function(
     # WARNING: the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the fun_gg_donut() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
     # return: logical (either TRUE or FALSE). Return the graph parameters?
     # return.ggplot: logical (either TRUE or FALSE). Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the fun_gg_donut() function (e.g., a <- fun_gg_donut()) into something if the return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
-    # return.gtable: logical (either TRUE or FALSE). Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details
+    # return.gtable: logical (either TRUE or FALSE). Return the full graph (main, title and legend) as a gtable of grobs in the output list? See $gtable in the RETURN section below for more details
     # plot: logical (either TRUE or FALSE). Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
     # warn.print: logical (either TRUE or FALSE). Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
     # lib.path: vector of character strings indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders
@@ -77,11 +77,12 @@ fun_gg_donut <- function(
     # $data: the initial data with modifications and with graphic information added
     # $removed.row.nb: a list of the removed rows numbers in data frames (because of NA). NULL if no row removed
     # $removed.rows: a list of the removed rows in data frames (because of NA). NULL if no row removed
+    # $plot.data
     # $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0
     # $axes: the x-axis and y-axis info
     # $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE
     # $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Warning: the legend is not in $ggplot as it is in a separated grob (use $gtable to get it). Of note, a non-null $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
-    # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
+    # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
     # REQUIRED PACKAGES
     # ggplot2
     # gridExtra
@@ -290,6 +291,13 @@ fun_gg_donut <- function(
     }
     # end management of NULL arguments
     # code that protects set.seed() in the global environment
+    if(exists(".Random.seed", envir = .GlobalEnv)){ # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
+        tempo.random.seed <- .Random.seed
+        on.exit(assign(".Random.seed", tempo.random.seed, env = .GlobalEnv))
+    }else{
+        on.exit(set.seed(NULL)) # inactivate seeding -> return to complete randomness
+    }
+    set.seed(1)
     # end code that protects set.seed() in the global environment
     # warning initiation
     ini.warning.length <- options()$warning.length
@@ -628,43 +636,49 @@ fun_gg_donut <- function(
     }
     bef.final.plot <- suppressWarnings(suppressMessages(ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))))
     if( ! is.null(legend.width)){
-        legend.final <- suppressWarnings(suppressMessages(fun_gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
+        legend.plot <- suppressWarnings(suppressMessages(fun_gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
-        if(is.null(legend.final) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
-            legend.final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
+        if(is.null(legend.plot) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
+            legend.plot <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
             warn.count <- warn.count + 1
             tempo.warn <- paste0("(", warn.count,") LEGEND REQUESTED (legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend.width ARGUMENT\n")
             warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
         }
+    }else{
+        legend.plot <- NULL
     }
     # end legend management
 
-    # drawing
-    final.plot <- eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))
-
     # title
-    if(title != ""){
-        title.grob <- grid::textGrob(
-            label = title,
-            x = grid::unit(0, "lines"), 
-            y = grid::unit(0, "lines"),
-            hjust = 0,
-            vjust = 0,
-            gp = grid::gpar(fontsize = title.text.size)
-        )
-        pdf(NULL)
-        final.plot <- suppressMessages(suppressWarnings(gridExtra::arrangeGrob(final.plot, top = title.grob, left = " ", right = " "))) # , left = " ", right = " " : trick to add margins in the plot. padding =  unit(0.5, "inch") is for top margin above the title
-        dev.off()
-    }
+    title.grob <- grid::textGrob(
+        label = title,
+        x = grid::unit(0, "lines"), 
+        y = grid::unit(0, "lines"),
+        hjust = 0,
+        vjust = 0,
+        gp = grid::gpar(fontsize = 7)
+    )
     # end title
 
+    # drawing
+    pdf(NULL)
     grob.save <- NULL
+    main.plot <- eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))
+    main.plot.output <- suppressMessages(ggplot2::ggplot_build(main.plot))
+    main.grob <- suppressMessages(suppressWarnings(gridExtra::arrangeGrob(
+        main.plot, 
+        top = if(title == ""){" "}else{title.grob}, 
+        left = " ", 
+        right = " "
+    ))) # , left = " ", right = " " : trick to add margins in the plot. padding =  unit(0.5, "inch") is for top margin above the title
+    if( ! is.null(legend.width)){
+        grob.save <- suppressMessages(suppressWarnings(gridExtra::grid.arrange(main.grob, legend.plot, ncol=2, widths=c(1, legend.width)))) # assemble grobs, ggplot, gtable into a gtable that defines the positions of the different elements (as grobs)
+    }else{
+        grob.save <- suppressMessages(suppressWarnings(print(main.grob)))
+    }
+    dev.off() # inactivate the pdf(NULL) above
     if(plot == TRUE){
-        if( ! is.null(legend.width)){
-            grob.save <- suppressMessages(suppressWarnings(gridExtra::grid.arrange(final.plot, legend.final, ncol=2, widths=c(1, legend.width))))
-        }else{
-            grob.save <- suppressMessages(suppressWarnings(print(final.plot)))
-        }
+        gridExtra::grid.arrange(grob.save) # plot a gtable (grob)
     }else{
         warn.count <- warn.count + 1
         tempo.warn <- paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
@@ -672,25 +686,22 @@ fun_gg_donut <- function(
     }
     # end drawing
 
-
-
     # output
     if(warn.print == TRUE & ! is.null(warn)){
         on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
     }
     on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
     if(return == TRUE){
-        output <- suppressMessages(ggplot2::ggplot_build(final.plot))
         if(is.null(unlist(removed.row.nb))){
             removed.row.nb <- NULL
             removed.rows <- NULL
         }
-        tempo <- output$layout$panel_params[[1]]
+        tempo <- main.plot.output$layout$panel_params[[1]]
         output <- list(
             data = data1, 
             removed.row.nb = removed.row.nb, 
             removed.rows = removed.rows, 
-            plot = output$data, 
+            plot.data = main.plot.output$data, 
             panel = facet.categ, 
             axes = list(
                 x.range = tempo$x.range, 
@@ -701,8 +712,8 @@ fun_gg_donut <- function(
                 y.positions = if(is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{unlist(attributes(tempo$y$breaks))}
             ), 
             warn = paste0("\n", warn, "\n\n"), 
-            ggplot = if(return.ggplot == TRUE){final.plot}else{NULL}, # final.plot plots the graph if return == TRUE
-            gtable = if(return.gtable == TRUE){grob.save}else{NULL} #
+            ggplot = if(return.ggplot == TRUE){main.plot}else{NULL}, # main plot -> plots the graph if return == TRUE
+            gtable = if(return.gtable == TRUE){grob.save}else{NULL} # gtable of the full graph (main + title + legend)
         )
         return(output) # this plots the graph if return.ggplot is TRUE and if no assignment
     }
