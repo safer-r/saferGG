@@ -21,6 +21,9 @@ fun_gg_donut <- function(
     legend.show = TRUE, 
     legend.width = 0.25, 
     legend.name = NULL, 
+    legend.text.size = 10, 
+    legend.box.size = 5, 
+    legend.box.space = 2, 
     legend.limit = NULL, 
     legend.add.prop = FALSE,
     add = NULL, 
@@ -58,6 +61,9 @@ fun_gg_donut <- function(
     # legend.show: logical (either TRUE or FALSE). Show legend? 
     # legend.width: single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend
     # legend.name: character string of the legend title. If legend.name is NULL then legend.name is the value of the categ argument. Write legend.name = "" to remove the legend
+    # legend.text.size: single numeric value of the font size in mm of the legend labels
+    # legend.box.size: single numeric value of the size of the legend squares in mm
+    # legend.box.space: single numeric value of the space between the legend boxes in mm
     # legend.limit: single positive proportion of the classes displayed in the legend for which the corresponding proportion is over legend.limit. Write NULL to display all the classes
     # legend.add.prop: logical (either TRUE or FALSE). add the proportion after the class names in the legend ?
     # add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
@@ -97,7 +103,7 @@ fun_gg_donut <- function(
     # EXAMPLES
     # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
     # DEBUGGING
-    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text = TRUE ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
+    # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text = TRUE ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.text.size = 10 ; legend.box.size = 5 ; legend.box.space = 2 ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
     # function name
     function.name <- paste0(as.list(match.call(expand.dots=FALSE))[[1]], "()")
     arg.names <- names(formals(fun = sys.function(sys.parent(n = 2)))) # names of all the arguments
@@ -211,6 +217,9 @@ fun_gg_donut <- function(
         tempo <- fun_check(data = legend.name, class = "vector")
         checked.arg.names <- c(checked.arg.names, tempo$object.name)
     }
+    tempo <- fun_check(data = legend.text.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- fun_check(data = legend.box.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- fun_check(data = legend.box.space, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; eval(ee)
     if( ! is.null(legend.limit)){
         tempo <- fun_check(data = legend.limit, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
     }else{
@@ -274,6 +283,9 @@ fun_gg_donut <- function(
         "legend.show", 
         # "legend.width", # inactivated because can be null
         # "legend.name", # inactivated because can be null
+        "legend.text.size",
+        "legend.box.size",
+        "legend.box.space",
         # "legend.limit", # inactivated because can be null
         "legend.add.prop", 
         # "add", # inactivated because can be null
@@ -578,8 +590,8 @@ fun_gg_donut <- function(
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_brewer(palette = fill.palette, name = legend.name))
     }else if( ! is.null(fill.color)){
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(values = fill.color, name = legend.name, na.value = "white"))
-    }else if(! is.null(legend.name)){
-        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::labs(fill = legend.name))
+    }else if( ! is.null(legend.name)){
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::labs(fill = legend.name)) # title of the legend
     }
 
     if( ! is.null(add)){ # if add is NULL, then = 0
@@ -590,12 +602,23 @@ fun_gg_donut <- function(
             add.check <- FALSE
         }else{
             assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
+            assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
+                    legend.text = ggplot2::element_text(size = legend.text.size),
+                    legend.spacing.y = unit(legend.box.space, 'mm')
+            ))
         }
     }else{
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
+        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
+                legend.text = ggplot2::element_text(size = legend.text.size),
+                legend.spacing.y = unit(legend.box.space, 'mm')
+        ))
     }
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(
-        fill = ggplot2::guide_legend(override.aes = list(color = "white", size  = 2, stroke = 1))
+        fill = ggplot2::guide_legend(
+            override.aes = list(color = "white", size  = legend.box.size),
+            byrow = TRUE
+        )
     )) # remove border of squares in legend
 
     # annotations on slices

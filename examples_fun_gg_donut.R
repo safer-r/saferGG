@@ -97,9 +97,13 @@ fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car",
 
 ## Management of the legend area
 fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car", 
+    border.size = 2, 
     legend.show = TRUE, # FALSE remove the legend, not the area of the legend
     legend.width = 0.5, # between 0 (no area for the legend) to 1 (half the device width for the legend area)
     legend.name = "Noise", # legend title added
+    legend.text.size = 10, # font size in mm of the legend labels
+    legend.box.size = 5, # size of the legend squares in mm
+    legend.box.space = 1, # space between the legend boxes in mm
     legend.limit = NULL, # all the slices lower that 0.2 in proportion are not displayed in the legend
     legend.add.prop = TRUE # proportion after the class names added
 )
