@@ -171,6 +171,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.0.0
+
+1) several arguments added in gg_donut()
+
+
 ### v11.10.0
 
 1) hole.text argument added in gg_donut()
