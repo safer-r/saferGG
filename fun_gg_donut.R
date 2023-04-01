@@ -12,7 +12,7 @@ fun_gg_donut <- function(
     border.color = "gray50", 
     border.size = 0.2, 
     title = "", 
-    title.text.size = 12, 
+    title.text.size = 7, 
     annotation = NULL,
     annotation.distance = 0,
     annotation.size = 3,
@@ -679,7 +679,7 @@ fun_gg_donut <- function(
         y = grid::unit(0, "lines"),
         hjust = 0,
         vjust = 0,
-        gp = grid::gpar(fontsize = 7)
+        gp = grid::gpar(fontsize = title.text.size)
     )
     # end title
 
