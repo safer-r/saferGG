@@ -171,6 +171,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.2.0
+
+1) bug removed in the title.text.size argument in gg_donut() 
+
+
 ### v12.1.0
 
 1) bug removed in the title.text.size argument in gg_donut() 
