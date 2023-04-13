@@ -171,6 +171,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.4.0
+
+1) fun_gg_empty_graph improved so that no need to use pdf(NULL) anymore
+
+
 ### v12.3.0
 
 1) fun_gg_empty_graph with a true white background (to prevent some display bugs in png and pdf devices) 

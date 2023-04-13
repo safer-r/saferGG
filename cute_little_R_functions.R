@@ -98,21 +98,21 @@
 # -> transferred into the cute package
 # Do not modify this function in cute_little_R_function anymore. See the cute repo
 fun_check <- function(
-    data, 
-    class = NULL, 
-    typeof = NULL, 
-    mode = NULL, 
-    length = NULL, 
-    prop = FALSE, 
-    double.as.integer.allowed = FALSE, 
-    options = NULL, 
-    all.options.in.data = FALSE, 
-    na.contain = FALSE, 
-    neg.values = TRUE, 
-    inf.values = TRUE, 
-    print = FALSE, 
-    data.name = NULL, 
-    fun.name = NULL
+        data, 
+        class = NULL, 
+        typeof = NULL, 
+        mode = NULL, 
+        length = NULL, 
+        prop = FALSE, 
+        double.as.integer.allowed = FALSE, 
+        options = NULL, 
+        all.options.in.data = FALSE, 
+        na.contain = FALSE, 
+        neg.values = TRUE, 
+        inf.values = TRUE, 
+        print = FALSE, 
+        data.name = NULL, 
+        fun.name = NULL
 ){
     # AIM
     # Check the class, type, mode and length of the data argument
@@ -682,9 +682,9 @@ fun_secu <- function(pos = 1, name = NULL){
 # -> transferred into the cute package
 # Do not modify this function in cute_little_R_function anymore. See the cute repo
 fun_info <- function(
-    data, 
-    n = NULL, 
-    warn.print = TRUE
+        data, 
+        n = NULL, 
+        warn.print = TRUE
 ){
     # AIM
     # Provide a broad description of an object
@@ -956,9 +956,9 @@ fun_info <- function(
 
 
 fun_head <- function(
-    data1, 
-    n = 6, 
-    side = "l"
+        data1, 
+        n = 6, 
+        side = "l"
 ){
     # AIM
     # as head() but display the left or right head of big 2D objects
@@ -1019,9 +1019,9 @@ fun_head <- function(
 
 
 fun_tail <- function(
-    data1, 
-    n = 6, 
-    side = "l"
+        data1, 
+        n = 6, 
+        side = "l"
 ){
     # AIM
     # as tail() but display the left or right head of big 2D objects
@@ -1871,18 +1871,18 @@ fun_comp_list <- function(data1, data2){
 # add traceback https://stackoverflow.com/questions/47414119/how-to-read-a-traceback-in-r
 
 fun_test <- function(
-    fun, 
-    arg, 
-    val, 
-    expect.error = NULL, 
-    parall = FALSE, 
-    thread.nb = NULL, 
-    print.count = 10, 
-    plot.fun = FALSE, 
-    export = FALSE, 
-    res.path = NULL, 
-    lib.path = NULL, 
-    cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
+        fun, 
+        arg, 
+        val, 
+        expect.error = NULL, 
+        parall = FALSE, 
+        thread.nb = NULL, 
+        print.count = 10, 
+        plot.fun = FALSE, 
+        export = FALSE, 
+        res.path = NULL, 
+        lib.path = NULL, 
+        cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
 ){
     # AIM
     # test combinations of argument values of a function
@@ -2414,29 +2414,29 @@ end.loop.string
             lib.path = lib.path, 
             cute.path = cute.path, 
             fun = function(
-                x, 
-                function.name, 
-                instruction, 
-                thread.nb, 
-                print.count, 
-                total.comp.nb, 
-                sp.plot.fun, 
-                i.list, 
-                fun.tested, 
-                arg.values, 
-                fun.test, 
-                fun.test2, 
-                kind, 
-                problem, 
-                res, 
-                count, 
-                plot.count, 
-                data, 
-                code, 
-                plot.fun, 
-                res.path, 
-                lib.path, 
-                cute.path
+        x, 
+        function.name, 
+        instruction, 
+        thread.nb, 
+        print.count, 
+        total.comp.nb, 
+        sp.plot.fun, 
+        i.list, 
+        fun.tested, 
+        arg.values, 
+        fun.test, 
+        fun.test2, 
+        kind, 
+        problem, 
+        res, 
+        count, 
+        plot.count, 
+        data, 
+        code, 
+        plot.fun, 
+        res.path, 
+        lib.path, 
+        cute.path
             ){
                 # check again: very important because another R
                 process.id <- Sys.getpid()
@@ -2740,9 +2740,9 @@ fun_name_change <- function(data1, data2, added.string = "_modif"){
 
 
 fun_df_remod <- function(
-    data, 
-    quanti.col.name = "quanti", 
-    quali.col.name = "quali"
+        data, 
+        quanti.col.name = "quanti", 
+        quali.col.name = "quali"
 ){
     # AIM
     # if the data frame is made of n numeric columns, a new data frame is created, with the 1st column gathering all the numeric values, and the 2nd column being the name of the columns of the initial data frame. If row names were present in the initial data frame, then a new ini_rowname column is added with the names of the rows
@@ -2999,12 +2999,12 @@ fun_mat_rotate <- function(data){
 
 
 fun_mat_num2color <- function(
-    mat1, 
-    mat.hsv.h = TRUE, 
-    notch = 1, 
-    s = 1, 
-    v = 1, 
-    forced.color = NULL
+        mat1, 
+        mat.hsv.h = TRUE, 
+        notch = 1, 
+        s = 1, 
+        v = 1, 
+        forced.color = NULL
 ){
     # AIM
     # convert a matrix made of numbers into a hexadecimal matrix for rgb colorization
@@ -3472,16 +3472,16 @@ fun_mat_fill <- function(mat, empty.cell.string = 0, warn.print = FALSE){
 
 
 fun_permut <- function(
-    data1, 
-    data2 = NULL, 
-    n = NULL, 
-    seed = NULL, 
-    print.count = 10, 
-    text.print = "", 
-    cor.method = "spearman", 
-    cor.limit = 0.2, 
-    warn.print = FALSE, 
-    lib.path = NULL
+        data1, 
+        data2 = NULL, 
+        n = NULL, 
+        seed = NULL, 
+        print.count = 10, 
+        text.print = "", 
+        cor.method = "spearman", 
+        cor.limit = 0.2, 
+        warn.print = FALSE, 
+        lib.path = NULL
 ){
     # AIM
     # reorder the elements of the data1 vector by flipping 2 randomly selected  consecutive positions either:
@@ -3866,21 +3866,21 @@ fun_permut <- function(
 
 
 fun_slide <- function(
-    data, 
-    window.size, 
-    step, 
-    from = NULL, 
-    to = NULL, 
-    fun, 
-    args = NULL, 
-    boundary = "left", 
-    parall = FALSE, 
-    thread.nb = NULL, 
-    print.count = 100, 
-    res.path = NULL, 
-    lib.path = NULL, 
-    verbose = TRUE, 
-    cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
+        data, 
+        window.size, 
+        step, 
+        from = NULL, 
+        to = NULL, 
+        fun, 
+        args = NULL, 
+        boundary = "left", 
+        parall = FALSE, 
+        thread.nb = NULL, 
+        print.count = 100, 
+        res.path = NULL, 
+        lib.path = NULL, 
+        verbose = TRUE, 
+        cute.path = "C:\\Users\\Gael\\Documents\\Git_projects\\cute_little_R_functions\\cute_little_R_functions.R"
 ){
     # AIM
     # return a computation made on a vector using a sliding window
@@ -4216,20 +4216,20 @@ fun_slide <- function(
             verbose = verbose, 
             cute.path = cute.path, 
             fun = function(
-                x, 
-                function.name, 
-                data, 
-                FUN, 
-                args, 
-                thread.nb, 
-                print.count, 
-                wind, 
-                left, 
-                right, 
-                res.path, 
-                lib.path, 
-                verbose, 
-                cute.path
+        x, 
+        function.name, 
+        data, 
+        FUN, 
+        args, 
+        thread.nb, 
+        print.count, 
+        wind, 
+        left, 
+        right, 
+        res.path, 
+        lib.path, 
+        verbose, 
+        cute.path
             ){
                 # check again: very important because another R
                 process.id <- Sys.getpid()
@@ -4301,8 +4301,8 @@ fun_slide <- function(
 
 
 fun_codon2aa <- function(
-    data,
-    display = FALSE
+        data,
+        display = FALSE
 ){
     # AIM
     # Convert codon to amino acid using standard genetic code indicated in https://en.wikipedia.org/wiki/DNA_and_RNA_codon_tables
@@ -4453,9 +4453,9 @@ fun_codon2aa <- function(
 
 
 fun_codon_finder <- function(
-    pos, 
-    begin, 
-    end
+        pos, 
+        begin, 
+        end
 ){
     # AIM
     # gives the codon number and position in the codon of nucleotid positions
@@ -4612,12 +4612,12 @@ fun_codon_finder <- function(
 
 
 fun_width <- function(
-    class.nb, 
-    inches.per.class.nb = 1, 
-    ini.window.width = 7, 
-    inch.left.space, 
-    inch.right.space, 
-    boundarie.space = 0.5
+        class.nb, 
+        inches.per.class.nb = 1, 
+        ini.window.width = 7, 
+        inch.left.space, 
+        inch.right.space, 
+        boundarie.space = 0.5
 ){
     # AIM
     # rescale the width of a window to open depending on the number of classes to plot
@@ -4683,16 +4683,16 @@ fun_width <- function(
 
 
 fun_open <- function(
-    pdf = TRUE, 
-    pdf.path = "working.dir", 
-    pdf.name = "graph", 
-    width = 7, 
-    height = 7, 
-    paper = "special", 
-    pdf.overwrite = FALSE, 
-    rescale = "fixed", 
-    remove.read.only = TRUE, 
-    return.output = FALSE
+        pdf = TRUE, 
+        pdf.path = "working.dir", 
+        pdf.name = "graph", 
+        width = 7, 
+        height = 7, 
+        paper = "special", 
+        pdf.overwrite = FALSE, 
+        rescale = "fixed", 
+        remove.read.only = TRUE, 
+        return.output = FALSE
 ){
     # AIM
     # open a pdf or screen (GUI) graphic window and return initial graphic parameters
@@ -4859,26 +4859,26 @@ fun_open <- function(
 
 
 fun_prior_plot <- function(
-    param.reinitial = FALSE, 
-    xlog.scale = FALSE, 
-    ylog.scale = FALSE, 
-    remove.label = TRUE, 
-    remove.x.axis = TRUE, 
-    remove.y.axis = TRUE, 
-    std.x.range = TRUE, 
-    std.y.range = TRUE, 
-    down.space = 1, 
-    left.space = 1, 
-    up.space = 1, 
-    right.space = 1, 
-    orient = 1, 
-    dist.legend = 3.5, 
-    tick.length = 0.5, 
-    box.type = "n", 
-    amplif.label = 1, 
-    amplif.axis = 1, 
-    display.extend = FALSE, 
-    return.par = FALSE
+        param.reinitial = FALSE, 
+        xlog.scale = FALSE, 
+        ylog.scale = FALSE, 
+        remove.label = TRUE, 
+        remove.x.axis = TRUE, 
+        remove.y.axis = TRUE, 
+        std.x.range = TRUE, 
+        std.y.range = TRUE, 
+        down.space = 1, 
+        left.space = 1, 
+        up.space = 1, 
+        right.space = 1, 
+        orient = 1, 
+        dist.legend = 3.5, 
+        tick.length = 0.5, 
+        box.type = "n", 
+        amplif.label = 1, 
+        amplif.axis = 1, 
+        display.extend = FALSE, 
+        return.par = FALSE
 ){
     # AIM
     # very convenient to erase the axes for post plot axis redrawing using fun_post_plot()
@@ -5255,11 +5255,11 @@ fun_scale <- function(n, lim, kind = "approx", lib.path = NULL){
 
 
 fun_inter_ticks <- function(
-    lim, 
-    log = "log10", 
-    breaks = NULL, 
-    n = NULL, 
-    warn.print = TRUE
+        lim, 
+        log = "log10", 
+        breaks = NULL, 
+        n = NULL, 
+        warn.print = TRUE
 ){
     # AIM
     # define coordinates and values of secondary ticks
@@ -5446,35 +5446,35 @@ fun_inter_ticks <- function(
 
 
 fun_post_plot <- function(
-    x.side = 0, 
-    x.log.scale = FALSE, 
-    x.categ = NULL, 
-    x.categ.pos = NULL, 
-    x.lab = "", 
-    x.axis.size = 1.5, 
-    x.label.size = 1.5, 
-    x.dist.legend = 0.5, 
-    x.nb.inter.tick = 1, 
-    y.side = 0, 
-    y.log.scale = FALSE, 
-    y.categ = NULL, 
-    y.categ.pos = NULL, 
-    y.lab = "", 
-    y.axis.size = 1.5, 
-    y.label.size = 1.5, 
-    y.dist.legend = 0.5, 
-    y.nb.inter.tick = 1, 
-    text.angle = 90, 
-    tick.length = 0.5, 
-    sec.tick.length = 0.3, 
-    bg.color = NULL, 
-    grid.lwd = NULL, 
-    grid.col = "white", 
-    corner.text = "", 
-    corner.text.size = 1, 
-    just.label.add = FALSE, 
-    par.reset = FALSE, 
-    custom.par = NULL
+        x.side = 0, 
+        x.log.scale = FALSE, 
+        x.categ = NULL, 
+        x.categ.pos = NULL, 
+        x.lab = "", 
+        x.axis.size = 1.5, 
+        x.label.size = 1.5, 
+        x.dist.legend = 0.5, 
+        x.nb.inter.tick = 1, 
+        y.side = 0, 
+        y.log.scale = FALSE, 
+        y.categ = NULL, 
+        y.categ.pos = NULL, 
+        y.lab = "", 
+        y.axis.size = 1.5, 
+        y.label.size = 1.5, 
+        y.dist.legend = 0.5, 
+        y.nb.inter.tick = 1, 
+        text.angle = 90, 
+        tick.length = 0.5, 
+        sec.tick.length = 0.3, 
+        bg.color = NULL, 
+        grid.lwd = NULL, 
+        grid.col = "white", 
+        corner.text = "", 
+        corner.text.size = 1, 
+        just.label.add = FALSE, 
+        par.reset = FALSE, 
+        custom.par = NULL
 ){
     # AIM
     # redesign axis. If x.side = 0, y.side = 0, the function just adds text at topright of the graph and reset par() for next graphics and provides outputs (see below)
@@ -5927,10 +5927,10 @@ fun_close <- function(kind = "pdf", return.text = FALSE){
 
 
 fun_empty_graph <- function(
-    text = NULL, 
-    text.size = 1, 
-    title = NULL, 
-    title.size = 1.5
+        text = NULL, 
+        text.size = 1, 
+        title = NULL, 
+        title.size = 1.5
 ){
     # AIM
     # display an empty plot with a text in the middle of the window (for instance to specify that no plot can be drawn)
@@ -6380,19 +6380,19 @@ fun_gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
 
 
 fun_gg_point_rast <- function(
-    data = NULL, 
-    mapping = NULL, 
-    stat = "identity", 
-    position = "identity", 
-    ..., 
-    na.rm = FALSE, 
-    show.legend = NA, 
-    inherit.aes = TRUE, 
-    raster.width = NULL, 
-    raster.height = NULL, 
-    raster.dpi = 300, 
-    inactivate = TRUE, 
-    lib.path = NULL
+        data = NULL, 
+        mapping = NULL, 
+        stat = "identity", 
+        position = "identity", 
+        ..., 
+        na.rm = FALSE, 
+        show.legend = NA, 
+        inherit.aes = TRUE, 
+        raster.width = NULL, 
+        raster.height = NULL, 
+        raster.dpi = 300, 
+        inactivate = TRUE, 
+        lib.path = NULL
 ){
     # AIM
     # equivalent to ggplot2::geom_point() but in raster mode
@@ -6546,27 +6546,27 @@ fun_gg_point_rast <- function(
 # if matrix is full of zero (or same value I guess), heatmap is complicate. Test it and error message
 
 fun_gg_heatmap <- function(
-    data1, 
-    legend.name1 = "", 
-    low.color1 = "blue", 
-    mid.color1 = "white", 
-    high.color1 = "red", 
-    limit1 = NULL, 
-    midpoint1 = NULL, 
-    data2 = NULL, 
-    color2 = "black", 
-    alpha2 = 0.5, 
-    invert2 = FALSE, 
-    text.size = 12, 
-    title = "", 
-    title.text.size = 12, 
-    show.scale = TRUE, 
-    rotate = FALSE, 
-    return = FALSE, 
-    plot = TRUE, 
-    add = NULL, 
-    warn.print = FALSE, 
-    lib.path = NULL
+        data1, 
+        legend.name1 = "", 
+        low.color1 = "blue", 
+        mid.color1 = "white", 
+        high.color1 = "red", 
+        limit1 = NULL, 
+        midpoint1 = NULL, 
+        data2 = NULL, 
+        color2 = "black", 
+        alpha2 = 0.5, 
+        invert2 = FALSE, 
+        text.size = 12, 
+        title = "", 
+        title.text.size = 12, 
+        show.scale = TRUE, 
+        rotate = FALSE, 
+        return = FALSE, 
+        plot = TRUE, 
+        add = NULL, 
+        warn.print = FALSE, 
+        lib.path = NULL
 ){
     # AIM
     # ggplot2 heatmap with the possibility to overlay a mask
@@ -6896,11 +6896,11 @@ fun_gg_heatmap <- function(
 
 
 fun_gg_empty_graph <- function(
-    text = NULL, 
-    text.size = 12, 
-    title = NULL, 
-    title.size = 8, 
-    lib.path = NULL
+        text = NULL, 
+        text.size = 12, 
+        title = NULL, 
+        title.size = 8, 
+        lib.path = NULL
 ){
     # AIM
     # display an empty ggplot2 plot with a text in the middle of the window (for instance to specify that no plot can be drawn)
@@ -6974,7 +6974,8 @@ fun_gg_empty_graph <- function(
         panel.background = ggplot2::element_rect(fill = "white", color = NA),
         plot.title = ggplot2::element_text(size = title.size) # stronger than text
     ))
-    suppressWarnings(print(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
+    final <- suppressWarnings(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+    return(final)
 }
 
 
@@ -6986,36 +6987,36 @@ fun_gg_empty_graph <- function(
 # Add name of the variable in the graph
 # not max and min for boxplot but 1.5IQR
 fun_trim <- function(
-    data, 
-    displayed.nb = NULL, 
-    single.value.display = FALSE, 
-    trim.method = "", 
-    trim.cutoffs = c(0.05, 
-                     0.975), 
-    interval.scale.disp = TRUE, 
-    down.space = 0.75, 
-    left.space = 0.75, 
-    up.space = 0.3, 
-    right.space = 0.25, 
-    orient = 1, 
-    dist.legend = 0.37, 
-    box.type = "l", 
-    amplif.label = 1.25, 
-    amplif.axis = 1.25, 
-    std.x.range = TRUE, 
-    std.y.range = TRUE, 
-    cex.pt = 0.2, 
-    col.box = hsv(0.55, 
-                  0.8, 
-                  0.8), 
-    x.nb.inter.tick = 4, 
-    y.nb.inter.tick = 0, 
-    tick.length = 1, 
-    sec.tick.length = 0.75, 
-    corner.text = "", 
-    amplif.legend = 1, 
-    corner.text.size = 0.75, 
-    trim.return = FALSE
+        data, 
+        displayed.nb = NULL, 
+        single.value.display = FALSE, 
+        trim.method = "", 
+        trim.cutoffs = c(0.05, 
+                         0.975), 
+        interval.scale.disp = TRUE, 
+        down.space = 0.75, 
+        left.space = 0.75, 
+        up.space = 0.3, 
+        right.space = 0.25, 
+        orient = 1, 
+        dist.legend = 0.37, 
+        box.type = "l", 
+        amplif.label = 1.25, 
+        amplif.axis = 1.25, 
+        std.x.range = TRUE, 
+        std.y.range = TRUE, 
+        cex.pt = 0.2, 
+        col.box = hsv(0.55, 
+                      0.8, 
+                      0.8), 
+        x.nb.inter.tick = 4, 
+        y.nb.inter.tick = 0, 
+        tick.length = 1, 
+        sec.tick.length = 0.75, 
+        corner.text = "", 
+        amplif.legend = 1, 
+        corner.text.size = 0.75, 
+        trim.return = FALSE
 ){
     # AIM
     # trim and display values from a numeric vector or matrix
@@ -7326,24 +7327,24 @@ fun_trim <- function(
 
 
 fun_segmentation <- function(
-    data1, 
-    x1, 
-    y1, 
-    x.range.split = NULL, 
-    x.step.factor = 10, 
-    y.range.split = NULL, 
-    y.step.factor = 10, 
-    error = 0, 
-    data2 = NULL, 
-    x2, 
-    y2, 
-    data2.pb.dot = "unknown", 
-    xy.cross.kind = "&", 
-    plot = FALSE, 
-    graph.in.file = FALSE, 
-    raster = TRUE, 
-    warn.print = FALSE, 
-    lib.path = NULL
+        data1, 
+        x1, 
+        y1, 
+        x.range.split = NULL, 
+        x.step.factor = 10, 
+        y.range.split = NULL, 
+        y.step.factor = 10, 
+        error = 0, 
+        data2 = NULL, 
+        x2, 
+        y2, 
+        data2.pb.dot = "unknown", 
+        xy.cross.kind = "&", 
+        plot = FALSE, 
+        graph.in.file = FALSE, 
+        raster = TRUE, 
+        warn.print = FALSE, 
+        lib.path = NULL
 ){
     # AIM
     # if data1 is a data frame corresponding to the data set of a scatterplot (with a x column for x-axis values and a y column for the y-axis column), then fun_segmentation() delimits a frame around the dots cloud using a sliding window set by x.range.split and x.step.factor to frame the top and bottom part of the cloud, and set by y.range.split and y.step.factor to frame the left and right part of the cloud
@@ -8616,9 +8617,9 @@ fun_segmentation <- function(
 
 
 fun_pack <- function(
-    req.package, 
-    load = FALSE, 
-    lib.path = NULL
+        req.package, 
+        load = FALSE, 
+        lib.path = NULL
 ){
     # AIM
     # check if the specified R packages are present in the computer and import them into the working environment
@@ -8707,10 +8708,10 @@ fun_pack <- function(
 
 
 fun_python_pack <- function(
-    req.package, 
-    python.exec.path = NULL, 
-    lib.path = NULL, 
-    R.lib.path = NULL
+        req.package, 
+        python.exec.path = NULL, 
+        lib.path = NULL, 
+        R.lib.path = NULL
 ){
     # AIM
     # check if the specified python packages are present in the computer (no import)
@@ -8837,14 +8838,14 @@ path_lib = sys.path
 # Problem with 1D tables : names over the table not printed. In addition, see how the 2D tables are printed. 
 
 fun_report <- function(
-    data, 
-    output = "results.txt", 
-    path = "C:/Users/Gael/Desktop/", 
-    overwrite = FALSE, 
-    rownames.kept = FALSE, 
-    vector.cat = FALSE, 
-    noquote = TRUE, 
-    sep = 2
+        data, 
+        output = "results.txt", 
+        path = "C:/Users/Gael/Desktop/", 
+        overwrite = FALSE, 
+        rownames.kept = FALSE, 
+        vector.cat = FALSE, 
+        noquote = TRUE, 
+        sep = 2
 ){
     # AIM
     # log file function: print a character string or a data object into a same output file
@@ -8958,12 +8959,12 @@ fun_report <- function(
 
 
 fun_get_message <- function(
-    data, 
-    kind = "error", 
-    header = TRUE, 
-    print.no = FALSE, 
-    text = NULL, 
-    env = NULL
+        data, 
+        kind = "error", 
+        header = TRUE, 
+        print.no = FALSE, 
+        text = NULL, 
+        env = NULL
 ){
     # AIM
     # evaluate an instruction written between "" and return the first of the error, or warning or standard (non error non warning) messages if ever exist
@@ -9149,63 +9150,63 @@ fun_get_message <- function(
 
 
 fun_gg_boxplot <- function(
-    data1, 
-    y, 
-    categ, 
-    categ.class.order = NULL, 
-    categ.color = NULL, 
-    box.legend.name = NULL, 
-    box.fill = FALSE, 
-    box.width = 0.5, 
-    box.space = 0.1, 
-    box.line.size = 0.75, 
-    box.notch = FALSE, 
-    box.alpha = 1, 
-    box.mean = TRUE, 
-    box.whisker.kind = "std", 
-    box.whisker.width = 0, 
-    dot.color = grey(0.25), 
-    dot.categ = NULL, 
-    dot.categ.class.order = NULL, 
-    dot.legend.name = NULL, 
-    dot.tidy = FALSE, 
-    dot.tidy.bin.nb = 50, 
-    dot.jitter = 0.5, 
-    dot.seed = 2, 
-    dot.size = 3, 
-    dot.alpha = 0.5, 
-    dot.border.size = 0.5, 
-    dot.border.color = NULL, 
-    x.lab = NULL, 
-    x.angle = 0, 
-    y.lab = NULL, 
-    y.lim = NULL, 
-    y.log = "no", 
-    y.tick.nb = NULL, 
-    y.second.tick.nb = 1, 
-    y.include.zero = FALSE, 
-    y.top.extra.margin = 0.05, 
-    y.bottom.extra.margin = 0.05, 
-    stat.pos = "top", 
-    stat.mean = FALSE, 
-    stat.size = 4, 
-    stat.dist = 5, 
-    stat.angle = 0, 
-    vertical = TRUE, 
-    text.size = 12, 
-    title = "", 
-    title.text.size = 8, 
-    legend.show = TRUE, 
-    legend.width = 0.5, 
-    article = TRUE, 
-    grid = FALSE, 
-    add = NULL, 
-    return = FALSE, 
-    return.ggplot = FALSE,
-    return.gtable = TRUE,
-    plot = TRUE, 
-    warn.print = FALSE, 
-    lib.path = NULL
+        data1, 
+        y, 
+        categ, 
+        categ.class.order = NULL, 
+        categ.color = NULL, 
+        box.legend.name = NULL, 
+        box.fill = FALSE, 
+        box.width = 0.5, 
+        box.space = 0.1, 
+        box.line.size = 0.75, 
+        box.notch = FALSE, 
+        box.alpha = 1, 
+        box.mean = TRUE, 
+        box.whisker.kind = "std", 
+        box.whisker.width = 0, 
+        dot.color = grey(0.25), 
+        dot.categ = NULL, 
+        dot.categ.class.order = NULL, 
+        dot.legend.name = NULL, 
+        dot.tidy = FALSE, 
+        dot.tidy.bin.nb = 50, 
+        dot.jitter = 0.5, 
+        dot.seed = 2, 
+        dot.size = 3, 
+        dot.alpha = 0.5, 
+        dot.border.size = 0.5, 
+        dot.border.color = NULL, 
+        x.lab = NULL, 
+        x.angle = 0, 
+        y.lab = NULL, 
+        y.lim = NULL, 
+        y.log = "no", 
+        y.tick.nb = NULL, 
+        y.second.tick.nb = 1, 
+        y.include.zero = FALSE, 
+        y.top.extra.margin = 0.05, 
+        y.bottom.extra.margin = 0.05, 
+        stat.pos = "top", 
+        stat.mean = FALSE, 
+        stat.size = 4, 
+        stat.dist = 5, 
+        stat.angle = 0, 
+        vertical = TRUE, 
+        text.size = 12, 
+        title = "", 
+        title.text.size = 8, 
+        legend.show = TRUE, 
+        legend.width = 0.5, 
+        article = TRUE, 
+        grid = FALSE, 
+        add = NULL, 
+        return = FALSE, 
+        return.ggplot = FALSE,
+        return.gtable = TRUE,
+        plot = TRUE, 
+        warn.print = FALSE, 
+        lib.path = NULL
 ){
     # AIM
     # Plot ggplot2 boxplots + dots + means
@@ -11369,58 +11370,58 @@ fun_gg_boxplot <- function(
 
 
 fun_gg_scatter <- function(
-    data1, 
-    x, 
-    y, 
-    categ = NULL, 
-    categ.class.order = NULL, 
-    color = NULL, 
-    geom = "geom_point", 
-    geom.step.dir = "hv", 
-    geom.stick.base = NULL, 
-    alpha = 0.5, 
-    dot.size = 2, 
-    dot.shape = 21, 
-    dot.border.size = 0.5, 
-    dot.border.color = NULL, 
-    line.size = 0.5, 
-    line.type = "solid", 
-    x.lim = NULL, 
-    x.lab = NULL, 
-    x.log = "no", 
-    x.tick.nb = NULL, 
-    x.second.tick.nb = NULL, 
-    x.include.zero = FALSE, 
-    x.left.extra.margin = 0.05, 
-    x.right.extra.margin = 0.05, 
-    x.text.angle = 0, 
-    y.lim = NULL, 
-    y.lab = NULL, 
-    y.log = "no", 
-    y.tick.nb = NULL, 
-    y.second.tick.nb = NULL, 
-    y.include.zero = FALSE, 
-    y.top.extra.margin = 0.05, 
-    y.bottom.extra.margin = 0.05, 
-    y.text.angle = 0, 
-    raster = FALSE, 
-    raster.ratio = 1, 
-    raster.threshold = NULL, 
-    text.size = 12, 
-    title = "", 
-    title.text.size = 12, 
-    legend.show = TRUE, 
-    legend.width = 0.5, 
-    legend.name = NULL, 
-    article = TRUE, 
-    grid = FALSE, 
-    add = NULL, 
-    return = FALSE, 
-    return.ggplot = FALSE,
-    return.gtable = TRUE,
-    plot = TRUE, 
-    warn.print = FALSE, 
-    lib.path = NULL
+        data1, 
+        x, 
+        y, 
+        categ = NULL, 
+        categ.class.order = NULL, 
+        color = NULL, 
+        geom = "geom_point", 
+        geom.step.dir = "hv", 
+        geom.stick.base = NULL, 
+        alpha = 0.5, 
+        dot.size = 2, 
+        dot.shape = 21, 
+        dot.border.size = 0.5, 
+        dot.border.color = NULL, 
+        line.size = 0.5, 
+        line.type = "solid", 
+        x.lim = NULL, 
+        x.lab = NULL, 
+        x.log = "no", 
+        x.tick.nb = NULL, 
+        x.second.tick.nb = NULL, 
+        x.include.zero = FALSE, 
+        x.left.extra.margin = 0.05, 
+        x.right.extra.margin = 0.05, 
+        x.text.angle = 0, 
+        y.lim = NULL, 
+        y.lab = NULL, 
+        y.log = "no", 
+        y.tick.nb = NULL, 
+        y.second.tick.nb = NULL, 
+        y.include.zero = FALSE, 
+        y.top.extra.margin = 0.05, 
+        y.bottom.extra.margin = 0.05, 
+        y.text.angle = 0, 
+        raster = FALSE, 
+        raster.ratio = 1, 
+        raster.threshold = NULL, 
+        text.size = 12, 
+        title = "", 
+        title.text.size = 12, 
+        legend.show = TRUE, 
+        legend.width = 0.5, 
+        legend.name = NULL, 
+        article = TRUE, 
+        grid = FALSE, 
+        add = NULL, 
+        return = FALSE, 
+        return.ggplot = FALSE,
+        return.gtable = TRUE,
+        plot = TRUE, 
+        warn.print = FALSE, 
+        lib.path = NULL
 ){
     # AIM
     # Plot ggplot2 scatterplot with the possibility to overlay dots from up to 3 different data frames (-> three different legends) and lines from up to 3 different data frames (-> three different legends) -> up to 6 overlays totally
@@ -13731,38 +13732,38 @@ if(return == TRUE){
 
 
 fun_gg_donut <- function(
-    data1, 
-    freq, 
-    categ, 
-    fill.palette = NULL,
-    fill.color = NULL, 
-    hole.size = 0.5, 
-    hole.text = TRUE, 
-    hole.text.size = 14, 
-    border.color = "gray50", 
-    border.size = 0.2, 
-    title = "", 
-    title.text.size = 7, 
-    annotation = NULL,
-    annotation.distance = 0,
-    annotation.size = 3,
-    annotation.force = 1,
-    annotation.force.pull = 100,
-    legend.show = TRUE, 
-    legend.width = 0.25, 
-    legend.name = NULL, 
-    legend.text.size = 10, 
-    legend.box.size = 5, 
-    legend.box.space = 2, 
-    legend.limit = NULL, 
-    legend.add.prop = FALSE,
-    add = NULL, 
-    return = FALSE, 
-    return.ggplot = FALSE,
-    return.gtable = TRUE,
-    plot = TRUE, 
-    warn.print = TRUE, 
-    lib.path = NULL
+        data1, 
+        freq, 
+        categ, 
+        fill.palette = NULL,
+        fill.color = NULL, 
+        hole.size = 0.5, 
+        hole.text = TRUE, 
+        hole.text.size = 14, 
+        border.color = "gray50", 
+        border.size = 0.2, 
+        title = "", 
+        title.text.size = 7, 
+        annotation = NULL,
+        annotation.distance = 0,
+        annotation.size = 3,
+        annotation.force = 1,
+        annotation.force.pull = 100,
+        legend.show = TRUE, 
+        legend.width = 0.25, 
+        legend.name = NULL, 
+        legend.text.size = 10, 
+        legend.box.size = 5, 
+        legend.box.space = 2, 
+        legend.limit = NULL, 
+        legend.add.prop = FALSE,
+        add = NULL, 
+        return = FALSE, 
+        return.ggplot = FALSE,
+        return.gtable = TRUE,
+        plot = TRUE, 
+        warn.print = TRUE, 
+        lib.path = NULL
 ){
     # AIM
     # Plot a ggplot2 donut using contingency data, systematically in the decreasing order of frequencies, starting at the top and turning clockwise
