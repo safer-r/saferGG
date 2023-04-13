@@ -171,6 +171,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.3.0
+
+1) fun_gg_empty_graph with a true white background (to prevent some display bugs in png and pdf devices) 
+
+
 ### v12.2.0
 
 1) bug removed in the title.text.size argument in gg_donut() 
