@@ -171,6 +171,12 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+
+### v12.5.0
+
+1) bug fixed in fun_gg_donut
+
+
 ### v12.4.0
 
 1) fun_gg_empty_graph improved so that no need to use pdf(NULL) anymore

@@ -9139,7 +9139,6 @@ fun_get_message <- function(
 
 
 
-
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every paste0("ERROR IN ", function.name, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into fun_scatter
@@ -10370,7 +10369,7 @@ fun_gg_boxplot <- function(
         "gridExtra", 
         "lemon", 
         "scales"
-    ), lib.path = lib.path)
+    ), load = FALSE, lib.path = lib.path)
     # end package checking
     
     
@@ -11360,6 +11359,7 @@ fun_gg_boxplot <- function(
     # end output
     # end main code
 }
+
 
 
 
@@ -12857,7 +12857,7 @@ fun_gg_scatter <- function(
         "ggplot2", 
         "lemon", 
         "scales"
-    ), lib.path = lib.path)
+    ), load = FALSE, lib.path = lib.path)
     # packages Cairo and grid tested by fun_gg_point_rast()
     # end package checking
     
@@ -14335,14 +14335,14 @@ fun_gg_donut <- function(
             assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
             assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
                 legend.text = ggplot2::element_text(size = legend.text.size),
-                legend.spacing.y = unit(legend.box.space, 'mm')
+                legend.spacing.y = grid::unit(legend.box.space, 'mm')
             ))
         }
     }else{
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
             legend.text = ggplot2::element_text(size = legend.text.size),
-            legend.spacing.y = unit(legend.box.space, 'mm')
+            legend.spacing.y = grid::unit(legend.box.space, 'mm')
         ))
     }
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(

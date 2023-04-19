@@ -604,14 +604,14 @@ fun_gg_donut <- function(
             assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
             assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
                     legend.text = ggplot2::element_text(size = legend.text.size),
-                    legend.spacing.y = unit(legend.box.space, 'mm')
+                    legend.spacing.y = grid::unit(legend.box.space, 'mm')
             ))
         }
     }else{
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
                 legend.text = ggplot2::element_text(size = legend.text.size),
-                legend.spacing.y = unit(legend.box.space, 'mm')
+                legend.spacing.y = grid::unit(legend.box.space, 'mm')
         ))
     }
     assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(
