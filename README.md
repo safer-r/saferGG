@@ -171,6 +171,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.6.0
+
+- minor corrections
+- files ready for starting package configuration into cute and ggcute folders
+
 
 ### v12.5.0
 
