@@ -171,6 +171,12 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.7.0
+
+- bug fixed for the arg.check object inside all the functions
+- bug fixed for the arg.user.setting object inside all the functions
+
+
 ### v12.6.0
 
 - minor corrections
