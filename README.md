@@ -50,44 +50,6 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 
 ## DESCRIPTIONS OF THE FUNCTIONS
 
-| Object analysis | |
-| --- | --- |
-| **fun_check()** | check class, type, length, etc., of objects |
-| **fun_secu()** | verif that local variables are not present in other envs |
-| **fun_info()** | recover object information |
-| **fun_head()** | head of the corners of big 2D objects |
-| **fun_tail()** | tail of the corners of big 2D objects |
-| **fun_comp_1d()** | comparison of two 1D datasets (vectors, factors, 1D tables) |
-| **fun_comp_2d()** | comparison of two 2D datasets (matrices, data.drames, tables) |
-| **fun_comp_list()** | comparison of two lists |
-| **fun_test()** | test combinations of argument values of a function and return errors (and graphs) |
-
-| Object modification | |
-| --- | --- |
-| **fun_name_change()** | check a vector of character strings and modify any string if present in another vector |
-| **fun_df_remod()** | remodel a data frame to have column name as a qualitative values and vice-versa |
-| **fun_round()** | round numbers if decimals present |
-| **fun_mat_rotate()** | 90° clockwise matrix rotation |
-| **fun_mat_num2color()** | convert a numeric matrix into hexadecimal color matrix |
-| **fun_mat_op()** | assemble several matrices with operation |
-| **fun_mat_inv()** | return the inverse of a square matrix |
-| **fun_mat_fill()** | fill the empty half part of a symmetric square matrix |
-| **fun_permut()** | progressively break a vector order |
-| **fun_slide()** | return a computation made on a vector using a sliding window |
-
-| Graphics management | |
-| --- | --- |
-| **fun_width()** | graphic device width depending on the number of classes to plot |
-| **fun_open()** | open a GUI or pdf graphic device |
-| **fun_prior_plot()** | set graphic parameters before plotting (erase axes for instance) |
-| **fun_scale()** | select nice labeling numbers when setting the number of ticks on an axis |
-| **fun_inter_ticks()** | define coordinates of secondary ticks |
-| **fun_post_plot()** | set graphic parameters after plotting (axes redesign for instance) |
-| **fun_close()** | close specific graphic devices |
-
-| Standard graphics | |
-| --- | --- |
-| **fun_empty_graph()** | generate an empty graphic device with text in the middle |
 
 | gg graphics | |
 | --- | --- |
@@ -99,21 +61,6 @@ The present repository of Cute Little R functions is for beta testing. Ultimatel
 | **fun_gg_scatter()** | ggplot2 scatterplot + lines (up to 6 overlays totally) |
 | **fun_gg_donut()** | ggplot2 donut |
 | **fun_gg_empty_graph()** | generate an empty graphic device with text in the middle |
-
-| Graphic extraction | |
-| --- | --- |
-| **fun_trim()** | display values from a quantitative variable and trim according to defined cut-offs |
-| **fun_segmentation()** | segment a dot cloud on a scatterplot and define the dots from another cloud outside the segmentation |
-
-| Import | |
-| --- | --- |
-| **fun_pack()** | check if R packages are present and import into the working environment |
-| **fun_python_pack()** | check if python packages are present |
-
-| Print / Exporting results (text & tables) | |
-| --- | --- |
-| **fun_report()** | print strings or results into a log file |
-| **fun_get_message()** | catch the error/warning/other messages of an evaluated expression |
 
 
 ## HOW TO LOAD AND MANIPULATE cute_little_R_functions
