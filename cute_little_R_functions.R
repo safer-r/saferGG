@@ -413,12 +413,15 @@ fun_check <- function(
     problem <- FALSE
     text <- paste0(ifelse(is.null(fun.name), "", paste0("IN ", fun.name, ": ")), "NO PROBLEM DETECTED FOR THE ", data.name, " OBJECT")
     if(( ! is.null(options)) & (all(base::typeof(data) == "character") | all(base::typeof(data) == "integer") | all(base::typeof(data) == "double"))){ # all() without na.rm -> ok because typeof() never returns NA
+        test.log <- TRUE
         if(all(base::typeof(data) == "double")){
             if( ! all(data %% 1 == 0L, na.rm = TRUE)){
                 problem <- TRUE
                 text <- paste0(ifelse(is.null(fun.name), "ERROR", paste0("ERROR IN ", fun.name)), ": THE ", data.name, " OBJECT MUST BE SOME OF THESE OPTIONS: ", paste(options, collapse = " "), "\nBUT IS NOT EVEN TYPE CHARACTER OR INTEGER")
+                test.log <- FALSE
             }
-        }else{
+        }
+        if(test.log == TRUE){
             text <- ""
             if( ! all(data %in% options)){ # no need of na.rm = TRUE for all() because %in% does not output NA
                 problem <- TRUE
@@ -1978,8 +1981,7 @@ fun_test <- function(
         "arg", 
         "val"
     )
-    tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), "))")))
-    print(tempo)
+    tempo <- eval(parse(text = paste0("missing(", paste0(mandat.args, collapse = ") | missing("), ")")))
     if(any(tempo)){ # normally no NA for missing() output
         tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(sum(tempo, na.rm = TRUE) > 1, "S HAVE", " HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args[tempo], collapse = "\n"))
         stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -8898,7 +8900,6 @@ path_lib = sys.path
             tempo.try[[i2]] <- suppressWarnings(try(reticulate::import_from_path(req.package[i1], path = lib.path[i2]), silent = TRUE)) # done twice to avoid the error message  about flushing present the first time but not the second time. see https://stackoverflow.com/questions/57357001/reticulate-1-13-error-in-sysstdoutflush-attempt-to-apply-non-function
         }
         if(all(sapply(tempo.try, FUN = grepl, pattern = "[Ee]rror"))){
-            print(tempo.try)
             tempo.cat <- paste0("ERROR IN ", function.name, ": PACKAGE ", req.package[i1], " MUST BE INSTALLED IN THE MENTIONNED DIRECTORY:\n", paste(lib.path, collapse = "\n"))
             stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         } # else{
@@ -9095,6 +9096,14 @@ fun_get_message <- function(
     }
     # end required function checking
     # no need to use reserved words to avoid bugs, because it is local, and  exists("tempo.warning", inherit = FALSE), never use the scope
+mandat.args <- c(
+"data"
+)
+tempo <- eval(parse(text = paste0("c(missing(", paste0(mandat.args, collapse = "),missing("), "))")))
+if(any(tempo)){ # normally no NA for missing() output
+tempo.cat <- paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", ifelse(sum(tempo, na.rm = TRUE) > 1, "S HAVE", " HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", paste0(mandat.args, collapse = "\n"))
+stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+}
     # argument checking
     # argument checking with fun_check()
     arg.check <- NULL #
