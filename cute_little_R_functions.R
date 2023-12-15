@@ -14425,7 +14425,8 @@ fun_gg_donut <- function(
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_brewer(palette = fill.palette, name = legend.name))
     }else if( ! is.null(fill.color)){
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(values = fill.color, name = legend.name, na.value = "white"))
-    }else if( ! is.null(legend.name)){
+    }
+    if(legend.name != ""){
         assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::labs(fill = legend.name)) # title of the legend
     }
     

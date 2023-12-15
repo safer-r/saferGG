@@ -118,6 +118,12 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.8.0
+
+- Warning: functions relatives to the cute/trust packages have been removed -> correct only the cute_little_R_functions.R file if necessary
+- bug fixed in fun_gg_donut about palette and color
+
+
 ### v12.7.0
 
 - bug fixed for the arg.check object inside all the functions

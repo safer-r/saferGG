@@ -35,7 +35,7 @@ fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car",
 
 # The fill.color argument overrides the fill.palette argument
 fun_gg_donut(data1 = obs1, freq = "Km", categ = "Car",
-    fill.palette = "BrBG",
+    fill.palette = "Spectral",
     fill.color = obs1$Color1
 )
 # Using the fill.color argument (as elements from colors())
