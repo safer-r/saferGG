@@ -118,6 +118,11 @@ Gitlab developers
 
 ## WHAT'S NEW IN
 
+### v12.9
+
+- In fun_gg_heatmap(), values of limit1 argument are now sorted
+
+
 ### v12.8.0
 
 - Warning: functions relatives to the cute/trust packages have been removed -> correct only the cute_little_R_functions.R file if necessary
