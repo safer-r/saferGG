@@ -40,11 +40,11 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
             tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE: DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
-            .libPaths(new = base::sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
-            lib.path <- .libPaths()
+            base::.libPaths(new = base::sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # base::.libPaths(new = ) add path to default path. BEWARE: base::.libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
+            lib.path <- base::.libPaths()
         }
     }else{
-        lib.path <- .libPaths() # .libPaths(new = lib.path) # or .libPaths(new = c(.libPaths(), lib.path))
+        lib.path <- base::.libPaths() # base::.libPaths(new = lib.path) # or base::.libPaths(new = c(base::.libPaths(), lib.path))
     }
     # end check of lib.path
     # check of the required function from the required packages
@@ -62,8 +62,8 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
     mandat.args <- base::c(
         "ggplot_built"
     )
-    tempo <- base::eval(base::parse(text = base::paste0("missing(", base::paste0(mandat.args, collapse = ") | missing("), ")")))
-    if(base::any(tempo)){ # normally no NA for missing() output
+    tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
+    if(base::any(tempo)){ # normally no NA for base::missing() output
         tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
@@ -124,19 +124,19 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
     # end second round of checking and data preparation
 
     # main code
-    win.nb <- dev.cur()
-    pdf(file = NULL)
+    win.nb <- grDevices::dev.cur()
+    grDevices::pdf(file = NULL)
     tmp <- ggplot2::ggplot_gtable(ggplot_built)
     # BEWARE with ggplot_gtable : open a blanck device https://stackoverflow.com/questions/17012518/why-does-this-r-ggplot2-code-bring-up-a-blank-display-device
-    invisible(dev.off())
+    base::invisible(grDevices::dev.off())
     if(win.nb > 1){ # to go back to the previous active device, if == 1 means no opened device
-        dev.set(win.nb)
+        grDevices::dev.set(win.nb)
     }
-    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-    if(length(leg) == 0L){
+    leg <- base::which(base::sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    if(base::length(leg) == 0L){
         legend <- NULL
     }else{
         legend <- tmp$grobs[[leg]]
     }
-    return(legend)
+    base::return(legend)
 }
