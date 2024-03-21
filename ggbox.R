@@ -303,10 +303,10 @@ ggbox <- function(
     }
     # end arg with no default values
     # argument primary checking
-    arg.check <- NULL #
+    argum.check <- NULL #
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-    ee <- expression(arg.check <- c(arg.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
+    ee <- expression(argum.check <- c(argum.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
     tempo <- saferDev::arg_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; eval(ee)
     tempo <- saferDev::arg_check(data = y, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
     tempo <- saferDev::arg_check(data = categ, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
@@ -333,11 +333,11 @@ ggbox <- function(
             if(tempo.check.color == TRUE){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR") # integer possible because dealt above
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }else if(any(categ.color == 0L, na.rm = TRUE)){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ncateg.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR") # integer possible because dealt above
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -363,11 +363,11 @@ ggbox <- function(
             if(tempo.check.color == TRUE){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR") # integer possible because dealt above
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }else if(any(dot.color == 0L, na.rm = TRUE)){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR") # integer possible because dealt above
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -402,7 +402,7 @@ ggbox <- function(
         if(dot.tidy.bin.nb == 0L){ # length and NA checked above
             tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.tidy.bin.nb ARGUMENT MUST BE A NON-NULL AND POSITVE INTEGER VALUE") # integer possible because dealt above
             text.check <- c(text.check, tempo.cat)
-            arg.check <- c(arg.check, TRUE)
+            argum.check <- c(argum.check, TRUE)
         }
     }
     tempo <- saferDev::arg_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; eval(ee)
@@ -423,12 +423,12 @@ ggbox <- function(
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE")
             text.check <- c(text.check, tempo.cat)
-            arg.check <- c(arg.check, TRUE)
+            argum.check <- c(argum.check, TRUE)
         }else if(tempo1$problem == FALSE & tempo2$problem == TRUE){
             if( ! all(dot.border.color %in% colors() | grepl(pattern = "^#", dot.border.color), na.rm = TRUE)){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ndot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY colors(), OR (3) AN INTEGER VALUE")
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -443,7 +443,7 @@ ggbox <- function(
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             tempo.cat <- paste0("ERROR IN ", function.name, "\nx.lab ARGUMENT MUST BE A SINGLE CHARACTER STRING OR EXPRESSION")
             text.check <- c(text.check, tempo.cat)
-            arg.check <- c(arg.check, TRUE)
+            argum.check <- c(argum.check, TRUE)
         }
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
@@ -458,7 +458,7 @@ ggbox <- function(
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lab ARGUMENT MUST BE A SINGLE CHARACTER STRING OR EXPRESSION")
             text.check <- c(text.check, tempo.cat)
-            arg.check <- c(arg.check, TRUE)
+            argum.check <- c(argum.check, TRUE)
         }
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
@@ -471,7 +471,7 @@ ggbox <- function(
             if(any(is.infinite(y.lim))){ # normally no NA for is.infinite() output
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.lim ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -486,7 +486,7 @@ ggbox <- function(
             if(y.tick.nb < 0){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -500,7 +500,7 @@ ggbox <- function(
             if(y.second.tick.nb <= 0){
                 tempo.cat <- paste0("ERROR IN ", function.name, "\ny.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER")
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -554,7 +554,7 @@ ggbox <- function(
             if( ! all(dir.exists(lib.path), na.rm = TRUE)){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
                 tempo.cat <- paste0("ERROR IN ", function.name, "\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
                 text.check <- c(text.check, tempo.cat)
-                arg.check <- c(arg.check, TRUE)
+                argum.check <- c(argum.check, TRUE)
             }
         }
     }else{
@@ -562,9 +562,9 @@ ggbox <- function(
         tempo <- saferDev::arg_check(data = lib.path, class = "vector")
         checked.arg.names <- c(checked.arg.names, tempo$object.name)
     }
-    if( ! is.null(arg.check)){
-        if(any(arg.check) == TRUE){
-            stop(paste0("\n\n================\n\n", paste(text.check[arg.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+    if( ! is.null(argum.check)){
+        if(any(argum.check) == TRUE){
+            stop(paste0("\n\n================\n\n", paste(text.check[argum.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
         }
     }
     # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_saferDev::arg_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using saferDev::arg_check()
