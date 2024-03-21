@@ -1,6 +1,6 @@
 
 
-fun_gg_donut <- function(
+gg_donut <- function(
     data1, 
     freq, 
     categ, 
