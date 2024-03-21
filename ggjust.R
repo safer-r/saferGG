@@ -98,7 +98,7 @@ ggjust <- function(
         }
     }
     # end management of NA arguments
-     # management of NULL arguments
+    # management of NULL arguments
     tempo.arg <-base::c(
         "angle", 
         "pos", 
