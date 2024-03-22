@@ -184,7 +184,7 @@ gg_donut <- function(
         "freq", 
         "categ"
     )
-    tempo <- base::eval(base::parse(text = base::paste0("missing(", base::paste0(mandat.args, collapse = ") | missing("), ")")))
+    tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for missing() output
         tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -195,12 +195,12 @@ gg_donut <- function(
     argum.check <- NULL #
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-    ee <- base::expression(argum.check <- c(argum.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
+    ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
     tempo <- saferDev::arg_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = freq, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = categ, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name) ; base::eval(ee)
     if( ! base::is.null(fill.palette)){
-        tempo <- saferDev::arg_check(data = fill.palette, options = c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), length = 1, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = fill.palette, options = base::c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), length = 1, fun.name = function.name) ; base::eval(ee)
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = fill.palette, class = "vector")
@@ -217,9 +217,9 @@ gg_donut <- function(
             checked.arg.names <- base::c(checked.arg.names, tempo1$object.name)
         }else if(tempo3$problem == FALSE & base::any(base::is.infinite(fill.color))){ # is.infinite() deals with NA as FALSE
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT CANNOT CONTAIN Inf VALUES AMONG POSITIVE INTEGER VALUES")
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
-            checked.arg.names <- c(checked.arg.names, tempo1$object.name)
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
+            checked.arg.names <- base::c(checked.arg.names, tempo1$object.name)
         }else if(tempo3$problem == FALSE & base::any(fill.color == 0, na.rm = TRUE)){
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT CANNOT CONTAIN 0 AMONG POSITIVE INTEGER VALUES")
             text.check <- base::c(text.check, tempo.cat)
@@ -270,12 +270,12 @@ gg_donut <- function(
     tempo <- saferDev::arg_check(data = legend.text.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = legend.box.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = legend.box.space, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name) ; base::eval(ee)
-    if( ! is.null(legend.limit)){
+    if( ! base::is.null(legend.limit)){
         tempo <- saferDev::arg_check(data = legend.limit, prop = TRUE, length = 1, fun.name = function.name) ; base::eval(ee)
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = legend.limit, class = "vector")
-        checked.arg.names <- c(checked.arg.names, tempo$object.name)
+        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
     }
     tempo <- saferDev::arg_check(data = legend.add.prop, class = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
     if( ! base::is.null(add)){
@@ -283,7 +283,7 @@ gg_donut <- function(
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = add, class = "vector")
-        checked.arg.names <- c(checked.arg.names, tempo$object.name)
+        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
     }
     tempo <- saferDev::arg_check(data = return, class = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = return.ggplot, class = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
@@ -383,7 +383,7 @@ gg_donut <- function(
     }else{
         if(base::all(base::is.na(data1[ , freq]) | base::is.infinite(data1[ , freq]))){
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\nTHE freq COLUMN OF data1 CANNOT BE JUST NA OR Inf")
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
         tempo <- saferDev::arg_check(data = data1[ , freq], mode = "numeric", neg.values = FALSE, fun.name = function.name)
         if(tempo$problem == TRUE){
@@ -394,7 +394,7 @@ gg_donut <- function(
         if(base::any(base::is.infinite(data1[, freq]) | base::is.na(data1[, freq]))){
             warn.count <- warn.count + 1
             tempo.warn <- base::paste0("(", warn.count,") PRESENCE OF Inf OR NA VALUES IN THE ", freq, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
-            warn <- base::paste0(base::ifelse(is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
+            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
             tempo <- base::which(base::is.infinite(data1.ini[, freq]) | base::is.na(data1.ini[, freq])) # data.ini used for the output
             removed.row.nb <- base::c(removed.row.nb, tempo)
             removed.rows <- base::rbind(removed.rows, data1.ini[tempo, ], stringsAsFactors = FALSE) # data.ini used for the output
@@ -458,7 +458,7 @@ gg_donut <- function(
             tempo2 <- saferDev::arg_check(data = annotation, class = "factor", na.contain = TRUE, fun.name = function.name)
             if(tempo1$problem == TRUE & tempo2$problem == TRUE){
                 tempo.cat <- base::paste0("ERROR IN ", function.name, "\nTHE annotation COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"")
-                base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+                base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
             }
             if(base::any(base::duplicated(data1[, annotation]))){
                 warn.count <- warn.count + 1
@@ -468,14 +468,14 @@ gg_donut <- function(
         }
     }
     if(base::length(data1) == 0){
-        tempo.cat <- base::paste0("ERROR IN ", function.name, "\nTHE data1 ARGUMENT IS EMPTY AFTER Inf, NA AND 0 REMOVAL IN THE ", freq, base::ifelse(is.null(annotation), " AND ", ", "), categ, base::ifelse(is.null(annotation), "", " AND "), " COLUMNS")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, "\nTHE data1 ARGUMENT IS EMPTY AFTER Inf, NA AND 0 REMOVAL IN THE ", freq, base::ifelse(base::is.null(annotation), " AND ", ", "), categ, base::ifelse(base::is.null(annotation), "", " AND "), " COLUMNS")
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
     }
     if( ! base::is.null(fill.color)){
         if( ! base::is.numeric(fill.color)){
-            if( ! base::all(fill.color[ ! base::is.na(fill.color)] %in% base::colors() | base::grepl(pattern = "^#", fill.color[ ! base::is.na(fill.color)]), na.rm = TRUE)){
+            if( ! base::all(fill.color[ ! base::is.na(fill.color)] %in% grDevices::colors() | base::grepl(pattern = "^#", fill.color[ ! base::is.na(fill.color)]), na.rm = TRUE)){
                 tempo.cat <- base::paste0("ERROR IN ", function.name, "\nfill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY colors(), OR (3) INTEGER VALUES")
-                stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+                base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
             }else{
                 fill.color <- base::as.character(fill.color) # remove class factor is any
             }
@@ -503,10 +503,10 @@ gg_donut <- function(
             
         }else if( ! base::grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }else if( ! base::grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
     # end verif of add
@@ -559,9 +559,9 @@ gg_donut <- function(
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else if( ! base::grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
-            stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else if( ! base::grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
-            tempo.cat <- base::paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, "\nadd ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }
@@ -580,8 +580,8 @@ gg_donut <- function(
             tempo.text <- "facet_wrap OR facet_rep_wrap"
             facet.check <- FALSE
         }else if(base::grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
-            tempo1 <- base::suppressWarnings(eval(parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
-            facet.categ <- c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))
+            tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
+            facet.categ <- base::c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))
             tempo.text <- "facet_grid OR facet_rep_grid"
             facet.check <- FALSE
         }
@@ -623,7 +623,7 @@ gg_donut <- function(
         expand = base::c(0, 0), # prevent extra limits in x axis
         limits = base::c(- bar_width / 2 - (bar_width * hole.size) / (1 - hole.size), base::max(bar_width / 2, annotation.distance))
     )) # must be centered on x = 0
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(c(0, base::max(base::cumsum(data1[ , freq])))))
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylim(base::c(0, base::max(base::cumsum(data1[ , freq])))))
     if(hole.text == TRUE){
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
             geom = "text", 
@@ -673,7 +673,7 @@ gg_donut <- function(
     # annotations on slices
     if( ! base::is.null(annotation)){
         tempo <- base::rev(base::cumsum(base::rev(data1[ , freq])))
-        data1 <- base::data.frame(data1, text_y = tempo - (tempo - c(tempo[-1], 0)) / 2)
+        data1 <- base::data.frame(data1, text_y = tempo - (tempo - base::c(tempo[-1], 0)) / 2)
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggrepel::geom_text_repel(
             data = data1, 
             mapping = ggplot2::aes_string(
