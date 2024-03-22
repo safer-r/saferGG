@@ -60,7 +60,7 @@ ggjust <- function(
         "angle", 
         "pos"
     )
-    tempo <- base::eval(base::parse(text = base::paste0("missing(", base::paste0(mandat.args, collapse = ") | missing("), ")")))
+    tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for missing() output
         tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -71,10 +71,10 @@ ggjust <- function(
     argum.check <- NULL #
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-    ee <- base::expression(argum.check <- c(argum.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
+    ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
     tempo <- saferDev::arg_check(data = angle , class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = pos, options = c("top", "right", "bottom", "left"), length = 1, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = kind, options = c("axis", "text"), length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = pos, options = base::c("top", "right", "bottom", "left"), length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = kind, options = base::c("axis", "text"), length = 1, fun.name = function.name) ; base::eval(ee)
 
     if( ! base::is.null(argum.check)){
         if(base::any(argum.check, na.rm = TRUE) == TRUE){
@@ -125,23 +125,23 @@ ggjust <- function(
     }
     # end to get angle between -360 and 360
     # justifications
-    if(pos %in% c("bottom", "top")){
+    if(pos %in% base::c("bottom", "top")){
         # code below is for if(pos == "bottom"){
-        if(any(sapply(FUN = all.equal, c(-360, -180, 0, 180, 360), angle) == TRUE)){ # equivalent of angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360 but deals with floats
+        if(base::any(base::sapply(FUN = all.equal, base::c(-360, -180, 0, 180, 360), angle) == TRUE)){ # equivalent of angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360 but deals with floats
             hjust <- 0.5
             if(kind == "text"){
-                if(any(sapply(FUN = all.equal, c(-360, 0, 360), angle) == TRUE)){
+                if(base::any(sbase::apply(FUN = all.equal, base::c(-360, 0, 360), angle) == TRUE)){
                     vjust <- 1
-                }else if(any(sapply(FUN = all.equal, c(-180, 180), angle) == TRUE)){
+                }else if(base::any(base::sapply(FUN = all.equal, base::c(-180, 180), angle) == TRUE)){
                     vjust <- 0
                 }
             }else{
                 vjust <- 0.5
             }
-        }else if(any(sapply(FUN = all.equal, c(-270, 90), angle) == TRUE)){
+        }else if(base::any(base::sapply(FUN = all.equal, base::c(-270, 90), angle) == TRUE)){
             hjust <- 1
             vjust <- 0.5
-        }else if(any(sapply(FUN = all.equal, c(-90, 270), angle) == TRUE)){
+        }else if(base::any(base::sapply(FUN = all.equal, base::c(-90, 270), angle) == TRUE)){
             hjust <- 0
             vjust <- 0.5
         }else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
@@ -166,23 +166,23 @@ ggjust <- function(
             }
             vjust <- 1 - vjust
         }
-    }else if(pos %in% c("left", "right")){
+    }else if(pos %in% base::c("left", "right")){
         # code below is for if(pos == "left"){
-        if(any(sapply(FUN = all.equal, c(-270, -90, 90, 270), angle) == TRUE)){ # equivalent of angle == -270 | angle == -90 | angle == 90 | angle == 270 but deals with floats
+        if(base::any(base::sapply(FUN = all.equal, base::c(-270, -90, 90, 270), angle) == TRUE)){ # equivalent of angle == -270 | angle == -90 | angle == 90 | angle == 270 but deals with floats
             hjust <- 0.5
             if(kind == "text"){
-                if(any(sapply(FUN = all.equal, c(-90, 90), angle) == TRUE)){
+                if(base::any(base::sapply(FUN = all.equal, base::c(-90, 90), angle) == TRUE)){
                     vjust <- 0
-                }else if(any(sapply(FUN = all.equal, c(-270, 270), angle) == TRUE)){
+                }else if(base::any(base::sapply(FUN = all.equal, base::c(-270, 270), angle) == TRUE)){
                     vjust <- 1
                 }
             }else{
                 vjust <- 0.5
             }
-        }else if(any(sapply(FUN = all.equal, c(-360, 0, 360), angle) == TRUE)){
+        }else if(base::any(base::sapply(FUN = all.equal, base::c(-360, 0, 360), angle) == TRUE)){
             hjust <- 1
             vjust <- 0.5
-        }else if(any(sapply(FUN = all.equal, c(-180, 180), angle) == TRUE)){
+        }else if(base::any(base::sapply(FUN = all.equal, base::c(-180, 180), angle) == TRUE)){
             hjust <- 0
             vjust <- 0.5
         }else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
@@ -206,6 +206,6 @@ ggjust <- function(
         }
     }
     # end justifications
-    output <- list(angle = angle, pos = pos, kind = kind, hjust = hjust, vjust = vjust)
-    return(output)
+    output <- base::list(angle = angle, pos = pos, kind = kind, hjust = hjust, vjust = vjust)
+    base::return(output)
 }
