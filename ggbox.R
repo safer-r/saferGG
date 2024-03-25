@@ -303,6 +303,13 @@ ggbox <- function(
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end arg with no default values
+
+
+
+
+
+
+
     # argument primary checking
     argum.check <- NULL #
     text.check <- NULL #
@@ -570,7 +577,17 @@ ggbox <- function(
     }
     # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_saferDev::arg_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using saferDev::arg_check()
     # end argument primary checking
+
+
+
+
+
     # second round of checking and data preparation
+
+
+
+
+    
     # management of NA arguments
     if( ! (base::all(base::class(arg.user.setting) == "list") & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
@@ -581,6 +598,10 @@ ggbox <- function(
         }
     }
     # end management of NA arguments
+
+
+
+
     # management of NULL arguments
     tempo.arg <-base::c(
         "data1", 
@@ -634,6 +655,10 @@ ggbox <- function(
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of NULL arguments
+
+
+
+
     # code that protects set.seed() in the global environment
     # see also Protocol 100-rev0 Parallelization in R.docx
     if(base::exists(".Random.seed", envir = .GlobalEnv)){ # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
@@ -644,12 +669,22 @@ ggbox <- function(
     }
     base::set.seed(dot.seed)
     # end code that protects set.seed() in the global environment
+
+
+
+
+
     # warning initiation
     ini.warning.length <- base::options()$warning.length
     base::options(warning.length = 8170)
     warn <- NULL
     warn.count <- 0
     # end warning initiation
+
+
+
+
+
     # other checkings
     if(base::any(base::duplicated(base::names(data1)), na.rm = TRUE)){
         tempo.cat <- base::paste0("ERROR IN ", function.name, "\nDUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED:\n", base::paste(base::names(data1)[base::duplicated(base::names(data1))], collapse = " "))
@@ -1282,6 +1317,19 @@ ggbox <- function(
     # end na detection and removal (done now to be sure of the correct length of categ)
     # From here, data1 and data.ini have no more NA or NaN
     # end other checkings
+
+
+
+
+
+
+
+
+
+
+
+
+
     # reserved word checking
     #already done above
     # end reserved word checking
@@ -1556,7 +1604,7 @@ ggbox <- function(
     
     
     # graphic info recovery (including means)
-    tempo.graph.info <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste0(base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, notch = box.notch, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}) + ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color)== 1L){rep(categ.color, length(unique(data1[, categ[length(categ)]])))}else{categ.color})')))) # will be recovered later again, when ylim will be considered
+    tempo.graph.info <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste0(base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, notch = box.notch, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}) + ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color)== 1L){rep(categ.color, length(base::unique(data1[, categ[length(categ)]])))}else{categ.color})')))) # will be recovered later again, when ylim will be considered
     tempo.yx.ratio <- (tempo.graph.info$layout$panel_params[[1]]$y.range[2] - tempo.graph.info$layout$panel_params[[1]]$y.range[1]) / (tempo.graph.info$layout$panel_params[[1]]$x.range[2] - tempo.graph.info$layout$panel_params[[1]]$x.range[1])
     box.coord <- tempo.graph.info$data[[2]] # to have the summary statistics of the plot. Contrary to ini.box.plot, now integrates ylim Here because can be required for stat.pos when just box are plotted
     box.coord$x <- base::as.numeric(box.coord$x) # because x is of special class that block comparison of values using identical
