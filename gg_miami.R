@@ -1,4 +1,4 @@
-fun_gg_miami <- function(
+gg_miami <- function(
         fisher, 
         chr, 
         top.y.column,
