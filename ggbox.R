@@ -281,16 +281,7 @@ ggbox <- function(
     # end package checking
 
 
-
-
-
-
-
-
-
-    # reserved words to avoid bugs (names of dataframe columns used in this function)
-    reserved.words <- base::c("categ.check", "categ.color", "dot.color", "dot.categ", "dot.max", "dot.min", "group", "PANEL", "group.check", "MEAN", "tempo.categ1", "tempo.categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax", "tidy_group", "binwidth")
-    # end reserved words to avoid bugs (used in this function)
+   
     # arg with no default values
     mandat.args <- base::c(
         "data1", 
@@ -583,6 +574,9 @@ ggbox <- function(
 
 
     # second round of checking and data preparation
+    # reserved words to avoid bugs (names of dataframe columns used in this function)
+    reserved.words <- base::c("categ.check", "categ.color", "dot.color", "dot.categ", "dot.max", "dot.min", "group", "PANEL", "group.check", "MEAN", "tempo.categ1", "tempo.categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax", "tidy_group", "binwidth")
+    # end reserved words to avoid bugs (used in this function)
 
 
 
