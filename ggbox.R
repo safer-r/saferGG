@@ -6,7 +6,56 @@
 # add horizontal argument and deal any conflict with vertical argument. Start with horizontal = NULL as default. If ! is.null() -> convert vertical if required
 # time for excecution : microbenchmark package. See also in RStudio time per line of code. See also https://stackoverflow.com/questions/7561362/what-can-cause-a-program-to-run-much-faster-the-second-time
 
-
+#' @title ggbox
+#' @description
+#' Plot ggplot2 boxplots + dots + means. For ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html.
+#' @param data1 data frame containing one column of quantitative values (see the y argument below) and one or two columns of categories (see the categ argument below). Duplicated column names are not allowed.
+#' @param y character string of the data1 column name for y-axis (column containing numeric values). Numeric values will be split according to the classes of the column names indicated in the categ argument to generate the boxes and will also be used to plot the dots.
+#' @param categ vector of character strings of the data1 column name for categories (column of characters or factors). Must be either one or two column names. If a single column name (further referred to as categ1), then one box per class of categ1. If two column names (further referred to as categ1 and categ2), then one box per class of categ2, which form a group of boxes in each class of categ1. WARNING: no empty classes allowed. To have a single box, create a factor column with a single class and specify the name of this column in the categ argument (here, no categ2 in categ argument). For a single set of grouped boxes, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1), in addition to the already used category (as categ2 in this situation).
+#' @param categ.class.order list indicating the order of the classes of categ1 and categ2 represented on the boxplot (the first compartment for categ1 and and the second for categ2). If categ.class.order == NULL, classes are represented according to the alphabetical order. Some compartments can be NULL and others not. See the categ argument for categ1 and categ2 description.
+#' @param categ.color vector of color character string for box frames (see the categ argument for categ1 and categ2 description). If categ.color == NULL, default colors of ggplot2, whatever categ1 and categ2. If categ.color is non-null and only categ1 in categ argument, categ.color can be either: (1) a single color string. All the boxes will have this color, whatever the number of classes of categ1; (2) a vector of string colors, one for each class of categ1. Each color will be associated according to categ.class.order of categ1; (3) a vector or factor of string colors, like if it was one of the column of data1 data frame. WARNING: a single color per class of categ1 and a single class of categ1 per color must be respected; Color functions, like grey(), hsv(), etc., are also accepted; Positive integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by ggpalette() using the maximal integer value among all the integers in categ.color (see ggpalette()); If categ.color is non-null and categ1 and categ2 are specified, all the rules described above will apply to categ2 instead of categ1 (colors will be determined for boxes inside a group of boxes)
+#' @param box.legend.name character string of the legend title. If box.legend.name is NULL, then box.legend.name <- categ1 if only categ1 is present, and box.legend.name <- categ2 if categ1 and categ2 are present in the categ argument. Write "" if no legend required. See the categ argument for categ1 and categ2 description.
+#' @param box.fill logical. Fill the box? If TRUE, the categ.color argument will be used to generate filled boxplots (the box frames being black) as well as filled outlier dots (the dot border being controlled by the dot.border.color argument). If all the dots are plotted (argument dot.color other than NULL), they will be over the boxes. If FALSE, the categ.color argument will be used to color the box frames and the outlier dot borders. If all the dots are plotted, they will be beneath the boxes.
+#' @param box.width single numeric value (from 0 to 1) of width of either boxes or group of boxes. When categ argument has a single categ1 element (i.e., separate boxes. See the categ argument for categ1 and categ2 description), then each class of categ1 is represented by a single box. In that case, box.width argument defines each box width, from 0 (no box width) to 1 (max box width), but also the space between boxes (the code uses 1 - box.width for the box spaces). Of note, xmin and xmax of the ggbox() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each box); When categ argument has a two categ1 and categ2 elements (i.e., grouped boxes), box.width argument defines the width allocated for each set of grouped boxes, from 0 (no group width) to 1 (max group width), but also the space between grouped boxes (the code uses 1 - box.width for the spaces). Of note, xmin and xmax of the ggbox() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped box)
+#' @param box.space single numeric value (from 0 to 1) indicating the box separation inside grouped boxes, when categ argument has a two categ1 and categ2 elements. 0 means no space and 1 means boxes shrunk to a vertical line. Ignored if categ argument has a single categ1 element.
+#' @param box.line.size single numeric value of line width of boxes and whiskers in mm.
+#' @param box.notch logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences.
+#' @param box.alpha single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). To remove boxplots, use box.alpha = 0.
+#' @param box.mean logical. Add mean value? If TRUE, a diamond-shaped dot, with the horizontal diagonal corresponding to the mean value, is displayed over each boxplot.
+#' @param box.whisker.kind range of the whiskers. Either "no" (no whiskers), or "std" (length of each whisker equal to 1.5 x Inter Quartile Range (IQR)), or "max" (length of the whiskers up or down to the most distant dot).
+#' @param box.whisker.width single numeric value (from 0 to 1) of the whisker width, with 0 meaning no whiskers and 1 meaning a width equal to the box width.
+#' @param dot.color 
+#' @param dot.categ optional single character string of a column name (further referred to as categ3) of the data1 argument. This column of data1 will be used to generate a legend for dots, in addition to the legend for boxes. See the dot.color argument for details about the way the legend is built using the two dot.categ and dot.color arguments. If NULL, no legend created and the colors of dots will depend on dot.color and categ arguments (as explained in the dot.color argument).
+#' @param dot.categ.class.order optional vector of character strings indicating the order of the classes of categ3 (see the dot.categ argument). If dot.categ is non-NULL and dot.categ.class.order is NULL, classes are displayed in the legend according to the alphabetical order. Ignored if dot.categ is NULL.
+#' @param dot.legend.name optional character string of the legend title for categ3 (see the dot.categ argument). If dot.legend.name == NULL, dot.categ value is used (name of the column in data1). Write "" if no legend required. Ignored if dot.categ is NULL.
+#' @param dot.tidy logical. Nice dot spreading? If TRUE, use the geom_dotplot() function for a nice representation. WARNING: change the true quantitative coordinates of dots (i.e., y-axis values for vertical display) because of binning. Thus, the gain in aestheticism is associated with a loss in precision that can be very important. If FALSE, dots are randomly spread on the qualitative axis, using the dot.jitter argument (see below) keeping the true quantitative coordinates.
+#' @param dot.tidy.bin.nb positive integer indicating the number of bins (i.e., nb of separations) of the y.lim range. Each dot will then be put in one of the bin, with a diameter of the width of the bin. In other words, increase the number of bins to have smaller dots. Not considered if dot.tidy is FALSE.
+#' @param dot.jitter numeric value (from 0 to 1) of random dot horizontal dispersion (for vertical display), with 0 meaning no dispersion and 1 meaning dispersion in the corresponding box width interval. Not considered if dot.tidy is TRUE.
+#' @param dot.seed integer value that set the random seed. Using the same number will generate the same dot jittering. Write NULL to have different jittering each time the same instruction is run. Ignored if dot.tidy is TRUE.
+#' @param dot.size numeric value of dot diameter in mm. Not considered if dot.tidy is TRUE.
+#' @param dot.alpha numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively).
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param kind either "std" for standard gg colors, "dark" for darkened gg colors, or "light" for pastel gg colors.
+#' @returns the vector of hexadecimal colors.
+#' @examples
+#' ggpalette(n = 2) # output of the function
+#'    
+#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7)) # the ggplot2 palette when asking for 7 different colors
+#'   
+#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
+#'    
+#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
+#'    
+#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
+#' @importFrom utils find
+#' @importFrom saferDev arg_check
+#' @export
 ggbox <- function(
         data1, 
         y, 
@@ -66,9 +115,7 @@ ggbox <- function(
         warn.print = FALSE, 
         lib.path = NULL
 ){
-    # AIM
-    # Plot ggplot2 boxplots + dots + means
-    # For ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
+
     # WARNINGS
     # Rows containing NA in data1[, c(y, categ)] will be removed before processing, with a warning (see below)
     # Hinges are not computed like in the classical boxplot() function of R. See https://ggplot2.tidyverse.org/reference/geom_boxplot.html
@@ -78,43 +125,28 @@ ggbox <- function(
     # Display seems to be done twice on Windows devices (like a blink). However, no double plots on pdf devices. Thus, the blink remains mysterious
     # To remove boxes and have only dots, use box.alpha = 0
     # ARGUMENTS
-    # data1: data frame containing one column of quantitative values (see the y argument below) and one or two columns of categories (see the categ argument below). Duplicated column names are not allowed
-    # y: character string of the data1 column name for y-axis (column containing numeric values). Numeric values will be split according to the classes of the column names indicated in the categ argument to generate the boxes and will also be used to plot the dots
-    # categ: vector of character strings of the data1 column name for categories (column of characters or factors). Must be either one or two column names. If a single column name (further referred to as categ1), then one box per class of categ1. If two column names (further referred to as categ1 and categ2), then one box per class of categ2, which form a group of boxes in each class of categ1. WARNING: no empty classes allowed. To have a single box, create a factor column with a single class and specify the name of this column in the categ argument (here, no categ2 in categ argument). For a single set of grouped boxes, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1), in addition to the already used category (as categ2 in this situation)
-    # categ.class.order: list indicating the order of the classes of categ1 and categ2 represented on the boxplot (the first compartment for categ1 and and the second for categ2). If categ.class.order == NULL, classes are represented according to the alphabetical order. Some compartments can be NULL and others not. See the categ argument for categ1 and categ2 description
-    # categ.color: vector of color character string for box frames (see the categ argument for categ1 and categ2 description)
-    # If categ.color == NULL, default colors of ggplot2, whatever categ1 and categ2
-    # If categ.color is non-null and only categ1 in categ argument, categ.color can be either:
-    # (1) a single color string. All the boxes will have this color, whatever the number of classes of categ1
-    # (2) a vector of string colors, one for each class of categ1. Each color will be associated according to categ.class.order of categ1
-    # (3) a vector or factor of string colors, like if it was one of the column of data1 data frame. WARNING: a single color per class of categ1 and a single class of categ1 per color must be respected
-    # Color functions, like grey(), hsv(), etc., are also accepted
-    # Positive integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by ggpalette() using the maximal integer value among all the integers in categ.color (see ggpalette())
-    # If categ.color is non-null and categ1 and categ2 are specified, all the rules described above will apply to categ2 instead of categ1 (colors will be determined for boxes inside a group of boxes)
-    # box.legend.name: character string of the legend title. If box.legend.name is NULL, then box.legend.name <- categ1 if only categ1 is present, and box.legend.name <- categ2 if categ1 and categ2 are present in the categ argument. Write "" if no legend required. See the categ argument for categ1 and categ2 description
-    # box.fill: logical. Fill the box? If TRUE, the categ.color argument will be used to generate filled boxplots (the box frames being black) as well as filled outlier dots (the dot border being controlled by the dot.border.color argument). If all the dots are plotted (argument dot.color other than NULL), they will be over the boxes. If FALSE, the categ.color argument will be used to color the box frames and the outlier dot borders. If all the dots are plotted, they will be beneath the boxes
-    # box.width: single numeric value (from 0 to 1) of width of either boxes or group of boxes
-    # When categ argument has a single categ1 element (i.e., separate boxes. See the categ argument for categ1 and categ2 description), then each class of categ1 is represented by a single box. In that case, box.width argument defines each box width, from 0 (no box width) to 1 (max box width), but also the space between boxes (the code uses 1 - box.width for the box spaces). Of note, xmin and xmax of the ggbox() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each box)
-    # When categ argument has a two categ1 and categ2 elements (i.e., grouped boxes), box.width argument defines the width allocated for each set of grouped boxes, from 0 (no group width) to 1 (max group width), but also the space between grouped boxes (the code uses 1 - box.width for the spaces). Of note, xmin and xmax of the ggbox() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped box)
-    # box.space: single numeric value (from 0 to 1) indicating the box separation inside grouped boxes, when categ argument has a two categ1 and categ2 elements. 0 means no space and 1 means boxes shrunk to a vertical line. Ignored if categ argument has a single categ1 element
-    # box.line.size: single numeric value of line width of boxes and whiskers in mm
-    # box.notch: logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences
-    # box.alpha: single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). To remove boxplots, use box.alpha = 0
-    # box.mean: logical. Add mean value? If TRUE, a diamond-shaped dot, with the horizontal diagonal corresponding to the mean value, is displayed over each boxplot
-    # box.whisker.kind: range of the whiskers. Either "no" (no whiskers), or "std" (length of each whisker equal to 1.5 x Inter Quartile Range (IQR)), or "max" (length of the whiskers up or down to the most distant dot)
-    # box.whisker.width: single numeric value (from 0 to 1) of the whisker width, with 0 meaning no whiskers and 1 meaning a width equal to the box width
+    
+    
+
+
+   
+
+    
+   
+
+
+
     # dot.color: vector of color character string ruling the dot colors and the dot display. See the example section below for easier understanding of the rules described here
     # If NULL, no dots plotted
     # If "same", the dots will have the same colors as the respective boxplots
     # Otherwise, as in the rule (1), (2) or (3) described in the categ.color argument, except that in the possibility (3), the rule "a single color per class of categ and a single class of categ per color", does not have to be respected (for instance, each dot can have a different color). Colors will also depend on the dot.categ argument. If dot.categ is NULL, then colors will be applied to each class of the last column name specified in categ. If dot.categ is non-NULL, colors will be applied to each class of the column name specified in dot.categ. See examples
-    # dot.categ: optional single character string of a column name (further referred to as categ3) of the data1 argument. This column of data1 will be used to generate a legend for dots, in addition to the legend for boxes. See the dot.color argument for details about the way the legend is built using the two dot.categ and dot.color arguments. If NULL, no legend created and the colors of dots will depend on dot.color and categ arguments (as explained in the dot.color argument)
-    # dot.categ.class.order: optional vector of character strings indicating the order of the classes of categ3 (see the dot.categ argument). If dot.categ is non-NULL and dot.categ.class.order is NULL, classes are displayed in the legend according to the alphabetical order. Ignored if dot.categ is NULL
-    # dot.legend.name: optional character string of the legend title for categ3 (see the dot.categ argument). If dot.legend.name == NULL, dot.categ value is used (name of the column in data1). Write "" if no legend required. Ignored if dot.categ is NULL
-    # dot.tidy: logical. Nice dot spreading? If TRUE, use the geom_dotplot() function for a nice representation. WARNING: change the true quantitative coordinates of dots (i.e., y-axis values for vertical display) because of binning. Thus, the gain in aestheticism is associated with a loss in precision that can be very important. If FALSE, dots are randomly spread on the qualitative axis, using the dot.jitter argument (see below) keeping the true quantitative coordinates
-    # dot.tidy.bin.nb: positive integer indicating the number of bins (i.e., nb of separations) of the y.lim range. Each dot will then be put in one of the bin, with a diameter of the width of the bin. In other words, increase the number of bins to have smaller dots. Not considered if dot.tidy is FALSE
-    # dot.jitter: numeric value (from 0 to 1) of random dot horizontal dispersion (for vertical display), with 0 meaning no dispersion and 1 meaning dispersion in the corresponding box width interval. Not considered if dot.tidy is TRUE
-    # dot.seed: integer value that set the random seed. Using the same number will generate the same dot jittering. Write NULL to have different jittering each time the same instruction is run. Ignored if dot.tidy is TRUE
-    # dot.size: numeric value of dot diameter in mm. Not considered if dot.tidy is TRUE
+   
+
+
+
+
+
+
     # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
     # dot.border.size: numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature)
     # dot.border.color: single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by ggpalette()
