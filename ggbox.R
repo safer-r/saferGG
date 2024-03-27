@@ -233,7 +233,7 @@ ggbox <- function(
     # end check of lib.path
     # check of the required function from the required packages
     .pack_and_function_check(
-        fun = c(
+        fun = base::c(
             "ggplot2::aes",
             "ggplot2::aes_string",
             "ggplot2::annotate",
@@ -291,7 +291,7 @@ ggbox <- function(
     )
     tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for missing() output
-        tempo.cat <-base:: paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
+        tempo.cat <-base::paste0("ERROR IN ", function.name, "\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end arg with no default values
@@ -339,7 +339,7 @@ ggbox <- function(
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = categ.color, class = "vector")
-        checked.arg.names <- c(checked.arg.names, tempo$object.name)
+        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
     }
     tempo <- saferDev::arg_check(data = box.fill, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = box.width, prop = TRUE, length = 1, fun.name = function.name) ; base::eval(ee)
@@ -403,7 +403,7 @@ ggbox <- function(
     }
     tempo <- saferDev::arg_check(data = dot.jitter, prop = TRUE, length = 1, fun.name = function.name) ; base::eval(ee)
     if( ! base::is.null(dot.seed)){
-        tempo <- saferDev::arg_check(data = dot.seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = dot.seed, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = TRUE, fun.name = function.name) ; base::eval(ee)
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = dot.seed, class = "vector")
@@ -430,7 +430,7 @@ ggbox <- function(
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = dot.border.color, class = "vector")
-        checked.arg.names <- c(checked.arg.names, tempo$object.name)
+        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
     }
     if( ! base::is.null(x.lab)){
         tempo1 <- saferDev::arg_check(data = x.lab, class = "expression", length = 1, fun.name = function.name)
@@ -475,7 +475,7 @@ ggbox <- function(
         tempo <- saferDev::arg_check(data = y.lim, class = "vector")
         checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
     }
-    tempo <- saferDev::arg_check(data = y.log, options = c("no", "log2", "log10"), length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = y.log, options = base::c("no", "log2", "log10"), length = 1, fun.name = function.name) ; base::eval(ee)
     if( ! base::is.null(y.tick.nb)){
         tempo <- saferDev::arg_check(data = y.tick.nb, class = "vector", typeof = "integer", length = 1, double.as.integer.allowed = TRUE, fun.name = function.name) ; base::eval(ee)
         if(tempo$problem == FALSE){
@@ -622,7 +622,7 @@ ggbox <- function(
     if( ! (base::is.null(add))){
         if(base::any(base::sapply(X = arg.names, FUN = grepl, x = add), na.rm = TRUE)){
             warn.count <- warn.count + 1
-            tempo.warn <- base::paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", paste(arg.names[base::sapply(X = arg.names, FUN = grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
+            tempo.warn <- base::paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", base::paste(arg.names[base::sapply(X = arg.names, FUN = grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
         }
     }
@@ -848,12 +848,12 @@ ggbox <- function(
     }
     # end management of log scale and Inf removal
     # na detection and removal (done now to be sure of the correct length of categ)
-    column.check <- base::unique(c(y, categ, if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){dot.categ}, if( ! base::is.null(facet.categ)){facet.categ})) # dot.categ because can be a 3rd column of data1, categ.color and dot.color will be tested later
+    column.check <- base::unique(base::c(y, categ, if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){dot.categ}, if( ! base::is.null(facet.categ)){facet.categ})) # dot.categ because can be a 3rd column of data1, categ.color and dot.color will be tested later
     if(base::any(base::is.na(data1[, column.check]))){ # data1 used here instead of data1.ini in case of new NaN created by log conversion (neg values) # normally no NA with is.na
         warn.count <- warn.count + 1
         tempo.warn <- base::paste0("(", warn.count,") NA DETECTED IN COLUMNS OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
-        for(i2 in 1:length(column.check)){
+        for(i2 in 1:base::length(column.check)){
             if(base::any(base::is.na(data1[, column.check[i2]]))){ # normally no NA with is.na
                 tempo.warn <- base::paste0("NA REMOVAL DUE TO COLUMN ", column.check[i2], " OF data1")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n", tempo.warn)))
@@ -883,7 +883,7 @@ ggbox <- function(
                 categ.class.order[count.categ] <- base::list(base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(data1[, column.check[i2]])]) # remove the absent color in the character vector
                 data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = base::unique(categ.class.order[[count.categ]]))
             }
-            if( ! base::is.null(dot.color) & ! is.null(dot.categ)){ # reminder : dot.categ cannot be a column name of categ anymore (because in that case dot.categ name is changed into "..._DOT"
+            if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){ # reminder : dot.categ cannot be a column name of categ anymore (because in that case dot.categ name is changed into "..._DOT"
                 if(column.check[i2] == dot.categ){
                     dot.categ.class.order <- base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(data1[, column.check[i2]])] # remove the absent color in the character vector
                     data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = base::unique(dot.categ.class.order))
@@ -903,7 +903,7 @@ ggbox <- function(
     if( ! base::is.null(categ.class.order)){
         if(base::length(categ.class.order) != base::length(categ)){
             tempo.cat <- base::paste0("ERROR IN ", function.name, "\ncateg.class.order ARGUMENT MUST BE A LIST OF LENGTH EQUAL TO LENGTH OF categ\nHERE IT IS LENGTH: ", base::length(categ.class.order), " VERSUS ", base::length(categ))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
             for(i3 in 1:base::length(categ.class.order)){
                 if(base::is.null(categ.class.order[[i3]])){
@@ -1199,7 +1199,7 @@ ggbox <- function(
                 tempo.warn <- base::paste0("(", warn.count,") dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", base::paste(base::levels(base::factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", base::paste(dot.color, collapse = " "))
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
             }else{
-                tempo.cat <- base::paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", base::length(dot.color), " VERSUS CATEG LENGTH ", base::length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", length(unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
+                tempo.cat <- base::paste0("ERROR IN ", function.name, "\ndot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", base::length(dot.color), " VERSUS CATEG LENGTH ", base::length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", base::length(base::unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
             # end check the length of color
@@ -1284,35 +1284,7 @@ ggbox <- function(
     # end na detection and removal (done now to be sure of the correct length of categ)
     # From here, data1 and data.ini have no more NA or NaN
     # end other checkings
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # reserved word checking
-    #already done above
-    # end reserved word checking
-    # end second round of checking and data preparation
-    
-    
-    # package checking
-    fun_pack(req.package = base::c(
-        "ggplot2", 
-        "gridExtra", 
-        "lemon", 
-        "scales"
-    ), load = FALSE, lib.path = lib.path)
-    # end package checking
-    
-    
+    # end second round of checking and data preparation   
     
     
     
@@ -1383,7 +1355,7 @@ ggbox <- function(
     base::names(tempo.mean)[base::names(tempo.mean) == "Group.2"] <- "PANEL"
     dot.coord <- base::data.frame(
         dot.coord[base::order(dot.coord$group, dot.coord$y), ], # dot.coord$PANEL deals below
-        y.check = base::as.double(data1[order(data1$categ.check, data1[, y]), y]), 
+        y.check = base::as.double(data1[base::order(data1$categ.check, data1[, y]), y]), 
         categ.check = data1[base::order(data1$categ.check, data1[, y]), "categ.check"], 
         dot.color = if(base::is.null(dot.color)){NA}else{data1[base::order(data1$categ.check, data1[, y]), "dot.color"]}, 
         data1[base::order(data1$categ.check, data1[, y]), ][categ], # avoid the renaming below
@@ -1437,7 +1409,7 @@ ggbox <- function(
         tempo.cat <- base::paste0("INTERNAL CODE ERROR IN ", function.name, "\n(dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
     }else{
-        if( ! base::identical(tempo.mean[base::order(tempo.mean$BOX, tempo.mean$PANEL), ]$BOX, base::unique(dot.coord[base::order(dot.coord$group, dot.coord$PANEL), c("group", "PANEL")])$group)){
+        if( ! base::identical(tempo.mean[base::order(tempo.mean$BOX, tempo.mean$PANEL), ]$BOX, base::unique(dot.coord[base::order(dot.coord$group, dot.coord$PANEL), base::c("group", "PANEL")])$group)){
             tempo.cat <- base::paste0("INTERNAL CODE ERROR IN ", function.name, "\n(tempo.mean$BOX, tempo.mean$PANEL) AND (dot.coord$group, dot.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
@@ -1480,7 +1452,7 @@ ggbox <- function(
     y.lim[1] <- y.lim[1] - base::abs(y.lim[2] - y.lim[1]) * base::ifelse(base::diff(y.lim.order) > 0, y.bottom.extra.margin, y.top.extra.margin) # diff(y.lim.order) > 0 medians not inversed axis
     y.lim[2] <- y.lim[2] + base::abs(y.lim[2] - y.lim[1]) * base::ifelse(base::diff(y.lim.order) > 0, y.top.extra.margin, y.bottom.extra.margin) # diff(y.lim.order) > 0 medians not inversed axis
     if(y.include.zero == TRUE){ # no need to check y.log != "no" because done before
-        y.lim <- base::range(c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+        y.lim <- base::range(base::c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
     }
     y.lim <- y.lim[y.lim.order]
     if(base::any(base::is.na(y.lim))){ # normally no NA with is.na
@@ -1546,7 +1518,7 @@ ggbox <- function(
             ))
         }
     }else if(add.check == TRUE & article == FALSE){
-        assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
             text = ggplot2::element_text(size = text.size), 
             plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
             line = ggplot2::element_line(size = 0.5), 
@@ -1714,7 +1686,7 @@ ggbox <- function(
             }
         }
         base::names(tempo.polygon) <- categ
-        tempo.polygon <- base::data.frame(X = base::c(base::t(stat[, base::c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = base::c(base::t(stat[, base::c("BOX_INF", "BOX_INF", "BOX_SUP", "BOX_SUP", "BOX_INF")])), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = base::as.character(c(t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
+        tempo.polygon <- base::data.frame(X = base::c(base::t(stat[, base::c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = base::c(base::t(stat[, base::c("BOX_INF", "BOX_INF", "BOX_SUP", "BOX_SUP", "BOX_INF")])), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = base::as.character(base::c(base::t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
         if( ! base::is.null(facet.categ)){
             for(i4 in 1:base::length(facet.categ)){
                 tempo.polygon <- base::data.frame(tempo.polygon, base::c(base::t(stat[, base::c(facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4])])), stringsAsFactors = TRUE)
@@ -2020,7 +1992,7 @@ ggbox <- function(
                 hjust = stat.just$hjust, 
                 vjust = stat.just$vjust
             )) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
-            coord.names <- c(coord.names, "stat.pos")
+            coord.names <- base::c(coord.names, "stat.pos")
         }else if(stat.pos == "above"){
             # stat coordinates
             if( ! base::is.null(dot.color)){ # for text just above max dot
@@ -2235,7 +2207,7 @@ ggbox <- function(
         if(base::is.null(legend.width)){
             grob.save <- base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin.plot)))
         }else{
-            grob.save <-base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=c(1, legend.width))))
+            grob.save <-base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=base::c(1, legend.width))))
         }
         # }
         # suppressMessages(suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}))))))
@@ -2280,7 +2252,7 @@ ggbox <- function(
             stat = stat.nolog, 
             removed.row.nb = removed.row.nb, 
             removed.rows = removed.rows, 
-            plot = base::c(tempo.output$data, y.second.tick.values = list(y.second.tick.values)), 
+            plot = base::c(tempo.output$data, y.second.tick.values = base::list(y.second.tick.values)), 
             panel = facet.categ, 
             axes = base::list(
                 x.range = tempo$x.range, 
