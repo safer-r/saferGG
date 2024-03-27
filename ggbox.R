@@ -133,7 +133,7 @@ ggbox <- function(
         box.mean = TRUE, 
         box.whisker.kind = "std", 
         box.whisker.width = 0, 
-        dot.color = base::grey(0.25), 
+        dot.color = grDevices::grey(0.25), 
         dot.categ = NULL, 
         dot.categ.class.order = NULL, 
         dot.legend.name = NULL, 
@@ -188,7 +188,7 @@ ggbox <- function(
 
 
 
-    # dot.color: vector of color character string ruling the dot colors and the dot display. See the example section below for easier understanding of the rules described here
+    # dot.color: vector of color character string ruling the dot colors and the dot display. il can also be a factor, for example 'same'. See the example section below for easier understanding of the rules described here
     # If NULL, no dots plotted
     # If "same", the dots will have the same colors as the respective boxplots
     # Otherwise, as in the rule (1), (2) or (3) described in the categ.color argument, except that in the possibility (3), the rule "a single color per class of categ and a single class of categ per color", does not have to be respected (for instance, each dot can have a different color). Colors will also depend on the dot.categ argument. If dot.categ is NULL, then colors will be applied to each class of the last column name specified in categ. If dot.categ is non-NULL, colors will be applied to each class of the column name specified in dot.categ. See examples
