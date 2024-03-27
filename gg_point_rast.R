@@ -14,12 +14,16 @@
 #' @param lib.path: character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.
 #' @returns a raster scatter plot.
 #' @examples
-#'  # Two pdf in the current directory
-#'  set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
+#' # Two pdf in the current directory
+#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), inactivate = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 ggproto
 #' @importFrom ggplot2 layer
 #' @importFrom ggplot2 GeomPoint
+#' @importFrom graphics par
+#' @importFrom grDevices dev.cur
+#' @importFrom grDevices dev.set
+#' @importFrom grDevices dev.off
 #' @importFrom grid grid.cap
 #' @importFrom grid grid.points
 #' @importFrom grid popViewport
@@ -90,6 +94,10 @@ gg_point_rast <- function(
             "ggplot2::ggproto",
             "ggplot2::layer",
             "ggplot2::GeomPoint",
+            "graphics::par",
+            "grDevices::dev.cur",
+            "grDevices::dev.off",
+            "grDevices::dev.set",
             "grid::grid.cap",
             "grid::grid.points",
             "grid::popViewport",
@@ -187,12 +195,12 @@ gg_point_rast <- function(
     # additional functions
     DrawGeomPointRast <- function(data, panel_params, coord, na.rm = FALSE, raster.width = NULL, raster.height= NULL, raster.dpi = raster.dpi){
         if (base::is.null(raster.width)){
-            raster.width <- base::par('fin')[1]
+            raster.width <- graphics::par('fin')[1]
         }
         if (base::is.null(raster.height)){
-            raster.height <- base::par('fin')[2]
+            raster.height <- graphics::par('fin')[2]
         }
-        prev_dev_id <- base::dev.cur()
+        prev_dev_id <- grDevices::dev.cur()
         p <- ggplot2::GeomPoint$draw_panel(data, panel_params, coord)
         dev_id <- Cairo::Cairo(type='raster', width = raster.width*raster.dpi, height = raster.height*raster.dpi, dpi = raster.dpi, units = 'px', bg = "transparent")[1]
         grid::pushViewport(grid::viewport(width = 1, height = 1))
@@ -200,8 +208,8 @@ gg_point_rast <- function(
                           name = p$name, gp = p$gp, vp = p$vp, draw = T)
         grid::popViewport()
         cap <- grid::grid.cap()
-        base::invisible(base::dev.off(dev_id))
-        base::invisible(base::dev.set(prev_dev_id))
+        base::invisible(grDevices::dev.off(dev_id))
+        base::invisible(grDevices::dev.set(prev_dev_id))
         grid::rasterGrob(cap, x = 0, y = 0, width = 1, height = 1, default.units = "native", just = base::c("left","bottom"))
     }
     # end additional functions
