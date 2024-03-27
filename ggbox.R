@@ -46,6 +46,8 @@
 #' @param y.include.zero logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10".
 #' @param y.top.extra.margin single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis.
 #' @param y.bottom.extra.margin idem as y.top.extra.margin but to the bottom of y-axis.
+#' @param y.second.tick.positions coordinates of secondary ticks (only if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no").
+#' @param y.second.tick.values values of secondary ticks. NULL except if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no").
 #' @param stat.pos add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box).
 #' @param stat.mean logical. Display mean numbers instead of median numbers? Ignored if stat.pos is NULL.
 #' @param stat.size numeric value of the stat font size in mm. Ignored if stat.pos is NULL.
@@ -59,31 +61,61 @@
 #' @param legend.width single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend.
 #' @param article logical. If TRUE, use an article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (e.g., add = "+ggplot2::theme_classic()" for the exact classic ggplot theme.
 #' @param grid logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present).
-#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param n number of groups on the graph.
-#' @param kind either "std" for standard gg colors, "dark" for darkened gg colors, or "light" for pastel gg colors.
-#' @returns the vector of hexadecimal colors.
+#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()". If the character string contains the "ggplot2::theme" string, then the article argument of ggbox() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x.angle (check all the arguments). Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions   
+#' @param return logical. Return the graph parameters?.
+#' @param return.ggplot logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the ggbox() function (e.g., a <- ggbox()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details.
+#' @param return.gtable logical. Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details.
+#' @param plot logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting.
+#' @param warn.print logical. Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE.
+#' @param lib.path character string indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders.
+#' @returns A boxplot if plot argument is TRUE.
+#' @returns A list of the graph info if return argument is TRUE: $data: the initial data with graphic information added; $stat: the graphic statistics (mostly equivalent to ggplot_build()$data[[2]]); $removed.row.nb: which rows have been removed due to NA/Inf detection in y and categ columns (NULL if no row removed); $removed.rows: removed rows (NULL if no row removed); $plot: the graphic box and dot coordinates; $dots: dot coordinates; $main.box: coordinates of boxes; $median: median coordinates; $sup.whisker: coordinates of top whiskers (y for base and y.end for extremities); $inf.whisker: coordinates of bottom whiskers (y for base and y.end for extremities); $sup.whisker.edge: coordinates of top whisker edges (x and xend); $inf.whisker.edge: coordinates of bottom whisker edges(x and xend); $mean: diamond mean coordinates (only if box.mean argument is TRUE); $stat.pos: coordinates of stat numbers (only if stat.pos argument is not NULL); $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0; $axes: the x-axis and y-axis info; $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE; $ggplot: ggplot object that can be used for reprint (use print(...$ggplot) or update (use ...$ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non-NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot; $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot; 
 #' @examples
-#' ggpalette(n = 2) # output of the function
-#'    
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7)) # the ggplot2 palette when asking for 7 different colors
-#'   
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
-#'    
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
-#'    
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
-#' @importFrom utils find
+#' set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; ggbox(data1 = obs1, y = "Time", categ = "Categ1")
+#' see http  
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_string
+#' @importFrom ggplot2 annotate
+#' @importFrom ggplot2 coord_cartesian
+#' @importFrom ggplot2 coord_flip
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 geom_dotplot
+#' @importFrom ggplot2 geom_path
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_polygon
+#' @importFrom ggplot2 geom_segment
+#' @importFrom ggplot2 geom_text
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 ggplot_build
+#' @importFrom ggplot2 ggtitle
+#' @importFrom ggplot2 guides
+#' @importFrom ggplot2 guide_legend
+#' @importFrom ggplot2 position_dodge
+#' @importFrom ggplot2 scale_discrete_manual
+#' @importFrom ggplot2 scale_y_continuous
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme_classic
+#' @importFrom ggplot2 theme_void
+#' @importFrom ggplot2 waiver
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom grDevices colors
+#' @importFrom gridExtra grid.arrange
+#' @importFrom scales math_format
+#' @importFrom scales rescale_none
+#' @importFrom scales trans_format
 #' @importFrom saferDev arg_check
+#' @importFrom saferTool comp_2d
+#' @importFrom saferTool name_change
+#' @importFrom saferTool round2
+#' @importFrom saferGraph scale2
+#' @importFrom saferGraph inter_ticks
+#' @details
+#' -the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the ggbox() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
 #' @export
 ggbox <- function(
         data1, 
@@ -153,15 +185,6 @@ ggbox <- function(
     # Size arguments (box.line.size, dot.size, dot.border.size, stat.size, text.size and title.text.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE))
     # Display seems to be done twice on Windows devices (like a blink). However, no double plots on pdf devices. Thus, the blink remains mysterious
     # To remove boxes and have only dots, use box.alpha = 0
-    # ARGUMENTS
-    
-    
-
-
-   
-
-    
-   
 
 
 
@@ -169,76 +192,12 @@ ggbox <- function(
     # If NULL, no dots plotted
     # If "same", the dots will have the same colors as the respective boxplots
     # Otherwise, as in the rule (1), (2) or (3) described in the categ.color argument, except that in the possibility (3), the rule "a single color per class of categ and a single class of categ per color", does not have to be respected (for instance, each dot can have a different color). Colors will also depend on the dot.categ argument. If dot.categ is NULL, then colors will be applied to each class of the last column name specified in categ. If dot.categ is non-NULL, colors will be applied to each class of the column name specified in dot.categ. See examples
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
     # add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
     # WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
     # If the character string contains the "ggplot2::theme" string, then the article argument of ggbox() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x.angle (check all the arguments)
     # Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
     # WARNING: the call of objects inside the quotes of add can lead to an error if the name of these objects are some of the ggbox() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
-    # return: logical. Return the graph parameters?
-    # return.ggplot: logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the ggbox() function (e.g., a <- ggbox()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details
-    # return.gtable: logical. Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details
-    # plot: logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting
-    # warn.print: logical. Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE
-    # lib.path: character string indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders
-    # RETURN
-    # A boxplot if plot argument is TRUE
-    # A list of the graph info if return argument is TRUE:
-    # $data: the initial data with graphic information added
-    # $stat: the graphic statistics (mostly equivalent to ggplot_build()$data[[2]])
-    # $removed.row.nb: which rows have been removed due to NA/Inf detection in y and categ columns (NULL if no row removed)
-    # $removed.rows: removed rows (NULL if no row removed)
-    # $plot: the graphic box and dot coordinates
-    # $dots: dot coordinates
-    # $main.box: coordinates of boxes
-    # $median: median coordinates
-    # $sup.whisker: coordinates of top whiskers (y for base and y.end for extremities)
-    # $inf.whisker: coordinates of bottom whiskers (y for base and y.end for extremities)
-    # $sup.whisker.edge: coordinates of top whisker edges (x and xend)
-    # $inf.whisker.edge: coordinates of bottom whisker edges(x and xend)
-    # $mean: diamond mean coordinates (only if box.mean argument is TRUE)
-    # $stat.pos: coordinates of stat numbers (only if stat.pos argument is not NULL)
-    # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no")
-    # y.second.tick.values: values of secondary ticks. NULL except if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no")
-    # $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0
-    # $axes: the x-axis and y-axis info
-    
-    # $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE
-    # $ggplot: ggplot object that can be used for reprint (use print(...$ggplot) or update (use ...$ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non-NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
-    # $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
-    # REQUIRED PACKAGES
-    # ggplot2
-    # gridExtra
-    # lemon (in case of use in the add argument)
-    # scales
-    # REQUIRED FUNCTIONS FROM THE cute PACKAGE
-    # saferDev::arg_check()
-    # fun_comp_1d()
-    # saferTool::comp_2d()
-    # fun_gg_just()
-    # ggpalette()
-    # saferGraph::inter_ticks()
-    # saferTool::name_change()
-    # fun_pack()
-    # saferTool::round2()
-    # saferGraph::scale2()
-    # EXAMPLE
-    # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; ggbox(data1 = obs1, y = "Time", categ = "Categ1")
-    # see http
     # DEBUGGING
     # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; categ.color = NULL ; box.legend.name = NULL ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.line.size = 0.75 ; box.notch = FALSE ; box.alpha = 1 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0 ; dot.color = grey(0.25) ; dot.categ = NULL ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = FALSE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.5 ; dot.seed = 2 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; x.lab = NULL ; x.angle = 0 ; y.lab = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = 1 ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.pos = "top" ; stat.mean = FALSE ; stat.size = 4 ; stat.dist = 5 ; stat.angle = 0 ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
     # package name
