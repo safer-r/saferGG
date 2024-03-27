@@ -34,6 +34,35 @@
 #' @param dot.seed integer value that set the random seed. Using the same number will generate the same dot jittering. Write NULL to have different jittering each time the same instruction is run. Ignored if dot.tidy is TRUE.
 #' @param dot.size numeric value of dot diameter in mm. Not considered if dot.tidy is TRUE.
 #' @param dot.alpha numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively).
+#' @param dot.border.size numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature).
+#' @param dot.border.color single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by ggpalette().
+#' @param x.lab a character string or expression for x-axis legend. If NULL, character string of categ1 (see the categ argument for categ1 and categ2 description).
+#' @param x.angle integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
+#' @param y.lab a character string or expression for y-axis legend. If NULL, character string of the y argument.
+#' @param y.lim 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used.
+#' @param y.log either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881).
+#' @param y.tick.nb approximate number of desired values labeling the y-axis (i.e., main ticks, see the n argument of the the cute::saferGraph::scale2() function). If NULL and if y.log is "no", then the number of labeling values is set by ggplot2. If NULL and if y.log is "log2" or "log10", then the number of labeling values corresponds to all the exposant integers in the y.lim range (e.g., 10^1, 10^2 and 10^3, meaning 3 main ticks for y.lim = c(9, 1200)). WARNING: if non-NULL and if y.log is "log2" or "log10", labeling can be difficult to read (e.g., ..., 10^2, 10^2.5, 10^3, ...).
+#' @param y.second.tick.nb number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks.
+#' @param y.include.zero logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10".
+#' @param y.top.extra.margin single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis.
+#' @param y.bottom.extra.margin idem as y.top.extra.margin but to the bottom of y-axis.
+#' @param stat.pos add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box).
+#' @param stat.mean logical. Display mean numbers instead of median numbers? Ignored if stat.pos is NULL.
+#' @param stat.size numeric value of the stat font size in mm. Ignored if stat.pos is NULL.
+#' @param stat.dist numeric value of the stat distance in percentage of the y-axis range (stat.dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat.pos is NULL or "top".
+#' @param stat.angle integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
+#' @param vertical logical. Vertical boxes? WARNING: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881).
+#' @param text.size numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm).
+#' @param title character string of the graph title.
+#' @param title.text.size numeric value of the title font size in mm.
+#' @param legend.show logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend, excepted if legend.width argument is non-NULL. In that specific case (categ is NULL, legend.show is TRUE and legend.width is non-NULL), an empty legend space is created. This can be useful when desiring graphs of exactly the same width, whatever they have legends or not.
+#' @param legend.width single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend.
+#' @param article logical. If TRUE, use an article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (e.g., add = "+ggplot2::theme_classic()" for the exact classic ggplot theme.
+#' @param grid logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present).
+#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
+#' @param n number of groups on the graph.
 #' @param n number of groups on the graph.
 #' @param n number of groups on the graph.
 #' @param n number of groups on the graph.
@@ -147,32 +176,14 @@ ggbox <- function(
 
 
 
-    # dot.alpha: numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively)
-    # dot.border.size: numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature)
-    # dot.border.color: single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by ggpalette()
-    # x.lab: a character string or expression for x-axis legend. If NULL, character string of categ1 (see the categ argument for categ1 and categ2 description)
-    # x.angle: integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
-    # y.lab: a character string or expression for y-axis legend. If NULL, character string of the y argument
-    # y.lim: 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used. 
-    # y.log: either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
-    # y.tick.nb: approximate number of desired values labeling the y-axis (i.e., main ticks, see the n argument of the the cute::saferGraph::scale2() function). If NULL and if y.log is "no", then the number of labeling values is set by ggplot2. If NULL and if y.log is "log2" or "log10", then the number of labeling values corresponds to all the exposant integers in the y.lim range (e.g., 10^1, 10^2 and 10^3, meaning 3 main ticks for y.lim = c(9, 1200)). WARNING: if non-NULL and if y.log is "log2" or "log10", labeling can be difficult to read (e.g., ..., 10^2, 10^2.5, 10^3, ...)
-    # y.second.tick.nb: number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks
-    # y.include.zero: logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10"
-    # y.top.extra.margin: single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis
-    # y.bottom.extra.margin: idem as y.top.extra.margin but to the bottom of y-axis
-    # stat.pos: add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box)
-    # stat.mean: logical. Display mean numbers instead of median numbers? Ignored if stat.pos is NULL
-    # stat.size: numeric value of the stat font size in mm. Ignored if stat.pos is NULL
-    # stat.dist: numeric value of the stat distance in percentage of the y-axis range (stat.dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat.pos is NULL or "top"
-    # stat.angle: integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
-    # vertical: logical. Vertical boxes? WARNING: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881)
-    # text.size: numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm)
-    # title: character string of the graph title
-    # title.text.size: numeric value of the title font size in mm
-    # legend.show: logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend, excepted if legend.width argument is non-NULL. In that specific case (categ is NULL, legend.show is TRUE and legend.width is non-NULL), an empty legend space is created. This can be useful when desiring graphs of exactly the same width, whatever they have legends or not
-    # legend.width: single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend
-    # article: logical. If TRUE, use an article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (e.g., add = "+ggplot2::theme_classic()" for the exact classic ggplot theme
-    # grid: logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present)
+
+
+
+
+
+
+
+
     # add: character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
     # WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
     # If the character string contains the "ggplot2::theme" string, then the article argument of ggbox() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x.angle (check all the arguments)
