@@ -1,7 +1,7 @@
 #' @title gg_miami
 #' @description
-#' Plot a ggplot2 donut using contingency data, systematically in the decreasing order of frequencies, starting at the top and turning clockwise;or ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html.
-#' @param x_lim single character string of the x-axis limits. Either whole for the whole genome, region to have the regions of the region parameter (i.e., whole if region == none), or a character string written like the region parameter, to have the x-axis limited to the x_lim parameter. Write NULL to does not plot results. 
+#' Plot two ggplot2 manhattan plots in mirror.
+#' @param x_lim single character string of the x-axis limits. Either "whole" for the whole genome, region to have the regions of the region parameter (i.e., "whole" if region == none), or a character string written like the region parameter, to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. 
 #' @param vgrid single character string of logical value TRUE or FALSE. Display the chromosome separators in the miami plot? Example: vgrid = TRUE.
 #' @param top.y.column NEG_LOG10_P_VALUE_CARRIER_MODEL: single character string of any of the quantitative column of the res_fisher.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter..
 #' @param bottom.y.column  as the top_y_column parameter but for the bottom manhattan plot of the miami plot. NULL generates a simple manhattan plot.
