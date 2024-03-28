@@ -13,7 +13,11 @@
 #' @importFrom ggplot2 ggplot_gtable
 #' @importFrom saferDev arg_check
 #' @export
-gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
+gg_get_legend <- function(
+    ggplot_built, 
+    fun.name = NULL, 
+    lib.path = NULL
+    ){
     # DEBUGGING
     # obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; ggplot_built = ggplot2::ggplot_build(p) ; fun.name = NULL ; lib.path = NULL
      # package name
@@ -60,7 +64,9 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
     # argument primary checking
     # arg with no default values
     mandat.args <- base::c(
-        "ggplot_built"
+        "ggplot_built",
+        "fun.name", # inactivated because can be null
+        "lib.path" # inactivated because can be null
     )
     tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for base::missing() output
@@ -93,6 +99,8 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
     # end argument primary checking
 
     # second round of checking
+    # reserved words (to avoid bugs)
+    # end reserved words (to avoid bugs)
     # management of NA
     if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
@@ -119,8 +127,6 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
     # end warning initiation
     # other checkings
     # end other checkings
-    # reserved words (to avoid bugs)
-    # end reserved words (to avoid bugs)
     # end second round of checking and data preparation
 
     # main code
@@ -139,4 +145,5 @@ gg_get_legend <- function(ggplot_built, fun.name = NULL, lib.path = NULL){
         legend <- tmp$grobs[[leg]]
     }
     base::return(legend)
+    #end main code
 }
