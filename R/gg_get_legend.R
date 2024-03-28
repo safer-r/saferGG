@@ -64,9 +64,7 @@ gg_get_legend <- function(
     # argument primary checking
     # arg with no default values
     mandat.args <- base::c(
-        "ggplot_built",
-        "fun.name", # inactivated because can be null
-        "lib.path" # inactivated because can be null
+        "ggplot_built"
     )
     tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for base::missing() output
@@ -112,8 +110,9 @@ gg_get_legend <- function(
     }
     # management of NULL arguments
     tempo.arg <-base::c(
-        "ggplot_built" 
-        # 'fun.name' inactivated because can be null
+        "ggplot_built" ,
+        "fun.name", # inactivated because can be null
+        "lib.path" # inactivated because can be null
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
