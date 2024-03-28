@@ -53,7 +53,6 @@
 #' - NA and Inf values are displayed as grey.
 #' - when using limit1 all values out of the range of limit1 are also displayed as grey.
 #' @export
-
 # test plot.margin = margin(up.space.mds, right.space.mds, down.space.mds, left.space.mds, "inches") to set the dim of the region plot ?
 # if matrix is full of zero (or same value I guess), heatmap is complicate. Test it and error message
 gg_heatmap <- function(
@@ -297,6 +296,8 @@ gg_heatmap <- function(
     # end argument primary checking
 
     # second round of checking and data preparation
+    # reserved words (to avoid bugs)
+    # end reserved words (to avoid bugs)
     # management of NA arguments
     if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
@@ -314,6 +315,9 @@ gg_heatmap <- function(
         "low.color1",
         "mid.color1",
         "high.color1",
+        # "limit1", # inactivated because can be null 
+        # "midpoint1", # inactivated because can be null 
+        # "data2", # inactivated because can be null 
         "color2",
         "alpha2",
         "invert2",
@@ -324,7 +328,9 @@ gg_heatmap <- function(
         "rotate",
         "return",
         "plot",
-        "warn.print"
+        # "add",# inactivated because can be null
+        "warn.print", 
+        # "lib.path" # inactivated because can be null 
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
@@ -336,6 +342,8 @@ gg_heatmap <- function(
     # end code that protects set.seed() in the global environment
     # warning initiation
     # end warning initiation
+    # other checkings
+     # end other checkings
     # end second round of checking and data preparation
    
     # main code
@@ -441,4 +449,5 @@ gg_heatmap <- function(
         }
         return(list(data = output, axes = output$layout$panel_params[[1]], scale = c(limit1[1],  midpoint1, limit1[2]), warn = warn))
     }
+    #end main code
 }
