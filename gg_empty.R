@@ -158,5 +158,5 @@ gg_empty <- function(
     ))
     final <- base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
     base::return(final)
+    # end main code
 }
-# end main code
