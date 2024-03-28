@@ -125,8 +125,11 @@ gg_empty <- function(
     # end management of NA arguments
     # management of NULL arguments
     tempo.arg <-base::c(
+        # "text", # inactivated because can be null
         "text.size" ,
-        "title.size" 
+        # "title" , # inactivated because can be null
+        "title.size" ,
+        # "lib.path" # inactivated because can be null
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
