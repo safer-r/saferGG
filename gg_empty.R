@@ -47,7 +47,7 @@ gg_empty <- function(
     .base_op_check(external.function.name = function.name)
     # end critical operator checking
     # package checking
-     # check of lib.path
+    # check of lib.path
     if( ! base::is.null(lib.path)){
         if( ! base::all(base::typeof(lib.path) == "character")){ # no na.rm = TRUE with typeof
             tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE: DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT MUST BE A VECTOR OF CHARACTERS:\n", base::paste(lib.path, collapse = "\n"))
@@ -111,6 +111,8 @@ gg_empty <- function(
     # end argument primary checking
 
     # second round of checking and data preparation
+    # reserved words (to avoid bugs)
+    # end reserved words (to avoid bugs)
     # management of NA arguments
     if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
@@ -136,8 +138,6 @@ gg_empty <- function(
     # end code that protects set.seed() in the global environment
     # warning initiation
     # end warning initiation
-    # reserved words (to avoid bugs)
-    # end reserved words (to avoid bugs)
     # end second round of checking and data preparation
     # main code
     tempo.gg.name <- "gg.indiv.plot."
@@ -156,3 +156,4 @@ gg_empty <- function(
     final <- base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
     base::return(final)
 }
+# end main code
