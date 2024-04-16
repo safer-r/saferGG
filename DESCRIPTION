@@ -1,0 +1,20 @@
+Package: ggcute
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2024-04-16
+Author: Haiding WANG, Gaël Millot
+Maintainer: Gaël Millot <gael.millot@pasteur.fr>
+Description: More about what it does (maybe more than one line)
+License: GPL-3
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+Imports: 
+    ggplot2,
+    ggrepel,
+    grDevices,
+    grid,
+    gridExtra,
+    reshape2,
+    scales,
+    utils
