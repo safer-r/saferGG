@@ -33,6 +33,7 @@
 #' @param plot logical (either TRUE or FALSE). Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting.
 #' @param warn.print logical (either TRUE or FALSE). Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE.
 #' @param lib.path vector of character strings indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a donut plot if plot argument is TRUE.
 #' @returns a list of the graph info if return argument is TRUE:
     # $data: the initial data with modifications and with graphic information added
@@ -67,7 +68,7 @@
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom gridExtra grid.arrange
 #' @importFrom grid unit
-#' @importFrom saferDev::arg_check
+#' @importFrom saferDev arg_check
 #' @details
 #' - Rows containing NA in data1[, c(freq, categ)] will be removed before processing, with a warning (see below).
 #' - Size arguments (hole.text.size, border.size, title.text.size and annotation.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE)).
@@ -104,7 +105,8 @@ gg_donut <- function(
     return.gtable = TRUE,
     plot = TRUE, 
     warn.print = TRUE, 
-    lib.path = NULL
+    lib.path = NULL,
+    safer_check = TRUE
 ){
     # DEBUGGING
     # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text = TRUE ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.text.size = 10 ; legend.box.size = 5 ; legend.box.space = 2 ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL
@@ -120,7 +122,10 @@ gg_donut <- function(
     arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(
+            external.function.name = function.name)
+    }
     # end critical operator checking
     # package checking
     # check of lib.path

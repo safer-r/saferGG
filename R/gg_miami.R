@@ -29,7 +29,6 @@
 #' @importFrom scales trans_breaks
 #' @importFrom scales trans_format
 #' @importFrom scales rescale_none
-#' @details
 #' @export
 gg_miami <- function(
         fisher, 
