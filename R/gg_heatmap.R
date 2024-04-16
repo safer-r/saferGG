@@ -23,6 +23,7 @@
 #' @param add character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions.
 #' @param warn.print logical. Print warnings at the end of the execution? No print if no warning messages.
 #' @param lib.path absolute path of the required packages, if not in the default folders.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a heatmap if plot argument is TRUE; a list of the graph info if return argument is TRUE:$data: a list of the graphic info; $axes: a list of the axes info; $warn: the warning messages. Use cat() for proper display. NULL if no warning.
 #' @examples
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), title = "GRAPH 1")
@@ -76,10 +77,11 @@ gg_heatmap <- function(
         plot = TRUE, 
         add = NULL, 
         warn.print = FALSE, 
-        lib.path = NULL
+        lib.path = NULL,
+        safer_check = TRUE
 ){
     # DEBUGGING
-    # data1 = matrix(1:16, ncol = 4) ; legend.name1 = "" ; low.color1 = "blue" ; mid.color1 = "white" ; high.color1 = "red" ; limit1 = NULL ; midpoint1 = NULL ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; text.size = 12 ; title = "" ; title.text.size = 12 ; show.scale = TRUE ; rotate = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL
+    # data1 = matrix(1:16, ncol = 4) ; legend.name1 = "" ; low.color1 = "blue" ; mid.color1 = "white" ; high.color1 = "red" ; limit1 = NULL ; midpoint1 = NULL ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; text.size = 12 ; title = "" ; title.text.size = 12 ; show.scale = TRUE ; rotate = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL ;safer_check = TRUE
     # package name
     package.name <- "ggcute"
     # end package name
@@ -92,7 +94,9 @@ gg_heatmap <- function(
     arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(external.function.name = function.name)
+    }
     # end critical operator checking
     # package checking
     # check of lib.path
@@ -114,7 +118,8 @@ gg_heatmap <- function(
 
 
      # check of the required function from the required packages
-    .pack_and_function_check(
+    if(safer_check == TRUE){
+        .pack_and_function_check(
         fun = base::c(
             "ggplot2::aes_string",
             "ggplot2::coord_fixed",
@@ -133,6 +138,7 @@ gg_heatmap <- function(
         lib.path = lib.path,
         external.function.name = function.name
     )
+    }
     # end check of the required function from the required packages
     # end package checking
 
@@ -154,43 +160,43 @@ gg_heatmap <- function(
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- expression(argum.check <- c(argum.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
     if(all(is.matrix(data1))){
-        tempo <- saferDev::arg_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     }else if(all(is.data.frame(data1))){
-        tempo <- saferDev::arg_check(data = data1, class = "data.frame", length = 3, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = data1, class = "data.frame", length = 3, fun.name = function.name, safer_check = FALSE) ; eval(ee)
         if(tempo$problem == FALSE){
             # structure of reshape2::melt() data frame
-            tempo <- saferDev::arg_check(data = data1[, 1], data.name = "COLUMN 1 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name) ; eval(ee)
-            tempo <- saferDev::arg_check(data = data1[, 2], data.name = "COLUMN 2 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name) ; eval(ee)
-            tempo <- saferDev::arg_check(data = data1[, 3], data.name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", mode = "numeric", na.contain = TRUE, fun.name = function.name) ; eval(ee)
+            tempo <- saferDev::arg_check(data = data1[, 1], data.name = "COLUMN 1 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
+            tempo <- saferDev::arg_check(data = data1[, 2], data.name = "COLUMN 2 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
+            tempo <- saferDev::arg_check(data = data1[, 3], data.name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; eval(ee)
         }
     }else{
         tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
         text.check <- c(text.check, tempo.cat)
         argum.check <- c(argum.check, TRUE)
     }
-    tempo <- saferDev::arg_check(data = legend.name1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = low.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- saferDev::arg_check(data = legend.name1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = low.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     if(tempo$problem == FALSE & ! (all(low.color1 %in% colors() | grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
         tempo.cat <- paste0("ERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
         text.check <- c(text.check, tempo.cat)
         argum.check <- c(argum.check, TRUE)
     }
     if( ! is.null(mid.color1)){
-        tempo <- saferDev::arg_check(data = mid.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = mid.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
         if(tempo$problem == FALSE & ! (all(mid.color1 %in% colors() | grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
             tempo.cat <- paste0("ERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
             text.check <- c(text.check, tempo.cat)
             argum.check <- c(argum.check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = high.color1, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- saferDev::arg_check(data = high.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     if(tempo$problem == FALSE & ! (all(high.color1 %in% colors() | grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
         tempo.cat <- paste0("ERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
         text.check <- c(text.check, tempo.cat)
         argum.check <- c(argum.check, TRUE)
     }
     if( ! is.null(limit1)){
-        tempo <- saferDev::arg_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name, safer_check = FALSE) ; eval(ee)
         if(tempo$problem == FALSE & any(limit1 %in% c(Inf, -Inf))){
             tempo.cat <- paste0("ERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
             text.check <- c(text.check, tempo.cat)
@@ -198,11 +204,11 @@ gg_heatmap <- function(
         }
     }
     if( ! is.null(midpoint1)){
-        tempo <- saferDev::arg_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     }
     if( ! is.null(data2)){
         if(all(is.matrix(data2))){
-            tempo <- saferDev::arg_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name) ; eval(ee)
+            tempo <- saferDev::arg_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; eval(ee)
             if(tempo$problem == FALSE & ! all(unique(data2) %in% c(0,1))){
                 tempo.cat <- paste0("ERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)")
                 text.check <- c(text.check, tempo.cat)
@@ -217,12 +223,12 @@ gg_heatmap <- function(
                 argum.check <- c(argum.check, TRUE)
             }
         }else if(all(is.data.frame(data2))){
-            tempo <- saferDev::arg_check(data = data2, class = "data.frame", length = 3, fun.name = function.name) ; eval(ee)
+            tempo <- saferDev::arg_check(data = data2, class = "data.frame", length = 3, fun.name = function.name, safer_check = FALSE) ; eval(ee)
             if(tempo$problem == FALSE){
                 # structure of reshape2::melt() data frame
-                tempo <- saferDev::arg_check(data = data2[, 1], data.name = "COLUMN 1 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name) ; eval(ee)
-                tempo <- saferDev::arg_check(data = data2[, 2], data.name = "COLUMN 2 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name) ; eval(ee)
-                tempo <- saferDev::arg_check(data = data2[, 3], data.name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", mode = "numeric", fun.name = function.name) ; eval(ee)
+                tempo <- saferDev::arg_check(data = data2[, 1], data.name = "COLUMN 1 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
+                tempo <- saferDev::arg_check(data = data2[, 2], data.name = "COLUMN 2 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
+                tempo <- saferDev::arg_check(data = data2[, 3], data.name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; eval(ee)
             }
             if(tempo$problem == FALSE & ! all(unique(data2[, 3]) %in% c(0,1))){
                 tempo.cat <- paste0("ERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)")
@@ -243,22 +249,22 @@ gg_heatmap <- function(
             argum.check <- c(argum.check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = color2, class = "character", length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- saferDev::arg_check(data = color2, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
         tempo.cat <- paste0("ERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
         text.check <- c(text.check, tempo.cat)
         argum.check <- c(argum.check, TRUE)
     }
-    tempo <- saferDev::arg_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = invert2, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = title, class = "character", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = show.scale, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = return, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
-    tempo <- saferDev::arg_check(data = plot, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- saferDev::arg_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = invert2, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = title, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = show.scale, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = return, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = plot, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     if( ! is.null(add)){
-        tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
         if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
             tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
             text.check <- c(text.check, tempo.cat)
@@ -273,9 +279,9 @@ gg_heatmap <- function(
             argum.check <- c(argum.check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = warn.print, class = "logical", length = 1, fun.name = function.name) ; eval(ee)
+    tempo <- saferDev::arg_check(data = warn.print, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
     if( ! is.null(lib.path)){
-        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; eval(ee)
+        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; eval(ee)
         if(tempo$problem == FALSE){
             if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
                 tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
@@ -347,7 +353,7 @@ gg_heatmap <- function(
     # end second round of checking and data preparation
    
     # main code
-    ini.warning.length <- options()$warning.length
+    ini.warning.length <- base::options()$warning.length
     options(warning.length = 8170)
     warn <- NULL
     warn.count <- 0

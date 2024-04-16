@@ -5,6 +5,7 @@
 #' for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 #' @param n number of groups on the graph.
 #' @param kind either "std" for standard gg colors, "dark" for darkened gg colors, or "light" for pastel gg colors.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns the vector of hexadecimal colors.
 #' @examples
 #' ggpalette(n = 2) # output of the function
@@ -21,10 +22,11 @@
 #' @export
     ggpalette <- function(
         n, 
-        kind = "std"
+        kind = "std",
+        safer_check = TRUE
     ){
     # DEBUGGING
-    # n = 0 ; kind = "std"
+    # n = 0 ; kind = "std" ; safer_check = TRUE
     # package name
     package.name <- "ggcute"
     # end package name
@@ -37,13 +39,15 @@
     arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(external.function.name = function.name)}
     # end critical operator checking
     # package checking
     # check of lib.path
     # end check of lib.path
     # check of the required function from the required packages
-    .pack_and_function_check(
+    if(safer_check == TRUE){
+        .pack_and_function_check(
         fun = base::c(
             "saferDev::arg_check",
             "utils::find"
@@ -51,6 +55,7 @@
         lib.path = NULL,
         external.function.name = function.name
     )
+    }
     # end check of the required function from the required packages
     # end package checking
 
@@ -71,8 +76,8 @@
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check <- c(argum.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = kind, options = c("std", "dark", "light"), length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = kind, options = c("std", "dark", "light"), length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
 
     if( ! base::is.null(argum.check)){
         if(base::any(argum.check, na.rm = TRUE) == TRUE){
