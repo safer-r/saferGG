@@ -10,13 +10,13 @@
 #' @param raster.width width of the result image (in inches). Default: deterined by the current device parameters.
 #' @param raster.height height of the result image (in inches). Default: deterined by the current device parameters.
 #' @param raster.dpi resolution of the result image.
-#' @param inactivate logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).
+#' @param fun.name logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).
 #' @param lib.path: character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a raster scatter plot.
 #' @examples
 #' # Two pdf in the current directory
-#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), inactivate = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
+#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 ggproto
 #' @importFrom ggplot2 layer
@@ -45,7 +45,7 @@ gg_point_rast <- function(
         raster.width = NULL, 
         raster.height = NULL, 
         raster.dpi = 300, 
-        inactivate = TRUE, 
+        fun.name = TRUE, 
         lib.path = NULL,
         safer_check = TRUE
 ){
@@ -54,14 +54,14 @@ gg_point_rast <- function(
     package.name <- "ggcute"
     # end package name
     # function name
-    if(base::all(inactivate == FALSE)){ # inactivate has to be used here but will be fully checked below
+    if(base::all(fun.name == FALSE)){ # fun.name has to be used here but will be fully checked below
          function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
         if(function.name[1] == "::()"){
             function.name <- function.name[3]
         }
         arg.names <- base::names(base::formals(fun = base::sys.function(base::sys.parent(n = 2)))) # names of all the arguments
         arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
-    }else if(base::all(inactivate == TRUE)){
+    }else if(base::all(fun.name == TRUE)){
         function.name <- NULL
         arg.names <- NULL
         arg.user.setting <- NULL
@@ -144,7 +144,7 @@ gg_point_rast <- function(
         tempo <- saferDev::arg_check(data = raster.height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
     tempo <- saferDev::arg_check(data = raster.dpi, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = inactivate, class = "vector", mode = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = fun.name, class = "vector", mode = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if( ! base::is.null(lib.path)){
         tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE){
@@ -185,7 +185,7 @@ gg_point_rast <- function(
         "show.legend",
         "inherit.aes",
         "raster.dpi",
-        "inactivate"
+        "fun.name"
         # "raster.width",  # inactivated because can be null
         # "raster.height",  # inactivated because can be null      
     )
