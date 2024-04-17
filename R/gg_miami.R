@@ -184,7 +184,7 @@ gg_miami <- function(
     # reserved words
     # end reserved words
     # management of NA arguments
-    if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
+    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
         tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
         if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here
@@ -542,7 +542,7 @@ gg_miami <- function(
         }else{
             base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_y_continuous(
                 expand = base::c(0, 0), # remove space after after axis limits
-                limits = if(reverse1){c(y.max.pos, y.min.pos)}else{base::c(y.min.pos, y.max.pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
+                limits = if(reverse1){base::c(y.max.pos, y.min.pos)}else{base::c(y.min.pos, y.max.pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
                 oob = scales::rescale_none, 
                 trans = "identity"
             ))

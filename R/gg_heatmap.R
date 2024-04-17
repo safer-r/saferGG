@@ -45,11 +45,14 @@
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 ggplot_build
 #' @importFrom ggplot2 ggtitle
+#' @importFrom ggplot2 scale_y_reverse
 #' @importFrom ggplot2 scale_fill_gradient2
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_classic
+#' @importFrom grDevices colors
 #' @importFrom reshape2 melt
 #' @importFrom saferDev arg_check
+#' @importFrom saferTool round2
 #' @details
 #' - NA and Inf values are displayed as grey.
 #' - when using limit1 all values out of the range of limit1 are also displayed as grey.
@@ -129,11 +132,14 @@ gg_heatmap <- function(
             "ggplot2::ggplot",
             "ggplot2::ggplot_build",
             "ggplot2::ggtitle",
+            "ggplot2::scale_y_reverse",
             "ggplot2::scale_fill_gradient2",
             "ggplot2::theme",
             "ggplot2::theme_classic",
+            "grDevices::colors",
             "reshape2::melt",
-            "saferDev::arg_check"
+            "saferDev::arg_check",
+            "saferTool::round2"
         ),
         lib.path = lib.path,
         external.function.name = function.name
@@ -158,141 +164,141 @@ gg_heatmap <- function(
     argum.check <- NULL #
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-    ee <- expression(argum.check <- c(argum.check, tempo$problem) , text.check <- c(text.check, tempo$text) , checked.arg.names <- c(checked.arg.names, tempo$object.name))
-    if(all(is.matrix(data1))){
-        tempo <- saferDev::arg_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    }else if(all(is.data.frame(data1))){
-        tempo <- saferDev::arg_check(data = data1, class = "data.frame", length = 3, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
+    if(base::all(base::is.matrix(data1))){
+        tempo <- saferDev::arg_check(data = data1, class = "matrix", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    }else if(base::all(base::is.data.frame(data1))){
+        tempo <- saferDev::arg_check(data = data1, class = "data.frame", length = 3, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE){
             # structure of reshape2::melt() data frame
-            tempo <- saferDev::arg_check(data = data1[, 1], data.name = "COLUMN 1 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
-            tempo <- saferDev::arg_check(data = data1[, 2], data.name = "COLUMN 2 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
-            tempo <- saferDev::arg_check(data = data1[, 3], data.name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+            tempo <- saferDev::arg_check(data = data1[, 1], data.name = "COLUMN 1 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+            tempo <- saferDev::arg_check(data = data1[, 2], data.name = "COLUMN 2 OF data1 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+            tempo <- saferDev::arg_check(data = data1[, 3], data.name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         }
     }else{
-        tempo.cat <- paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
-        text.check <- c(text.check, tempo.cat)
-        argum.check <- c(argum.check, TRUE)
+        tempo.cat <- base::paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
+        text.check <- base::c(text.check, tempo.cat)
+        argum.check <- base::c(argum.check, TRUE)
     }
-    tempo <- saferDev::arg_check(data = legend.name1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = low.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    if(tempo$problem == FALSE & ! (all(low.color1 %in% colors() | grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
-        tempo.cat <- paste0("ERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
-        text.check <- c(text.check, tempo.cat)
-        argum.check <- c(argum.check, TRUE)
+    tempo <- saferDev::arg_check(data = legend.name1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = low.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    if(tempo$problem == FALSE & ! (base::all(low.color1 %in% grDevices::colors() | base::grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
+        tempo.cat <- base::paste0("ERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+        text.check <- base::c(text.check, tempo.cat)
+        argum.check <- base::c(argum.check, TRUE)
     }
-    if( ! is.null(mid.color1)){
-        tempo <- saferDev::arg_check(data = mid.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-        if(tempo$problem == FALSE & ! (all(mid.color1 %in% colors() | grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
-            tempo.cat <- paste0("ERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
+    if( ! base::is.null(mid.color1)){
+        tempo <- saferDev::arg_check(data = mid.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+        if(tempo$problem == FALSE & ! (base::all(mid.color1 %in% grDevices::colors() | base::grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
+            tempo.cat <- base::paste0("ERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = high.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    if(tempo$problem == FALSE & ! (all(high.color1 %in% colors() | grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
-        tempo.cat <- paste0("ERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
-        text.check <- c(text.check, tempo.cat)
-        argum.check <- c(argum.check, TRUE)
+    tempo <- saferDev::arg_check(data = high.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    if(tempo$problem == FALSE & ! (base::all(high.color1 %in% grDevices::colors() | base::grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
+        tempo.cat <- base::paste0("ERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+        text.check <- base::c(text.check, tempo.cat)
+        argum.check <- base::c(argum.check, TRUE)
     }
-    if( ! is.null(limit1)){
-        tempo <- saferDev::arg_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-        if(tempo$problem == FALSE & any(limit1 %in% c(Inf, -Inf))){
-            tempo.cat <- paste0("ERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
+    if( ! base::is.null(limit1)){
+        tempo <- saferDev::arg_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+        if(tempo$problem == FALSE & base::any(limit1 %in% base::c(Inf, -Inf))){
+            tempo.cat <- base::paste0("ERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
         }
     }
-    if( ! is.null(midpoint1)){
-        tempo <- saferDev::arg_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    if( ! base::is.null(midpoint1)){
+        tempo <- saferDev::arg_check(data = midpoint1, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
-    if( ! is.null(data2)){
-        if(all(is.matrix(data2))){
-            tempo <- saferDev::arg_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; eval(ee)
-            if(tempo$problem == FALSE & ! all(unique(data2) %in% c(0,1))){
-                tempo.cat <- paste0("ERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)")
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
-            }else if(tempo$problem == FALSE & all(is.matrix(data1)) & ! identical(dim(data1), dim(data2))){ # matrix and matrix
-                tempo.cat <- paste0("ERROR IN ", function.name, ": MATRIX DIMENSION IN data2 MUST BE IDENTICAL AS MATRIX DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", paste(dim(data2), collapse = " "), "\n", paste(dim(data1), collapse = " "))
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
-            }else if(tempo$problem == FALSE & all(is.data.frame(data1)) & nrow(data1) != prod(dim(data2))){ # reshape2 and matrix
-                tempo.cat <- paste0("ERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSIONS OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", paste(nrow(data1), collapse = " "), "\n", paste(prod(dim(data2)), collapse = " "))
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
+    if( ! base::is.null(data2)){
+        if(base::all(base::is.matrix(data2))){
+            tempo <- saferDev::arg_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+            if(tempo$problem == FALSE & ! base::all(base::unique(data2) %in% base::c(0,1))){
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)")
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
+            }else if(tempo$problem == FALSE & base::all(base::is.matrix(data1)) & ! base::identical(base::dim(data1), base::dim(data2))){ # matrix and matrix
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": MATRIX DIMENSION IN data2 MUST BE IDENTICAL AS MATRIX DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", base::paste(base::dim(data2), collapse = " "), "\n", base::paste(base::dim(data1), collapse = " "))
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
+            }else if(tempo$problem == FALSE & base::all(base::is.data.frame(data1)) & base::nrow(data1) != base::prod(base::dim(data2))){ # reshape2 and matrix
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSIONS OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", base::paste(base::nrow(data1), collapse = " "), "\n", base::paste(base::prod(base::dim(data2)), collapse = " "))
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
             }
-        }else if(all(is.data.frame(data2))){
-            tempo <- saferDev::arg_check(data = data2, class = "data.frame", length = 3, fun.name = function.name, safer_check = FALSE) ; eval(ee)
+        }else if(base::all(base::is.data.frame(data2))){
+            tempo <- saferDev::arg_check(data = data2, class = "data.frame", length = 3, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
             if(tempo$problem == FALSE){
                 # structure of reshape2::melt() data frame
-                tempo <- saferDev::arg_check(data = data2[, 1], data.name = "COLUMN 1 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
-                tempo <- saferDev::arg_check(data = data2[, 2], data.name = "COLUMN 2 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; eval(ee)
-                tempo <- saferDev::arg_check(data = data2[, 3], data.name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; eval(ee)
+                tempo <- saferDev::arg_check(data = data2[, 1], data.name = "COLUMN 1 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+                tempo <- saferDev::arg_check(data = data2[, 2], data.name = "COLUMN 2 OF data2 (reshape2::melt() DATA FRAME)", typeof = "integer", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+                tempo <- saferDev::arg_check(data = data2[, 3], data.name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
             }
-            if(tempo$problem == FALSE & ! all(unique(data2[, 3]) %in% c(0,1))){
-                tempo.cat <- paste0("ERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)")
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
-            }else if(tempo$problem == FALSE & all(is.data.frame(data1)) & ! identical(dim(data1), dim(data2))){ # data frame and data frame
-                tempo.cat <- paste0("ERROR IN ", function.name, ": DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL TO DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", paste(dim(data2), collapse = " "), "\n", paste(dim(data1), collapse = " "))
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
-            }else if(tempo$problem == FALSE & all(is.matrix(data1)) & nrow(data2) != prod(dim(data1))){ # reshape2 and matrix
-                tempo.cat <- paste0("ERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSION OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", paste(nrow(data2), collapse = " "), "\n", paste(prod(dim(data1)), collapse = " "))
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
+            if(tempo$problem == FALSE & ! base::all(base::unique(data2[, 3]) %in% base::c(0,1))){
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)")
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
+            }else if(tempo$problem == FALSE & base::all(base::is.data.frame(data1)) & ! base::identical(base::dim(data1), base::dim(data2))){ # data frame and data frame
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL TO DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", base::paste(base::dim(data2), collapse = " "), "\n", base::paste(base::dim(data1), collapse = " "))
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
+            }else if(tempo$problem == FALSE & base::all(base::is.matrix(data1)) & base::nrow(data2) != base::prod(base::dim(data1))){ # reshape2 and matrix
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSION OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", base::paste(base::nrow(data2), collapse = " "), "\n", base::paste(base::prod(base::dim(data1)), collapse = " "))
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
             }
         }else{
-            tempo.cat <- paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
+            tempo.cat <- base::paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = color2, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    if(tempo$problem == FALSE & ! (all(color2 %in% colors() | grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
-        tempo.cat <- paste0("ERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY colors()")
-        text.check <- c(text.check, tempo.cat)
-        argum.check <- c(argum.check, TRUE)
+    tempo <- saferDev::arg_check(data = color2, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    if(tempo$problem == FALSE & ! (base::all(color2 %in% grDevices::colors() | base::grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
+        tempo.cat <- base::paste0("ERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+        text.check <- base::c(text.check, tempo.cat)
+        argum.check <- base::c(argum.check, TRUE)
     }
-    tempo <- saferDev::arg_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = invert2, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = title, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = show.scale, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = return, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    tempo <- saferDev::arg_check(data = plot, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    if( ! is.null(add)){
-        tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-        if(tempo$problem == FALSE & ! grepl(pattern = "^\\+", add)){ # check that the add string start by +
-            tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", paste(unique(add), collapse = " "))
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
-        }else if(tempo$problem == FALSE & ! grepl(pattern = "ggplot2::", add)){ #
-            tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", paste(unique(add), collapse = " "))
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
-        }else if(tempo$problem == FALSE & ! grepl(pattern = ")$", add)){ # check that the add string  finished by )
-            tempo.cat <- paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", paste(unique(add), collapse = " "))
-            text.check <- c(text.check, tempo.cat)
-            argum.check <- c(argum.check, TRUE)
+    tempo <- saferDev::arg_check(data = alpha2, class = "vector", mode = "numeric", length = 1, prop = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = invert2, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = title, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = title.text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = show.scale, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = return, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = plot, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    if( ! base::is.null(add)){
+        tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+        if(tempo$problem == FALSE & ! base::grepl(pattern = "^\\+", add)){ # check that the add string start by +
+            tempo.cat <- base::paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", base::paste(base::unique(add), collapse = " "))
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
+        }else if(tempo$problem == FALSE & ! base::grepl(pattern = "ggplot2::", add)){ #
+            tempo.cat <- base::paste0("ERROR IN ", function.name, ": add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
+        }else if(tempo$problem == FALSE & ! base::grepl(pattern = ")$", add)){ # check that the add string  finished by )
+            tempo.cat <- base::paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
+            text.check <- base::c(text.check, tempo.cat)
+            argum.check <- base::c(argum.check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = warn.print, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; eval(ee)
-    if( ! is.null(lib.path)){
-        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; eval(ee)
+    tempo <- saferDev::arg_check(data = warn.print, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    if( ! base::is.null(lib.path)){
+        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE){
-            if( ! all(dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-                tempo.cat <- paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", paste(lib.path, collapse = "\n"))
-                text.check <- c(text.check, tempo.cat)
-                argum.check <- c(argum.check, TRUE)
+            if( ! base::all(base::dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
+                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
+                text.check <- base::c(text.check, tempo.cat)
+                argum.check <- base::c(argum.check, TRUE)
             }
         }
     }
-    if( ! is.null(argum.check)){
-        if(any(argum.check) == TRUE){
-            stop(paste0("\n\n================\n\n", paste(text.check[argum.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+    if( ! base::is.null(argum.check)){
+        if(base::any(argum.check) == TRUE){
+            base::stop(base::paste0("\n\n================\n\n", base::paste(text.check[argum.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
         }
     }
     # end argument checking with arg_check()
@@ -305,7 +311,7 @@ gg_heatmap <- function(
     # reserved words (to avoid bugs)
     # end reserved words (to avoid bugs)
     # management of NA arguments
-    if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
+    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
         tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
         if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here
@@ -354,76 +360,76 @@ gg_heatmap <- function(
    
     # main code
     ini.warning.length <- base::options()$warning.length
-    options(warning.length = 8170)
+    base::options(warning.length = 8170)
     warn <- NULL
     warn.count <- 0
-    if(all(is.matrix(data1))){
+    if(base::all(base::is.matrix(data1))){
         data1 <- reshape2::melt(data1) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
     }
     if(rotate == TRUE){
-        data1[, 1] <- rev(data1[, 1])
+        data1[, 1] <- base::rev(data1[, 1])
     }
-    if(is.null(limit1)){
-        if(any( ! is.finite(data1[, 3]))){
+    if(base::is.null(limit1)){
+        if(base::any( ! base::is.finite(data1[, 3]))){
             warn.count <- warn.count + 1
-            tempo.warn <- paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
-            warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+            tempo.warn <- base::paste0("(", warn.count,") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
+            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
         }
-        limit1 <- range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+        limit1 <- base::range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
         warn.count <- warn.count + 1
-        tempo.warn <- paste0("(", warn.count,") THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", paste(saferTool::round2(limit1), collapse = " "))
-        warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-        if(suppressWarnings(any(limit1 %in% c(Inf, -Inf)))){
-            tempo.cat <- paste0("ERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY")
-            stop(paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", ifelse(is.null(warn), "", paste0("IN ADDITION\nWARNING", ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        tempo.warn <- base::paste0("(", warn.count,") THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(limit1, safer_check = FALSE), collapse = " "))
+        warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
+        if(base::suppressWarnings(base::any(limit1 %in% base::c(Inf, -Inf)))){
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " COMPUTED LIMIT CONTAINS Inf VALUES, BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY")
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }else{
-        limit1 <- sort(limit1)
+        limit1 <- base::sort(limit1)
     }
-    if(is.null(midpoint1)){
-        midpoint1 <- mean(limit1, na.rm = TRUE)
+    if(base::is.null(midpoint1)){
+        midpoint1 <- base::mean(limit1, na.rm = TRUE)
         warn.count <- warn.count + 1
-        tempo.warn <- paste0("(", warn.count,") THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", paste(saferTool::round2(midpoint1), collapse = " "))
-        warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
-    }else if(saferTool::round2(midpoint1, 9) != saferTool::round2(mean(limit1), 9)){
+        tempo.warn <- base::paste0("(", warn.count,") THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(midpoint1, safer_check = FALSE), collapse = " "))
+        warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
+    }else if(saferTool::round2(midpoint1, 9, safer_check = FALSE) != saferTool::round2(base::mean(limit1), 9, safer_check = FALSE)){
         warn.count <- warn.count + 1
-        tempo.warn <- paste0("(", warn.count,") THE midpoint1 ARGUMENT (", saferTool::round2(mean(midpoint1), 9), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", saferTool::round2(mean(limit1), 9), "). COLOR SCALE IS NOT LINEAR")
-        warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+        tempo.warn <- base::paste0("(", warn.count,") THE midpoint1 ARGUMENT (", saferTool::round2(base::mean(midpoint1), 9, safer_check = FALSE), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", saferTool::round2(base::mean(limit1), 9, safer_check = FALSE), "). COLOR SCALE IS NOT LINEAR")
+        warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
     }
-    if( ! is.null(data2)){
-        if(all(is.matrix(data2))){
+    if( ! base::is.null(data2)){
+        if(base::all(base::is.matrix(data2))){
             data2 <- reshape2::melt(data2) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
         }
         if(rotate == TRUE){
-            data2[, 1] <- rev(data2[, 1])
+            data2[, 1] <- base::rev(data2[, 1])
         }
-        data2[, 3] <- factor(data2[, 3]) # to converte continuous scale into discrete scale
+        data2[, 3] <- base::factor(data2[, 3]) # to converte continuous scale into discrete scale
     }
     tempo.gg.name <- "gg.indiv.plot."
     tempo.gg.count <- 0 # to facilitate debugging
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data1, mapping = ggplot2::aes_string(x = names(data1)[ifelse(rotate == FALSE, 2, 1)], y = names(data1)[ifelse(rotate == FALSE, 1, 2)], fill = names(data1)[3]), show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color1, high = high.color1, mid = mid.color1, midpoint = midpoint1, limit = limit1, breaks = c(limit1[1], midpoint1, limit1[2]), labels = saferTool::round2(c(limit1[1], midpoint1, limit1[2])), name = legend.name1))
-    if( ! is.null(data2)){
-        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], alpha = names(data2)[3]), fill = color2, show.legend = FALSE))
-        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", values = if(invert2 == FALSE){c(0, alpha2)}else{c(alpha2, 0)}, guide = FALSE))
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data1, mapping = ggplot2::aes_string(x = base::names(data1)[base::ifelse(rotate == FALSE, 2, 1)], y = base::names(data1)[base::ifelse(rotate == FALSE, 1, 2)], fill = base::names(data1)[3]), show.legend = show.scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2(low = low.color1, high = high.color1, mid = mid.color1, midpoint = midpoint1, limit = limit1, breaks = base::c(limit1[1], midpoint1, limit1[2]), labels = saferTool::round2(base::c(limit1[1], midpoint1, limit1[2]), safer_check = FALSE), name = legend.name1))
+    if( ! base::is.null(data2)){
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = base::names(data2)[base::ifelse(rotate == FALSE, 2, 1)], y = base::names(data2)[base::ifelse(rotate == FALSE, 1, 2)], alpha = base::names(data2)[3]), fill = color2, show.legend = FALSE))
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", values = if(invert2 == FALSE){base::c(0, alpha2)}else{base::c(alpha2, 0)}, guide = FALSE))
         # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # BEWARE: this does not work if NA present, because geom_raster() has a tendency to complete empty spaces, and thus, behave differently than geom_tile(). See https://github.com/tidyverse/ggplot2/issues/3025
     }
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_fixed()) # x = y
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_reverse())
-    assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_fixed()) # x = y
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_reverse())
+    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
     add.check <- TRUE
-    if( ! is.null(add)){ # if add is NULL, then = 0
-        if(grepl(pattern = "ggplot2::theme", add) == TRUE){
+    if( ! base::is.null(add)){ # if add is NULL, then = 0
+        if(base::grepl(pattern = "ggplot2::theme", add) == TRUE){
             warn.count <- warn.count + 1
-            tempo.warn <- paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
-            warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+            tempo.warn <- base::paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
             add.check <- FALSE
         }
     }
     if(add.check == TRUE){
-        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
-        assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
             text = ggplot2::element_text(size = text.size), 
             plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
             line = ggplot2::element_blank(),
@@ -435,25 +441,25 @@ gg_heatmap <- function(
     }
     if(plot == TRUE){
         # suppressWarnings(
-        print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(is.null(add)){NULL}else{add}))))
+        base::print(base::eval(base::parse(text = base::paste(base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(base::is.null(add)){NULL}else{add}))))
         # )
     }else{
         warn.count <- warn.count + 1
-        tempo.warn <- paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
-        warn <- paste0(ifelse(is.null(warn), tempo.warn, paste0(warn, "\n\n", tempo.warn)))
+        tempo.warn <- base::paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
+        warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
     }
-    if(warn.print == TRUE & ! is.null(warn)){
-        on.exit(warning(paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
+    if(warn.print == TRUE & ! base::is.null(warn)){
+        base::on.exit(base::warning(base::paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
     }
-    on.exit(exp = options(warning.length = ini.warning.length), add = TRUE)
+    base::on.exit(exp = base::options(warning.length = ini.warning.length), add = TRUE)
     if(return == TRUE){
-        output <- ggplot2::ggplot_build(eval(parse(text = paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+        output <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
         output <- output$data
-        names(output)[1] <- "heatmap"
-        if( ! is.null(data2)){
-            names(output)[2] <- "mask"
+        base::names(output)[1] <- "heatmap"
+        if( ! base::is.null(data2)){
+            base::names(output)[2] <- "mask"
         }
-        return(list(data = output, axes = output$layout$panel_params[[1]], scale = c(limit1[1],  midpoint1, limit1[2]), warn = warn))
+        base::return(base::list(data = output, axes = output$layout$panel_params[[1]], scale = c(limit1[1],  midpoint1, limit1[2]), warn = warn))
     }
     #end main code
 }
