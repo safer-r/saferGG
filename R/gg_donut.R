@@ -124,7 +124,9 @@ gg_donut <- function(
     # critical operator checking
     if(safer_check == TRUE){
         .base_op_check(
-            external.function.name = function.name)
+            external.function.name = function.name,
+            external.package.name = package.name
+        )
     }
     # end critical operator checking
     # package checking
@@ -174,7 +176,8 @@ gg_donut <- function(
             "saferDev::arg_check"
         ),
         lib.path = lib.path,
-        external.function.name = function.name
+        external.function.name = function.name,
+        external.package.name = package.name
     )
     }
     # end check of the required function from the required packages

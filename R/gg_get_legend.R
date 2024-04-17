@@ -35,7 +35,10 @@ gg_get_legend <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(external.function.name = function.name)
+        .base_op_check(
+            external.function.name = function.name,
+            external.package.name = package.name
+        )
     }
     # end critical operator checking
     # package checking
@@ -63,7 +66,9 @@ gg_get_legend <- function(
             "saferDev::arg_check"
     ),
         lib.path = lib.path,
-        external.function.name = function.name)
+        external.function.name = function.name,
+        external.package.name = package.name
+    )
     }
     # end required function checking
 
