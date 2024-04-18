@@ -315,6 +315,8 @@ gg_donut <- function(
     # end argument primary checking
 
     # second round of checking and data preparation
+    # reserved words (to avoid bugs)
+    # end reserved words (to avoid bugs)
     # reserved word checking
     if( ! (base::is.null(add))){
         if(base::any(base::sapply(X = arg.names, FUN = grepl, x = add), na.rm = TRUE)){
