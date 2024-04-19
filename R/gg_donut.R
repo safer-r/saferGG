@@ -319,9 +319,9 @@ gg_donut <- function(
     # end reserved words (to avoid bugs)
     # reserved word checking
     if( ! (base::is.null(add))){
-        if(base::any(base::sapply(X = arg.names, FUN = grepl, x = add), na.rm = TRUE)){
+        if(base::any(base::sapply(X = arg.names, FUN = base::grepl, x = add), na.rm = TRUE)){
             warn.count <- warn.count + 1
-            tempo.warn <- base::paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", base::paste(arg.names[base::sapply(X = arg.names, FUN = grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
+            tempo.warn <- base::paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", base::paste(arg.names[base::sapply(X = arg.names, FUN = base::grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
         }
     }
