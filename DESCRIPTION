@@ -12,9 +12,6 @@ RoxygenNote: 7.3.1
 Imports: 
     ggplot2,
     ggrepel,
-    grDevices,
     grid,
     gridExtra,
     reshape2,
-    scales,
-    utils
