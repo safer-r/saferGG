@@ -64,7 +64,6 @@
 #' @importFrom ggplot2 theme_void
 #' @importFrom ggplot2 ylim
 #' @importFrom ggrepel geom_text_repel
-#' @importFrom grDevices colors
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom gridExtra grid.arrange
 #' @importFrom grid unit
@@ -169,7 +168,6 @@ gg_donut <- function(
             "ggplot2::theme_void",
             "ggplot2::ylim",
             "ggrepel::geom_text_repel",
-            "grDevices::colors",
             "gridExtra::arrangeGrob",
             "gridExtra::grid.arrange",
             "grid::unit",

@@ -16,8 +16,9 @@ gg_point_rast(
   raster.width = NULL,
   raster.height = NULL,
   raster.dpi = 300,
-  inactivate = TRUE,
-  lib.path = NULL
+  fun.name = TRUE,
+  lib.path = NULL,
+  safer_check = TRUE
 )
 }
 \arguments{
@@ -27,7 +28,9 @@ gg_point_rast(
 
 \item{raster.dpi}{resolution of the result image.}
 
-\item{inactivate}{logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).}
+\item{fun.name}{logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).}
+
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 
 \item{#classical}{arguments of geom_point(), shown here https://rdrr.io/github/VPetukhov/ggrastr/man/geom_point_rast.html}
 
@@ -47,5 +50,5 @@ this function is derived from the geom_point_rast() function, created by Viktor 
 }
 \examples{
 # Two pdf in the current directory
-set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), inactivate = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
+set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
 }

@@ -4,12 +4,14 @@
 \alias{ggjust}
 \title{ggjust}
 \usage{
-ggjust(angle, pos, kind = "axis")
+ggjust(angle, pos, kind = "axis", safer_check = TRUE)
 }
 \arguments{
 \item{angle}{integer value of the text angle, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.}
 
 \item{pos}{where text is? Either "top", "right", "bottom" or "left" of the elements to justify from.}
+
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 
 \item{kind:}{kind of text? Either "axis" or "text". In the first case, the pos argument refers to the axis position, and in the second to annotated text (using ggplot2::annotate() or ggplot2::geom_text()).}
 }

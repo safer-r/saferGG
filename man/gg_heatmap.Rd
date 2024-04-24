@@ -25,7 +25,8 @@ gg_heatmap(
   plot = TRUE,
   add = NULL,
   warn.print = FALSE,
-  lib.path = NULL
+  lib.path = NULL,
+  safer_check = TRUE
 )
 }
 \arguments{
@@ -70,6 +71,8 @@ gg_heatmap(
 \item{warn.print}{logical. Print warnings at the end of the execution? No print if no warning messages.}
 
 \item{lib.path}{absolute path of the required packages, if not in the default folders.}
+
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 }
 \value{
 a heatmap if plot argument is TRUE; a list of the graph info if return argument is TRUE:$data: a list of the graphic info; $axes: a list of the axes info; $warn: the warning messages. Use cat() for proper display. NULL if no warning.

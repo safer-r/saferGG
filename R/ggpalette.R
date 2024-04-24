@@ -17,7 +17,6 @@
 #' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
 #'    
 #' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
-#' @importFrom utils find
 #' @importFrom saferDev arg_check
 #' @export
     ggpalette <- function(
@@ -53,8 +52,7 @@
     if(safer_check == TRUE){
         .pack_and_function_check(
         fun = base::c(
-            "saferDev::arg_check",
-            "utils::find"
+            "saferDev::arg_check"
         ),
         lib.path = NULL,
         external.function.name = function.name,

@@ -36,7 +36,6 @@
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5))
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 #' gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
-#' @importFrom utils find
 #' @importFrom ggplot2 aes_string
 #' @importFrom ggplot2 coord_fixed
 #' @importFrom ggplot2 element_blank
@@ -49,7 +48,6 @@
 #' @importFrom ggplot2 scale_fill_gradient2
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_classic
-#' @importFrom grDevices colors
 #' @importFrom reshape2 melt
 #' @importFrom saferDev arg_check
 #' @importFrom saferTool round2
@@ -139,7 +137,6 @@ gg_heatmap <- function(
             "ggplot2::scale_fill_gradient2",
             "ggplot2::theme",
             "ggplot2::theme_classic",
-            "grDevices::colors",
             "reshape2::melt",
             "saferDev::arg_check",
             "saferTool::round2"

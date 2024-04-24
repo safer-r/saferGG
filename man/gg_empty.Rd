@@ -9,7 +9,8 @@ gg_empty(
   text.size = 12,
   title = NULL,
   title.size = 8,
-  lib.path = NULL
+  lib.path = NULL,
+  safer_check = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ gg_empty(
 \item{title.size}{numeric value of the title size (in points).}
 
 \item{lib.path}{character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.}
+
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 }
 \value{
 an empty plot.

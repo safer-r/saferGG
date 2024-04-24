@@ -17,13 +17,9 @@
 #' @param y_log2: single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y_log2 = TRUE.
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a list containing: $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed); $pos: the selected position (argument pos); $kind: the selected kind of text (argument kind); $hjust: the horizontal justification; $vjust: the vertical justification.
-#' @examples
-#' 
 #' @importFrom ggplot2 annotation_custom
 #' @importFrom ggplot2 ggtitle
 #' @importFrom gridExtra grid.arrange
-#' @importFrom grDevices pdf
-#' @importFrom grDevices png
 #' @importFrom saferDev arg_check
 #' @importFrom scales math_format
 #' @importFrom scales rescale_none
@@ -82,8 +78,6 @@ gg_miami <- function(
             "ggplot2::annotation_custom",
             "ggplot2::ggtitle",
             "gridExtra::grid.arrange",
-            "grDevices::pdf",
-            "grDevices::png",
             "saferDev::arg_check",
             "scales::math_format",
             "scales::rescale_none",

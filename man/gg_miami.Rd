@@ -20,7 +20,8 @@ gg_miami(
   y.threshold1 = NULL,
   y.threshold2 = NULL,
   y.log1 = FALSE,
-  y.log2 = FALSE
+  y.log2 = FALSE,
+  safer_check = TRUE
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ gg_miami(
 \item{color.column}{single character string of one of the column name of the res_fisher.tsv file (see bottom_y_column) in order color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).}
 
 \item{dot.border.color}{single color character string to color the border of the dots. Write NULL if not required.}
+
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 
 \item{x_lim}{single character string of the x-axis limits. Either "whole" for the whole genome, region to have the regions of the region parameter (i.e., "whole" if region == none), or a character string written like the region parameter, to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results.}
 

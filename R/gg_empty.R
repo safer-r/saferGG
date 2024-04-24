@@ -22,7 +22,6 @@
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 theme_void
-#' @importFrom utils find
 #' @export
 gg_empty <- function(
         text = NULL, 
@@ -80,11 +79,11 @@ gg_empty <- function(
             "ggplot2::ggplot",
             "ggplot2::ggtitle",
             "ggplot2::theme_void",
-            "saferDev::arg_check",
-            "utils::find"         
+            "saferDev::arg_check"        
         ),
         lib.path = lib.path,
-        external.function.name = function.name
+        external.function.name = function.name,
+        external.package.name = package.name
     )
     }
     # end check of the required function from the required packages
