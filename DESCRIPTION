@@ -5,7 +5,7 @@ Version: 1.0
 Date: 2024-04-16
 Author: Haiding WANG, Gaël Millot
 Maintainer: Gaël Millot <gael.millot@pasteur.fr>
-Description: More about what it does (maybe more than one line)
+Description: ggcute fournit des fonctions R qui permettent d’obtenir facilement les beaux graphiques ggplot2 en une seule commande. 
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.1

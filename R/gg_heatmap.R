@@ -356,7 +356,7 @@ gg_heatmap <- function(
     # warning initiation
     # end warning initiation
     # other checkings
-     # end other checkings
+    # end other checkings
     # end second round of checking and data preparation
    
     # main code
