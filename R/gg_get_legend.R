@@ -4,6 +4,7 @@
 #' @param ggplot_built a ggplot build object.
 #' @param fun.name single character string indicating the name of the function using gg_get_legend() for warning and error messages. Ignored if NULL.
 #' @param lib.path character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a list of class c("gtable", "gTree", "grob", "gDesc"), providing legend information of ggplot_built objet, or NULL if the ggplot_built object has no legend.
 #' @examples
 #' # Simple example
@@ -16,10 +17,11 @@
 gg_get_legend <- function(
     ggplot_built, 
     fun.name = NULL, 
-    lib.path = NULL
+    lib.path = NULL,
+    safer_check = TRUE
     ){
     # DEBUGGING
-    # obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; ggplot_built = ggplot2::ggplot_build(p) ; fun.name = NULL ; lib.path = NULL
+    # obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; ggplot_built = ggplot2::ggplot_build(p) ; fun.name = NULL ; lib.path = NULL ;safer_check = TRUE
      # package name
     package.name <- "ggcute"
     # end package name
@@ -32,7 +34,12 @@ gg_get_legend <- function(
     arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(
+            external.function.name = function.name,
+            external.package.name = package.name
+        )
+    }
     # end critical operator checking
     # package checking
     # check of lib.path
@@ -52,13 +59,17 @@ gg_get_legend <- function(
     }
     # end check of lib.path
     # check of the required function from the required packages
-    .pack_and_function_check(
+    if(safer_check == TRUE){
+        .pack_and_function_check(
         fun = base::c(
             "ggplot2::ggplot_gtable",
             "saferDev::arg_check"
     ),
         lib.path = lib.path,
-        external.function.name = function.name)
+        external.function.name = function.name,
+        external.package.name = package.name
+    )
+    }
     # end required function checking
 
     # argument primary checking
@@ -68,7 +79,7 @@ gg_get_legend <- function(
     )
     tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for base::missing() output
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", " HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end arg with no default values
@@ -78,12 +89,12 @@ gg_get_legend <- function(
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check<- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = ggplot_built, class = "ggplot_built", mode = "list", fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = ggplot_built, class = "ggplot_built", mode = "list", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if( ! base::is.null(fun.name)){
-        tempo <- saferDev::arg_check(data = fun.name, class = "vector", mode = "character", length = 1, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = fun.name, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
     if( ! base::is.null(lib.path)){
-        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
     if( ! base::is.null(argum.check)){
         if(base::any(argum.check) == TRUE){
@@ -100,7 +111,7 @@ gg_get_legend <- function(
     # reserved words (to avoid bugs)
     # end reserved words (to avoid bugs)
     # management of NA
-    if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
+    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
         tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
         if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here
@@ -111,8 +122,8 @@ gg_get_legend <- function(
     # management of NULL arguments
     tempo.arg <-base::c(
         "ggplot_built" ,
-        "fun.name", # inactivated because can be null
-        "lib.path" # inactivated because can be null
+        #"fun.name", # inactivated because can be null
+        #"lib.path" # inactivated because can be null
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()

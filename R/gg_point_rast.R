@@ -10,20 +10,17 @@
 #' @param raster.width width of the result image (in inches). Default: deterined by the current device parameters.
 #' @param raster.height height of the result image (in inches). Default: deterined by the current device parameters.
 #' @param raster.dpi resolution of the result image.
-#' @param inactivate logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).
+#' @param fun.name logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).
 #' @param lib.path: character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a raster scatter plot.
 #' @examples
 #' # Two pdf in the current directory
-#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), inactivate = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
+#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 ggproto
 #' @importFrom ggplot2 layer
 #' @importFrom ggplot2 GeomPoint
-#' @importFrom graphics par
-#' @importFrom grDevices dev.cur
-#' @importFrom grDevices dev.set
-#' @importFrom grDevices dev.off
 #' @importFrom grid grid.cap
 #' @importFrom grid grid.points
 #' @importFrom grid popViewport
@@ -44,22 +41,23 @@ gg_point_rast <- function(
         raster.width = NULL, 
         raster.height = NULL, 
         raster.dpi = 300, 
-        inactivate = TRUE, 
-        lib.path = NULL
+        fun.name = TRUE, 
+        lib.path = NULL,
+        safer_check = TRUE
 ){
     # DEBUGGING
     # package name
     package.name <- "ggcute"
     # end package name
     # function name
-    if(base::all(inactivate == FALSE)){ # inactivate has to be used here but will be fully checked below
+    if(base::all(fun.name == FALSE)){ # fun.name has to be used here but will be fully checked below
          function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
         if(function.name[1] == "::()"){
             function.name <- function.name[3]
         }
         arg.names <- base::names(base::formals(fun = base::sys.function(base::sys.parent(n = 2)))) # names of all the arguments
         arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
-    }else if(base::all(inactivate == TRUE)){
+    }else if(base::all(fun.name == TRUE)){
         function.name <- NULL
         arg.names <- NULL
         arg.user.setting <- NULL
@@ -69,7 +67,12 @@ gg_point_rast <- function(
     }
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(
+            external.function.name = function.name,
+            external.package.name = package.name
+    )
+    }
     # end critical operator checking
     # package checking
     # check of lib.path
@@ -89,7 +92,8 @@ gg_point_rast <- function(
     }
     # end check of lib.path
     # check of the required function from the required packages
-    .pack_and_function_check(
+    if(safer_check == TRUE){
+        .pack_and_function_check(
         fun = base::c(
             "Cairo::Cairo",
             "ggplot2::ggproto",
@@ -110,6 +114,7 @@ gg_point_rast <- function(
         lib.path = NULL,
         external.function.name = function.name
     )
+    }
     # end check of the required function from the required packages
     # end package checking
 
@@ -123,25 +128,25 @@ gg_point_rast <- function(
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
     if( ! base::is.null(data)){
-        tempo <- saferDev::arg_check(data = data, class = "data.frame", na.contain = TRUE, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = data, class = "data.frame", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
     if( ! base::is.null(mapping)){
-        tempo <- saferDev::arg_check(data = mapping, class = "uneval", typeof = "list", fun.name = function.name) ; base::eval(ee) # aes() is tested
+        tempo <- saferDev::arg_check(data = mapping, class = "uneval", typeof = "list", fun.name = function.name, safer_check = FALSE) ; base::eval(ee) # aes() is tested
     }
     # stat and position not tested because too complicate
-    tempo <- saferDev::arg_check(data = na.rm, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = show.legend, class = "vector", mode = "logical", length = 1, na.contain = TRUE, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = inherit.aes, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = na.rm, class = "vector", mode = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = show.legend, class = "vector", mode = "logical", length = 1, na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = inherit.aes, class = "vector", mode = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if( ! base::is.null(raster.width)){
-        tempo <- saferDev::arg_check(data = raster.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = raster.width, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
     if( ! base::is.null(raster.height)){
-        tempo <- saferDev::arg_check(data = raster.height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = raster.height, class = "vector", mode = "numeric", length = 1, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
-    tempo <- saferDev::arg_check(data = raster.dpi, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = inactivate, class = "vector", mode = "logical", length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = raster.dpi, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = fun.name, class = "vector", mode = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if( ! base::is.null(lib.path)){
-        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE){
             if( ! base::all(base::dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
                 tempo.cat <- base::paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
@@ -163,7 +168,7 @@ gg_point_rast <- function(
     # reserved words (to avoid bugs)
     # end reserved words (to avoid bugs)
     # management of NA arguments
-    if( ! (base::all(base::class(arg.user.setting) %in% c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
+    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
         tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
         if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here
@@ -180,7 +185,7 @@ gg_point_rast <- function(
         "show.legend",
         "inherit.aes",
         "raster.dpi",
-        "inactivate"
+        "fun.name"
         # "raster.width",  # inactivated because can be null
         # "raster.height",  # inactivated because can be null      
     )

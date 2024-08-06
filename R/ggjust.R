@@ -4,6 +4,7 @@
 #' @param angle integer value of the text angle, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc. 
 #' @param pos where text is? Either "top", "right", "bottom" or "left" of the elements to justify from.
 #' @param kind: kind of text? Either "axis" or "text". In the first case, the pos argument refers to the axis position, and in the second to annotated text (using ggplot2::annotate() or ggplot2::geom_text()).
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a list containing: $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed); $pos: the selected position (argument pos); $kind: the selected kind of text (argument kind); $hjust: the horizontal justification; $vjust: the vertical justification.
 #' @examples
 #' ggjust(angle = 45, pos = "bottom")
@@ -13,7 +14,6 @@
 #' output1 <- ggjust(angle = 90, pos = "bottom") ; output2 <- ggjust(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust, vjust = output1$vjust), axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust, vjust = output2$vjust))
 #' output <- ggjust(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1, km = 1, bird = "pigeon", stringsAsFactors = FALSE) ; ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust)
 #' obs1 <- data.frame(time = 1:10, km = 1:10, bird = c(NA, NA, NA, "pigeon", NA, "cat", NA, NA, NA, NA), stringsAsFactors = FALSE) ; fun_open(width = 4, height = 4) ; for(i0 in c("text", "axis")){for(i1 in c("top", "right", "bottom", "left")){for(i2 in c(0, 45, 90, 135, 180, 225, 270, 315, 360)){output <- ggjust(angle = i2, pos = i1, kind = i0) ; title <- paste0("kind: ", i0, " | pos: ", i1, " | angle = ", i2, " | hjust: ", output$hjust, " | vjust: ", output$vjust) ; if(i0 == "text"){print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point(color = fun_gg_palette(1), alpha = 0.5) + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust) + ggplot2::theme(title = ggplot2::element_text(size = 5)))}else{print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point(color = fun_gg_palette(1), alpha = 0.5) + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird)) + ggplot2::scale_x_continuous(position = ifelse(i1 == "top", "top", "bottom")) + ggplot2::scale_y_continuous(position = ifelse(i1 == "right", "right", "left")) + ggplot2::theme(title = ggplot2::element_text(size = 5), axis.text.x = if(i1 %in% c("top", "bottom")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}, axis.text.y = if(i1 %in% c("right", "left")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}))}}}} ; dev.off()
-#' @importFrom utils find
 #' @importFrom saferDev arg_check
 #' @details
 #' - justification behave differently on plot, depending whether it is used for annotayed text or for axis labelling. Indeed the latter has labelling constrained.
@@ -22,9 +22,11 @@
 ggjust <- function(
         angle, 
         pos, 
-        kind = "axis"){
+        kind = "axis",
+        safer_check = TRUE
+    ){
     # DEBUGGING
-    # angle = 45 ; pos = "left" ; kind = "axis"
+    # angle = 45 ; pos = "left" ; kind = "axis" ; safer_check = TRUE
     # package name
     package.name <- "ggcute"
     # end package name
@@ -37,20 +39,27 @@ ggjust <- function(
     arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(
+            external.function.name = function.name,
+            external.package.name = package.name
+    )
+    }
     # end critical operator checking
     # package checking
     # check of lib.path
     # end check of lib.path
     # check of the required function from the required packages
-    .pack_and_function_check(
+    if(safer_check == TRUE){
+        .pack_and_function_check(
         fun = base::c(
-            "saferDev::arg_check",
-            "utils::find"        
+            "saferDev::arg_check"      
         ),
         lib.path = NULL,
-        external.function.name = function.name
+        external.function.name = function.name,
+        external.package.name = package.name
     )
+    }
     # end check of the required function from the required packages
     # end package checking
 
@@ -62,7 +71,7 @@ ggjust <- function(
     )
     tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for missing() output
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", "HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", " HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args, collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end arg with no default values
@@ -72,9 +81,9 @@ ggjust <- function(
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = angle , class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = pos, options = base::c("top", "right", "bottom", "left"), length = 1, fun.name = function.name) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = kind, options = base::c("axis", "text"), length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = angle , class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = pos, options = base::c("top", "right", "bottom", "left"), length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = kind, options = base::c("axis", "text"), length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
 
     if( ! base::is.null(argum.check)){
         if(base::any(argum.check, na.rm = TRUE) == TRUE){
@@ -91,7 +100,7 @@ ggjust <- function(
     # reserved words (to avoid bugs)
     # end reserved words (to avoid bugs)
     # management of NA arguments
-    if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
+    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
         tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
         if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here

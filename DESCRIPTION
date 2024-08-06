@@ -1,0 +1,24 @@
+Package: ggcute
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2024-04-16
+Authors@R: c(
+    person(given = "Haiding", family = "Wang", email = "wanghaiding442@gmail.com", role = c("aut", "ctb"), comment = c(ORCID = "0009-0008-4831-2022")),
+    person(given = "Yushi", family = "Han",  email = "yushi.han2000@gmail.com", role = c("aut", "ctb"), comment = c(ORCID = "0009-0009-9908-1958")),
+    person(given = "Gael", family = "Millot",  email = "gael.millot@pasteur.fr", role = c("cre", "aut", "ctb"), comment = c(ORCID = "0000-0002-0591-3509"))
+  )
+Author: Haiding Wang [aut, ctb], Gael Millot [cre, aut, ctb]
+Encoding: UTF-8
+Maintainer: Gael Millot <gael.millot@pasteur.fr>
+Description: ggcute fournit des fonctions R qui permettent d’obtenir facilement les beaux graphiques ggplot2 en une seule commande.
+License: GPL-3
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+Imports: 
+    ggplot2,
+    ggrepel,
+    grid,
+    gridExtra,
+    reshape2,
+    scales

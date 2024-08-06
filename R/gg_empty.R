@@ -6,6 +6,7 @@
 #' @param title character string of the graph title.
 #' @param title.size numeric value of the title size (in points).
 #' @param lib.path character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns an empty plot.
 #' @examples
 #' ### simple example.
@@ -21,17 +22,17 @@
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 theme_void
-#' @importFrom utils find
 #' @export
 gg_empty <- function(
         text = NULL, 
         text.size = 12, 
         title = NULL, 
         title.size = 8, 
-        lib.path = NULL
+        lib.path = NULL,
+        safer_check = TRUE
 ){
     # DEBUGGING
-    # text = "NO GRAPH" ; text.size = 12 ; title = "GRAPH1" ; title.size = 8 ; lib.path = NULL
+    # text = "NO GRAPH" ; text.size = 12 ; title = "GRAPH1" ; title.size = 8 ; lib.path = NULL ; safer_check = TRUE
     # package name
     package.name <- "ggcute"
     # end package name
@@ -44,7 +45,11 @@ gg_empty <- function(
     arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
     # end function name
     # critical operator checking
-    .base_op_check(external.function.name = function.name)
+    if(safer_check == TRUE){
+        .base_op_check(
+            external.function.name = function.name,
+            external.package.name = package.name)
+    }
     # end critical operator checking
     # package checking
     # check of lib.path
@@ -64,7 +69,8 @@ gg_empty <- function(
     }
     # end check of lib.path
     # check of the required function from the required packages
-    .pack_and_function_check(
+    if(safer_check == TRUE){
+        .pack_and_function_check(
         fun = base::c(
             "ggplot2::aes",
             "ggplot2::element_rect",
@@ -73,12 +79,13 @@ gg_empty <- function(
             "ggplot2::ggplot",
             "ggplot2::ggtitle",
             "ggplot2::theme_void",
-            "saferDev::arg_check",
-            "utils::find"         
+            "saferDev::arg_check"        
         ),
         lib.path = lib.path,
-        external.function.name = function.name
+        external.function.name = function.name,
+        external.package.name = package.name
     )
+    }
     # end check of the required function from the required packages
     # end package checking
 
@@ -92,13 +99,13 @@ gg_empty <- function(
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
     if( ! base::is.null(text)){
-        tempo <- saferDev::arg_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = text, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
-    tempo <- saferDev::arg_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = text.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if( ! base::is.null(title)){
-        tempo <- saferDev::arg_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name) ; base::eval(ee)
+        tempo <- saferDev::arg_check(data = title, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     }
-    tempo <- saferDev::arg_check(data = title.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = title.size, class = "vector", mode = "numeric", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if( ! base::is.null(argum.check)){
         if(base::any(argum.check) == TRUE){
             base::stop(base::paste0("\n\n================\n\n", base::paste(text.check[argum.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
@@ -114,7 +121,7 @@ gg_empty <- function(
     # reserved words (to avoid bugs)
     # end reserved words (to avoid bugs)
     # management of NA arguments
-    if( ! (base::all(base::class(arg.user.setting) == "list", na.rm = TRUE) & base::length(arg.user.setting) == 0)){
+    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
         tempo.arg <- base::names(arg.user.setting) # values provided by the user
         tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
         if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here
