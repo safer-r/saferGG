@@ -210,7 +210,7 @@ gg_miami <- function(
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE:\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of NULL arguments
@@ -237,7 +237,7 @@ gg_miami <- function(
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = get, env = base::sys.nframe(), inherit = FALSE), FUN = function(x){base::any(x == "")})
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
-        tempo.cat <- base::paste0("ERROR IN miami.R:\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE \"\"")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE \"\"")
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of ""
@@ -256,7 +256,7 @@ gg_miami <- function(
         }else if(base::get(i0) == "FALSE"){
             base::assign(i0, FALSE)
         }else{
-            tempo.cat <- base::paste0("ERROR IN miami.R\n", i0, " PARAMETER CAN ONLY BE \"TRUE\" OR \"FALSE\": ", base::get(i0))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", i0, " PARAMETER CAN ONLY BE \"TRUE\" OR \"FALSE\": ", base::get(i0))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }
@@ -291,7 +291,7 @@ gg_miami <- function(
 
     # data import
     if( ! base::file.exists(fisher)){
-        base::stop(base::paste0("\n\n============\n\nERROR IN miami.R\nFILE INDICATED IN THE fisher PARAMETER DOES NOT EXISTS: ", fisher, "\n\n============\n\n"), call. = FALSE)
+        base::stop(base::paste0("\n\n============\n\nERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n\nFILE INDICATED IN THE fisher PARAMETER DOES NOT EXISTS: ", fisher, "\n\n============\n\n"), call. = FALSE)
     }else{
         obs <- base::read.table(fisher, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
         if(base::length(obs) > 0 & base::nrow(obs) > 0){
@@ -301,7 +301,7 @@ gg_miami <- function(
         }
     }
     if( ! base::file.exists(chr.path)){
-        base::stop(base::paste0("\n\n============\n\nERROR IN miami.R\nFILE INDICATED IN THE chr.path PARAMETER DOES NOT EXISTS: ", chr.path, "\n\n============\n\n"), call. = FALSE)
+        base::stop(base::paste0("\n\n============\n\nERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFILE INDICATED IN THE chr.path PARAMETER DOES NOT EXISTS: ", chr.path, "\n\n============\n\n"), call. = FALSE)
     }else{
         chr <- base::read.table(chr.path, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
     }
@@ -324,7 +324,7 @@ gg_miami <- function(
             obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^MT$|^M$")] <- "25"
         }
         if(base::any( ! base::grepl(x = obs$CHROM, pattern = "\\d"))){
-            tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE chr COLUMN of the fisher.tsv FILE HAS LETTERS IN IT, OTHER THAN X, Y and MT:\n", base::paste0(obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^\\d")], collapse = "\n"))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE chr COLUMN of the fisher.tsv FILE HAS LETTERS IN IT, OTHER THAN X, Y and MT:\n", base::paste0(obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^\\d")], collapse = "\n"))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
             obs$CHROM <- base::as.integer(obs$CHROM)
@@ -344,13 +344,13 @@ gg_miami <- function(
             tempo <- base::strsplit(x = x.lim, split = ",")[[1]]
             tempo <- base::gsub(x = tempo, pattern = " ", replacement = "")
             if( ! base::all(base::grepl(x = tempo, pattern = "^chr.+"))){
-                tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE x_lim PARAMETER MUST START WITH \"chr\" IF NOT \"none\":\n", base::paste0(x.lim, collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST START WITH \"chr\" IF NOT \"none\":\n", base::paste0(x.lim, collapse = " "))
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
             if(base::any(base::grepl(x = tempo, pattern = ":"))){
                 # means that there are coordinates
                 if( ! base::all(base::grepl(tempo, pattern = "-"))){# normally no NA with is.null()
-                    tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
+                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }
                 tempo2 <- base::strsplit(x = tempo, split = ":")
@@ -363,13 +363,13 @@ gg_miami <- function(
                 xmax_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[2]})
                 xmax_x_lim <- base::gsub(x = xmax_x_lim, pattern = " ", replacement = "")
                 if(base::any(base::grepl(xmin_x_lim, pattern = "\\D")) | base::any(base::grepl(xmax_x_lim, pattern = "\\D"))){# normally no NA with is.null()
-                    tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
+                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }else{
                     xmin_x_lim <- base::as.integer(xmin_x_lim)
                     xmax_x_lim <- base::as.integer(xmax_x_lim)
                     if(base::any(xmax_x_lim - xmin_x_lim < 0)){
-                        tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE x_lim PARAMETER MUST BE WRITTEN WITH ORDERED COORDINATES, LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\", IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
+                        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN WITH ORDERED COORDINATES, LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\", IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
                         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                     }
                 }
@@ -382,7 +382,7 @@ gg_miami <- function(
             # modification of the chr object for restricted plotting
             tempo.coord <- base::which(chr$CHR %in% chr_x_lim) # which rows of chr to take for plotting
             if(base::any(chr$BP_LENGTH[tempo.coord] - xmax_x_lim < 0)){
-                tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE x_lim PARAMETER HAS AT LEAST ONE COORDINATE THAT IS ABOVE THE MAX LENGTH OF THE CHROMO.\nCHROMO LENGTH: ", base::paste0(chr$BP_LENGTH[tempo.coord], collapse = " "), "\nMAX COORDINATE: ", base::paste0(xmax_x_lim, collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER HAS AT LEAST ONE COORDINATE THAT IS ABOVE THE MAX LENGTH OF THE CHROMO.\nCHROMO LENGTH: ", base::paste0(chr$BP_LENGTH[tempo.coord], collapse = " "), "\nMAX COORDINATE: ", base::paste0(xmax_x_lim, collapse = " "))
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
             if(tempo.coord[1] > 1){
@@ -407,7 +407,7 @@ gg_miami <- function(
         if( ! base::is.null(base::get(i0))){
             tempo <- base::unlist(base::strsplit(x = base::get(i0), split = " "))
             if(base::length(tempo) != 2 | ! base::all(base::grepl(tempo, pattern = "^[0123456789.\\-\\+eE]*$"))){
-                tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE ", i0, " PARAMETER MUST BE TWO NUMERIC VALUES SEPARATED BY A SINGLE SPACE\nHERE IT IS: \n", base::paste0(base::get(i0), collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE ", i0, " PARAMETER MUST BE TWO NUMERIC VALUES SEPARATED BY A SINGLE SPACE\nHERE IT IS: \n", base::paste0(base::get(i0), collapse = " "))
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }else{
                 base::assign(i0, base::as.numeric(tempo))
@@ -418,7 +418,7 @@ gg_miami <- function(
         if( ! base::is.null(base::get(i0))){
             tempo <- base::unlist(base::strsplit(x = base::get(i0), split = " "))
             if(base::length(tempo) != 1 | ! base::all(base::grepl(tempo, pattern = "^[0123456789.\\-\\+eE]*$"))){
-                tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE ", i0, " PARAMETER MUST BE TWO NUMERIC VALUES SEPARATED BY A SINGLE SPACE\nHERE IT IS: \n", base::paste0(base::get(i0), collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE ", i0, " PARAMETER MUST BE TWO NUMERIC VALUES SEPARATED BY A SINGLE SPACE\nHERE IT IS: \n", base::paste0(base::get(i0), collapse = " "))
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }else{
                 base::assign(i0, base::as.numeric(tempo))
@@ -427,11 +427,11 @@ gg_miami <- function(
     }
 
     if( ! top.y.column %in% base::names(obs)){
-        tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE top.y.column PARAMETER MUST BE A COLUMN NAME OF THE FISHER TABLE.\n\ntop.y.column PARAMETER:\n", base::paste0(top.y.column, collapse = " "), "\n\nCOLUMN NAMES:\n", base::paste0(base::names(obs), collapse = "\n"))
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE top.y.column PARAMETER MUST BE A COLUMN NAME OF THE FISHER TABLE.\n\ntop.y.column PARAMETER:\n", base::paste0(top.y.column, collapse = " "), "\n\nCOLUMN NAMES:\n", base::paste0(base::names(obs), collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     if( ! bottom.y.column %in% base::names(obs)){
-        tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE bottom.y.column PARAMETER MUST BE A COLUMN NAME OF THE FISHER TABLE.\n\nbottom.y.column PARAMETER:\n", base::paste0(bottom.y.column, collapse = " "), "\n\nCOLUMN NAMES:\n", base::paste0(base::names(obs), collapse = "\n"))
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE bottom.y.column PARAMETER MUST BE A COLUMN NAME OF THE FISHER TABLE.\n\nbottom.y.column PARAMETER:\n", base::paste0(bottom.y.column, collapse = " "), "\n\nCOLUMN NAMES:\n", base::paste0(base::names(obs), collapse = "\n"))
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
 
@@ -524,7 +524,7 @@ gg_miami <- function(
         ))
         if(y.log1){
             if(base::any(obs[ , top.y.column] <= 0)){
-                tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE y_log1 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", top.y.column, " FIELD OF THE TSV OR VCF")
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE y_log1 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", top.y.column, " FIELD OF THE TSV OR VCF")
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }else{
                 base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_y_continuous(
@@ -647,7 +647,7 @@ gg_miami <- function(
             ))
             if(y.log2){
                 if(base::any(obs[ , bottom.y.column] <= 0)){
-                    tempo.cat <- base::paste0("ERROR IN miami.R:\nTHE y_log2 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", bottom.y.column, " FIELD OF THE TSV OR VCF")
+                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE y_log2 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", bottom.y.column, " FIELD OF THE TSV OR VCF")
                     base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }else{
                     base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_y_continuous(

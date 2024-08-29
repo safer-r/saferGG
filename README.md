@@ -66,7 +66,7 @@ The different *ggcute* releases are tagged [here](https://github.com/safer-r/ggc
 
 ```r
 install.packages("remotes")
-remotes::install_github("https://github.com/safer-r/ggcute")
+remotes::install_github("https://github.com/safer-r/ggcute") # or open R as admin and remotes::install_github("https://github.com/safer-r/ggcute", lib = "C:/Program Files/R/R-4.3.1/library")
 ```
 
 Older versions can be installed like this:

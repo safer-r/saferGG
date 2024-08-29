@@ -106,10 +106,10 @@ gg_heatmap <- function(
     # check of lib.path
     if( ! base::is.null(lib.path)){
         if( ! base::all(base::typeof(lib.path) == "character")){ # no na.rm = TRUE with typeof
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE: DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT MUST BE A VECTOR OF CHARACTERS:\n", base::paste(lib.path, collapse = "\n"))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT MUST BE A VECTOR OF CHARACTERS:\n", base::paste(lib.path, collapse = "\n"))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else if( ! base::all(base::dir.exists(lib.path), na.rm = TRUE)){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-            tempo.cat <-base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE: DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
+            tempo.cat <-base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
             base::.libPaths(new = base::sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
@@ -177,35 +177,35 @@ gg_heatmap <- function(
             tempo <- saferDev::arg_check(data = data1[, 3], data.name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", mode = "numeric", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         }
     }else{
-        tempo.cat <- base::paste0("ERROR IN ", function.name, ": THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
         text.check <- base::c(text.check, tempo.cat)
         argum.check <- base::c(argum.check, TRUE)
     }
     tempo <- saferDev::arg_check(data = legend.name1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = low.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if(tempo$problem == FALSE & ! (base::all(low.color1 %in% grDevices::colors() | base::grepl(pattern = "^#", low.color1)))){ # check that all strings of low.color1 start by #
-        tempo.cat <- base::paste0("ERROR IN ", function.name, ": low.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nlow.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
         text.check <- base::c(text.check, tempo.cat)
         argum.check <- base::c(argum.check, TRUE)
     }
     if( ! base::is.null(mid.color1)){
         tempo <- saferDev::arg_check(data = mid.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE & ! (base::all(mid.color1 %in% grDevices::colors() | base::grepl(pattern = "^#", mid.color1)))){ # check that all strings of mid.color1 start by #
-            tempo.cat <- base::paste0("ERROR IN ", function.name, ": mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nmid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
             text.check <- base::c(text.check, tempo.cat)
             argum.check <- base::c(argum.check, TRUE)
         }
     }
     tempo <- saferDev::arg_check(data = high.color1, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if(tempo$problem == FALSE & ! (base::all(high.color1 %in% grDevices::colors() | base::grepl(pattern = "^#", high.color1)))){ # check that all strings of high.color1 start by #
-        tempo.cat <- base::paste0("ERROR IN ", function.name, ": high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nhigh.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
         text.check <- base::c(text.check, tempo.cat)
         argum.check <- base::c(argum.check, TRUE)
     }
     if( ! base::is.null(limit1)){
         tempo <- saferDev::arg_check(data = limit1, class = "vector", mode = "numeric", length = 2, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE & base::any(limit1 %in% base::c(Inf, -Inf))){
-            tempo.cat <- base::paste0("ERROR IN ", function.name, ": limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nlimit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES")
             text.check <- base::c(text.check, tempo.cat)
             argum.check <- base::c(argum.check, TRUE)
         }
@@ -217,15 +217,15 @@ gg_heatmap <- function(
         if(base::all(base::is.matrix(data2))){
             tempo <- saferDev::arg_check(data = data2, class = "matrix", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
             if(tempo$problem == FALSE & ! base::all(base::unique(data2) %in% base::c(0,1))){
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)")
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nMATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)")
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }else if(tempo$problem == FALSE & base::all(base::is.matrix(data1)) & ! base::identical(base::dim(data1), base::dim(data2))){ # matrix and matrix
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": MATRIX DIMENSION IN data2 MUST BE IDENTICAL AS MATRIX DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", base::paste(base::dim(data2), collapse = " "), "\n", base::paste(base::dim(data1), collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nMATRIX DIMENSION IN data2 MUST BE IDENTICAL AS MATRIX DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", base::paste(base::dim(data2), collapse = " "), "\n", base::paste(base::dim(data1), collapse = " "))
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }else if(tempo$problem == FALSE & base::all(base::is.data.frame(data1)) & base::nrow(data1) != base::prod(base::dim(data2))){ # reshape2 and matrix
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSIONS OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", base::paste(base::nrow(data1), collapse = " "), "\n", base::paste(base::prod(base::dim(data2)), collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSIONS OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", base::paste(base::nrow(data1), collapse = " "), "\n", base::paste(base::prod(base::dim(data2)), collapse = " "))
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }
@@ -238,27 +238,27 @@ gg_heatmap <- function(
                 tempo <- saferDev::arg_check(data = data2[, 3], data.name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", mode = "numeric", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
             }
             if(tempo$problem == FALSE & ! base::all(base::unique(data2[, 3]) %in% base::c(0,1))){
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)")
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)")
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }else if(tempo$problem == FALSE & base::all(base::is.data.frame(data1)) & ! base::identical(base::dim(data1), base::dim(data2))){ # data frame and data frame
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL TO DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", base::paste(base::dim(data2), collapse = " "), "\n", base::paste(base::dim(data1), collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDATA FRAME DIMENSION IN data2 MUST BE IDENTICAL TO DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", base::paste(base::dim(data2), collapse = " "), "\n", base::paste(base::dim(data1), collapse = " "))
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }else if(tempo$problem == FALSE & base::all(base::is.matrix(data1)) & base::nrow(data2) != base::prod(base::dim(data1))){ # reshape2 and matrix
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSION OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", base::paste(base::nrow(data2), collapse = " "), "\n", base::paste(base::prod(base::dim(data1)), collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSION OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", base::paste(base::nrow(data2), collapse = " "), "\n", base::paste(base::prod(base::dim(data1)), collapse = " "))
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }
         }else{
-            tempo.cat <- base::paste0("ERROR IN ", function.name, ": THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape::melt() FUNCTION")
             text.check <- base::c(text.check, tempo.cat)
             argum.check <- base::c(argum.check, TRUE)
         }
     }
     tempo <- saferDev::arg_check(data = color2, class = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     if(tempo$problem == FALSE & ! (base::all(color2 %in% grDevices::colors() | base::grepl(pattern = "^#", color2)))){ # check that all strings of color2 start by #
-        tempo.cat <- base::paste0("ERROR IN ", function.name, ": color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\ncolor2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()")
         text.check <- base::c(text.check, tempo.cat)
         argum.check <- base::c(argum.check, TRUE)
     }
@@ -273,15 +273,15 @@ gg_heatmap <- function(
     if( ! base::is.null(add)){
         tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE & ! base::grepl(pattern = "^\\+", add)){ # check that the add string start by +
-            tempo.cat <- base::paste0("ERROR IN ", function.name, ": add ARGUMENT MUST START WITH \"+\": ", base::paste(base::unique(add), collapse = " "))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST START WITH \"+\": ", base::paste(base::unique(add), collapse = " "))
             text.check <- base::c(text.check, tempo.cat)
             argum.check <- base::c(argum.check, TRUE)
         }else if(tempo$problem == FALSE & ! base::grepl(pattern = "ggplot2::", add)){ #
-            tempo.cat <- base::paste0("ERROR IN ", function.name, ": add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
             text.check <- base::c(text.check, tempo.cat)
             argum.check <- base::c(argum.check, TRUE)
         }else if(tempo$problem == FALSE & ! base::grepl(pattern = ")$", add)){ # check that the add string  finished by )
-            tempo.cat <- base::paste0("ERROR IN ", function.name, ": add ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
             text.check <- base::c(text.check, tempo.cat)
             argum.check <- base::c(argum.check, TRUE)
         }
@@ -291,7 +291,7 @@ gg_heatmap <- function(
         tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
         if(tempo$problem == FALSE){
             if( ! base::all(base::dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-                tempo.cat <- base::paste0("ERROR IN ", function.name, ": DIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
                 text.check <- base::c(text.check, tempo.cat)
                 argum.check <- base::c(argum.check, TRUE)
             }
@@ -347,7 +347,7 @@ gg_heatmap <- function(
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
     if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE:\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
+        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of NULL arguments
