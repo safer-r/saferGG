@@ -12,7 +12,7 @@
 #' @param raster.dpi resolution of the result image.
 #' @param fun.name logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).
 #' @param lib.path: character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.
-#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a raster scatter plot.
 #' @examples
 #' # Two pdf in the current directory

@@ -5,7 +5,7 @@
 #' for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 #' @param n number of groups on the graph.
 #' @param kind either "std" for standard gg colors, "dark" for darkened gg colors, or "light" for pastel gg colors.
-#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
+#' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns the vector of hexadecimal colors.
 #' @examples
 #' ggpalette(n = 2) # output of the function
