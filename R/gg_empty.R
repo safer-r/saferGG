@@ -34,7 +34,7 @@ gg_empty <- function(
     # DEBUGGING
     # text = "NO GRAPH" ; text.size = 12 ; title = "GRAPH1" ; title.size = 8 ; lib.path = NULL ; safer_check = TRUE
     # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
@@ -46,7 +46,7 @@ gg_empty <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name)
     }
@@ -70,7 +70,7 @@ gg_empty <- function(
     # end check of lib.path
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "ggplot2::aes",
             "ggplot2::element_rect",

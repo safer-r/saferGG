@@ -110,7 +110,7 @@ gg_donut <- function(
     # DEBUGGING
     # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text = TRUE ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.text.size = 10 ; legend.box.size = 5 ; legend.box.space = 2 ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL ; safer_check = TRUE
     # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
@@ -122,7 +122,7 @@ gg_donut <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        ggcute:::.base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
         )
@@ -149,7 +149,7 @@ gg_donut <- function(
 
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        ggcute:::.pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "ggplot2::aes_string",
             "ggplot2::annotate",
@@ -716,7 +716,7 @@ gg_donut <- function(
     }
     bef.final.plot <- base::suppressWarnings(base::suppressMessages(ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))))
     if( ! base::is.null(legend.width)){
-        legend.plot <- base::suppressWarnings(base::suppressMessages(ggcute::gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
+        legend.plot <- base::suppressWarnings(base::suppressMessages(saferGG::gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
         if(base::is.null(legend.plot) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
             legend.plot <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend

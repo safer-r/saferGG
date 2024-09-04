@@ -1,4 +1,4 @@
-#' @title ggpalette
+#' @title gg_palette
 #' @description
 #' provide colors used by ggplot2
 #' the interest is to use another single color that is not the red one used by default
@@ -8,18 +8,18 @@
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns the vector of hexadecimal colors.
 #' @examples
-#' ggpalette(n = 2) # output of the function
+#' gg_palette(n = 2) # output of the function
 #'    
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7)) # the ggplot2 palette when asking for 7 different colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)) # the ggplot2 palette when asking for 7 different colors
 #'   
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
 #'    
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
 #'    
-#' plot(1:7, pch = 16, cex = 5, col = ggpalette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
 #' @importFrom saferDev arg_check
 #' @export
-    ggpalette <- function(
+    gg_palette <- function(
         n, 
         kind = "std",
         safer_check = TRUE
@@ -39,7 +39,7 @@
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
     )
@@ -50,7 +50,7 @@
     # end check of lib.path
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "saferDev::arg_check"
         ),

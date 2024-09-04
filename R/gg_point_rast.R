@@ -68,7 +68,7 @@ gg_point_rast <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
     )
@@ -85,7 +85,7 @@ gg_point_rast <- function(
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
             base::.libPaths(new = base::sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
-            lib.path <- base.libPaths()
+            lib.path <- base::.libPaths()
         }
     }else{
         lib.path <- base::.libPaths() # .libPaths(new = lib.path) # or .libPaths(new = c(.libPaths(), lib.path))
@@ -93,7 +93,7 @@ gg_point_rast <- function(
     # end check of lib.path
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "Cairo::Cairo",
             "ggplot2::ggproto",

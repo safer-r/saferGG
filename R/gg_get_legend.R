@@ -23,7 +23,7 @@ gg_get_legend <- function(
     # DEBUGGING
     # obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; ggplot_built = ggplot2::ggplot_build(p) ; fun.name = NULL ; lib.path = NULL ;safer_check = TRUE
      # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
@@ -35,7 +35,7 @@ gg_get_legend <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
         )
@@ -60,7 +60,7 @@ gg_get_legend <- function(
     # end check of lib.path
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "ggplot2::ggplot_gtable",
             "saferDev::arg_check"

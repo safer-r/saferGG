@@ -1,22 +1,28 @@
 #' @title gg_miami
 #' @description
 #' Plot two ggplot2 manhattan plots in mirror.
+#' @param file single character string of the vcf.tsv file path. Example: "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv".
+#' @param chr single character string of the human chromo infos file.tsv path. Example: chr_path = "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt".
+#' @param top_y_column single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.
+#' @param bottom_y_column as the top_y_column parameter but for the bottom manhattan plot of the miami plot. "NULL" generates a simple manhattan plot
 #' @param x_lim single character string of the x-axis limits. Either "whole" for the whole genome, region to have the regions of the region parameter (i.e., "whole" if region == none), or a character string written like the region parameter, to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. 
 #' @param vgrid single character string of logical value TRUE or FALSE. Display the chromosome separators in the miami plot? Example: vgrid = TRUE.
-#' @param top.y.column NEG_LOG10_P_VALUE_CARRIER_MODEL: single character string of any of the quantitative column of the res_fisher.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter..
+#' @param top.y.column single character string of any of the quantitative column of the .tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter..
 #' @param bottom.y.column  as the top_y_column parameter but for the bottom manhattan plot of the miami plot. NULL generates a simple manhattan plot.
-#' @param color.column single character string of one of the column name of the res_fisher.tsv file (see bottom_y_column) in order color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).
+#' @param color.column single character string of one of the column name of the .tsv file (see bottom_y_column) in order color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).
 #' @param dot.border.color single color character string to color the border of the dots. Write NULL if not required.
-#' @param y_lim1 = NULL single character string of the y-axis limits of the top panel in the miami plot, made of two numbers, separated by a single space. Example: y_lim1 = 0 3. Write NULL for no particular limit.
-#' @param y_lim2 = NULL single character string of the y-axis limits of the bottom panel in the miami plot, made of two numbers, separated by a single space. Example: y_lim2 = 0 3 .Write NULL for no particular limit. Not considered if bottom_y_column = NULL.
-#' @param y_reverse1 = FALSE single character string of logical value TRUE or FALSE, y-axis coordinates flip for the top panel in the miami plot. Example: y_reverse1 = TRUE.
-#' @param y_reverse2 = FALSE: single character string of logical value TRUE or FALSE, y-axis coordinates flip for the bottom panel in the miami plot. Example: y_reverse2 = TRUE.
-#' @param y_threshold single character string made of 1 numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y_threshold1 = 3. Write NULL for no particular threshold.
-#' @param y_threshold2 single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y_threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom_y_column = NULL.
-#' @param y_log1: single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y_log1 = TRUE.
-#' @param y_log2: single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y_log2 = TRUE.
+#' @param y_lim1 single character string of the y-axis limits of the top panel in the miami plot, made of two numbers, separated by a single space. Example: y_lim1 = 0 3. Write NULL for no particular limit.
+#' @param y_lim2 single character string of the y-axis limits of the bottom panel in the miami plot, made of two numbers, separated by a single space. Example: y_lim2 = 0 3 .Write NULL for no particular limit. Not considered if bottom_y_column = NULL.
+#' @param reverse1 single character string of logical value TRUE or FALSE, y-axis coordinates flip for the top panel in the miami plot. Example: reverse1 = TRUE.
+#' @param reverse2 single character string of logical value TRUE or FALSE, y-axis coordinates flip for the bottom panel in the miami plot. Example: reverse2 = TRUE.
+#' @param y.threshold single character string made of 1 numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y.threshold1 = 3. Write NULL for no particular threshold.
+#' @param y.threshold2 single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y.threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom_y_column = NULL.
+#' @param y.log1: single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y.log1 = TRUE.
+#' @param y.log2: single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y.log2 = TRUE.
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a list containing: $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed); $pos: the selected position (argument pos); $kind: the selected kind of text (argument kind); $hjust: the horizontal justification; $vjust: the vertical justification.
+#' @examples
+#' gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv",  chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top.y.column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom.y.column = "AF")
 #' @importFrom ggplot2 annotation_custom
 #' @importFrom ggplot2 ggtitle
 #' @importFrom gridExtra grid.arrange
@@ -28,16 +34,16 @@
 #' @importFrom scales rescale_none
 #' @export
 gg_miami <- function(
-        fisher, 
+        file, 
         chr, 
         top.y.column,
         bottom.y.column,
-        x.lim = "whole", 
+        x_lim = "whole", 
         vgrid = FALSE, 
         color.column = NULL,
         dot.border.color = NULL, 
-        y.lim1 = NULL, 
-        y.lim2 = NULL,
+        y_lim1 = NULL, 
+        y_lim2 = NULL,
         reverse1 = FALSE, 
         reverse2 = FALSE, 
         y.threshold1 = NULL, 
@@ -49,7 +55,7 @@ gg_miami <- function(
     # DEBUGGING
     #
     # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
@@ -61,7 +67,7 @@ gg_miami <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
     )
@@ -73,7 +79,7 @@ gg_miami <- function(
 
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "ggplot2::annotation_custom",
             "ggplot2::ggtitle",
@@ -98,10 +104,10 @@ gg_miami <- function(
     # argument primary checking
     # arg with no default values
     mandat.args <- base::c(
-        "bottom.y.column",
+        "file", 
         "chr", 
-        "fisher", 
-        "top.y.column"
+        "top.y.column",
+        "bottom.y.column"
     )
     tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
     if(base::any(tempo)){ # normally no NA for missing() output
@@ -115,13 +121,13 @@ gg_miami <- function(
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = fisher, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = chr.path, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = file, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = chr, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
     # tempo <- saferDev::arg_check(data = cute, class = "vector", typeof = "character", length = 1) ; eval(ee) # check above
-    if(base::all(x.lim != "NULL")){
-        tempo <- saferDev::arg_check(data = x.lim, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
+    if(base::all(x_lim != "NULL")){
+        tempo <- saferDev::arg_check(data = x_lim, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
     }else{
-        x.lim <- NULL
+        x_lim <- NULL
     }
     tempo <- saferDev::arg_check(data = vgrid, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
     if(base::all(top.y.column != "NULL")){
@@ -144,15 +150,15 @@ gg_miami <- function(
     }else{
         dot.border.color <- NULL
     }
-    if(base::all(y.lim1 != "NULL")){
-        tempo <- saferDev::arg_check(data = y.lim1, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
+    if(base::all(y_lim1 != "NULL")){
+        tempo <- saferDev::arg_check(data = y_lim1, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
     }else{
-        y.lim1 <- NULL
+        y_lim1 <- NULL
     }
-    if(base::all(y.lim2 != "NULL")){
-        tempo <- saferDev::arg_check(data = y.lim2, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
+    if(base::all(y_lim2 != "NULL")){
+        tempo <- saferDev::arg_check(data = y_lim2, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
     }else{
-        y.lim2 <- NULL
+        y_lim2 <- NULL
     }
     tempo <- saferDev::arg_check(data = reverse1, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = reverse2, class = "vector", typeof = "character", length = 1, safer_check = FALSE) ; base::eval(ee)
@@ -193,13 +199,13 @@ gg_miami <- function(
     # end management of NA arguments
     # management of NULL arguments
     tempo.arg <-base::c(
-        "fisher",
-        "chr.path", 
+        "file",
+        "chr", 
         "vgrid", 
         # "color.column", # inactivated because can be null
         # "dot.border.color", # inactivated because can be null
-        # "y.lim1", # inactivated because can be null
-        # "y.lim2", # inactivated because can be null
+        # "y_lim1", # inactivated because can be null
+        # "y_lim2", # inactivated because can be null
         "reverse1", 
         "reverse2", 
         # "y.threshold1", # inactivated because can be null
@@ -216,16 +222,16 @@ gg_miami <- function(
     # end management of NULL arguments
     # management of ""
     tempo.arg <-base::c(
-        "fisher", 
-        "chr.path", 
-        "x.lim", 
+        "file", 
+        "chr", 
+        "x_lim", 
         "vgrid", 
         "top.y.column",
         "bottom.y.column", 
         "color.column", 
         "dot.border.color", 
-        "y.lim1", 
-        "y.lim2", 
+        "y_lim1", 
+        "y_lim2", 
         "reverse1", 
         "reverse2",
         "y.threshold1", 
@@ -265,12 +271,12 @@ gg_miami <- function(
 
     # main code
     # ignition
-    fun_report(data = base::paste0("\n\n################################################################ miami PROCESS\n\n"), output = log, path = "./", overwrite = TRUE)
+    saferGG::report(data = base::paste0("\n\n################################################################ miami PROCESS\n\n"), output = log, path = "./", overwrite = TRUE)
     ini.date <- base::Sys.time()
     ini.time <- base::as.numeric(ini.date) # time of process begin, converted into seconds
-    fun_report(data = base::paste0("\n\n################################ RUNNING DATE AND STARTING TIME\n\n"), output = log, path = "./", overwrite = FALSE)
-    fun_report(data = base::paste0(ini.date, "\n\n"), output = log, path = "./", overwrite = FALSE)
-    fun_report(data = base::paste0("\n\n################################ RUNNING\n\n"), output = log, path = "./", overwrite = FALSE)
+    saferGG::report(data = base::paste0("\n\n################################ RUNNING DATE AND STARTING TIME\n\n"), output = log, path = "./", overwrite = FALSE)
+    saferGG::report(data = base::paste0(ini.date, "\n\n"), output = log, path = "./", overwrite = FALSE)
+    saferGG::report(data = base::paste0("\n\n################################ RUNNING\n\n"), output = log, path = "./", overwrite = FALSE)
     # end ignition
     # graphical parameter initialization
 
@@ -283,27 +289,27 @@ gg_miami <- function(
         base::graphics.off()
     }else{
         tempo.warn <- base::paste0("GRAPHICS HAVE NOT BEEN ERASED. GRAPHICAL PARAMETERS MAY HAVE NOT BEEN REINITIALIZED")
-        fun_report(data = base::paste0("WARNING\n", tempo.warn), output = log, path = "./", overwrite = FALSE)
+        saferGG::report(data = base::paste0("WARNING\n", tempo.warn), output = log, path = "./", overwrite = FALSE)
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
     }
     # end graphical parameter initialization
 
 
     # data import
-    if( ! base::file.exists(fisher)){
-        base::stop(base::paste0("\n\n============\n\nERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n\nFILE INDICATED IN THE fisher PARAMETER DOES NOT EXISTS: ", fisher, "\n\n============\n\n"), call. = FALSE)
+    if( ! base::file.exists(file)){
+        base::stop(base::paste0("\n\n============\n\nERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n\nFILE INDICATED IN THE file PARAMETER DOES NOT EXISTS: ", file, "\n\n============\n\n"), call. = FALSE)
     }else{
-        obs <- base::read.table(fisher, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
+        obs <- base::read.table(file, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
         if(base::length(obs) > 0 & base::nrow(obs) > 0){
             empty.obs <- FALSE
         }else{
             empty.obs <- TRUE
         }
     }
-    if( ! base::file.exists(chr.path)){
-        base::stop(base::paste0("\n\n============\n\nERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFILE INDICATED IN THE chr.path PARAMETER DOES NOT EXISTS: ", chr.path, "\n\n============\n\n"), call. = FALSE)
+    if( ! base::file.exists(chr)){
+        base::stop(base::paste0("\n\n============\n\nERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFILE INDICATED IN THE chr PARAMETER DOES NOT EXISTS: ", chr, "\n\n============\n\n"), call. = FALSE)
     }else{
-        chr <- base::read.table(chr.path, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
+        chr <- base::read.table(chr, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
     }
     # end data import
     # modifications of imported tables
@@ -324,7 +330,7 @@ gg_miami <- function(
             obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^MT$|^M$")] <- "25"
         }
         if(base::any( ! base::grepl(x = obs$CHROM, pattern = "\\d"))){
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE chr COLUMN of the fisher.tsv FILE HAS LETTERS IN IT, OTHER THAN X, Y and MT:\n", base::paste0(obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^\\d")], collapse = "\n"))
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE chr COLUMN of the .tsv FILE HAS LETTERS IN IT, OTHER THAN X, Y and MT:\n", base::paste0(obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^\\d")], collapse = "\n"))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
             obs$CHROM <- base::as.integer(obs$CHROM)
@@ -336,21 +342,21 @@ gg_miami <- function(
         }
         # preparation of the x coordinates: three solutions: 1) whole object (see above), 2) single chromo "chr7" or "chr7:0-15", 3) several chromo chr7, chr8" or "chr7:0-15, chr8" or "chr7:0-15, chr8:0-20"
         # The idea is to select rows of chr and potentially restrict some chr limits
-        if( ! base::is.null(x.lim)){
+        if( ! base::is.null(x_lim)){
             is.whole <- FALSE
-            if(x.lim == whole){ #at that stage, x.lim is a single character
+            if(x_lim == whole){ #at that stage, x_lim is a single character
                 is.whole <- TRUE
             }
-            tempo <- base::strsplit(x = x.lim, split = ",")[[1]]
+            tempo <- base::strsplit(x = x_lim, split = ",")[[1]]
             tempo <- base::gsub(x = tempo, pattern = " ", replacement = "")
             if( ! base::all(base::grepl(x = tempo, pattern = "^chr.+"))){
-                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST START WITH \"chr\" IF NOT \"none\":\n", base::paste0(x.lim, collapse = " "))
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST START WITH \"chr\" IF NOT \"none\":\n", base::paste0(x_lim, collapse = " "))
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
             if(base::any(base::grepl(x = tempo, pattern = ":"))){
                 # means that there are coordinates
                 if( ! base::all(base::grepl(tempo, pattern = "-"))){# normally no NA with is.null()
-                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
+                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x_lim, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }
                 tempo2 <- base::strsplit(x = tempo, split = ":")
@@ -363,13 +369,13 @@ gg_miami <- function(
                 xmax_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[2]})
                 xmax_x_lim <- base::gsub(x = xmax_x_lim, pattern = " ", replacement = "")
                 if(base::any(base::grepl(xmin_x_lim, pattern = "\\D")) | base::any(base::grepl(xmax_x_lim, pattern = "\\D"))){# normally no NA with is.null()
-                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
+                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", base::paste0(x_lim, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }else{
                     xmin_x_lim <- base::as.integer(xmin_x_lim)
                     xmax_x_lim <- base::as.integer(xmax_x_lim)
                     if(base::any(xmax_x_lim - xmin_x_lim < 0)){
-                        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN WITH ORDERED COORDINATES, LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\", IF COORDINATES ARE SPECIFIED: \n", base::paste0(x.lim, collapse = " "))
+                        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE x_lim PARAMETER MUST BE WRITTEN WITH ORDERED COORDINATES, LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\", IF COORDINATES ARE SPECIFIED: \n", base::paste0(x_lim, collapse = " "))
                         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                     }
                 }
@@ -397,13 +403,13 @@ gg_miami <- function(
             # restriction of obs
             obs <- obs[obs$coord >= xmin_plot & obs$coord <= chr$LENGTH_CUMUL[base::nrow(chr)], ]
         }else{
-            tempo.warn <- base::paste0("x.lim is NULL: NO PLOT DRAWN")
-            fun_report(data = base::paste0("WARNING\n", tempo.warn), output = log, path = "./", overwrite = FALSE)
+            tempo.warn <- base::paste0("x_lim is NULL: NO PLOT DRAWN")
+            saferGG::report(data = base::paste0("WARNING\n", tempo.warn), output = log, path = "./", overwrite = FALSE)
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn,base::paste0(warn, "\n\n", tempo.warn)))
         }
     }
 
-    for(i0 in base::c("y.lim1", "y.lim2")){
+    for(i0 in base::c("y_lim1", "y_lim2")){
         if( ! base::is.null(base::get(i0))){
             tempo <- base::unlist(base::strsplit(x = base::get(i0), split = " "))
             if(base::length(tempo) != 2 | ! base::all(base::grepl(tempo, pattern = "^[0123456789.\\-\\+eE]*$"))){
@@ -446,23 +452,23 @@ gg_miami <- function(
     grDevices::png(filename = base::paste0("miami.png"), width = png.size * 2, height = png.size, units = "px", res = 300)
 
     if(empty.obs == TRUE){
-        fun_gg_empty_graph(text = base::paste0("NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE"))
-    }else if(base::length(obs) > 0 & base::nrow(obs) > 0 & ! base::is.null(x.lim)){
-        marging <- (chr$LENGTH_CUMUL[base::nrow(chr)] - xmin_plot) * 0.005 # chr$LENGTH_CUMUL and xmin_plot have been corrected depending on x.lim boundaries
-        y.min.pos <- base::ifelse(base::is.null(y.lim1), base::min(obs[ , top.y.column]), base::min(y.lim1))
-        y.max.pos <- base::ifelse(base::is.null(y.lim1), base::max(obs[ , top.y.column]), base::max(y.lim1))
+        saferGG::gg_empty(text = base::paste0("NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE"))
+    }else if(base::length(obs) > 0 & base::nrow(obs) > 0 & ! base::is.null(x_lim)){
+        marging <- (chr$LENGTH_CUMUL[base::nrow(chr)] - xmin_plot) * 0.005 # chr$LENGTH_CUMUL and xmin_plot have been corrected depending on x_lim boundaries
+        y.min.pos <- base::ifelse(base::is.null(y_lim1), base::min(obs[ , top.y.column]), base::min(y_lim1))
+        y.max.pos <- base::ifelse(base::is.null(y_lim1), base::max(obs[ , top.y.column]), base::max(y_lim1))
         tempo.gg.name <- "gg.indiv.plot."
         tempo.gg.count <- 0
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot(obs, aes_string(x = "coord", y = top.y.column)))
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot(obs, ggplot2::aes_string(x = "coord", y = top.y.column)))
         if(vgrid){
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_vline(
+            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_vline(
                 xintercept = base::c(xmin_plot, chr$LENGTH_CUMUL),
                 size = 0.25,
                 color = "grey80"
             ))
         }
         if( ! base::is.null(y.threshold1)){
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_hline(
+            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_hline(
                 yintercept = y.threshold1,
                 linetype = "22", 
                 size = 0.25, 
@@ -471,50 +477,50 @@ gg_miami <- function(
         }
         if(base::is.null(color.column)){
             if(base::is.null(dot.border.color)){
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_point(
-                    aes(color = base::as.factor(CHROM)), 
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
+                    ggplot2::aes(color = base::as.factor(CHROM)), 
                     alpha = 1, 
                     pch = 16, 
                     size = 1
                 ))
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_color_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_color_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
             }else{
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_point(
-                    aes(fill = base::as.factor(CHROM)), 
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
+                    ggplot2::aes(fill = base::as.factor(CHROM)), 
                     alpha = 1, 
                     color = dot.border.color, 
                     pch = 21, 
                     size = 1
                 ))
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_fill_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
             }
         }else{
             if(base::is.null(dot.border.color)){
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_point(
-                    aes(color = color.column), 
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
+                    ggplot2::aes(color = color.column), 
                     alpha = 1, 
                     pch = 16, 
                     size = 1
                 ))
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_color_gradient2())
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_color_gradient2())
             }else{
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_point(
-                    aes(fill = base::as.factor(CHROM)), 
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
+                    ggplot2::aes(fill = base::as.factor(CHROM)), 
                     alpha = 1, 
                     color = dot.border.color, 
                     pch = 21, 
                     size = 1
                 ))
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_fill_gradient2())
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_gradient2())
             }
         }
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(
-            base::paste0("x.lim: ", base::ifelse(is.whole, "whole genome", x.lim), 
+            base::paste0("x_lim: ", base::ifelse(is.whole, "whole genome", x_lim), 
             base::ifelse( ! base::is.null(y.threshold1), base::paste0(", top threshold: ", y.threshold1), ""), 
             base::ifelse( ! (base::is.null(y.threshold2) & base::is.null(bottom.y.column)), base::paste0(", bottom threshold: ", y.threshold2), ""), 
             base::ifelse(y.log1, ", top y-axis: log10", ""), base::ifelse(y.log2, ", bottom y-axis: log10", ""))
         ))
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_x_continuous(
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
             name = "CHR", 
             expand = base::c(0, 0), # remove space after after axis limits
             oob = scales::rescale_none,
@@ -524,10 +530,10 @@ gg_miami <- function(
         ))
         if(y.log1){
             if(base::any(obs[ , top.y.column] <= 0)){
-                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE y_log1 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", top.y.column, " FIELD OF THE TSV OR VCF")
+                tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE y.log1 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", top.y.column, " FIELD OF THE TSV OR VCF")
                 base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }else{
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_y_continuous(
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
                     expand = base::c(0, 0), # remove space after after axis limits
                     limits = if(reverse1){base::c(y.max.pos, y.min.pos)}else{base::c(y.min.pos, y.max.pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
                     oob = scales::rescale_none, 
@@ -538,35 +544,35 @@ gg_miami <- function(
                 # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), annotation_logticks(outside = TRUE))
             }
         }else{
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), scale_y_continuous(
+            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
                 expand = base::c(0, 0), # remove space after after axis limits
                 limits = if(reverse1){base::c(y.max.pos, y.min.pos)}else{base::c(y.min.pos, y.max.pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
                 oob = scales::rescale_none, 
                 trans = "identity"
             ))
         }
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), theme_bw())
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), theme(
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_bw())
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme(
             plot.title = ggplot2::element_text(size = 8), 
             legend.position=if(base::is.null(color.column)){"none"}, 
-            panel.border = element_blank(), 
-            panel.grid = element_blank(), 
-            axis.ticks.x = element_blank(), 
-            axis.ticks.y.left = element_line(size = 0.25), 
-            # axis.line.x.bottom = element_line(size = 0.25), # ugly, thus i added geom_hline below
-            axis.line.y.left = element_line(size = 0.25) 
+            panel.border = ggplot2::element_blank(), 
+            panel.grid = ggplot2::element_blank(), 
+            axis.ticks.x = ggplot2::element_blank(), 
+            axis.ticks.y.left = ggplot2::element_line(size = 0.25), 
+            # axis.line.x.bottom = ggplot2::element_line(size = 0.25), # ugly, thus i added geom_hline below
+            axis.line.y.left = ggplot2::element_line(size = 0.25) 
         ))
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), geom_hline(
+        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_hline(
             yintercept = base::ifelse(
-                base::is.null(y.lim1), 
+                base::is.null(y_lim1), 
                 base::ifelse(reverse1, base::max(obs[ , top.y.column]), base::min(obs[ , top.y.column])), 
-                base::ifelse(reverse1, base::max(y.lim1), base::min(y.lim1))
+                base::ifelse(reverse1, base::max(y_lim1), base::min(y_lim1))
             ), 
             size = 0.25
         ))
         # add tick lines if vgrid is FALSE
         if( ! vgrid){
-            gline = linesGrob(y = base::c(-0.02, 0),  gp = gpar(col = "black", lwd = 0.5))
+            gline = grid::linesGrob(y = base::c(-0.02, 0),  gp = grid::gpar(col = "black", lwd = 0.5))
             for(i2 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
                 base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotation_custom(gline, xmin = i2, xmax = i2, ymin = -Inf, ymax = Inf))
             }
@@ -579,20 +585,20 @@ gg_miami <- function(
         if(base::is.null(bottom.y.column)){
             base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin.plot1, ncol=1, nrow = 1)))
         }else{
-            y.min.pos2 <- base::ifelse(base::is.null(y.lim2), base::min(obs[ , bottom.y.column]), base::min(y.lim2))
-            y.max.pos2 <- base::ifelse(base::is.null(y.lim2), base::max(obs[ , bottom.y.column]), max(y.lim2))
+            y.min.pos2 <- base::ifelse(base::is.null(y_lim2), base::min(obs[ , bottom.y.column]), base::min(y_lim2))
+            y.max.pos2 <- base::ifelse(base::is.null(y_lim2), base::max(obs[ , bottom.y.column]), base::max(y_lim2))
             tempo.gg.name2 <- "gg.indiv.plot."
             tempo.gg.count2 <- 0
-            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot(obs, aes_string(x = "coord", y = bottom.y.column)))
+            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::ggplot(obs, ggplot2::aes_string(x = "coord", y = bottom.y.column)))
             if(vgrid){
-                base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_vline(
+                base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_vline(
                     xintercept = base::c(xmin_plot, chr$LENGTH_CUMUL),
                     size = 0.25,
                     color = "grey80"
                 ))
             }
             if( ! base::is.null(y.threshold2)){
-                base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_hline(
+                base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_hline(
                     yintercept = y.threshold2,
                     linetype = "22", 
                     size = 0.25, 
@@ -601,44 +607,44 @@ gg_miami <- function(
             }
             if(base::is.null(color.column)){
                 if(base::is.null(dot.border.color)){
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_point(
-                        aes(color = base::as.factor(CHROM)), 
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_point(
+                        ggplot2::aes(color = base::as.factor(CHROM)), 
                         alpha = 1, 
                         pch = 16, 
                         size = 1
                     ))
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_color_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_color_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
                 }else{
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_point(
-                        aes(fill = base::as.factor(CHROM)), 
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_point(
+                        ggplot2::aes(fill = base::as.factor(CHROM)), 
                         alpha = 1, 
                         color = dot.border.color, 
                         pch = 21, 
                         size = 1
                     ))
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_fill_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_fill_manual(values = base::rep(base::c("grey20", "skyblue"), 25)))
                 }
             }else{
                 if(base::is.null(dot.border.color)){
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_point(
-                        aes(color = color.column), 
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_point(
+                        ggplot2::aes(color = color.column), 
                         alpha = 1, 
                         pch = 16, 
                         size = 1
                     ))
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_color_gradient2())
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_color_gradient2())
                 }else{
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_point(
-                        aes(fill = base::as.factor(CHROM)), 
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_point(
+                        ggplot2::aes(fill = base::as.factor(CHROM)), 
                         alpha = 1, 
                         color = dot.border.color, 
                         pch = 21, 
                         size = 1
                     ))
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_fill_gradient2())
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_fill_gradient2())
                 }
             }
-            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_x_continuous(
+            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_x_continuous(
                 expand = base::c(0, 0), # remove space after after axis limits
                 oob = scales::rescale_none,
                 label = chr$CHR_NAME, 
@@ -647,10 +653,10 @@ gg_miami <- function(
             ))
             if(y.log2){
                 if(base::any(obs[ , bottom.y.column] <= 0)){
-                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE y_log2 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", bottom.y.column, " FIELD OF THE TSV OR VCF")
+                    tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE y.log2 PARAMETER CANNOT BE SET TO \"TRUE\" IF 0 OR NEG VALUES IN THE ", bottom.y.column, " FIELD OF THE TSV OR VCF")
                     base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }else{
-                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_y_continuous(
+                    base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_y_continuous(
                         expand = base::c(0, 0), # remove space after after axis limits
                         limits = if(reverse2){base::c(y.min.pos2, y.max.pos2)}else{base::c(y.max.pos2, y.min.pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
                         oob = scales::rescale_none, 
@@ -661,37 +667,37 @@ gg_miami <- function(
                     # assign(paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), annotation_logticks(outside = TRUE)) # 
                 }
             }else{
-                base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), scale_y_continuous(
+                base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::scale_y_continuous(
                     expand = base::c(0, 0), # remove space after after axis limits
                     limits = if(reverse2){base::c(y.min.pos2, y.max.pos2)}else{base::c(y.max.pos2, y.min.pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
                     oob = scales::rescale_none, 
                     trans = "identity" # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
                 ))
             }
-            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), theme_bw())
-            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), theme(
+            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::theme_bw())
+            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::theme(
                 legend.position=if(base::is.null(color.column)){"none"},
-                panel.border = element_blank(),
-                panel.grid = element_blank(), 
-                axis.ticks.y.left = element_line(size = 0.25), 
-                # axis.line.x.top = element_line(size = 0.25), # is not displayed. Thus, I add a geom_hline below
-                axis.line.y.left = element_line(size = 0.25),
-                axis.title.x = element_blank(),
-                axis.text.x = element_blank(),
-                axis.ticks.x = element_blank(), 
+                panel.border = ggplot2::element_blank(),
+                panel.grid = ggplot2::element_blank(), 
+                axis.ticks.y.left = ggplot2::element_line(size = 0.25), 
+                # axis.line.x.top = ggplot2::element_line(size = 0.25), # is not displayed. Thus, I add a geom_hline below
+                axis.line.y.left = ggplot2::element_line(size = 0.25),
+                axis.title.x = ggplot2::element_blank(),
+                axis.text.x = ggplot2::element_blank(),
+                axis.ticks.x = ggplot2::element_blank(), 
             ))
             # add x-axis line
-            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), geom_hline(
+            base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::geom_hline(
                 yintercept = base::ifelse(
-                    base::is.null(y.lim2), 
+                    base::is.null(y_lim2), 
                     base::ifelse(reverse2, base::max(obs[ , bottom.y.column]), base::min(obs[ , bottom.y.column])), 
-                    base::ifelse(reverse2, base::max(y.lim2), base::min(y.lim2))
+                    base::ifelse(reverse2, base::max(y_lim2), base::min(y_lim2))
                 ),
                 size = 0.25
             ))
             # add tick lines if vgrid is FALSE
             if( ! vgrid){
-                gline = linesGrob(y = base::c(1, 1.02),  gp = gpar(col = "black", lwd = 0.5))
+                gline = grid::linesGrob(y = base::c(1, 1.02),  gp = grid::gpar(col = "black", lwd = 0.5))
                 for(i2 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
                     base::assign(base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::annotation_custom(gline, xmin = i2, xmax = i2, ymin = -Inf, ymax = Inf))
                 }
@@ -708,7 +714,7 @@ gg_miami <- function(
             base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(gl[[1]], gl[[2]], ncol=1, nrow = 2)))
         }
     }else{
-        fun_gg_empty_graph(text = base::paste0("NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL"))
+        saferGG::gg_empty(text = base::paste0("NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL"))
     } 
     # else already dealt above
     # end main code

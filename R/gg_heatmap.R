@@ -84,7 +84,7 @@ gg_heatmap <- function(
     # DEBUGGING
     # data1 = matrix(1:16, ncol = 4) ; legend.name1 = "" ; low.color1 = "blue" ; mid.color1 = "white" ; high.color1 = "red" ; limit1 = NULL ; midpoint1 = NULL ; data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4) ; color2 = "black" ; alpha2 = 0.5 ; invert2 = FALSE ; text.size = 12 ; title = "" ; title.text.size = 12 ; show.scale = TRUE ; rotate = FALSE ; return = FALSE ; plot = TRUE ; add = NULL ; warn.print = TRUE ; lib.path = NULL ;safer_check = TRUE
     # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
@@ -96,7 +96,7 @@ gg_heatmap <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferGG:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
     )
@@ -123,7 +123,7 @@ gg_heatmap <- function(
 
      # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        saferGG:::.pack_and_function_check(
         fun = base::c(
             "ggplot2::aes_string",
             "ggplot2::coord_fixed",
@@ -423,7 +423,7 @@ gg_heatmap <- function(
     if( ! base::is.null(add)){ # if add is NULL, then = 0
         if(base::grepl(pattern = "ggplot2::theme", add) == TRUE){
             warn.count <- warn.count + 1
-            tempo.warn <- base::paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
+            tempo.warn <- base::paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS ggplot2::theme() AND ggplot2::theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
             add.check <- FALSE
         }
@@ -460,7 +460,7 @@ gg_heatmap <- function(
         if( ! base::is.null(data2)){
             base::names(output)[2] <- "mask"
         }
-        base::return(base::list(data = output, axes = output$layout$panel_params[[1]], scale = c(limit1[1],  midpoint1, limit1[2]), warn = warn))
+        base::return(base::list(data = output, axes = output$layout$panel_params[[1]], scale = base::c(limit1[1],  midpoint1, limit1[2]), warn = warn))
     }
     #end main code
 }
