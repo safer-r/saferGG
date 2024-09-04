@@ -122,7 +122,7 @@ gg_donut <- function(
     # end function name
     # critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        ggcute:::.base_op_check(
             external.function.name = function.name,
             external.package.name = package.name
         )
@@ -149,7 +149,7 @@ gg_donut <- function(
 
     # check of the required function from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check(
+        ggcute:::.pack_and_function_check(
         fun = base::c(
             "ggplot2::aes_string",
             "ggplot2::annotate",
@@ -269,7 +269,7 @@ gg_donut <- function(
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = legend.name, class = "vector", safer_check = FALSE)
-        checked.arg.names <- c(checked.arg.names, tempo$object.name)
+        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
     }
     tempo <- saferDev::arg_check(data = legend.text.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
     tempo <- saferDev::arg_check(data = legend.box.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
@@ -654,7 +654,7 @@ gg_donut <- function(
     if( ! base::is.null(add)){ # if add is NULL, then = 0
         if(base::grepl(pattern = "ggplot2\\s*::\\s*theme", add) == TRUE){
             warn.count <- warn.count + 1
-            tempo.warn <- base::paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme_void() HAS BEEN INACTIVATED, SO THAT THE USER THEME CAN BE EFFECTIVE")
+            tempo.warn <- base::paste0("(", warn.count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS ggplot2::theme_void() HAS BEEN INACTIVATED, SO THAT THE USER THEME CAN BE EFFECTIVE")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
             add.check <- FALSE
         }else{
@@ -716,7 +716,7 @@ gg_donut <- function(
     }
     bef.final.plot <- base::suppressWarnings(base::suppressMessages(ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))))
     if( ! base::is.null(legend.width)){
-        legend.plot <- base::suppressWarnings(base::suppressMessages(gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
+        legend.plot <- base::suppressWarnings(base::suppressMessages(ggcute::gg_get_legend(ggplot_built = bef.final.plot, fun.name = function.name, lib.path = lib.path))) # get legend
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
         if(base::is.null(legend.plot) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
             legend.plot <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
