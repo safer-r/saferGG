@@ -1,15 +1,15 @@
 
-# ggcute <a href="">[<img src="man/figures/ggcute.png" align="right" height="140" />](https://safer-r.github.io/ggcute)</a>
+# saferGG <a href="">[<img src="man/figures/saferGG.png" align="right" height="140" />](https://safer-r.github.io/saferGG)</a>
 
 <br />
 
 <!-- badges: start -->
 
-[![Codecov test coverage](https://codecov.io/github/safer-r/ggcute/coverage.svg?branch=master)](https://app.codecov.io/github/safer-r/ggcute?branch=master)
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ggcute)](https://cran.r-project.org/package=ggcute)
-[![downloads](https://cranlogs.r-pkg.org/badges/ggcute)](https://www.rdocumentation.org/trends)
+[![Codecov test coverage](https://codecov.io/github/safer-r/saferGG/coverage.svg?branch=master)](https://app.codecov.io/github/safer-r/saferGG?branch=master)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/saferGG)](https://cran.r-project.org/package=saferGG)
+[![downloads](https://cranlogs.r-pkg.org/badges/saferGG)](https://www.rdocumentation.org/trends)
 [![](https://img.shields.io/badge/license-GPL3.0-green.svg)](https://opensource.org/licenses/MITgpl-3-0)
-[![rworkflows](https://github.com/safer-r/ggcute/actions/workflows/rworkflows.yml/badge.svg)](https://github.com/safer-r/ggcute/actions/workflows/rworkflows.yml)
+[![rworkflows](https://github.com/safer-r/saferGG/actions/workflows/rworkflows.yml/badge.svg)](https://github.com/safer-r/saferGG/actions/workflows/rworkflows.yml)
 <!-- badges: end -->
 
 <br />
@@ -50,30 +50,30 @@ Set of R functions for the development of R functions, written according to the 
 
 <br />
 
-Read `vignette("ggcute")` for more details.
+Read `vignette("saferGG")` for more details.
 
 <br />
 
 ## Versions
 
-The different *ggcute* releases are tagged [here](https://github.com/safer-r/ggcute/tags).
+The different *saferGG* releases are tagged [here](https://github.com/safer-r/saferGG/tags).
 
 <br />
 
 ## Installation
 
-*ggcute* can be currently be installed from GitHub:
+*saferGG* can be currently be installed from GitHub:
 
 ```r
 install.packages("remotes")
-remotes::install_github("https://github.com/safer-r/ggcute") # or open R as admin and remotes::install_github("https://github.com/safer-r/ggcute", lib = "C:/Program Files/R/R-4.3.1/library")
+remotes::install_github("https://github.com/safer-r/saferGG") # or open R as admin and remotes::install_github("https://github.com/safer-r/saferGG", lib = "C:/Program Files/R/R-4.3.1/library")
 ```
 
 Older versions can be installed like this:
 
 ```r
 v <- "v1.0" # desired tag version
-remotes::install_github(paste0("https://github.com/safer-r/ggcute/tree/", v))
+remotes::install_github(paste0("https://github.com/safer-r/saferGG/tree/", v))
 ```
 
 <br />
@@ -88,10 +88,10 @@ See the GNU General Public License for more details at https://www.gnu.org/licen
 
 ## Citation
 
-If you are using functions of *ggcute*, please cite: 
+If you are using functions of *saferGG*, please cite: 
 
-> Wang H, Han Y, Serizay J, Millot GA (2023). _The R ggcute package_.
-> <https://github.com/safer-r/ggcute/>.
+> Wang H, Han Y, Serizay J, Millot GA (2023). _The R saferGG package_.
+> <https://github.com/safer-r/saferGG/>.
 
 <br />
 
