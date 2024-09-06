@@ -10,11 +10,11 @@
 #' @returns an empty plot.
 #' @examples
 #' # simple example.
-#' gg_empty(text = "NO GRAPH")    
+#' gg_empty(text = "NO GRAPH")
 #' # white page.
 #' gg_empty()
 #' # all the arguments.
-#' gg_empty(text = "NO GRAPH", text.size = 8, title = "GRAPH1", title.size = 10, lib.path = NULL)   
+#' gg_empty(text = "NO GRAPH", text.size = 8, title = "GRAPH1", title.size = 10, lib.path = NULL)
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 element_rect
 #' @importFrom ggplot2 element_text

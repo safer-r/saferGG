@@ -21,8 +21,10 @@
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a raster scatter plot.
 #' @examples
+#' \dontrun{
 #' # Two pdf in the current directory
-#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
+#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off()
+#' }
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 ggproto
 #' @importFrom ggplot2 layer
@@ -34,6 +36,7 @@
 #' @importFrom grid rasterGrob
 #' @importFrom grid viewport
 #' @importFrom saferDev arg_check
+#' @importFrom saferGraph open2
 #' @export
 gg_point_rast <- function(
         data = NULL, 
