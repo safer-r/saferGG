@@ -9,11 +9,11 @@
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns an empty plot.
 #' @examples
-#' ### simple example.
+#' # simple example.
 #' gg_empty(text = "NO GRAPH")    
-#' ### white page.
+#' # white page.
 #' gg_empty()
-#' ### all the arguments.
+#' # all the arguments.
 #' gg_empty(text = "NO GRAPH", text.size = 8, title = "GRAPH1", title.size = 10, lib.path = NULL)   
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 element_rect
@@ -135,7 +135,7 @@ gg_empty <- function(
         # "text", # inactivated because can be null
         "text.size" ,
         # "title" , # inactivated because can be null
-        "title.size" ,
+        "title.size"
         # "lib.path" # inactivated because can be null
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)

@@ -9,7 +9,7 @@
 #' @examples
 #' # Simple example
 #' obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time, fill = group)) ; gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))  
-#' #Error message because no legend in the ggplot
+#' # NULL result because no legend in the ggplot
 #' obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))  
 #' @importFrom ggplot2 ggplot_gtable
 #' @importFrom saferDev arg_check
@@ -121,7 +121,7 @@ gg_get_legend <- function(
     }
     # management of NULL arguments
     tempo.arg <-base::c(
-        "ggplot_built" ,
+        "ggplot_built"
         #"fun.name", # inactivated because can be null
         #"lib.path" # inactivated because can be null
     )

@@ -1,21 +1,18 @@
 #' @title gg_palette
 #' @description
-#' provide colors used by ggplot2
-#' the interest is to use another single color that is not the red one used by default
-#' for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
+#' provide colors used by ggplot2.
+#' the interest is to use another single color that is not the red one used by default.
+#' for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html.
 #' @param n number of groups on the graph.
 #' @param kind either "std" for standard gg colors, "dark" for darkened gg colors, or "light" for pastel gg colors.
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
-#' @returns the vector of hexadecimal colors.
+#' @returns
+#' The vector of hexadecimal colors.
 #' @examples
 #' gg_palette(n = 2) # output of the function
-#'    
 #' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)) # the ggplot2 palette when asking for 7 different colors
-#'   
 #' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
-#'    
 #' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
-#'    
 #' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
 #' @importFrom saferDev arg_check
 #' @export
@@ -130,7 +127,7 @@
     # end second round of checking and data preparation
     # main code
     hues = base::seq(15, 375, length = n + 1)
-    output <- base::hcl(h = hues, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind == "light"){85}, c = 100)[1:n]
+    output <- grDevices::hcl(h = hues, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind == "light"){85}, c = 100)[1:n]
 
     # end main code
     # output

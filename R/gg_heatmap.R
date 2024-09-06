@@ -29,10 +29,10 @@
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), title = "GRAPH 1")
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), return = TRUE)
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), legend.name1 = "VALUE", title = "GRAPH 1", text.size = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
-#' diagonal matrix
+#' # diagonal matrix
 #' gg_heatmap(data1 = matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4))
 #' gg_heatmap(data1 = reshape2::melt(matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4)))
-#' error message
+#' # Error message
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5))
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 #' gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
@@ -342,7 +342,7 @@ gg_heatmap <- function(
         "return",
         "plot",
         # "add",# inactivated because can be null
-        "warn.print", 
+        "warn.print"
         # "lib.path" # inactivated because can be null 
     )
     tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
