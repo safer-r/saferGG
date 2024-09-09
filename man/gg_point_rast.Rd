@@ -9,7 +9,6 @@ gg_point_rast(
   mapping = NULL,
   stat = "identity",
   position = "identity",
-  ...,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
@@ -22,6 +21,20 @@ gg_point_rast(
 )
 }
 \arguments{
+\item{data}{classical arguments of geom_point(), shown here https://rdrr.io/github/VPetukhov/ggrastr/man/geom_point_rast.html}
+
+\item{mapping}{idem}
+
+\item{stat}{idem}
+
+\item{position}{idem}
+
+\item{na.rm}{idem}
+
+\item{show.legend}{idem}
+
+\item{inherit.aes}{idem}
+
 \item{raster.width}{width of the result image (in inches). Default: deterined by the current device parameters.}
 
 \item{raster.height}{height of the result image (in inches). Default: deterined by the current device parameters.}
@@ -30,11 +43,9 @@ gg_point_rast(
 
 \item{fun.name}{logical. Inactivate the fun.name argument of the saferDev::arg_check() function? If TRUE, the name of the saferDev::arg_check() function in error messages coming from this function. Use TRUE if gg_point_rast() is used like this: eval(parse(text = "gg_point_rast")).}
 
-\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
+\item{lib.path}{character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.}
 
-\item{#classical}{arguments of geom_point(), shown here https://rdrr.io/github/VPetukhov/ggrastr/man/geom_point_rast.html}
-
-\item{lib.path:}{character vector specifying the absolute pathways of the directories containing the required packages if not in the default directories. Ignored if NULL.}
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 }
 \value{
 a raster scatter plot.
@@ -49,6 +60,8 @@ solve the transparency problems with some GUI.
 this function is derived from the geom_point_rast() function, created by Viktor Petukhov , and present in the ggrastr package (https://rdrr.io/github/VPetukhov/ggrastr/src/R/geom-point-rast.R, MIT License, Copyright (c) 2017 Viktor Petukhov). Has been placed here to minimize package dependencies.
 }
 \examples{
+\dontrun{
 # Two pdf in the current directory
-set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off() 
+set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y), fun.name = FALSE) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; dev.off();dev.off()
+}
 }

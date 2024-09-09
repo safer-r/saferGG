@@ -55,7 +55,7 @@ gg_point_rast <- function(
 ){
     # DEBUGGING
     # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     if(base::all(fun.name == FALSE)){ # fun.name has to be used here but will be fully checked below

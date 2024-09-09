@@ -1,0 +1,8 @@
+^dev$
+^vignettes/articles$
+^_pkgdown\.yml$
+^Licence\.txt$
+^docs$
+^check$
+^pkgdown$
+^\.github$

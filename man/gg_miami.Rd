@@ -5,16 +5,16 @@
 \title{gg_miami}
 \usage{
 gg_miami(
-  fisher,
+  file,
   chr,
   top.y.column,
   bottom.y.column,
-  x.lim = "whole",
+  x_lim = "whole",
   vgrid = FALSE,
   color.column = NULL,
   dot.border.color = NULL,
-  y.lim1 = NULL,
-  y.lim2 = NULL,
+  y_lim1 = NULL,
+  y_lim2 = NULL,
   reverse1 = FALSE,
   reverse2 = FALSE,
   y.threshold1 = NULL,
@@ -25,39 +25,46 @@ gg_miami(
 )
 }
 \arguments{
-\item{top.y.column}{NEG_LOG10_P_VALUE_CARRIER_MODEL: single character string of any of the quantitative column of the res_fisher.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter..}
+\item{file}{single character string of the vcf.tsv file path. Example: "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv".}
 
-\item{bottom.y.column}{as the top_y_column parameter but for the bottom manhattan plot of the miami plot. NULL generates a simple manhattan plot.}
+\item{chr}{single character string of the human chromo infos file.tsv path. Example: chr_path = "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt".}
+
+\item{top.y.column}{single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.}
+
+\item{bottom.y.column}{as the top.y.column parameter but for the bottom manhattan plot of the miami plot. "NULL" generates a simple manhattan plot}
+
+\item{x_lim}{single character string of the x-axis limits. Either "whole" for the whole genome or a special character string to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. For special character strings,  write "chr1:11000-15000" for a single region, "chr1:11000-" for a single region non delimited on the right, "chr7:0-147000000,chr10:1000000-2000000" if two regions, ""chr7" for a whole chromosome, "chr7,chr1" for two chromosomes.}
 
 \item{vgrid}{single character string of logical value TRUE or FALSE. Display the chromosome separators in the miami plot? Example: vgrid = TRUE.}
 
-\item{color.column}{single character string of one of the column name of the res_fisher.tsv file (see bottom_y_column) in order color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).}
+\item{color.column}{single character string of one of the column name of the .tsv file (see bottom.y.column) in order to color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).}
 
 \item{dot.border.color}{single color character string to color the border of the dots. Write NULL if not required.}
 
-\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
+\item{y_lim1}{2 numeric values indicating the range of the top y-axis. Order matters (for inverted axis). If NULL, the range of the values from top.y.column will be used.}
 
-\item{x_lim}{single character string of the x-axis limits. Either "whole" for the whole genome, region to have the regions of the region parameter (i.e., "whole" if region == none), or a character string written like the region parameter, to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results.}
+\item{y_lim2}{2 numeric values indicating the range of the bottom y-axis. Order matters (for inverted axis). If NULL, the range of the values from bottom.y.column will be used.}
 
-\item{y_lim1}{= NULL single character string of the y-axis limits of the top panel in the miami plot, made of two numbers, separated by a single space. Example: y_lim1 = 0 3. Write NULL for no particular limit.}
+\item{reverse1}{single character string of logical value TRUE or FALSE, y-axis coordinates flip for the top panel in the miami plot. Example: reverse1 = TRUE.}
 
-\item{y_lim2}{= NULL single character string of the y-axis limits of the bottom panel in the miami plot, made of two numbers, separated by a single space. Example: y_lim2 = 0 3 .Write NULL for no particular limit. Not considered if bottom_y_column = NULL.}
+\item{reverse2}{single character string of logical value TRUE or FALSE, y-axis coordinates flip for the bottom panel in the miami plot. Example: reverse2 = TRUE.}
 
-\item{y_reverse1}{= FALSE single character string of logical value TRUE or FALSE, y-axis coordinates flip for the top panel in the miami plot. Example: y_reverse1 = TRUE.}
+\item{y.threshold1}{single numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y.threshold1 = 3. Write NULL for no particular threshold.}
 
-\item{y_reverse2}{= FALSE: single character string of logical value TRUE or FALSE, y-axis coordinates flip for the bottom panel in the miami plot. Example: y_reverse2 = TRUE.}
+\item{y.threshold2}{single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y.threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom.y.column is NULL.}
 
-\item{y_threshold}{single character string made of 1 numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y_threshold1 = 3. Write NULL for no particular threshold.}
+\item{y.log1}{single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y.log1 = TRUE.}
 
-\item{y_threshold2}{single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y_threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom_y_column = NULL.}
+\item{y.log2}{single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y.log2 = TRUE.}
 
-\item{y_log1:}{single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y_log1 = TRUE.}
-
-\item{y_log2:}{single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y_log2 = TRUE.}
+\item{safer_check}{Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.}
 }
 \value{
 a list containing: $angle: the submitted angle (value potentially reduced to fit the [-360 ; 360] interval, e.g., 460 -> 100, without impact on the final angle displayed); $pos: the selected position (argument pos); $kind: the selected kind of text (argument kind); $hjust: the horizontal justification; $vjust: the vertical justification.
 }
 \description{
 Plot two ggplot2 manhattan plots in mirror.
+}
+\examples{
+gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv",  chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top.y.column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom.y.column = "AF")
 }

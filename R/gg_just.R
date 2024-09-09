@@ -28,7 +28,7 @@ gg_just <- function(
     # DEBUGGING
     # angle = 45 ; pos = "left" ; kind = "axis" ; safer_check = TRUE
     # package name
-    package.name <- "ggcute"
+    package.name <- "saferGG"
     # end package name
     # function name
     function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.

@@ -1,4 +1,4 @@
-#' @title ggjust
+#' @title gg_heatmap
 #' @description
 #' ggplot2 heatmap with the possibility to overlay a mask, see also: draw : http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization same range; scale : https://stackoverflow.com/questions/44655723/r-ggplot2-heatmap-fixed-scale-color-between-graphs; for ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-specs.html
 #' @param data1 numeric matrix or data frame resulting from the conversion of the numeric matrix by reshape2::melt(). 
