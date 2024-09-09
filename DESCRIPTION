@@ -1,4 +1,4 @@
-Package: ggcute
+Package: saferGG
 Type: Package
 Title: What the package does (short line)
 Version: 1.0
@@ -11,7 +11,7 @@ Authors@R: c(
 Author: Haiding Wang [aut, ctb], Gael Millot [cre, aut, ctb]
 Encoding: UTF-8
 Maintainer: Gael Millot <gael.millot@pasteur.fr>
-Description: ggcute fournit des fonctions R qui permettent d’obtenir facilement les beaux graphiques ggplot2 en une seule commande.
+Description: saferGG fournit des fonctions R qui permettent d’obtenir facilement les beaux graphiques ggplot2 en une seule commande.
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.1
