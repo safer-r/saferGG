@@ -1,4 +1,4 @@
-dev
+^dev$
 ^vignettes/articles$
 ^_pkgdown\.yml$
 ^Licence\.txt$
