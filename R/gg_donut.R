@@ -33,7 +33,7 @@
 #' @param return.gtable logical (either TRUE or FALSE). Return the full graph (main, title and legend) as a gtable of grobs in the output list? See $gtable in the RETURN section below for more details.
 #' @param plot logical (either TRUE or FALSE). Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting.
 #' @param warn.print logical (either TRUE or FALSE). Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE.
-#' @param lib.path vector of character strings indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders.
+#' @param lib_path vector of character strings indicating the absolute path of the required packages (see below). if NULL, the function will use the R library default folders.
 #' @param safer_check Single logical value. Perform some "safer" checks (see https://github.com/safer-r)? If TRUE, checkings are performed before main code running: 1) R classical operators (like "<-") not overwritten by another package because of the R scope and 2) required functions and related packages effectively present in local R lybraries. Must be set to FALSE if this fonction is used inside another "safer" function to avoid pointless multiple checkings.
 #' @returns a donut plot if plot argument is TRUE.
 #' @returns a list of the graph info if return argument is TRUE:
@@ -105,277 +105,235 @@ gg_donut <- function(
     return.gtable = TRUE,
     plot = TRUE, 
     warn.print = TRUE, 
-    lib.path = NULL,
+    lib_path = NULL,
     safer_check = TRUE
 ){
     # DEBUGGING
     # obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; data1 = obs1 ; freq = "Km" ; categ = "Car" ; fill.palette = NULL ; fill.color = NULL ; hole.size = 0.5 ; hole.text = TRUE ; hole.text.size = 12 ; border.color = "gray50" ; border.size = 0.1 ; title = "" ; title.text.size = 12 ; annotation = "Country" ; annotation.distance = 0.5 ; annotation.size = 3 ; annotation.force = 1 ; annotation.force.pull = 100 ; legend.show = TRUE ; legend.width = 0.5 ; legend.name = NULL ; legend.text.size = 10 ; legend.box.size = 5 ; legend.box.space = 2 ; legend.limit = NULL ; legend.add.prop = FALSE ; add = NULL ; return = TRUE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; lib.path = NULL ; safer_check = TRUE
-    # package name
+    #### package name
     package.name <- "saferGG"
-    # end package name
-    # function name
-    function.name <- base::paste0(base::as.list(base::match.call(expand.dots = FALSE))[[1]], "()") # function name with "()" paste, which split into a vector of three: c("::()", "package()", "function()") if "package::function()" is used.
-    if(function.name[1] == "::()"){
-        function.name <- function.name[3]
+    #### end package name
+
+    #### function name
+    tempo_settings <- base::as.list(x = base::match.call(definition = base::sys.function(which = base::sys.parent(n = 0)), call = base::sys.call(which = base::sys.parent(n = 0)), expand.dots = FALSE, envir = base::parent.frame(n = 2L))) # warning: I have written n = 0 to avoid error when a safer function is inside another functions
+    function_name <- base::paste0(tempo_settings[[1]], "()", collapse = NULL, recycle0 = FALSE) 
+    # function name with "()" paste, which split into a vector of three: c("::()", "package ()", "function ()") if "package::function()" is used.
+    if(function_name[1] == "::()" | function_name[1] == ":::()"){
+        function_name <- function_name[3]
     }
-    arg.names <- base::names(base::formals(fun = base::sys.function(base::sys.parent(n = 2)))) # names of all the arguments
-    arg.user.setting <- base::as.list(base::match.call(expand.dots = FALSE))[-1] # list of the argument settings (excluding default values not provided by the user)
-    # end function name
-    # critical operator checking
+    #### end function name
+
+     #### arguments settings
+    arg_user_setting <- tempo_settings[-1] # list of the argument settings (excluding default values not provided by the user)
+    arg_names <- base::names(x = base::formals(fun = base::sys.function(which = base::sys.parent(n = 2)), envir = base::parent.frame(n = 1))) # names of all the arguments
+    #### end arguments settings
+
+    #### critical operator checking
+    if( ! (base::all(safer_check %in% base::c(TRUE, FALSE), na.rm = FALSE) & base::length(x = safer_check) == 1 & base::all(base::is.logical(x = safer_check), na.rm = TRUE))){
+        tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\nsafer_check ARGUMENT MUST BE EITHER TRUE OR FALSE. HER IT IS:\n", base::paste0(safer_check, collapse = "\n", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
+    }
     if(safer_check == TRUE){
-        saferGG:::.base_op_check(
-            external.function.name = function.name,
-            external.package.name = package.name
+        saferDev:::.base_op_check(
+            external_function_name = function_name, 
+            external_package_name = package_name
         )
     }
-    # end critical operator checking
-    # package checking
-    # check of lib.path
-    if( ! base::is.null(lib.path)){
-        if( ! base::all(base::typeof(lib.path) == "character")){ # no na.rm = TRUE with typeof
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT MUST BE A VECTOR OF CHARACTERS:\n", base::paste(lib.path, collapse = "\n"))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }else if( ! base::all(base::dir.exists(lib.path), na.rm = TRUE)){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
-            tempo.cat <-base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    #### end critical operator checking
+
+    #### package checking
+
+    ######## check of lib_path
+    if( ! base::is.null(x = lib_path)){
+        if( ! base::all(base::typeof(x = lib_path) == "character", na.rm = FALSE)){ # no na.rm = TRUE with typeof
+            tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\nDIRECTORY PATH INDICATED IN THE lib_path ARGUMENT MUST BE A VECTOR OF CHARACTERS:\n", base::paste(lib_path, sep = " ", collapse = "\n", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
+        }else if( ! base::all(base::dir.exists(paths = lib_path), na.rm = TRUE)){ # separation to avoid the problem of tempo$problem == FALSE and lib_path == NA
+            tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\nDIRECTORY PATH INDICATED IN THE lib_path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib_path, sep = " ", collapse = "\n", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
         }else{
-            base::.libPaths(new = base::sub(x = lib.path, pattern = "/$|\\\\$", replacement = "")) # .libPaths(new = ) add path to default path. BEWARE: .libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
-            lib.path <- base::.libPaths()
+            base:::.libPaths(new = base::sub(x = lib_path, pattern = "/$|\\\\$", replacement = "", ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), include.site = TRUE) # base:::.libPaths(new = ) add path to default path. BEWARE: base:::.libPaths() does not support / at the end of a submitted path. Thus check and replace last / or \\ in path
+            lib_path <- base:::.libPaths(new = , include.site = TRUE)
         }
     }else{
-        lib.path <- base::.libPaths() # .libPaths(new = lib.path) # or .libPaths(new = c(.libPaths(), lib.path))
+        lib_path <- base:::.libPaths(new = , include.site = TRUE) # base:::.libPaths(new = lib_path) # or base:::.libPaths(new = base::c(base:::.libPaths(), lib_path))
     }
-    # end check of lib.path
+    ######## end check of lib_path
 
-
-    # check of the required function from the required packages
+    ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferGG:::.pack_and_function_check(
-        fun = base::c(
-            "ggplot2::aes_string",
-            "ggplot2::annotate",
-            "ggplot2::coord_polar",
-            "ggplot2::element_text",
-            "ggplot2::geom_col",
-            "ggplot2::ggplot",
-            "ggplot2::ggplot_build",
-            "ggplot2::guides",
-            "ggplot2::guide_legend",
-            "ggplot2::labs",
-            "ggplot2::scale_fill_brewer",
-            "ggplot2::scale_fill_manual",
-            "ggplot2::scale_x_continuous",
-            "ggplot2::theme",
-            "ggplot2::theme_void",
-            "ggplot2::ylim",
-            "ggrepel::geom_text_repel",
-            "gridExtra::arrangeGrob",
-            "gridExtra::grid.arrange",
-            "grid::unit",
-            "saferDev::arg_check"
-        ),
-        lib.path = lib.path,
-        external.function.name = function.name,
-        external.package.name = package.name
-    )
+        saferDev:::.pack_and_function_check(
+            fun = base::c(
+                "ggplot2::aes_string",
+                "ggplot2::annotate",
+                "ggplot2::coord_polar",
+                "ggplot2::element_text",
+                "ggplot2::geom_col",
+                "ggplot2::ggplot",
+                "ggplot2::ggplot_build",
+                "ggplot2::guides",
+                "ggplot2::guide_legend",
+                "ggplot2::labs",
+                "ggplot2::scale_fill_brewer",
+                "ggplot2::scale_fill_manual",
+                "ggplot2::scale_x_continuous",
+                "ggplot2::theme",
+                "ggplot2::theme_void",
+                "ggplot2::ylim",
+                "ggrepel::geom_text_repel",
+                "gridExtra::arrangeGrob",
+                "gridExtra::grid.arrange",
+                "grid::unit",
+                "saferDev::arg_check"
+            ),
+            lib_path = lib_path,
+            external_function_name = function_name,
+            external_package_name = package_name
+        )
     }
-    # end check of the required function from the required packages
-    # end package checking
+    ######## end check of the required functions from the required packages
+    
+    #### end package checking
 
-    # argument primary checking
-    # arg with no default values
-    mandat.args <- base::c(
+    #### argument primary checking
+
+    ######## arg with no default values
+    mandat_args <- base::c(
         "data1", 
         "freq", 
         "categ"
     )
-    tempo <- base::eval(base::parse(text = base::paste0("base::missing(", base::paste0(mandat.args, collapse = ") | base::missing("), ")")))
-    if(base::any(tempo)){ # normally no NA for missing() output
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOLLOWING ARGUMENT", base::ifelse(base::sum(tempo, na.rm = TRUE) > 1, "S HAVE", " HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat.args[tempo], collapse = "\n"))
-        base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    tempo <- base::eval(expr = base::parse(text = base::paste0("base::c(base::missing(", base::paste0(mandat_args, collapse = "),base::missing(", recycle0 = FALSE), "))", collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if(base::any(tempo, na.rm = FALSE)){
+        tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\nFOLLOWING ARGUMENT", base::ifelse(test = base::sum(tempo, na.rm = TRUE) > 1, yes = "S HAVE", no = " HAS"), " NO DEFAULT VALUE AND REQUIRE ONE:\n", base::paste0(mandat_args[tempo], collapse = "\n", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
     }
-    # end arg with no default values
-    # argument checking with arg_check()    
-    # argument checking
-    argum.check <- NULL #
-    text.check <- NULL #
-    checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
-    ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = data1, class = "data.frame", na.contain = TRUE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = freq, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = categ, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    if( ! base::is.null(fill.palette)){
-        tempo <- saferDev::arg_check(data = fill.palette, options = base::c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    ######## end arg with no default values
+
+    ######## argument checking with arg_check()
+    argum_check <- NULL
+    text_check <- NULL
+    checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
+    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
+    # add as many lines as below, for each of your arguments of your function in development
+    tempo <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL,  length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na.contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = freq, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na.contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = categ, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na.contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    if( ! base::is.null(X = fill.palette)){
+        tempo <- saferDev::arg_check(data = fill.palette, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = base::c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = fill.palette, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
+        checked_arg_names <- base::c(checked_arg_names, tempo$object.name)
     }
-    if( ! base::is.null(fill.color)){
-        tempo1 <- saferDev::arg_check(data = fill.color, class = "vector", mode = "character", na.contain = TRUE, fun.name = function.name, safer_check = FALSE)
-        tempo2 <- saferDev::arg_check(data = fill.color, class = "factor", na.contain = TRUE, fun.name = function.name, safer_check = FALSE)
-        tempo3 <- saferDev::arg_check(data = fill.color, class = "integer", double.as.integer.allowed = TRUE, na.contain = TRUE, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) # not need to test inf with integers
+    if( ! base::is.null(x = fill.color)){
+        tempo1 <- saferDev::arg_check(data = fill.color, class = "vector", mode = "character", typeof = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE)
+        tempo2 <- saferDev::arg_check(data = fill.color, class = "factor", mode = "factor", typeof = NULL, na.contain = TRUE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE)
+        tempo3 <- saferDev::arg_check(data = fill.color, class = "integer", mode = "integer", typeof = NULL, double.as.integer.allowed = TRUE, na.contain = TRUE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) # not need to test inf with integers
         if(tempo1$problem == TRUE & tempo2$problem == TRUE & tempo3$problem == TRUE){
             tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nfill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY grDevices::colors(), OR (3) POSITIVE INTEGER VALUES")
-            text.check <- base::c(text.check, tempo.cat)
-            argum.check <- base::c(argum.check, TRUE)
-            checked.arg.names <- base::c(checked.arg.names, tempo1$object.name)
+            text_check <- base::c(text_check, tempo.cat)
+            argum_check <- base::c(argum_check, TRUE)
+            checked_arg_names <- base::c(checked_arg_names, tempo1$object.name)
         }else if(tempo3$problem == FALSE & base::any(base::is.infinite(fill.color))){ # is.infinite() deals with NA as FALSE
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nfill.color ARGUMENT CANNOT CONTAIN Inf VALUES AMONG POSITIVE INTEGER VALUES")
-            text.check <- base::c(text.check, tempo.cat)
-            argum.check <- base::c(argum.check, TRUE)
-            checked.arg.names <- base::c(checked.arg.names, tempo1$object.name)
+            tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nfill.color ARGUMENT CANNOT CONTAIN Inf VALUES AMONG POSITIVE INTEGER VALUES")
+            text_check <- base::c(text_check, tempo_cat)
+            argum_check <- base::c(argum_check, TRUE)
+            checked_arg_names <- base::c(checked_arg_names, tempo1$object.name)
         }else if(tempo3$problem == FALSE & base::any(fill.color == 0, na.rm = TRUE)){
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nfill.color ARGUMENT CANNOT CONTAIN 0 AMONG POSITIVE INTEGER VALUES")
-            text.check <- base::c(text.check, tempo.cat)
-            argum.check <- base::c(argum.check, TRUE)
+            tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nfill.color ARGUMENT CANNOT CONTAIN 0 AMONG POSITIVE INTEGER VALUES")
+            text_check <- base::c(text_check, tempo_cat)
+            argum_check <- base::c(argum_check, TRUE)
             checked.arg.names <- base::c(checked.arg.names, tempo1$object.name)
         }
     }
-    tempo <- saferDev::arg_check(data = hole.size, prop = TRUE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = hole.text, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = hole.text.size, class = "vector", mode = "numeric", neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo1 <- saferDev::arg_check(data = border.color, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE)
-    tempo2 <- saferDev::arg_check(data = border.color, class = "integer", double.as.integer.allowed = TRUE, neg.values = FALSE, na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) # not need to test inf with integers
+    tempo <- saferDev::arg_check(data = hole.size, class = "integer",mode = "integer", length = 1, typeof = NULL, prop = TRUE,double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE); base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = hole.text, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = hole.text.size, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo1 <- saferDev::arg_check(data = border.color, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na.contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE)
+    tempo2 <- saferDev::arg_check(data = border.color, class = "integer", mode = "integer", typeof = NULL, length = 1, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, neg_values = FALSE, na_contain = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) # not need to test inf with integers
     if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nborder.color ARGUMENT MUST BE A SINGLE CHARACTER STRING OR POSITIVE INTEGER")
-        text.check <- base::c(text.check, tempo.cat)
-        argum.check <- base::c(argum.check, TRUE)
+        tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nborder.color ARGUMENT MUST BE A SINGLE CHARACTER STRING OR POSITIVE INTEGER")
+        text_check <- base::c(text_check, tempo_cat)
+        argum_check <- base::c(argum_check, TRUE)
         checked.arg.names <- base::c(checked.arg.names, tempo1$object.name)
     }
-    tempo <- saferDev::arg_check(data = border.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = title, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = title.text.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    if( ! base::is.null(annotation)){
-            tempo <- saferDev::arg_check(data = annotation, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-            tempo <- saferDev::arg_check(data = annotation.distance, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-            tempo <- saferDev::arg_check(data = annotation.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-            tempo <- saferDev::arg_check(data = annotation.force, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-            tempo <- saferDev::arg_check(data = annotation.force.pull, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = border.size, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = title, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = title.text.size, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    if( ! base::is.null(x = annotation)){
+            tempo <- saferDev::arg_check(data = annotation, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+            tempo <- saferDev::arg_check(data = annotation.distance, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE,  na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+            tempo <- saferDev::arg_check(data = annotation.size, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE,  print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+            tempo <- saferDev::arg_check(data = annotation.force, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE,  na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+            tempo <- saferDev::arg_check(data = annotation.force.pull, class = "vector", mode = "numeric", typeof = NULL, length = 1,  prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE,  print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        # no saferDev::arg_check test here, it is just for checked.arg.names
-        tempo <- saferDev::arg_check(data = annotation, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
+        # no saferDev::arg_check test here, it is just for checked_arg_names
+        tempo <- saferDev::arg_check(data = annotation, class = "vector", mode = "character", safer_check = FALSE)
+        checked_arg_names <- base::c(checked_arg_names, tempo$object.name)
     }
-    tempo <- saferDev::arg_check(data = legend.show, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    if( ! base::is.null(legend.width)){
-        tempo <- saferDev::arg_check(data = legend.width, prop = TRUE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = legend.show, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    if( ! base::is.null(x = legend.width)){
+        tempo <- saferDev::arg_check(data = legend.width, class = "integer", mode = "integer", typeof = NULL, length = 1, prop = TRUE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = legend.width, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
+        checked_arg_names <- base::c(checked_arg_names, tempo$object.name)
     }
-    if( ! base::is.null(legend.name)){
-        tempo <- saferDev::arg_check(data = legend.name, class = "vector", mode = "character", na.contain = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    if( ! base::is.null(x = legend.name)){
+        tempo <- saferDev::arg_check(data = legend.name, class = "vector", mode = "character", typeof = NULL, length = 1, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = legend.name, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
+        checked_arg_names <- base::c(checked_arg_names, tempo$object.name)
     }
-    tempo <- saferDev::arg_check(data = legend.text.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = legend.box.size, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = legend.box.space, class = "vector", mode = "numeric", na.contain = FALSE, neg.values = FALSE, inf.values = FALSE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    if( ! base::is.null(legend.limit)){
-        tempo <- saferDev::arg_check(data = legend.limit, prop = TRUE, length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = legend.text.size, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = legend.box.size, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = legend.box.space, class = "vector", mode = "numeric", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    if( ! base::is.null(x = legend.limit)){
+        tempo <- saferDev::arg_check(data = legend.limit, class = "vector", mode = NULL, typeof = NULL, prop = TRUE, length = 1, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = legend.limit, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
+        checked_arg_names <- base::c(checked_arg_names, tempo$object.name)
     }
-    tempo <- saferDev::arg_check(data = legend.add.prop, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    if( ! base::is.null(add)){
-        tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = legend.add.prop, class = "logical", mode = "logical", typeof = NULL, length = 1,prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    if( ! base::is.null(x = add)){
+        tempo <- saferDev::arg_check(data = add, class = "vector", mode = "character", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
         # no saferDev::arg_check test here, it is just for checked.arg.names
         tempo <- saferDev::arg_check(data = add, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
+        checked_arg_names <- base::c(checked_arg_names, tempo$object.name)
     }
-    tempo <- saferDev::arg_check(data = return, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = return.ggplot, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = return.gtable, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = plot, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = warn.print, class = "logical", length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    if( ! base::is.null(lib.path)){
-        tempo <- saferDev::arg_check(data = lib.path, class = "vector", mode = "character", fun.name = function.name, safer_check = FALSE) ; base::eval(ee) # several possible paths
-    }else{
-        # no saferDev::arg_check test here, it is just for checked.arg.names
-        tempo <- saferDev::arg_check(data = lib.path, class = "vector", safer_check = FALSE)
-        checked.arg.names <- base::c(checked.arg.names, tempo$object.name)
-    }
-    if( ! base::is.null(argum.check)){
-        if(base::any(argum.check) == TRUE){
-            base::stop(base::paste0("\n\n================\n\n", base::paste(text.check[argum.check], collapse = "\n"), "\n\n================\n\n"), call. = FALSE) #
+    tempo <- saferDev::arg_check(data = return, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = return.ggplot, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = return.gtable, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = plot, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    tempo <- saferDev::arg_check(data = warn.print, class = "logical", mode = "logical", typeof = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, fun_name = function_name, pack_name = package_name, safer_check = FALSE) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
+    # lib_path already checked above
+    # safer_check already checked above
+    if( ! base::is.null(x = argum_check)){
+        if(base::any(argum_check, na.rm = TRUE)){
+            base::stop(base::paste0("\n\n================\n\n", base::paste(text_check[argum_check], sep = " ", collapse = "\n", recycle0 = FALSE), "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
     }
-    # end argument checking with arg_check()
     # check with r_debugging_tools
-    # source("C:/Users/Gael/Documents/Git_versions_to_use/debugging_tools_for_r_dev-v1.7/r_debugging_tools-v1.7.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_saferDev::arg_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using saferDev::arg_check()
+    # source("https://gitlab.pasteur.fr/gmillot/debugging_tools_for_r_dev/-/raw/v1.8/r_debugging_tools.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using saferDev::arg_check()
     # end check with r_debugging_tools
-    # end argument primary checking
+    ######## end argument checking with arg_check()
 
-    # second round of checking and data preparation
-    # reserved words (to avoid bugs)
-    # end reserved words (to avoid bugs)
-    # reserved word checking
-    if( ! (base::is.null(add))){
-        if(base::any(base::sapply(X = arg.names, FUN = base::grepl, x = add), na.rm = TRUE)){
-            warn.count <- warn.count + 1
-            tempo.warn <- base::paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", base::paste(arg.names[base::sapply(X = arg.names, FUN = base::grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
+    ######## management of NA arguments
+    if(base::length(x = arg_user_setting) != 0){
+        tempo_log <- base::suppressWarnings(expr = base::sapply(X = base::lapply(X = arg_user_setting, FUN = function(x){base::is.na(x = x)}), FUN = function(x){base::any(x = x, na.rm = FALSE)}, simplify = TRUE, USE.NAMES = TRUE), classes = "warning") & base::lapply(X = arg_user_setting, FUN = function(x){base::length(x = x)}) == 1L # no argument provided by the user can be just NA
+        if(base::any(tempo_log, na.rm = FALSE)){ # normally no NA because base::is.na() used here
+            tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\n", base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS", no = "THIS ARGUMENT"), " CANNOT JUST BE NA:", base::paste0(arg_names[tempo_log], collapse = "\n", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
         }
     }
-    # verif of add
-    if( ! base::is.null(add)){
-        if( ! base::grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST START WITH \"+\": ", base::paste(base::unique(add), collapse = " "))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }else if( ! base::grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }else if( ! base::grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }
-    }
-    # end verif of add
-    # management of add containing facet
-    facet.categ <- NULL
-    if( ! base::is.null(add)){
-        facet.check <- TRUE
-        tempo <- base::unlist(base::strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
-        tempo <- base::sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
-        tempo <- base::sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
-        tempo <- base::sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
-        if(base::any(base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"), na.rm = TRUE)){
-            tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
-            facet.categ <- base::names(tempo1$params$facets)
-            tempo.text <- "facet_wrap OR facet_rep_wrap"
-            facet.check <- FALSE
-        }else if(base::grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
-            tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
-            facet.categ <- base::c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))
-            tempo.text <- "facet_grid OR facet_rep_grid"
-            facet.check <- FALSE
-        }
-        if(facet.check == FALSE & ! base::all(facet.categ %in% base::names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL # all() without na.rm -> ok because facet.categ cannot be NA (tested above)
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", base::paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", base::paste(base::names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }
-    }
-    # end management of add containing facet
-    # end reserved word checking
-    # management of NA arguments
-    if( ! (base::all(base::class(arg.user.setting) %in% base::c("list", "NULL"), na.rm = TRUE) & base::length(arg.user.setting) == 0)){
-        tempo.arg <- base::names(arg.user.setting) # values provided by the user
-        tempo.log <- base::suppressWarnings(base::sapply(base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.na), FUN = base::any)) & base::lapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::length) == 1L # no argument provided by the user can be just NA
-        if(base::any(tempo.log) == TRUE){ # normally no NA because is.na() used here
-            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS", "THIS ARGUMENT"), " CANNOT JUST BE NA:", base::paste0(tempo.arg[tempo.log], collapse = "\n"))
-            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
-        }
-    }
-    # end management of NA arguments
+    ######## end management of NA arguments
+
     # management of NULL arguments
-    tempo.arg <-base::c(
+    tempo_arg <-base::c(
         "data1", 
         "freq", 
         "categ", 
@@ -410,13 +368,95 @@ gg_donut <- function(
         # "lib.path", # inactivated because can be null
         "safer_check"
     )
-    tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = base::get, envir = base::sys.nframe(), inherits = FALSE), FUN = base::is.null)
-    if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE NULL")
-        base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    tempo_log <- base::sapply( X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::is.null(x = x)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because sapply(lapply())
+    if(base::any(tempo_log, na.rm = FALSE)){ # normally no NA with base::is.null()
+        tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\n", base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS\n", no = "THIS ARGUMENT\n"), base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE),"\nCANNOT BE NULL", collapse = NULL, recycle0 = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
     }
-    # end management of NULL arguments
-    # code that protects set.seed() in the global environment
+    ######## end management of NULL arguments
+
+    ######## management of "" in arguments of mode character
+    tempo_arg <-base::c(
+        "data1", 
+        "freq", 
+        "categ", 
+        "fill.palette", 
+        "fill.color", 
+        "hole.text", 
+        "border.color", 
+        "title", 
+        "annotation", 
+        "legend.name", 
+        "add"
+    )
+    tempo_log <- ! base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){if(base::is.null(x = x)){base::return(TRUE)}else{base::all(base::mode(x = x) == "character", na.rm = TRUE)}}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because sapply(lapply())  # for character argument that can also be NULL, if NULL -> considered as character
+    if(base::any(tempo_log, na.rm = TRUE)){
+        tempo_cat <- base::paste0("INTERNAL ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\n", base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS ARE", no = "THIS ARGUMENT IS"), " NOT MODE \"character\":\n", base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
+    }else{
+        tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::any(x == "", na.rm = FALSE)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because sapply(lapply())
+        if(base::any(tempo_log, na.rm = TRUE)){
+            tempo_cat <- base::paste0("ERROR IN ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\n", base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS\n", no = "THIS ARGUMENT\n"), base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE),"\nCANNOT CONTAIN \"\"", collapse = NULL, recycle0 = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in stop() to be able to add several messages between ==
+        }
+    }
+    ######## end management of "" in arguments of mode character
+
+    #### end argument primary checking
+
+    #### second round of checking and data preparation
+
+    ###### reserved word checking
+    if( ! (base::is.null(x = add))){
+        if(base::any(base::sapply(X = arg.names, FUN = base::grepl, x = add), na.rm = TRUE)){
+            warn.count <- warn.count + 1
+            tempo.warn <- base::paste0("(", warn.count,") NAMES OF ", function.name, " ARGUMENTS DETECTED IN THE add STRING:\n", base::paste(arg.names[base::sapply(X = arg.names, FUN = base::grepl, x = add)], collapse = "\n"), "\nRISK OF WRONG OBJECT USAGE INSIDE ", function.name)
+            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
+        }
+    }
+    ######## verif of add
+    if( ! base::is.null(x = add)){
+        if( ! base::grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
+            tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST START WITH \"+\": ", base::paste(base::unique(add), collapse = " "))
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }else if( ! base::grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+            tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nFOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", base::paste(base::unique(add), collapse = " "))
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }else if( ! base::grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
+            tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST FINISH BY \")\": ", base::paste(base::unique(add), collapse = " "))
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
+    }
+    ######## end verif of add
+
+    ######## management of add containing facet
+    facet.categ <- NULL
+    if( ! base::is.null(add)){
+        facet.check <- TRUE
+        tempo <- base::unlist(base::strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
+        tempo <- base::sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
+        tempo <- base::sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
+        tempo <- base::sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
+        if(base::any(base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"), na.rm = TRUE)){
+            tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
+            facet.categ <- base::names(tempo1$params$facets)
+            tempo.text <- "facet_wrap OR facet_rep_wrap"
+            facet.check <- FALSE
+        }else if(base::grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
+            tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
+            facet.categ <- base::c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))
+            tempo.text <- "facet_grid OR facet_rep_grid"
+            facet.check <- FALSE
+        }
+        if(facet.check == FALSE & ! base::all(facet.categ %in% base::names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL # all() without na.rm -> ok because facet.categ cannot be NA (tested above)
+            tempo_cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", base::paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", base::paste(base::names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
+    }
+    ######## end management of add containing facet
+    ######## end reserved word checking
+    
+    ######## code that protects set.seed() in the global environment
     if(base::exists(".Random.seed", envir = .GlobalEnv)){ # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
         tempo.random.seed <- .Random.seed
         base::on.exit(base::assign(".Random.seed", tempo.random.seed, env = .GlobalEnv))
@@ -424,14 +464,16 @@ gg_donut <- function(
         base::on.exit(base::set.seed(NULL)) # inactivate seeding -> return to complete randomness
     }
     base::set.seed(1)
-    # end code that protects set.seed() in the global environment
-    # warning initiation
-    ini.warning.length <- base::options()$warning.length
+    ######## end code that protects set.seed() in the global environment
+
+    ######## warning initiation
+    ini_warning_length <- base::options()$warning.length # required to have the max characters of output messages
     base::options(warning.length = 8170)
     warn <- NULL
-    warn.count <- 0
-    # end warning initiation
-    # other checkings
+    warn_count <- 0
+    ######## end warning initiation
+
+    ######## other checkings
     removed.row.nb <- NULL
     removed.rows <- base::data.frame(stringsAsFactors = FALSE)
     data1.ini <- data1 # strictly identical to data1
@@ -547,13 +589,14 @@ gg_donut <- function(
             border.color <- base::as.character(border.color) # remove class factor is any
         }
     }
-    # legend name filling
+    ######## legend name filling
     if(base::is.null(legend.name)){
         legend.name <- categ
     }
-    # legend.name not NULL anymore
-    # end legend name filling
-    # verif of add
+    ######## legend.name not NULL anymore
+    ######## end legend name filling
+
+    ######## verif of add
     if( ! base::is.null(add)){
         if( ! base::grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
             tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nadd ARGUMENT MUST START WITH \"+\": ", base::paste(base::unique(add), collapse = " "))
@@ -567,8 +610,8 @@ gg_donut <- function(
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
-    # end verif of add
-    # management of add containing facet
+    ######## end verif of add
+    ######## management of add containing facet
     facet.categ <- NULL
     if( ! base::is.null(add)){
         facet.check <- TRUE
@@ -593,19 +636,26 @@ gg_donut <- function(
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
-    # if facet.categ is not NULL, it is a list of length 1 now
-    # end management of add containing facet
+    ######## if facet.categ is not NULL, it is a list of length 1 now
+    ######## end management of add containing facet
     if( ! base::is.null(lib.path)){
         if( ! base::all(base::dir.exists(lib.path))){ # separation to avoid the problem of tempo$problem == FALSE and lib.path == NA
             tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nDIRECTORY PATH INDICATED IN THE lib.path ARGUMENT DOES NOT EXISTS:\n", base::paste(lib.path, collapse = "\n"))
             base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn.count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
     }
-    # end other checkings
-    # end second round of checking and data preparation
+    ######## end other checkings
+    ######## end second round of checking and data preparation
 
     
-    # main code
+    #### main code
+
+    ######## warning
+    warn_count <- warn_count + 1
+    tempo_warn <- base::paste0("(", warn_count,") THE FIRST FOR & WHILE LOOP STEPS HAVE BEEN TOO FAR AND SUBSEQUENT LOOP STEPS WILL NOT RUN", collapse = NULL, recycle0 = FALSE)
+    warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+    ######## end warning
+    
     data1 <- base::data.frame(data1, prop = data1[ , freq] / base::sum(data1[ , freq]))
     if(legend.add.prop == TRUE){
         data1[ , categ] <- base::paste0(data1[ , categ], " (", base::round(data1$prop, 2), ")")
@@ -679,7 +729,7 @@ gg_donut <- function(
         )
     )) # remove border of squares in legend
 
-    # annotations on slices
+    #### annotations on slices
     if( ! base::is.null(annotation)){
         tempo <- base::rev(base::cumsum(base::rev(data1[ , freq])))
         data1 <- base::data.frame(data1, text_y = tempo - (tempo - base::c(tempo[-1], 0)) / 2)
@@ -697,10 +747,10 @@ gg_donut <- function(
             show.legend = FALSE
         ))
     }
-    # end annotations on slices
+    #### end annotations on slices
 
-    # legend management
-    # removal of part of the legend 
+    #### legend management
+    #### removal of part of the legend 
     if( ! base::is.null(legend.limit)){
         if(base::sum(data1$prop >= legend.limit) == 0){
             tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\nTHE legend.limit PARAMETER VALUE (", legend.limit, ") IS TOO HIGH FOR THE PROPORTIONS IN THE DONUT PLOT:\n", base::paste0(data1$prop, collapse = "\n"))
@@ -711,7 +761,7 @@ gg_donut <- function(
             ))
         }
     }
-    # end removal of part of the legend
+    #### end removal of part of the legend
     if(legend.show == FALSE){ # must be here because must be before bef.final.plot
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
     }
@@ -728,9 +778,9 @@ gg_donut <- function(
     }else{
         legend.plot <- NULL
     }
-    # end legend management
+    #### end legend management
 
-    # title
+    #### title
     title.grob <- grid::textGrob(
         label = title,
         x = grid::unit(0, "lines"), 
@@ -739,9 +789,9 @@ gg_donut <- function(
         vjust = 0,
         gp = grid::gpar(fontsize = title.text.size)
     )
-    # end title
+    #### end title
 
-    # drawing
+    #### drawing
     grDevices::pdf(NULL)
     grob.save <- NULL
     main.plot <- base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))
@@ -765,9 +815,11 @@ gg_donut <- function(
         tempo.warn <- base::paste0("(", warn.count,") PLOT NOT SHOWN AS REQUESTED")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo.warn, base::paste0(warn, "\n\n", tempo.warn)))
     }
-    # end drawing
+    #### end drawing
 
-    # output
+    #### end main code
+
+    #### output
     if(warn.print == TRUE & ! base::is.null(warn)){
         base::on.exit(base::warning(base::paste0("FROM ", function.name, ":\n\n", warn), call. = FALSE))
     }
@@ -798,8 +850,14 @@ gg_donut <- function(
         )
         base::return(output) # this plots the graph if return.ggplot is TRUE and if no assignment
     }
-    # end output
-    # end main code
+    #### end output
+
+    #### warning output
+    if( ! base::is.null(x = warn)){
+        base::on.exit(expr = base::warning(base::paste0("FROM ", function_name, base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(" OF THE ", package_name, " PACKAGE", collapse = NULL, recycle0 = FALSE)), "\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL), add = FALSE, after = TRUE)
+        }
+        base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
+    #### end warning output
 }
 
 
