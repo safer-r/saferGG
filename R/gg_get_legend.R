@@ -26,7 +26,7 @@ gg_get_legend <- function(
     # obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; ggplot_built = ggplot2::ggplot_build(p) ; fun.name = NULL; lib_path = NULL ;safer_check = TRUE
 
     #### package name
-    package_name <- "saferDev" # write NULL if the function developed is not in a package
+    package_name <- "saferGG" # write NULL if the function developed is not in a package
     #### end package name
 
      #### internal error report link
