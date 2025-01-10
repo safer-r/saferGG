@@ -979,7 +979,7 @@ gg_donut <- function(
     }
     bef.final.plot <- base::suppressWarnings(base::suppressMessages(ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))))
     if( ! base::is.null(legend.width)){
-        legend.plot <- base::suppressWarnings(base::suppressMessages(saferGG::gg_get_legend(ggplot_built = bef.final.plot, fun.name = function_name, lib_path = lib_path))) # get legend
+        legend.plot <- base::suppressWarnings(base::suppressMessages(gg_get_legend(ggplot_built = bef.final.plot, fun.name = function_name, lib_path = lib_path))) # get legend
         base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
         if(base::is.null(legend.plot) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
             legend.plot <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
@@ -1029,11 +1029,23 @@ gg_donut <- function(
     }
     # end drawing
 
-    # output
+    #### warning output
     if(warn.print == TRUE & ! base::is.null(warn)){
-        base::on.exit(base::warning(base::paste0("FROM ", function_name, ":\n\n", warn), call. = FALSE))
+        base::on.exit(
+            expr = base::warning(
+                base::paste0(
+                    base::sub(pattern = "^ERROR IN ", replacement = "FROM ", x = error_text_start, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), 
+                    warn, 
+                    collapse = NULL, 
+                    recycle0 = FALSE
+                ), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL
+            ), add = TRUE, after = TRUE
+        )
     }
-    base::on.exit(exp = base::options(warning.length = ini.warning.length), add = TRUE)
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
+    #### end warning output
+
+    # output
     if(return == TRUE){
         if(base::is.null(base::unlist(removed.row.nb))){
             removed.row.nb <- NULL
@@ -1061,6 +1073,7 @@ gg_donut <- function(
         base::return(output) # this plots the graph if return.ggplot is TRUE and if no assignment
     }
     # end output
+
     # end main code
 }
 
