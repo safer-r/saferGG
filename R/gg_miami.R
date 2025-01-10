@@ -5,7 +5,7 @@
 #' @param chr single character string of the human chromo infos file.tsv path. Example: chr_path = "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt".
 #' @param top.y.column single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.
 #' @param bottom.y.column as the top.y.column parameter but for the bottom manhattan plot of the miami plot. "NULL" generates a simple manhattan plot
-#' @param x_lim single character string of the x-axis limits. Either "whole" for the whole genome or a special character string to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. For special character strings,  write "chr1:11000-15000" for a single region, "chr1:11000-" for a single region non delimited on the right, "chr7:0-147000000,chr10:1000000-2000000" if two regions, ""chr7" for a whole chromosome, "chr7,chr1" for two chromosomes.
+#' @param x_lim single character string of the x-axis limits. Either "whole" for the whole genome or a special character string to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. For special character strings,  write "chr1:11000-15000" for a single region, "chr1:11000-" for a single region non delimited on the right, "chr7:0-147000000,chr10:1000000-2000000" if two regions, "chr7" for a whole chromosome, "chr7,chr1" for two chromosomes.
 #' @param vgrid single character string of logical value TRUE or FALSE. Display the chromosome separators in the miami plot? Example: vgrid = TRUE.
 #' @param color.column single character string of one of the column name of the .tsv file (see bottom.y.column) in order to color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).
 #' @param dot.border.color single color character string to color the border of the dots. Write NULL if not required.
@@ -204,7 +204,7 @@ gg_miami <- function(
         base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # end management of NULL arguments
-    # management of ""
+    ######## management of "" in arguments of mode character
     tempo.arg <-base::c(
         "file", 
         "chr", 
@@ -223,12 +223,18 @@ gg_miami <- function(
         "y.log1", 
         "y.log2"
     )
-    tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = get, env = base::sys.nframe(), inherit = FALSE), FUN = function(x){base::any(x == "")})
-    if(base::any(tempo.log) == TRUE){# normally no NA with is.null()
-        tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT BE \"\"")
-        base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+    tempo.log <- ! sapply(base::lapply(tempo.arg, FUN = get, env = base::sys.nframe(), inherit = FALSE), FUN = function(x){base::all(base::mode(x) == "character", na.rm = TRUE)})
+    if(base::any(tempo.log, na.rm = TRUE)){
+        tempo.cat <- base::paste0("INTERNAL ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS", "THIS ARGUMENT"), " ARE NOT MODE \"character\":\n", base::paste0(tempo.arg[tempo.log], collapse = "\n"))
+        base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in base::stop() to be able to add several messages between ==
+    }else{
+        tempo.log <- base::sapply(base::lapply(tempo.arg, FUN = get, env = base::sys.nframe(), inherit = FALSE), FUN = function(x){base::any(x == "")})
+        if(base::any(tempo.log, na.rm = TRUE)){
+            tempo.cat <- base::paste0("ERROR IN ", function.name, " OF THE ", package.name, " PACKAGE\n", base::ifelse(base::sum(tempo.log, na.rm = TRUE) > 1, "THESE ARGUMENTS\n", "THIS ARGUMENT\n"), base::paste0(tempo.arg[tempo.log], collapse = "\n"),"\nCANNOT CONTAIN \"\"")
+            base::stop(base::paste0("\n\n================\n\n", tempo.cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
+        }
     }
-    # end management of ""
+    ######## end management of "" in arguments of mode character
     # code that protects set.seed() in the global environment
     # end code that protects set.seed() in the global environment
     # warning initiation
