@@ -80,6 +80,7 @@ gg_get_legend <- function(
     ######## end internal error text
 
     ######## error text when embedding
+    # use this in the error_text of safer functions if present below 
     embed_error_text  <- base::sub(pattern = "^ERROR IN ", replacement = " INSIDE ", x = error_text_start, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
     ######## end error text when embedding
 
@@ -249,7 +250,7 @@ gg_get_legend <- function(
     argum_check <- NULL
     text_check <- NULL
     checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
-    arg_check_error_text <- base::paste0("ERROR IN saferDev::arg_check()", embed_error_text, collapse = NULL, recycle0 = FALSE) # when several arg_check are performed on the same argument    
+    arg_check_error_text <- base::paste0("ERROR ", embed_error_text, collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)   
     ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
     # add as many lines as below, for each of your arguments of your function in development
     tempo <- saferDev::arg_check(data = ggplot_built, class = "ggplot_built", typeof = NULL, mode = "list", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)) # copy - paste this line as much as necessary
@@ -261,7 +262,7 @@ gg_get_legend <- function(
     # error_text already checked above
     if( ! base::is.null(x = argum_check)){
         if(base::any(argum_check, na.rm = TRUE)){
-            base::stop(base::paste0("\n\n================\n\n", base::paste0(text_check[argum_check], collapse = "\n", recycle0 = FALSE), "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            base::stop(base::paste0("\n\n================\n\n", base::paste0(text_check[argum_check], collapse = "\n\n", recycle0 = FALSE), "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
     }
     # check with r_debugging_tools
