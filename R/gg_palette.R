@@ -76,8 +76,8 @@
     text.check <- NULL #
     checked.arg.names <- NULL # for function debbuging: used by r_debugging_tools
     ee <- base::expression(argum.check <- base::c(argum.check, tempo$problem) , text.check <- base::c(text.check, tempo$text) , checked.arg.names <- base::c(checked.arg.names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = n, class = "integer", length = 1, double.as.integer.allowed = TRUE, neg.values = FALSE, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
-    tempo <- saferDev::arg_check(data = kind, options = base::c("std", "dark", "light"), length = 1, fun.name = function.name, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = n, class = "integer", length = 1, double_as_integer_allowed = TRUE, neg_values = FALSE, safer_check = FALSE) ; base::eval(ee)
+    tempo <- saferDev::arg_check(data = kind, options = base::c("std", "dark", "light"), length = 1, safer_check = FALSE) ; base::eval(ee)
 
     if( ! base::is.null(argum.check)){
         if(base::any(argum.check, na.rm = TRUE) == TRUE){
