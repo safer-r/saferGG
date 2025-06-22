@@ -1,5 +1,5 @@
 
-# saferGG <a href="">[<img src="man/figures/saferGG.png" align="right" height="140" />](https://safer-r.github.io/saferGG)</a>
+# saferGG <a href="">[<img src="man/figures/new_saferGG.png" align="right" height="140" />](https://safer-r.github.io/saferGG)</a>
 
 <br />
 
