@@ -283,7 +283,7 @@ gg_empty <- function(
                 "ggplot2::ggplot",
                 "ggplot2::ggtitle",
                 "ggplot2::theme_void",
-                "saferDev::arg_check"  
+                "saferDev::arg_check",  
                 # end functions required in this code
 
                 # internal functions required in this code
