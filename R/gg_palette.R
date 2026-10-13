@@ -62,7 +62,7 @@ gg_palette <- function(
         arg_user_setting_eval <- NULL
     }
     # end evaluation of values if they are expression, call, etc.
-    arg_names <- base::names(x = base::formals(fun = base::sys.function(which = base::sys.parent(n = 2)), envir = base::parent.frame(n = 1))) # names of all the arguments
+    arg_names <- base::names(x = base::formals(fun = base::sys.function(which = base::sys.parent(n = 0)), envir = base::parent.frame(n = 1))) # names of all the arguments
     #### end arguments settings
 
     #### error_text initiation
@@ -167,7 +167,7 @@ gg_palette <- function(
         # "lib_path", # inactivated because can be NULL
         # "error_text" # inactivated because NULL converted to "" above
     )
-    tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::is.null(x = x)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because sapply(lapply())
+    tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::is.null(x = x)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because get() is evaluated inside the FUN closure of the inner lapply: parent.frame(n = 1) is lapply's frame, parent.frame(n = 2) is BACKBONE's frame.
     if(base::any(tempo_log, na.rm = TRUE)){ # normally no NA with base::is.null()
         tempo_cat <- base::paste0(
             error_text_start, 
@@ -217,7 +217,7 @@ gg_palette <- function(
     ######## end management of empty non NULL arguments
 
     ######## management of NA arguments
-    # Mandataory section : argument of safer-r functions cannot have NA as only value, to prevent all(, na.rm = TRUE) or any(, na.rm = TRUE) to return a logical value
+    # Mandatory section : argument of safer-r functions cannot have NA as only value, to prevent all(, na.rm = TRUE) or any(, na.rm = TRUE) to return a logical value
     if(base::length(x = arg_user_setting_eval) != 0){
         tempo_log <- base::suppressWarnings(
             expr = base::sapply(
