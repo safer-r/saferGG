@@ -355,7 +355,13 @@ gg_get_legend <- function(
     checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
     arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
     ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
-    tempo <- saferDev::arg_check(data = ggplot_built, class = "ggplot_built", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo1 <- saferDev::arg_check(data = ggplot_built, class = "ggplot_built", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = arg_check_error_text) # before ggplot2 4.0.0
+    tempo2 <- saferDev::arg_check(data = ggplot_built, class = c("ggplot2::ggplot_built", "ggplot_built", "ggplot2::gg", "S7_object"), typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = arg_check_error_text) # since ggplot2 4.0.0
+    checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+    if(tempo1$problem == TRUE & tempo2$problem == TRUE){
+        argum_check <- base::c(argum_check, tempo1$problem)
+        text_check <- base::c(text_check, tempo1$text)
+    }
     # lib_path already checked above
     # safer_check already checked above
     # error_text converted to single string above
