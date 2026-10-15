@@ -592,7 +592,8 @@ testthat::test_that("gg_scatter draws scatter plots and returns the expected str
         grDevices::dev.off()
     }
     ## end errors
-    grDevices::dev.off()
-    base::unlink(x = tempo_file)
+    # cleanup of all files and devices created during the tests
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })

@@ -660,7 +660,8 @@ testthat::expect_type(output_tidycat, "list")
     testthat::expect_type(output, "list")
     testthat::expect_true(object = base::grepl(x = output$warn, pattern = "IN COLUMN categ.color OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED", fixed = TRUE))
     ## end errors
-    grDevices::dev.off()
-    base::unlink(x = tempo_file)
+    # cleanup of all files and devices created during the tests
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })

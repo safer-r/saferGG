@@ -189,7 +189,8 @@ testthat::test_that("gg_donut draws donut plots and returns the expected structu
     testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "", categ = "Car", plot = FALSE, safer_check = FALSE), regexp = "CANNOT CONTAIN EMPTY STRING \"\"", fixed = TRUE)
     testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "", plot = FALSE, safer_check = FALSE), regexp = "CANNOT CONTAIN EMPTY STRING \"\"", fixed = TRUE)
     ## end errors
-    grDevices::dev.off()
-    base::unlink(x = tempo_file)
+    # cleanup of all files and devices created during the tests
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })

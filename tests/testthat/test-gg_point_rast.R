@@ -43,7 +43,8 @@ testthat::test_that("gg_point_rast builds a raster layer", {
     res_zero <- saferGG::gg_point_rast(safer_check = FALSE)
     testthat::expect_s3_class(object = res_zero, class = "LayerInstance")
     ## end errors
-    grDevices::dev.off()
-    base::unlink(x = tempo_file)
+    # cleanup of all files and devices created during the tests
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })

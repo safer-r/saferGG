@@ -36,7 +36,8 @@ testthat::test_that("gg_get_legend extracts the legend", {
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "NO DEFAULT VALUE AND REQUIRE ONE", fixed = TRUE))
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "ggplot_built", fixed = TRUE))
     ## end errors
-    grDevices::dev.off()
-    base::unlink(x = tempo_file)
+    # cleanup of all files and devices created during the tests
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
