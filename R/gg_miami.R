@@ -1,0 +1,1136 @@
+#' @title gg_miami
+#' @description
+#' Plot two ggplot2 manhattan plots in mirror.
+#' @param file single character string of the vcf.tsv file path. Example: "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv".
+#' @param chr single character string of the human chromo infos file.tsv path. Example: chr_path = "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt".
+#' @param top.y.column single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.
+#' @param bottom.y.column as the top.y.column parameter but for the bottom manhattan plot of the miami plot. NULL (default) generates a simple manhattan plot.
+#' @param x_lim single character string of the x-axis limits. Either "whole" for the whole genome or a special character string to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. For special character strings,  write "chr1:11000-15000" for a single region, "chr1:11000-" for a single region non delimited on the right, "chr7:0-147000000,chr10:1000000-2000000" if two regions, "chr7" for a whole chromosome, "chr7,chr1" for two chromosomes.
+#' @param vgrid single logical value. Display the chromosome separators in the miami plot? Example: vgrid = TRUE.
+#' @param color.column single character string of one of the column name of the .tsv file (see bottom.y.column) in order to color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).
+#' @param dot.border.color single color character string to color the border of the dots. Write NULL if not required.
+#' @param y_lim1 2 numeric values indicating the range of the top y-axis. Order matters (for inverted axis). If NULL, the range of the values from top.y.column will be used.
+#' @param y_lim2 2 numeric values indicating the range of the bottom y-axis. Order matters (for inverted axis). If NULL, the range of the values from bottom.y.column will be used.
+#' @param reverse1 single logical value, y-axis coordinates flip for the top panel in the miami plot. Example: reverse1 = TRUE.
+#' @param reverse2 single logical value, y-axis coordinates flip for the bottom panel in the miami plot. Example: reverse2 = TRUE.
+#' @param y.threshold1 single numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y.threshold1 = 3. Write NULL for no particular threshold.
+#' @param y.threshold2 single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y.threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom.y.column is NULL.
+#' @param y.log1 single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y.log1 = TRUE.
+#' @param y.log2 single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y.log2 = TRUE.
+#' @param warn.print logical. Print warnings at the end of the execution? No print if no warning messages.
+#' @param lib_path Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{unique(c(new, .Library.site, .Library))}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.
+#' @param safer_check Single logical value. Perform some "safer" checks? If \code{TRUE}, checkings are performed before main code running (see the \href{https://github.com/safer-r}{safer-r project}): 1) correct \code{lib_path} argument value 2) required functions and related packages effectively present in local R libraries and 3) R classical operators (like \code{"<-"}) not overwritten by another package because of the R scope. Must be set to \code{FALSE} if this function is used inside another "safer" function to avoid pointless multiple checkings.
+#' @param error_text Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}. Of note, in \code{arg_check()}, \code{error_text} is also used at the end of the string returned when no problem is detected.
+#' @returns NULL. Draws the miami plot (and writes a miami.png file in the current working directory, as done by the initial design of the function).
+#' @examples
+#' \dontrun{
+#' gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv", chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top.y.column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom.y.column = "AF")
+#' }
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_string
+#' @importFrom ggplot2 annotation_custom
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 geom_hline
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 ggplotGrob
+#' @importFrom ggplot2 ggtitle
+#' @importFrom ggplot2 scale_color_gradient2
+#' @importFrom ggplot2 scale_color_manual
+#' @importFrom ggplot2 scale_fill_gradient2
+#' @importFrom ggplot2 scale_fill_manual
+#' @importFrom ggplot2 scale_x_continuous
+#' @importFrom ggplot2 scale_y_continuous
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme_bw
+#' @importFrom grid gpar
+#' @importFrom grid linesGrob
+#' @importFrom grid unit.pmax
+#' @importFrom gridExtra grid.arrange
+#' @importFrom grDevices dev.off
+#' @importFrom grDevices png
+#' @importFrom scales math_format
+#' @importFrom scales rescale_none
+#' @importFrom scales trans_breaks
+#' @importFrom scales trans_format
+#' @importFrom utils read.table
+#' @importFrom saferDev arg_check
+#' @export
+gg_miami <- function(
+        file, 
+        chr, 
+        top.y.column, 
+        bottom.y.column = NULL, 
+        x_lim = "whole", 
+        vgrid = FALSE, 
+        color.column = NULL, 
+        dot.border.color = NULL, 
+        y_lim1 = NULL, 
+        y_lim2 = NULL, 
+        reverse1 = FALSE, 
+        reverse2 = FALSE, 
+        y.threshold1 = NULL, 
+        y.threshold2 = NULL, 
+        y.log1 = FALSE, 
+        y.log2 = FALSE, 
+        warn.print = FALSE, 
+        lib_path = NULL, 
+        safer_check = TRUE, 
+        error_text = ""
+){
+    # DEBUGGING
+    # file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv" ; chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt" ; top.y.column = "NEG_LOG10_P_VALUE_CARRIER_MODEL" ; bottom.y.column = "AF" ; x_lim = "whole" ; vgrid = FALSE ; color.column = NULL ; dot.border.color = NULL ; y_lim1 = NULL ; y_lim2 = NULL ; reverse1 = FALSE ; reverse2 = FALSE ; y.threshold1 = NULL ; y.threshold2 = NULL ; y.log1 = FALSE ; y.log2 = FALSE ; warn.print = FALSE ; lib_path = NULL ; safer_check = TRUE ; error_text = "" ; 
+
+    #### package name
+    package_name <- "saferGG" # write NULL if the function developed is not in a package
+    #### end package name
+
+    #### internal error report link
+    internal_error_report_link <- base::paste0("https://github.com/safer-r/", package_name, "/issues/new", collapse = NULL, recycle0 = FALSE) # link where to post an issue indicated in an internal error message. Write NULL if no link to propose, or no internal error message
+    #### end internal error report link
+
+    #### function name
+    tempo_settings <- base::as.list(x = base::match.call(definition = base::sys.function(which = base::sys.parent(n = 0)), call = base::sys.call(which = base::sys.parent(n = 0)), expand.dots = FALSE, envir = base::parent.frame(n = 2L))) # warning: I have written n = 0 to avoid error when a safer function is inside another functions. In addition, arguments values retrieved are not evaluated base::match.call, but this is solved with get() below
+    function_name <- base::paste0(tempo_settings[[1]], "()", collapse = NULL, recycle0 = FALSE) 
+    # function name with "()" paste, which split into a vector of three: c("::()", "package ()", "function ()") if "package::function()" is used.
+    if(function_name[1] == "::()" | function_name[1] == ":::()"){
+        function_name <- function_name[3]
+    }
+    #### end function name
+
+    #### arguments settings
+    arg_user_setting <- tempo_settings[-1] # list of the argument settings (excluding default values not provided by the user). Always a list, even if 1 argument. So ok for lapply() usage (management of NA section)
+    arg_user_setting_names <- base::names(x = arg_user_setting)
+    # evaluation of values if they are expression, call, etc.
+    if(base::length(x = arg_user_setting) != 0){
+        arg_user_setting_eval <- base::lapply(
+            X = arg_user_setting_names, 
+            FUN = function(x){
+                base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = TRUE) # n = 2 because of lapply(), inherit = TRUE to be sure to correctly evaluate
+            }
+        )
+        base::names(x = arg_user_setting_eval) <- arg_user_setting_names
+    }else{
+        arg_user_setting_eval <- NULL
+    }
+    # end evaluation of values if they are expression, call, etc.
+    arg_names <- base::names(x = base::formals(fun = base::sys.function(which = base::sys.parent(n = 0)), envir = base::parent.frame(n = 1))) # names of all the arguments
+    #### end arguments settings
+
+    #### error_text initiation
+
+    ######## basic error text start
+    error_text <- base::paste0(base::unlist(x = error_text, recursive = TRUE, use.names = TRUE), collapse = "", recycle0 = FALSE) # convert everything to string. if error_text is a string, changes nothing. If NULL or empty (even list) -> "" so no need to check for management of NULL or empty value
+    package_function_name <- base::paste0(
+        base::ifelse(test = base::is.null(x = package_name), yes = "", no = base::paste0(package_name, base::ifelse(test = base::grepl(x = function_name, pattern = "^\\.", ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), yes = ":::", no = "::"), collapse = NULL, recycle0 = FALSE)), 
+        function_name,
+        collapse = NULL, 
+        recycle0 = FALSE
+    )
+    error_text_start <- base::paste0(
+        "ERROR IN ", # must not be changed, because this "ERROR IN " string is used for text replacement
+        package_function_name, 
+        base::ifelse(test = error_text == "", yes = ".", no = error_text), 
+        "\n\n", 
+        collapse = NULL, 
+        recycle0 = FALSE
+    )
+    ######## end basic error text start
+
+    ######## internal error text
+    intern_error_text_start <- base::paste0(
+        package_function_name, 
+        base::ifelse(test = error_text == "", yes = ".", no = error_text), 
+        "\n\n", 
+        collapse = NULL, 
+        recycle0 = FALSE
+    )
+    intern_error_text_end <- base::ifelse(test = base::is.null(x = internal_error_report_link), yes = "", no = base::paste0("\n\nPLEASE, REPORT THIS ERROR HERE: ", internal_error_report_link, ".", collapse = NULL, recycle0 = FALSE))
+    ######## end internal error text
+
+    ######## error text when embedding
+    # use this in the error_text of safer functions if present in your main code 
+    embed_error_text  <- base::sub(pattern = "^ERROR IN ", replacement = " INSIDE ", x = error_text_start, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+    embed_error_text  <- base::sub(pattern = "\n*$", replacement = "", x = embed_error_text, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE) # remove all the trailing \n, because added later
+    ######## end error text when embedding
+
+    #### end error_text initiation
+
+    #### argument primary checking
+
+    ######## arg ... forbidden
+    # nocov start
+    # codecov inactivated because it is an internal control of code writing, impossible to cover with argument values.
+    if("..." %in% arg_names) {
+        # This check is here in case the developer has not correctly written the argument of its function
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "ARGUMENT ... IS NOT ALLOWED IN SAFER-R FUNCTIONS.\n\nPLEASE, REWRITE YOUR FUNCTION CORRECTLY.", 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    # nocov end
+    ######## end arg ... forbidden
+
+    ######## mandatory arg of safer-r functions
+    mandat_args <- base::c("lib_path", "safer_check", "error_text")
+    tempo_log <- ! mandat_args %in% arg_names
+    if(base::any(x = tempo_log, na.rm = TRUE)) {
+        # This check is here in case the developer has not correctly written the argument of its function
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "FOLLOWING ARGUMENT", 
+            base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "S ARE", no = " IS"), 
+            " MANDATORY IN SAFER-R FUNCTIONS:\n", 
+            base::paste0(mandat_args[tempo_log], collapse = "\n", recycle0 = FALSE), 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    ######## end mandatory arg of safer-r functions
+
+    ######## arg with no default values
+    # optional section: remove the code if none of your arguments has no default value
+    no_def_args <- base::c(
+        "file", 
+        "chr", 
+        "top.y.column"
+    )
+    tempo <- base::eval(expr = base::parse(text = base::paste0("base::c(base::missing(", base::paste0(no_def_args, collapse = "),base::missing(", recycle0 = FALSE), "))", collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if(base::any(tempo, na.rm = TRUE)){
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "FOLLOWING ARGUMENT", 
+            base::ifelse(test = base::sum(tempo, na.rm = TRUE) > 1, yes = "S HAVE", no = " HAS"), 
+            " NO DEFAULT VALUE AND REQUIRE ONE:\n", 
+            base::paste0(no_def_args[tempo], collapse = "\n", recycle0 = FALSE), 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    ######## end arg with no default values
+
+    ######## management of NULL arguments
+    # before NA checking because is.na(NULL) return logical(0) and all(logical(0)) is TRUE (but secured with & base::length(x = x) > 0)
+    tempo_arg <- base::c(
+        "file", 
+        "chr", 
+        "top.y.column", 
+        # "bottom.y.column", # inactivated because can be NULL
+        "x_lim", 
+        "vgrid", 
+        # "color.column", # inactivated because can be NULL
+        # "dot.border.color", # inactivated because can be NULL
+        # "y_lim1", # inactivated because can be NULL
+        # "y_lim2", # inactivated because can be NULL
+        "reverse1", 
+        "reverse2", 
+        # "y.threshold1", # inactivated because can be NULL
+        # "y.threshold2", # inactivated because can be NULL
+        "y.log1", 
+        "y.log2", 
+        "warn.print"
+        # "lib_path", # inactivated because can be NULL
+        # "error_text" # inactivated because NULL converted to "" above
+    )
+    tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::is.null(x = x)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because sapply(lapply())
+    if(base::any(tempo_log, na.rm = TRUE)){ # normally no NA with base::is.null()
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS", no = "THIS ARGUMENT"), 
+            " CANNOT BE NULL:\n", 
+            base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    ######## end management of NULL arguments
+
+    ######## management of empty non NULL arguments
+    # before NA checking because is.na(logical()) is logical(0) (but secured with & base::length(x = x) > 0)
+    tempo_arg <- base::c(
+        "file", 
+        "chr", 
+        "top.y.column", 
+        "x_lim", 
+        "vgrid", 
+        "reverse1", 
+        "reverse2", 
+        "y.log1", 
+        "y.log2", 
+        "warn.print"
+        # "bottom.y.column", # inactivated because can be NULL (checked in the main code)
+        # "color.column", # inactivated because can be NULL (checked in the main code)
+        # "dot.border.color", # inactivated because can be NULL (checked in the main code)
+        # "y_lim1", # inactivated because can be NULL
+        # "y_lim2", # inactivated because can be NULL
+        # "y.threshold1", # inactivated because can be NULL
+        # "y.threshold2", # inactivated because can be NULL
+        # "lib_path", # inactivated because can be empty
+        # "error_text" # inactivated because empty value converted to "" above
+    )
+    tempo_arg_user_setting_eval <- arg_user_setting_eval[base::names(x = arg_user_setting_eval) %in% tempo_arg]
+    if(base::length(x = tempo_arg_user_setting_eval) != 0){
+        tempo_log <- base::suppressWarnings(
+            expr = base::sapply(
+                X = tempo_arg_user_setting_eval, 
+                FUN = function(x){
+                    base::length(x = x) == 0 & ! base::is.null(x = x)
+                }, 
+                simplify = TRUE, 
+                USE.NAMES = TRUE
+            ), 
+            classes = "warning"
+        ) # no argument provided by the user can be empty non NULL object. Warning: would not work if arg_user_setting_eval is a vector (because treat each element as a compartment), but ok because it is always a list, even if 0 or 1 argument in the developed function
+        if(base::any(tempo_log, na.rm = TRUE)){
+            tempo_cat <- base::paste0(
+                error_text_start, 
+                base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS", no = "THIS ARGUMENT"), 
+                " CANNOT BE AN EMPTY NON NULL OBJECT:\n", 
+                base::paste0(base::names(x = tempo_arg_user_setting_eval)[tempo_log], collapse = "\n", recycle0 = FALSE), 
+                collapse = NULL, 
+                recycle0 = FALSE
+            )
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        }
+    }
+    ######## end management of empty non NULL arguments
+
+    ######## management of NA arguments
+    # Mandatory section: argument of safer-r functions cannot have NA as only value, to prevent all(, na.rm = TRUE) or any(, na.rm = TRUE) to return a logical value
+    if(base::length(x = arg_user_setting_eval) != 0){
+        tempo_log <- base::suppressWarnings(
+            expr = base::sapply(
+                X = base::lapply(
+                    X = arg_user_setting_eval, 
+                    FUN = function(x){
+                        base::is.na(x = x) # if x is empty, return empty, but ok with below
+                    }
+                ), 
+                FUN = function(x){
+                    base::all(x = x, na.rm = TRUE) & base::length(x = x) > 0 # if x is empty, return FALSE, so OK
+                }, 
+                simplify = TRUE, 
+                USE.NAMES = TRUE
+            ), 
+            classes = "warning"
+        ) # no argument provided by the user can be just made of NA. is.na(NULL) returns logical(0), the reason why base::length(x = x) > 0 is used # warning: all(x = x, na.rm = TRUE) but normally no NA because base::is.na() used here. Warning: would not work if arg_user_setting_eval is a vector (because treat each element as a compartment), but ok because it is always a list, even if 0 or 1 argument in the developed function
+        if(base::any(tempo_log, na.rm = TRUE)){
+            tempo_cat <- base::paste0(
+                error_text_start, 
+                base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS", no = "THIS ARGUMENT"), 
+                " CANNOT BE MADE OF NA ONLY:\n", 
+                base::paste0(base::names(x = arg_user_setting_eval)[tempo_log], collapse = "\n", recycle0 = FALSE), 
+                collapse = NULL, 
+                recycle0 = FALSE
+            )
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        }
+    }
+    ######## end management of NA arguments
+
+    #### end argument primary checking
+
+    #### environment checking
+
+    ######## safer_check argument checking
+    if( ! (base::all(base::typeof(x = safer_check) == "logical", na.rm = TRUE) & base::length(x = safer_check) == 1)){ # no need to test NA because NA only already managed above and base::length(x = safer_check) == 1)
+        if(base::all(base::mode(x = safer_check) == "function", na.rm = TRUE)){
+            safer_check <- base::deparse1(expr = safer_check, collapse = "", width.cutoff = 500L)
+        }
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "THE safer_check ARGUMENT VALUE MUST BE A SINGLE LOGICAL VALUE (TRUE OR FALSE ONLY).\nHERE IT IS:\n", 
+            base::ifelse(test = base::length(x = safer_check) == 0 | base::all(base::suppressWarnings(expr = safer_check == base::quote(expr = ), classes = "warning"), na.rm = TRUE) | base::all(safer_check == "", na.rm = TRUE), yes = "<NULL, \"\", EMPTY OBJECT OR EMPTY NAME>", no = base::paste0(safer_check, collapse = "\n", recycle0 = FALSE)),
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    ######## end safer_check argument checking
+
+    ######## check of lib_path
+    # must be before any :: or ::: non basic package calling
+    if(safer_check == TRUE){ # this line must be inactivated if you want to use lib_path in the main code (other than in safer functions present in the main code) 
+        if( ! base::is.null(x = lib_path)){ #  is.null(NA) returns FALSE so OK.
+            if( ! base::all(base::typeof(x = lib_path) == "character", na.rm = TRUE)){ # na.rm = TRUE but no NA returned with typeof (typeof(NA) == "character" returns FALSE)
+                if(base::all(base::mode(x = lib_path) == "function", na.rm = TRUE)){
+                    lib_path <- base::deparse1(expr = lib_path, collapse = "", width.cutoff = 500L)
+                }
+                tempo_cat <- base::paste0(
+                    error_text_start, 
+                    "THE DIRECTORY PATH INDICATED IN THE lib_path ARGUMENT MUST BE A VECTOR OF CHARACTERS.\nHERE IT IS:\n", 
+                    base::ifelse(test = base::length(x = lib_path) == 0 | base::all(base::suppressWarnings(expr = lib_path == base::quote(expr = ), classes = "warning"), na.rm = TRUE), yes = "<NULL, EMPTY OBJECT OR EMPTY NAME>", no = base::paste0(lib_path, collapse = "\n", recycle0 = FALSE)),
+                    collapse = NULL, 
+                    recycle0 = FALSE
+                )
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            }else if( ! base::all(base::dir.exists(paths = lib_path), na.rm = TRUE)){ # separation to avoid the problem of tempo$problem == FALSE and lib_path == NA. dir.exists(paths = NA) returns an error, so ok. dir.exists(paths = "") returns FALSE so ok
+                tempo_log <- ! base::dir.exists(paths = lib_path)
+                tempo_cat_b <- lib_path[tempo_log] # here lib_path is character string
+                tempo_cat_b[tempo_cat_b == ""] <- "\"\""
+                tempo_cat <- base::paste0(
+                    error_text_start, 
+                    "THE DIRECTORY PATH", 
+                    base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "S", no = ""), 
+                    " INDICATED IN THE lib_path ARGUMENT DO", 
+                    base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "", no = "ES"), 
+                    " NOT EXIST:\n", 
+                    base::paste0(tempo_cat_b, collapse = "\n", recycle0 = FALSE), 
+                    collapse = NULL, 
+                    recycle0 = FALSE
+                )
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            }else{
+                ini_lib_path <- base::.libPaths(new = , include.site = TRUE) # normal to have empty new argument
+                base::on.exit(expr = base::.libPaths(new = ini_lib_path, include.site = TRUE), add = TRUE, after = TRUE) # return to the previous libPaths()
+                base::.libPaths(new = base::sub(x = base::c(ini_lib_path, lib_path), pattern = "/$|\\\\$", replacement = "", ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), include.site = TRUE) # base::.libPaths(new = ) add path to default path. BEWARE: base::.libPaths() does not support / at the end of a submitted path. The reason of the check and replacement of the last / or \\ in path
+                lib_path <- base::.libPaths(new = , include.site = TRUE) # normal to have empty new argument
+            }
+        }else{
+            lib_path <- base::.libPaths(new = , include.site = TRUE) # normal to have empty new argument # base::.libPaths(new = lib_path) # or base::.libPaths(new = base::c(base:::.libPaths(), lib_path))
+        }
+    }  # this line must be inactivated if you want to use lib_path in the main code (other than in safer functions present in the main code) 
+    ######## end check of lib_path
+
+    ######## check of the required functions from the required packages
+    if(safer_check == TRUE){
+        saferDev:::.pack_and_function_check(
+            fun = base::c(
+                # functions required in this code
+                "ggplot2::aes", 
+                "ggplot2::aes_string", 
+                "ggplot2::annotation_custom", 
+                "ggplot2::element_blank", 
+                "ggplot2::element_line", 
+                "ggplot2::element_text", 
+                "ggplot2::geom_hline", 
+                "ggplot2::geom_point", 
+                "ggplot2::geom_vline", 
+                "ggplot2::ggplot", 
+                "ggplot2::ggplotGrob", 
+                "ggplot2::ggtitle", 
+                "ggplot2::scale_color_gradient2", 
+                "ggplot2::scale_color_manual", 
+                "ggplot2::scale_fill_gradient2", 
+                "ggplot2::scale_fill_manual", 
+                "ggplot2::scale_x_continuous", 
+                "ggplot2::scale_y_continuous", 
+                "ggplot2::theme", 
+                "ggplot2::theme_bw", 
+                "grid::gpar", 
+                "grid::linesGrob", 
+                "grid::unit.pmax", 
+                "gridExtra::grid.arrange", 
+                "grDevices::dev.off", 
+                "grDevices::png", 
+                "scales::math_format", 
+                "scales::rescale_none", 
+                "scales::trans_breaks", 
+                "scales::trans_format", 
+                "utils::read.table", 
+                "saferDev::arg_check", 
+                "saferGG::gg_empty"
+                # end functions required in this code
+                # internal functions required in this code
+                , "saferDev:::.base_op_check"
+                # end internal functions required in this code
+            ),
+            lib_path = lib_path, # write NULL if your function does not have any lib_path argument
+            error_text = embed_error_text
+        )
+    }
+    ######## end check of the required functions from the required packages
+
+    ######## escaping CRAN submission NOTE for internal functions
+
+    # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
+    # not mandatory if your function is not designed for submission to the CRAN
+
+    ######## end escaping CRAN submission NOTE for internal functions
+
+    ######## critical operator checking
+    if(safer_check == TRUE){
+        saferDev:::.base_op_check(
+            error_text = embed_error_text
+        )
+    }
+    ######## end critical operator checking
+
+    #### end environment checking
+
+    #### argument secondary checking
+
+    ######## argument checking with arg_check()
+    argum_check <- NULL
+    text_check <- NULL
+    checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
+    arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
+    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
+    tempo <- saferDev::arg_check(data = file, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = chr, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = top.y.column, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(bottom.y.column)){
+        tempo <- saferDev::arg_check(data = bottom.y.column, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    if( ! base::is.null(x_lim)){
+        tempo <- saferDev::arg_check(data = x_lim, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    tempo <- saferDev::arg_check(data = vgrid, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(color.column)){
+        tempo <- saferDev::arg_check(data = color.column, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    if( ! base::is.null(dot.border.color)){
+        tempo <- saferDev::arg_check(data = dot.border.color, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    if( ! base::is.null(y_lim1)){
+        tempo <- saferDev::arg_check(data = y_lim1, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    if( ! base::is.null(y_lim2)){
+        tempo <- saferDev::arg_check(data = y_lim2, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    tempo <- saferDev::arg_check(data = reverse1, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = reverse2, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(y.threshold1)){
+        tempo <- saferDev::arg_check(data = y.threshold1, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    if( ! base::is.null(y.threshold2)){
+        tempo <- saferDev::arg_check(data = y.threshold2, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }
+    tempo <- saferDev::arg_check(data = y.log1, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = y.log2, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = warn.print, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    # lib_path already checked above
+    # safer_check already checked above
+    # error_text converted to single string above
+    if( ! base::is.null(x = argum_check)){
+        if(base::any(argum_check, na.rm = TRUE)){
+            base::stop(base::paste0("\n\n================\n\n", base::paste0(text_check[argum_check], collapse = "\n\n", recycle0 = FALSE), "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        }
+    }
+    # check with r_debugging_tools
+    # source("https://gitlab.pasteur.fr/gmillot/debugging_tools_for_r_dev/-/raw/v1.8/r_debugging_tools.R") ; eval(parse(text = str_basic_arg_check_dev)) ; eval(parse(text = str_arg_check_with_fun_check_dev)) # activate this line and use the function (with no arguments left as NULL) to check arguments status and if they have been checked using saferDev::arg_check()
+    # end check with r_debugging_tools
+    ######## end argument checking with arg_check()
+
+    ######## management of "" in arguments of mode character
+    # optional section: remove the code if you do not want to check if arguments of mode character of your own function cannot contain ""
+    tempo_arg <- base::c(
+        "file", 
+        "chr", 
+        "top.y.column", 
+        "bottom.y.column", 
+        "x_lim", 
+        "color.column", 
+        "dot.border.color"
+        # "vgrid", # inactivated because logical
+        # "reverse1", # inactivated because logical
+        # "reverse2", # inactivated because logical
+        # "y.log1", # inactivated because logical
+        # "y.log2", # inactivated because logical
+        # "lib_path" # inactivated because already checked above
+        # "error_text" # inactivated because can be ""
+    )
+    # nocov start
+    # codecov inactivated because it is an internal control of code writing, impossible to cover with argument values.
+    tempo_log <- ! base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){if(base::is.null(x = x)){base::return(TRUE)}else{base::all(base::mode(x = x) == "character", na.rm = TRUE)}}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because get() is evaluated inside the FUN closure of the inner lapply: parent.frame(n = 1) is lapply's frame, parent.frame(n = 2) is BACKBONE's frame.
+    if(base::any(tempo_log, na.rm = TRUE)){
+        # This check is here in case the developer has not correctly fill tempo_arg
+        tempo_cat <- base::paste0(
+            "INTERNAL ERROR IN THE BACKBONE PART OF ", 
+            intern_error_text_start, 
+            "IN THE SECTION \"management of \"\" in arguments of mode character\"\n", 
+            base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS ARE", no = "THIS ARGUMENT IS"), 
+            " NOT CLASS \"character\":\n", 
+            base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), 
+            intern_error_text_end, 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }else{
+        tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::any(x == "", na.rm = TRUE)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because get() is evaluated inside the FUN closure of the inner lapply: parent.frame(n = 1) is lapply's frame, parent.frame(n = 2) is BACKBONE's frame. # for character argument that can also be NULL, if NULL -> returns FALSE. Thus no need to test is.null()
+        if(base::any(tempo_log, na.rm = TRUE)){
+            tempo_cat <- base::paste0(
+                error_text_start, 
+                base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS\n", no = "THIS ARGUMENT\n"), 
+                base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE),
+                "\nCANNOT CONTAIN EMPTY STRING \"\".", 
+                collapse = NULL, 
+                recycle0 = FALSE
+            )
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in stop() to be able to add several messages between ==
+        }
+    }
+    # nocov end
+    ######## end management of "" in arguments of mode character
+
+    #### end argument secondary checking
+
+    #### second round of checking and data preparation
+
+    ######## code that protects set.seed() in the global environment
+    ######## end code that protects set.seed() in the global environment
+
+    ######## warning initiation
+    ini.warning.length <- base::options()$warning.length
+    base::options(warning.length = 8170)
+    warn <- NULL
+    warn.count <- 0
+    ######## end warning initiation
+
+    ######## graphic device checking
+    # optional section: remove the code if no graphics used in your functions
+    # BEWARE: unlike most of the safer functions, this function opens a graphic device (grDevices::png()) in the main code. Thus, instead of checking the number of devices on exit, the graphic devices opened during the execution are closed on exit (in case of error after the device opening)
+    # nocov start
+    # codecov inactivated because it is an internal control of code writing, impossible to cover with argument values.
+    dev_list <- grDevices::dev.list() 
+    base::on.exit(
+        expr = while(base::length(x = grDevices::dev.list()) > base::length(x = dev_list) & grDevices::dev.cur() != 1){
+            grDevices::dev.off() # close the devices opened by the function, in case of error after the device opening
+        }, 
+        add = TRUE, 
+        after = TRUE
+    )
+    # end close the devices opened by the function
+    if(base::length(x = grDevices::dev.list()) > 0){
+        par_ini <- base::suppressWarnings(expr = graphics::par(no.readonly = TRUE), classes = "warning") # to recover the present graphical parameters
+        base::on.exit(expr = base::suppressWarnings(expr = graphics::par(par_ini, no.readonly = TRUE), classes = "warning"), add = TRUE, after = TRUE)
+    }
+    # end restore the graphic parameters on exit
+    # nocov end
+    ######## end graphic device checking
+
+    ######## other checkings
+    ######## end other checkings
+
+    #### end second round of checking and data preparation
+
+    #### main code
+    # data import
+    if( ! base::file.exists(file)){
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "FILE INDICATED IN THE file ARGUMENT DOES NOT EXISTS: ", 
+            file, 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }else{
+        obs <- utils::read.table(file = file, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
+        if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0){
+            empty.obs <- FALSE
+        }else{
+            empty.obs <- TRUE
+        }
+    }
+    if( ! base::file.exists(chr)){
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "FILE INDICATED IN THE chr ARGUMENT DOES NOT EXISTS: ", 
+            chr, 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }else{
+        chr <- utils::read.table(file = chr, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
+    }
+    # end data import
+    # modifications of imported tables
+    is.whole <- FALSE
+    xmin_plot <- 0 # coordinates for plotting 
+    if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0){
+        if(base::any(base::grepl(x = obs$CHROM, pattern = "chr"))){
+            obs$CHROM <- base::sub(x = obs$CHROM, pattern = "chr", replacement = "")
+        }
+        if(base::any(base::grepl(x = obs$CHROM, pattern = "^X$"))){
+            obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^X$")] <- "23"
+        }
+        if(base::any(base::grepl(x = obs$CHROM, pattern = "^Y$"))){
+            obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^Y$")] <- "24"
+        }
+        if(base::any(base::grepl(x = obs$CHROM, pattern = "^MT$|^M$"))){
+            obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^MT$|^M$")] <- "25"
+        }
+        if(base::any( ! base::grepl(x = obs$CHROM, pattern = "\\d"))){
+            tempo_cat <- base::paste0(
+                error_text_start, 
+                "THE chr COLUMN OF THE .tsv FILE HAS LETTERS IN IT, OTHER THAN X, Y and MT:\n", 
+                base::paste0(obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^\\d")], collapse = "\n", recycle0 = FALSE), 
+                collapse = NULL, 
+                recycle0 = FALSE
+            )
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        }else{
+            obs$CHROM <- base::as.integer(x = obs$CHROM)
+        }
+        # add the chr info to obs
+        obs <- base::data.frame(obs, coord = base::vector(mode = "numeric", length = base::nrow(x = obs)), stringsAsFactors = TRUE)
+        for(i1 in chr$CHR_NB){
+            obs$coord[obs$CHROM == i1] <- obs$POS[obs$CHROM == i1] + chr$LENGTH_CUMUL_TO_ADD[i1]
+        }
+        # preparation of the x coordinates: three solutions: 1) whole object (see above), 2) single chromo "chr7" or "chr7:0-15", 3) several chromo chr7, chr8" or "chr7:0-15, chr8" or "chr7:0-15, chr8:0-20"
+        # The idea is to select rows of chr and potentially restrict some chr limits
+        if( ! base::is.null(x_lim)){
+            if(x_lim == "whole"){ #at that stage, x_lim is a single character
+                is.whole <- TRUE
+            }else{
+                tempo1 <- base::strsplit(x = x_lim, split = ",")[[1]]
+                tempo1 <- base::gsub(x = tempo1, pattern = " ", replacement = "")
+                chr_x_lim <- tempo1
+                coord_x_lim <- NULL
+                xmin_x_lim <- NULL
+                xmax_x_lim <- NULL
+                if( ! base::all(base::grepl(x = tempo1, pattern = "^chr.+"))){
+                    tempo_cat <- base::paste0(
+                        error_text_start, 
+                        "THE x_lim ARGUMENT MUST START WITH \"chr\" IF NOT \"whole\":\n", 
+                        base::paste0(x_lim, collapse = " ", recycle0 = FALSE), 
+                        collapse = NULL, 
+                        recycle0 = FALSE
+                    )
+                    base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                }
+                if(base::any(base::grepl(x = tempo1, pattern = ":"))){
+                    # means that there are coordinates
+                    if( ! base::all(base::grepl(x = tempo1, pattern = "-"))){ # normally no NA with is.null()
+                        tempo_cat <- base::paste0(
+                            error_text_start, 
+                            "THE x_lim ARGUMENT MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", 
+                            base::paste0(x_lim, collapse = " ", recycle0 = FALSE), 
+                            collapse = NULL, 
+                            recycle0 = FALSE
+                        )
+                        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                    }
+                    tempo2 <- base::strsplit(x = tempo1, split = ":")
+                    chr_x_lim <- base::sapply(X = tempo2, FUN = function(x){x[1]})
+                    chr_x_lim <- base::gsub(x = chr_x_lim, pattern = " ", replacement = "")
+                    coord_x_lim <- base::sapply(X = tempo2, FUN = function(x){x[2]})
+                    tempo3 <- base::strsplit(x = coord_x_lim, split = "-")
+                    xmin_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[1]})
+                    xmin_x_lim <- base::gsub(x = xmin_x_lim, pattern = " ", replacement = "")
+                    xmax_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[2]})
+                    xmax_x_lim <- base::gsub(x = xmax_x_lim, pattern = " ", replacement = "")
+                    if(base::any(base::grepl(x = xmin_x_lim, pattern = "\\D")) | base::any(base::grepl(x = xmax_x_lim, pattern = "\\D"))){ # normally no NA with is.null()
+                        tempo_cat <- base::paste0(
+                            error_text_start, 
+                            "THE x_lim ARGUMENT MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", 
+                            base::paste0(x_lim, collapse = " ", recycle0 = FALSE), 
+                            collapse = NULL, 
+                            recycle0 = FALSE
+                        )
+                        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                    }else{
+                        xmin_x_lim <- base::as.integer(x = xmin_x_lim)
+                        xmax_x_lim <- base::as.integer(x = xmax_x_lim)
+                        if(base::any(xmax_x_lim - xmin_x_lim < 0)){
+                            tempo_cat <- base::paste0(
+                                error_text_start, 
+                                "THE x_lim ARGUMENT MUST BE WRITTEN WITH ORDERED COORDINATES, LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\", IF COORDINATES ARE SPECIFIED: \n", 
+                                base::paste0(x_lim, collapse = " ", recycle0 = FALSE), 
+                                collapse = NULL, 
+                                recycle0 = FALSE
+                            )
+                            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                        }
+                    }
+                }
+                # modification of the chr object for restricted plotting
+                tempo.coord <- base::which(x = chr$CHR %in% chr_x_lim) # which rows of chr to take for plotting
+                if(base::length(x = tempo.coord) == 0){
+                    tempo_cat <- base::paste0(
+                        error_text_start, 
+                        "THE x_lim ARGUMENT CONTAINS CHROMO NAMES THAT ARE NOT FOUND IN THE chr ARGUMENT FILE: ", 
+                        base::paste0(chr_x_lim, collapse = " ", recycle0 = FALSE), 
+                        collapse = NULL, 
+                        recycle0 = FALSE
+                    )
+                    base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                }
+                if(base::any(chr$BP_LENGTH[tempo.coord] - xmax_x_lim < 0)){
+                    tempo_cat <- base::paste0(
+                        error_text_start, 
+                        "THE x_lim ARGUMENT HAS AT LEAST ONE COORDINATE THAT IS ABOVE THE MAX LENGTH OF THE CHROMO.\nCHROMO LENGTH: ", 
+                        base::paste0(chr$BP_LENGTH[tempo.coord], collapse = " ", recycle0 = FALSE), 
+                        "\nMAX COORDINATE: ", 
+                        base::paste0(xmax_x_lim, collapse = " ", recycle0 = FALSE), 
+                        collapse = NULL, 
+                        recycle0 = FALSE
+                    )
+                    base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                }
+                if(tempo.coord[1] > 1){
+                    xmin_plot <- chr$LENGTH_CUMUL[tempo.coord[1] - 1]
+                }
+                chr <- chr[tempo.coord[1]:tempo.coord[base::length(x = tempo.coord)], ]
+                if( ! base::is.null(coord_x_lim)){
+                    xmin_plot <- xmin_plot + xmin_x_lim[1] # the left boundary of the plot is corrected
+                    chr$LENGTH_CUMUL[base::nrow(x = chr)] <- chr$LENGTH_CUMUL[base::nrow(x = chr)] - chr$BP_LENGTH[base::nrow(x = chr)] + xmax_x_lim[base::length(x = xmax_x_lim)] # the right boundary of the plot is corrected
+                    chr$CHR_NAME_POS <- (base::c(xmin_plot, chr$LENGTH_CUMUL[-base::nrow(x = chr)]) + chr$LENGTH_CUMUL) / 2 # the positions of names in the x-axis of the plot are corrected
+                }
+                # restriction of obs
+                obs <- obs[obs$coord >= xmin_plot & obs$coord <= chr$LENGTH_CUMUL[base::nrow(x = chr)], ]
+            }
+        }else{
+            warn.count <- warn.count + 1
+            tempo.warn <- base::paste0("(", warn.count, ") x_lim IS NULL: NO PLOT DRAWN", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo.warn, no = base::paste0(warn, "\n\n", tempo.warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+        }
+    }
+    if( ! top.y.column %in% base::names(x = obs)){
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "THE top.y.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\ntop.y.column ARGUMENT:\n", 
+            base::paste0(top.y.column, collapse = " ", recycle0 = FALSE), 
+            "\n\nCOLUMN NAMES:\n", 
+            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE), 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    if(base::is.null(x = bottom.y.column)){
+        # bottom.y.column NULL: no check needed here
+    }else if( ! bottom.y.column %in% base::names(x = obs)){
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "THE bottom.y.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\nbottom.y.column ARGUMENT:\n", 
+            base::paste0(bottom.y.column, collapse = " ", recycle0 = FALSE), 
+            "\n\nCOLUMN NAMES:\n", 
+            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE), 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    if(base::is.null(x = color.column)){
+        # color.column NULL: no check needed here
+    }else if( ! color.column %in% base::names(x = obs)){
+        tempo_cat <- base::paste0(
+            error_text_start, 
+            "THE color.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\ncolor.column ARGUMENT:\n", 
+            base::paste0(color.column, collapse = " ", recycle0 = FALSE), 
+            "\n\nCOLUMN NAMES:\n", 
+            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE), 
+            collapse = NULL, 
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+    }
+    # end modifications of imported tables
+
+    # plotting
+    # fun_open(width = 12, height = 4, pdf.name = base::paste0("plot_read_length_", kind)) # must be systematically opened for main.nf
+    png.size <- 1800 # px
+    grDevices::png(filename = "miami.png", width = png.size * 2, height = png.size, units = "px", res = 300)
+    if(empty.obs == TRUE){
+        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE", lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+    }else if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0 & ! base::is.null(x_lim)){
+        marging <- (chr$LENGTH_CUMUL[base::nrow(x = chr)] - xmin_plot) * 0.005 # chr$LENGTH_CUMUL and xmin_plot have been corrected depending on x_lim boundaries
+        y.min.pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::min(x = obs[ , top.y.column], na.rm = TRUE), no = base::min(x = y_lim1))
+        y.max.pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::max(x = obs[ , top.y.column], na.rm = TRUE), no = base::max(x = y_lim1))
+        tempo.gg.name <- "gg.indiv.plot."
+        tempo.gg.count <- 0
+        base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = obs, mapping = ggplot2::aes_string(x = "coord", y = top.y.column)))
+        if(vgrid == TRUE){
+            base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_vline(
+                xintercept = base::c(xmin_plot, chr$LENGTH_CUMUL), 
+                linewidth = 0.25, 
+                color = "grey80"
+            ))
+        }
+        if( ! base::is.null(y.threshold1)){
+            base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+                yintercept = y.threshold1, 
+                linetype = "22", 
+                linewidth = 0.25, 
+                color = "red"
+            ))
+        }
+        if(base::is.null(x = color.column)){
+            if(base::is.null(x = dot.border.color)){
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                    mapping = ggplot2::aes(color = base::as.factor(x = CHROM)), 
+                    alpha = 1, 
+                    pch = 16, 
+                    size = 1
+                ))
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+            }else{
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                    mapping = ggplot2::aes(fill = base::as.factor(x = CHROM)), 
+                    alpha = 1, 
+                    color = dot.border.color, 
+                    pch = 21, 
+                    size = 1
+                ))
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+            }
+        }else{
+            if(base::is.null(x = dot.border.color)){
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                    mapping = ggplot2::aes_string(color = color.column), 
+                    alpha = 1, 
+                    pch = 16, 
+                    size = 1
+                ))
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_gradient2())
+            }else{
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                    mapping = ggplot2::aes_string(fill = color.column), 
+                    alpha = 1, 
+                    color = dot.border.color, 
+                    pch = 21, 
+                    size = 1
+                ))
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2())
+            }
+        }
+        base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(
+            label = base::paste0(
+                "x_lim: ", 
+                base::ifelse(test = is.whole, yes = "whole genome", no = x_lim), 
+                base::ifelse(test = ! base::is.null(y.threshold1), yes = base::paste0(", top threshold: ", y.threshold1), no = ""), 
+                base::ifelse(test = ! (base::is.null(y.threshold2) & base::is.null(bottom.y.column)), yes = base::paste0(", bottom threshold: ", y.threshold2), no = ""), 
+                base::ifelse(test = y.log1 == TRUE, yes = ", top y-axis: log10", no = ""), 
+                base::ifelse(test = y.log2 == TRUE, yes = ", bottom y-axis: log10", no = "")
+            )
+        ))
+        base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_x_continuous(
+            name = "CHR", 
+            expand = base::c(0, 0), # remove space after after axis limits
+            oob = scales::rescale_none, 
+            labels = chr$CHR_NAME, 
+            breaks = chr$CHR_NAME_POS, 
+            limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL) + marging)
+        ))
+        if(y.log1 == TRUE){
+            if(base::any(obs[ , top.y.column] <= 0)){
+                tempo_cat <- base::paste0(
+                    error_text_start, 
+                    "THE y.log1 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ", 
+                    top.y.column, 
+                    " FIELD OF THE TSV OR VCF", 
+                    collapse = NULL, 
+                    recycle0 = FALSE
+                )
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            }else{
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                    expand = base::c(0, 0), # remove space after after axis limits
+                    limits = if(reverse1 == TRUE){base::c(y.max.pos, y.min.pos)}else{base::c(y.min.pos, y.max.pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
+                    oob = scales::rescale_none, 
+                    trans = "log10", 
+                    breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}), 
+                    labels = scales::trans_format(trans = "log10", format = scales::math_format(10^.x))
+                ))
+                # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotation_logticks(outside = TRUE))
+            }
+        }else{
+            base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                expand = base::c(0, 0), # remove space after after axis limits
+                limits = if(reverse1 == TRUE){base::c(y.max.pos, y.min.pos)}else{base::c(y.min.pos, y.max.pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
+                oob = scales::rescale_none, 
+                trans = "identity"
+            ))
+        }
+        base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw())
+        base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
+            plot.title = ggplot2::element_text(size = 8), 
+            legend.position = if(base::is.null(x = color.column)){"none"}else{"right"}, 
+            panel.border = ggplot2::element_blank(), 
+            panel.grid = ggplot2::element_blank(), 
+            axis.ticks.x = ggplot2::element_blank(), 
+            axis.ticks.y.left = ggplot2::element_line(linewidth = 0.25), 
+            # axis.line.x.bottom = ggplot2::element_line(linewidth = 0.25), # ugly, thus i added geom_hline below
+            axis.line.y.left = ggplot2::element_line(linewidth = 0.25)
+        ))
+        base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+            yintercept = base::ifelse(
+                test = base::is.null(x = y_lim1), 
+                yes = base::ifelse(test = reverse1, yes = base::max(x = obs[ , top.y.column], na.rm = TRUE), no = base::min(x = obs[ , top.y.column], na.rm = TRUE)), 
+                no = base::ifelse(test = reverse1, yes = base::max(x = y_lim1), no = base::min(x = y_lim1))
+            ), 
+            linewidth = 0.25
+        ))
+        # add tick lines if vgrid is FALSE
+        if(vgrid == FALSE){
+            gline <- grid::linesGrob(y = base::c(-0.02, 0), gp = grid::gpar(col = "black", lwd = 0.5))
+            for(i2 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
+                base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline, xmin = i2, xmax = i2, ymin = -Inf, ymax = Inf))
+            }
+        }
+        fin.plot1 <- base::suppressMessages(expr = base::suppressWarnings(expr = base::eval(expr = base::parse(text = base::paste0(tempo.gg.name, 1:tempo.gg.count, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning"), classes = "message")
+        # tempo.output <- ggplot2::ggplot_build(fin.plot1)
+        if(base::is.null(x = bottom.y.column)){
+            base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(fin.plot1, ncol = 1, nrow = 1), classes = "warning"), classes = "message")
+        }else{
+            y.min.pos2 <- base::ifelse(test = base::is.null(x = y_lim2), yes = base::min(x = obs[ , bottom.y.column], na.rm = TRUE), no = base::min(x = y_lim2))
+            y.max.pos2 <- base::ifelse(test = base::is.null(x = y_lim2), yes = base::max(x = obs[ , bottom.y.column], na.rm = TRUE), no = base::max(x = y_lim2))
+            tempo.gg.name2 <- "gg.indiv.plot."
+            tempo.gg.count2 <- 0
+            base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = obs, mapping = ggplot2::aes_string(x = "coord", y = bottom.y.column)))
+            if(vgrid == TRUE){
+                base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_vline(
+                    xintercept = base::c(xmin_plot, chr$LENGTH_CUMUL), 
+                    linewidth = 0.25, 
+                    color = "grey80"
+                ))
+            }
+            if( ! base::is.null(y.threshold2)){
+                base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+                    yintercept = y.threshold2, 
+                    linetype = "22", 
+                    linewidth = 0.25, 
+                    color = "red"
+                ))
+            }
+            if(base::is.null(x = color.column)){
+                if(base::is.null(x = dot.border.color)){
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                        mapping = ggplot2::aes(color = base::as.factor(x = CHROM)), 
+                        alpha = 1, 
+                        pch = 16, 
+                        size = 1
+                    ))
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+                }else{
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                        mapping = ggplot2::aes(fill = base::as.factor(x = CHROM)), 
+                        alpha = 1, 
+                        color = dot.border.color, 
+                        pch = 21, 
+                        size = 1
+                    ))
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+                }
+            }else{
+                if(base::is.null(x = dot.border.color)){
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                        mapping = ggplot2::aes_string(color = color.column), 
+                        alpha = 1, 
+                        pch = 16, 
+                        size = 1
+                    ))
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_gradient2())
+                }else{
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
+                        mapping = ggplot2::aes_string(fill = color.column), 
+                        alpha = 1, 
+                        color = dot.border.color, 
+                        pch = 21, 
+                        size = 1
+                    ))
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2())
+                }
+            }
+            base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_x_continuous(
+                expand = base::c(0, 0), # remove space after after axis limits
+                oob = scales::rescale_none, 
+                labels = chr$CHR_NAME, 
+                breaks = chr$CHR_NAME_POS, 
+                limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL) + marging)
+            ))
+            if(y.log2 == TRUE){
+                if(base::any(obs[ , bottom.y.column] <= 0)){
+                    tempo_cat <- base::paste0(
+                        error_text_start, 
+                        "THE y.log2 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ", 
+                        bottom.y.column, 
+                        " FIELD OF THE TSV OR VCF", 
+                        collapse = NULL, 
+                        recycle0 = FALSE
+                    )
+                    base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                }else{
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                        expand = base::c(0, 0), # remove space after after axis limits
+                        limits = if(reverse2 == TRUE){base::c(y.min.pos2, y.max.pos2)}else{base::c(y.max.pos2, y.min.pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
+                        oob = scales::rescale_none, 
+                        trans = "log10", 
+                        breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}), 
+                        labels = scales::trans_format(trans = "log10", format = scales::math_format(10^.x))
+                    ))
+                    # assign(paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1), ggplot2::annotation_logticks(outside = TRUE)) # 
+                }
+            }else{
+                base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                    expand = base::c(0, 0), # remove space after after axis limits
+                    limits = if(reverse2 == TRUE){base::c(y.min.pos2, y.max.pos2)}else{base::c(y.max.pos2, y.min.pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
+                    oob = scales::rescale_none, 
+                    trans = "identity" # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
+                ))
+            }
+            base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw())
+            base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
+                legend.position = if(base::is.null(x = color.column)){"none"}else{"right"}, 
+                panel.border = ggplot2::element_blank(), 
+                panel.grid = ggplot2::element_blank(), 
+                axis.ticks.y.left = ggplot2::element_line(linewidth = 0.25), 
+                # axis.line.x.top = ggplot2::element_line(linewidth = 0.25), # is not displayed. Thus, I add a geom_hline below
+                axis.line.y.left = ggplot2::element_line(linewidth = 0.25), 
+                axis.title.x = ggplot2::element_blank(), 
+                axis.text.x = ggplot2::element_blank(), 
+                axis.ticks.x = ggplot2::element_blank()
+            ))
+            # add x-axis line
+            base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+                yintercept = base::ifelse(
+                    test = base::is.null(x = y_lim2), 
+                    yes = base::ifelse(test = reverse2, yes = base::max(x = obs[ , bottom.y.column], na.rm = TRUE), no = base::min(x = obs[ , bottom.y.column], na.rm = TRUE)), 
+                    no = base::ifelse(test = reverse2, yes = base::max(x = y_lim2), no = base::min(x = y_lim2))
+                ), 
+                linewidth = 0.25
+            ))
+            # add tick lines if vgrid is FALSE
+            if(vgrid == FALSE){
+                gline2 <- grid::linesGrob(y = base::c(1, 1.02), gp = grid::gpar(col = "black", lwd = 0.5))
+                for(i3 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
+                    base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline2, xmin = i3, xmax = i3, ymin = -Inf, ymax = Inf))
+                }
+            }
+            fin.plot2 <- base::suppressMessages(expr = base::suppressWarnings(expr = base::eval(expr = base::parse(text = base::paste0(tempo.gg.name2, 1:tempo.gg.count2, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning"), classes = "message")
+            gl <- base::lapply(X = base::list(fin.plot1, fin.plot2), FUN = ggplot2::ggplotGrob)
+            wd <- base::do.call(what = grid::unit.pmax, args = base::lapply(X = gl, FUN = "[[", "widths"))
+            gl <- base::lapply(X = gl, FUN = function(x){x[["widths"]] <- wd ; x})
+            if(vgrid == FALSE){
+                gl[[1]]$layout$clip[gl[[1]]$layout$name == "panel"] <- "off"
+                gl[[2]]$layout$clip[gl[[2]]$layout$name == "panel"] <- "off"
+            }
+            base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(gl[[1]], gl[[2]], ncol = 1, nrow = 2), classes = "warning"), classes = "message")
+        }
+    }else{
+        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL", lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+    } 
+    # else already dealt above
+    # close the graphic device opened above
+    if(grDevices::dev.cur() != 1){
+        grDevices::dev.off()
+    }
+    # end main code
+    if(warn.print == TRUE & ! base::is.null(x = warn)){
+        base::on.exit(expr = base::warning(message = base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE), add = TRUE, after = TRUE)
+    }
+    base::on.exit(expr = base::options(warning.length = ini.warning.length), add = TRUE, after = TRUE)
+    #end main code
+    #### end main code
+
+    #### warning output
+    #### end warning output
+
+    #### output
+    base::return(invisible(NULL))
+    #### end output
+    #### end of function
+}

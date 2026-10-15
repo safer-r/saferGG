@@ -56,7 +56,7 @@ gg_get_legend <- function(
         arg_user_setting_eval <- NULL
     }
     # end evaluation of values if they are expression, call, etc.
-    arg_names <- base::names(x = base::formals(fun = base::sys.function(which = base::sys.parent(n = 2)), envir = base::parent.frame(n = 1))) # names of all the arguments
+    arg_names <- base::names(x = base::formals(fun = base::sys.function(which = base::sys.parent(n = 0)), envir = base::parent.frame(n = 1))) # names of all the arguments
     #### end arguments settings
 
     #### error_text initiation
@@ -312,8 +312,7 @@ gg_get_legend <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = , envir = )
-        .pack_and_function_check(
+        saferDev:::.pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "saferDev::arg_check", 
@@ -331,7 +330,6 @@ gg_get_legend <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
-    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = , envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -339,7 +337,7 @@ gg_get_legend <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        .base_op_check(
+        saferDev:::.base_op_check(
             error_text = embed_error_text
         )
     }

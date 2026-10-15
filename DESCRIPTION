@@ -16,9 +16,14 @@ URL: <https://github.com/safer-r/saferDev>, <https://safer-r.github.io/saferDev/
 License: GPL-3
 Config/roxygen2/version: 8.0.0
 Imports: 
+    Cairo,
     ggplot2,
+    ggrepel,
     grDevices,
+    grid,
     gridExtra,
+    lemon,
+    reshape2,
     saferDev,
     saferGraph,
     saferTool,
