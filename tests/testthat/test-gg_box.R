@@ -3,6 +3,7 @@
 testthat::test_that("gg_box draws boxplots and returns the expected structure", {
 
     ## data argument values
+    base::set.seed(seed = 1, kind = NULL, normal.kind = NULL, sample.kind = NULL) # to make the test data deterministic (the tick-number checks below are data-dependent)
     obs1 <- base::data.frame(y = stats::rnorm(n = 30, mean = 10, sd = 2), grp = base::rep(x = c("A", "B", "C"), times = 10), stringsAsFactors = TRUE)
     ## end data argument values
 
@@ -660,6 +661,117 @@ testthat::expect_type(output_tidycat, "list")
     testthat::expect_type(output, "list")
     testthat::expect_true(object = base::grepl(x = output$warn, pattern = "IN COLUMN categ.color OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED", fixed = TRUE))
     ## end errors
+    # duplicated non-reserved column names of data1: error
+    obs_dup <- base::data.frame(y = 1:10, g = base::rep(c("A", "B"), 5), h = 1:10, stringsAsFactors = TRUE)
+    base::names(obs_dup)[3] <- "g"
+    testthat::expect_error(object = saferGG::gg_box(data1 = obs_dup, y = "y", categ = "g", plot = FALSE, safer_check = FALSE), regexp = "DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED", fixed = TRUE)
+    # valid y.lim with y.log: y.lim log-transformed without error
+    output_ylimlog <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", y.lim = base::c(1, 20), y.log = "log10", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_ylimlog, "list")
+    # y.include.zero = TRUE: y.lim includes 0
+    output_yzero <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", y.include.zero = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_yzero, "list")
+    # dot.tidy = TRUE with dot.categ equal to categ[1]: tidy_group_coord from dot.coord$group
+    output_dc <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", dot.tidy = TRUE, dot.categ = "grp", dot.categ.class.order = base::c("A", "B", "C"), plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_dc, "list")
+    # dot.tidy = TRUE with dot.categ = categ but dot.color NULL: tidy_group_coord = dot.coord$group branch
+    output_dc2 <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", dot.color = NULL, dot.categ = "grp", dot.tidy = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_dc2, "list")
+    # two categ columns: 2-categ group creation path
+    obs_2c <- base::data.frame(y = 1:12, g1 = base::rep(c("A", "B"), 6), g2 = base::rep(c("X", "Y", "Z"), 4), stringsAsFactors = TRUE)
+    output_2c <- saferGG::gg_box(data1 = obs_2c, y = "y", categ = base::c("g1", "g2"), plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_2c, "list")
+    # two categ + notch: notch polygon path
+    output_2cn <- saferGG::gg_box(data1 = obs_2c, y = "y", categ = base::c("g1", "g2"), box.notch = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_2cn, "list")
+    # two categ + notch + facet on a distinct column: facet column appended to tempo.polygon
+    obs_2cf <- base::data.frame(y = 1:12, g1 = base::rep(c("A", "B"), 6), g2 = base::rep(c("X", "Y", "Z"), 4), f = base::rep(c("F1", "F2"), 6), stringsAsFactors = TRUE)
+    output_2cf <- saferGG::gg_box(data1 = obs_2cf, y = "y", categ = base::c("g1", "g2"), box.notch = TRUE, add = "+ggplot2::facet_wrap(~f)", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_2cf, "list")
+    # stat.mean = TRUE: mean display
+    output_mean <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", stat.mean = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_mean, "list")
+    # Windows transparency warn (windows device + plot + legend.width + alpha < 1)
+    if(Sys.info()[["sysname"]] == "Windows"){
+        grDevices::windows(width = 7, height = 7)
+        output_win <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", dot.alpha = 0.5, legend.width = 0.2, plot = TRUE, return = TRUE, safer_check = FALSE)
+        testthat::expect_true(object = base::grepl(x = output_win$warn, pattern = "TRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND", fixed = TRUE))
+        grDevices::dev.off()
+    }
+    # plot = TRUE with legend.width = NULL: grid.arrange single plot branch
+    if(Sys.info()[["sysname"]] == "Windows"){
+        grDevices::windows(width = 7, height = 7)
+        output_print <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", legend.width = NULL, plot = TRUE, return = TRUE, return.gtable = TRUE, safer_check = FALSE)
+        testthat::expect_type(object = output_print, "list")
+        testthat::expect_s3_class(object = output_print$gtable, class = "gtable")
+        grDevices::dev.off()
+    }
+    # duplicated NON-reserved column names of data1: the second duplicated-names check (after name_change)
+    obs_dup_nr <- obs1
+    base::names(obs_dup_nr)[1] <- "yv"
+    obs_dup_nr <- base::cbind(obs_dup_nr, obs1$y)
+    obs_dup_nr <- base::cbind(obs_dup_nr, obs1$y)
+    base::names(obs_dup_nr)[3] <- "zz"
+    base::names(obs_dup_nr)[4] <- "zz"
+    testthat::expect_error(object = saferGG::gg_box(data1 = obs_dup_nr, y = "yv", categ = "grp", plot = FALSE, safer_check = FALSE), regexp = "DUPLICATED COLUMN NAMES OF data1 ARGUMENT NOT ALLOWED", fixed = TRUE)
+    # all-Inf y column with a finite y.lim: 0 remaining rows -> data.frame(dot.color) errors first ("differing number of rows", before the all-Inf y.lim guard)
+    obs_allinf <- base::data.frame(y = base::c(base::rep(x = Inf, times = 6), base::rep(x = -Inf, times = 6)), grp = base::rep(c("A", "B"), 6), stringsAsFactors = TRUE)
+    testthat::expect_error(object = saferGG::gg_box(data1 = obs_allinf, y = "y", categ = "grp", y.lim = base::c(0, 10), plot = FALSE, safer_check = FALSE), regexp = "differing number of rows: 0, 1", fixed = TRUE)
+    # single-class categ, 1-categ data: length(categ.color) == 1L branches of the per-box color/fill scales
+    obs_sc <- base::data.frame(y = 1:6, grp = base::rep(x = "A", times = 6), stringsAsFactors = TRUE)
+    output_sc <- saferGG::gg_box(data1 = obs_sc, y = "y", categ = "grp", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_sc, "list")
+    # single-class categ with box.fill = TRUE: length(categ.color) == 1L branch of the final fill scale
+    output_sc_fill <- saferGG::gg_box(data1 = obs_sc, y = "y", categ = "grp", box.fill = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_sc_fill, "list")
+    # 2-categ data with a single class in categ[2]: length(categ.color) == 1L branches of the 2-categ per-box scales
+    obs_2c1 <- base::data.frame(y = 1:6, g1 = base::rep(c("A", "B"), 3), g2 = base::rep("X", 6), stringsAsFactors = TRUE)
+    output_2c1 <- saferGG::gg_box(data1 = obs_2c1, y = "y", categ = base::c("g1", "g2"), plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_2c1, "list")
+    # box.whisker.kind = "no": coef 0 branch of the recovery boxplots (1-categ and 2-categ)
+    output_wno <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", box.whisker.kind = "no", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_wno, "list")
+    output_wno2 <- saferGG::gg_box(data1 = obs_2c, y = "y", categ = base::c("g1", "g2"), box.whisker.kind = "no", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_wno2, "list")
+    # box.whisker.kind = "max": coef Inf branch of the recovery boxplots (1-categ and 2-categ)
+    output_wmax <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", box.whisker.kind = "max", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_wmax, "list")
+    output_wmax2 <- saferGG::gg_box(data1 = obs_2c, y = "y", categ = base::c("g1", "g2"), box.whisker.kind = "max", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_wmax2, "list")
+    # 2-categ data with dot.tidy = TRUE and default dot.categ (NULL): tidy_group paste branch
+    output_tidy2c <- saferGG::gg_box(data1 = obs_2c, y = "y", categ = base::c("g1", "g2"), dot.tidy = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_tidy2c, "list")
+    # single row of data with dots: runif branch of the single-dot jitter
+    obs_1r <- base::data.frame(y = 5, grp = "A", stringsAsFactors = TRUE)
+    output_1r <- saferGG::gg_box(data1 = obs_1r, y = "y", categ = "grp", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_1r, "list")
+    # box.notch = TRUE with box.fill = TRUE: X_NOTCH_INF/X_NOTCH_SUP polygon vertices (fill path)
+    output_notchfill <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", box.notch = TRUE, box.fill = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_notchfill, "list")
+    # dot.tidy = TRUE with dot.categ outside categ, dot.color vector, non-NULL dot.border.color: rep(dot.border.color, nrow) path and ini.dot.categ legend title path
+    obs_dc <- obs1
+    obs_dc$dc <- base::rep(x = c("P", "Q"), times = 15)
+    output_dc3 <- saferGG::gg_box(data1 = obs_dc, y = "y", categ = "grp", dot.tidy = TRUE, dot.color = base::c("red", "green"), dot.categ = "dc", dot.border.color = "black", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_dc3, "list")
+    # 2-categ data with stat.pos = "above": above branch of the 2-categ aggregate
+    output_2cab <- saferGG::gg_box(data1 = obs_2c, y = "y", categ = base::c("g1", "g2"), stat.pos = "above", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_2cab, "list")
+    # grid = TRUE with default vertical = TRUE: panel.grid.major.y / minor.y element_line and axis.text branches
+    output_gv <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", grid = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_gv, "list")
+    # article = FALSE with default vertical = TRUE: axis.text element_text and NULL branches
+    output_afv <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", article = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_afv, "list")
+    # y.lab provided: used as y-axis label
+    output_ylab <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", y.lab = "MY Y", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_ylab, "list")
+    # return.ggplot = TRUE: ggplot object in output
+    output_ggp <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", return.ggplot = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_ggp, "list")
+    # return.gtable = FALSE: NULL gtable component
+    output_nogtable <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", return.gtable = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_nogtable, "list")
+    testthat::expect_null(object = output_nogtable$gtable)
     # cleanup of all files and devices created during the tests
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)

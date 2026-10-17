@@ -2,7 +2,7 @@ Package: saferGG
 Type: Package
 Title: ggplot2 graphics
 Version: 1.0.0
-Date: 2026-06-02
+Date: 2026-10-15
 Authors@R: c(
     person(given = "Haiding", family = "Wang", role = "ctb"),
     person(given = "Yushi", family = "Han", role = "ctb"),

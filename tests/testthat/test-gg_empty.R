@@ -26,6 +26,10 @@ testthat::test_that("gg_empty draws an empty graph", {
     res_zero <- saferGG::gg_empty(safer_check = FALSE)
     testthat::expect_s3_class(object = res_zero, class = "ggplot")
     ## end errors
+    # bare zero-argument call: arg_user_setting_eval NULL branch
+    output_zero <- saferGG::gg_empty()
+    testthat::expect_s3_class(object = output_zero, class = "ggplot")
+
     # cleanup of all files and devices created during the tests
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)

@@ -581,10 +581,11 @@ gg_miami <- function(
     ######## end code that protects set.seed() in the global environment
 
     ######## warning initiation
-    ini.warning.length <- base::options()$warning.length
+    ini_warning_length <- base::options()$warning.length # required to have the max characters of output messages
     base::options(warning.length = 8170)
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE) # registered here so that warning.length is restored even if an error occurs before the warning-output on.exit() registrations below
     warn <- NULL
-    warn.count <- 0
+    warn_count <- 0
     ######## end warning initiation
 
     ######## graphic device checking
@@ -783,50 +784,52 @@ gg_miami <- function(
                 obs <- obs[obs$coord >= xmin_plot & obs$coord <= chr$LENGTH_CUMUL[base::nrow(x = chr)], ]
             }
         }else{
-            warn.count <- warn.count + 1
-            tempo.warn <- base::paste0("(", warn.count, ") x_lim IS NULL: NO PLOT DRAWN", collapse = NULL, recycle0 = FALSE)
-            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo.warn, no = base::paste0(warn, "\n\n", tempo.warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+            # nocov start (unreachable: x_lim = NULL is rejected by arg_check, so this warn branch never runs)
+            warn_count <- warn_count + 1
+            tempo_warn <- base::paste0("(", warn_count,") x_lim IS NULL: NO PLOT DRAWN", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+            # nocov end
         }
     }
     if( ! top.y.column %in% base::names(x = obs)){
         tempo_cat <- base::paste0(
             error_text_start, 
-            "THE top.y.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\ntop.y.column ARGUMENT:\n", 
-            base::paste0(top.y.column, collapse = " ", recycle0 = FALSE), 
-            "\n\nCOLUMN NAMES:\n", 
-            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE), 
-            collapse = NULL, 
+            "THE top.y.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\ntop.y.column ARGUMENT:\n",
+            base::paste0(top.y.column, collapse = " ", recycle0 = FALSE),
+            "\n\nCOLUMN NAMES:\n",
+            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE),
+            collapse = NULL,
             recycle0 = FALSE
         )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
     if(base::is.null(x = bottom.y.column)){
         # bottom.y.column NULL: no check needed here
     }else if( ! bottom.y.column %in% base::names(x = obs)){
         tempo_cat <- base::paste0(
             error_text_start, 
-            "THE bottom.y.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\nbottom.y.column ARGUMENT:\n", 
-            base::paste0(bottom.y.column, collapse = " ", recycle0 = FALSE), 
-            "\n\nCOLUMN NAMES:\n", 
-            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE), 
-            collapse = NULL, 
+            "THE bottom.y.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\nbottom.y.column ARGUMENT:\n",
+            base::paste0(bottom.y.column, collapse = " ", recycle0 = FALSE),
+            "\n\nCOLUMN NAMES:\n",
+            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE),
+            collapse = NULL,
             recycle0 = FALSE
         )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
     if(base::is.null(x = color.column)){
         # color.column NULL: no check needed here
     }else if( ! color.column %in% base::names(x = obs)){
         tempo_cat <- base::paste0(
             error_text_start, 
-            "THE color.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\ncolor.column ARGUMENT:\n", 
-            base::paste0(color.column, collapse = " ", recycle0 = FALSE), 
-            "\n\nCOLUMN NAMES:\n", 
-            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE), 
-            collapse = NULL, 
+            "THE color.column ARGUMENT MUST BE A COLUMN NAME OF THE TSV FILE.\n\ncolor.column ARGUMENT:\n",
+            base::paste0(color.column, collapse = " ", recycle0 = FALSE),
+            "\n\nCOLUMN NAMES:\n",
+            base::paste0(base::names(x = obs), collapse = "\n", recycle0 = FALSE),
+            collapse = NULL,
             recycle0 = FALSE
         )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
     # end modifications of imported tables
 
@@ -919,13 +922,13 @@ gg_miami <- function(
             if(base::any(obs[ , top.y.column] <= 0)){
                 tempo_cat <- base::paste0(
                     error_text_start, 
-                    "THE y.log1 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ", 
-                    top.y.column, 
-                    " FIELD OF THE TSV OR VCF", 
-                    collapse = NULL, 
+                    "THE y.log1 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ",
+                    top.y.column,
+                    " FIELD OF THE TSV OR VCF",
+                    collapse = NULL,
                     recycle0 = FALSE
                 )
-                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             }else{
                 base::assign(x = base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
                     expand = base::c(0, 0), # remove space after after axis limits
@@ -1046,13 +1049,13 @@ gg_miami <- function(
                 if(base::any(obs[ , bottom.y.column] <= 0)){
                     tempo_cat <- base::paste0(
                         error_text_start, 
-                        "THE y.log2 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ", 
-                        bottom.y.column, 
-                        " FIELD OF THE TSV OR VCF", 
-                        collapse = NULL, 
+                        "THE y.log2 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ",
+                        bottom.y.column,
+                        " FIELD OF THE TSV OR VCF",
+                        collapse = NULL,
                         recycle0 = FALSE
                     )
-                    base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+                    base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
                 }else{
                     base::assign(x = base::paste0(tempo.gg.name2, tempo.gg.count2 <- tempo.gg.count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
                         expand = base::c(0, 0), # remove space after after axis limits
@@ -1111,7 +1114,9 @@ gg_miami <- function(
             base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(gl[[1]], gl[[2]], ncol = 1, nrow = 2), classes = "warning"), classes = "message")
         }
     }else{
+            # nocov start (unreachable: idem (x_lim = NULL rejected by arg_check))
         saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL", lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+            # nocov end
     } 
     # else already dealt above
     # close the graphic device opened above
@@ -1120,9 +1125,11 @@ gg_miami <- function(
     }
     # end main code
     if(warn.print == TRUE & ! base::is.null(x = warn)){
-        base::on.exit(expr = base::warning(message = base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE), add = TRUE, after = TRUE)
+            # nocov start (unreachable: warn stays NULL because the only warn assignment (x_lim NULL branch) is dead)
+        base::on.exit(expr = base::warning(message = base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL), add = TRUE, after = TRUE)
+            # nocov end
     }
-    base::on.exit(expr = base::options(warning.length = ini.warning.length), add = TRUE, after = TRUE)
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
     #end main code
     #### end main code
 

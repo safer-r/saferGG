@@ -43,6 +43,10 @@ testthat::test_that("gg_point_rast builds a raster layer", {
     res_zero <- saferGG::gg_point_rast(safer_check = FALSE)
     testthat::expect_s3_class(object = res_zero, class = "LayerInstance")
     ## end errors
+    # bare zero-argument call: arg_user_setting_eval NULL branch
+    output_zero <- saferGG::gg_point_rast()
+    testthat::expect_s3_class(object = output_zero, class = "LayerInstance")
+
     # cleanup of all files and devices created during the tests
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)

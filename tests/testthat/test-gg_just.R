@@ -33,6 +33,10 @@ testthat::test_that("gg_just returns the expected justification values", {
     # bad angle
     testthat::expect_error(object = saferGG::gg_just(angle = "BAD", pos = "bottom", kind = "axis", safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
     ## end errors
+    # bare zero-argument call: arg_user_setting_eval NULL branch
+    output_zero <- saferGG::gg_just()
+    testthat::expect_type(object = output_zero, type = "list")
+
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
 

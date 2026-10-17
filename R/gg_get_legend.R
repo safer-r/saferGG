@@ -454,7 +454,7 @@ gg_get_legend <- function(
     if(win.nb > 1){ # to go back to the previous active device, if == 1 means no opened device
         grDevices::dev.set(win.nb)
     }
-    leg <- base::which(base::sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    leg <- base::which(base::sapply(tmp$grobs, function(x) {x$name} ) == "guide-box")
     if(base::length(leg) == 0L){
         output <- NULL
     }else{

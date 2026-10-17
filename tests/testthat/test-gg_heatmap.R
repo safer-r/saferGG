@@ -56,6 +56,9 @@ testthat::test_that("gg_heatmap draws heatmaps and returns the expected structur
     melted_na[1, 3] <- NA
     output <- saferGG::gg_heatmap(data1 = melted_na, return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(output, "list")
+    # data2 mask with invert2 = TRUE: alpha scale with c(alpha2, 0) values
+    output <- saferGG::gg_heatmap(data1 = melted1, data2 = melted2, invert2 = TRUE, return = TRUE, plot = FALSE, safer_check = FALSE)
+    testthat::expect_type(output, "list")
     # data1 (melted data frame) with NA only in column 3: caught by arg_check (NA in data) before the Inf-limit branch
     melted_na_all <- melted1
     melted_na_all[, 3] <- NA
@@ -108,6 +111,10 @@ testthat::test_that("gg_heatmap draws heatmaps and returns the expected structur
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "NO DEFAULT VALUE AND REQUIRE ONE", fixed = TRUE))
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "data1", fixed = TRUE))
     ## end errors
+    # warn.print = TRUE with a warn (limit1 NULL): on.exit warning
+    output_wp <- saferGG::gg_heatmap(data1 = mat1, limit1 = NULL, warn.print = TRUE, return = TRUE, plot = FALSE, safer_check = FALSE)
+    testthat::expect_type(object = output_wp, "list")
+    testthat::expect_true(object = base::grepl(x = output_wp$warn, pattern = "THE limit1 ARGUMENT IS NULL", fixed = TRUE))
     # cleanup of all files and devices created during the tests
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)

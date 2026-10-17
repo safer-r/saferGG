@@ -3,6 +3,7 @@
 testthat::test_that("gg_scatter draws scatter plots and returns the expected structure", {
 
     ## data argument values
+    base::set.seed(seed = 1, kind = NULL, normal.kind = NULL, sample.kind = NULL) # to make the test data deterministic
     obs1 <- base::data.frame(x = 1:10, y = (1:10)^2, grp = base::factor(x = base::rep(x = c("A", "B"), times = 5)), stringsAsFactors = TRUE)
     obs2 <- base::data.frame(x = 1:5, y = base::c(2, 4, 6, 8, 10), stringsAsFactors = TRUE)
     ## end data argument values
@@ -390,6 +391,50 @@ testthat::test_that("gg_scatter draws scatter plots and returns the expected str
     # raster: small data uses gg_point_rast, large data stays geom_point (threshold path)
     output <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", categ = "grp", raster = TRUE, raster.threshold = 100, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
+    # 2nd and 3rd point layers with dot.shape in 21:24 and non-NULL dot.border.color: border color path in shape and stroke layers
+    output <- saferGG::gg_scatter(
+        data1 = base::list(P1 = obs1, P2 = obs1b, P3 = obs1),
+        x = base::list("x", "x", "x"),
+        y = base::list("y", "y", "y"),
+        geom = base::list("geom_point", "geom_point", "geom_point"),
+        categ = base::list("grp", "grp2", "grp"),
+        dot.shape = base::list(21, 21, 21),
+        dot.border.color = base::list("black", "black", "black"),
+        plot = FALSE,
+        return = TRUE,
+        safer_check = FALSE
+    )
+    testthat::expect_type(output, "list")
+    # stick as single line layer (linetype aesthetic) with non-NULL geom.stick.base: base of sticks = provided value
+    obs_stick <- obs1
+    output <- saferGG::gg_scatter(data1 = obs_stick, x = "x", y = "y", geom = "geom_stick", categ = "grp", geom.stick.base = 5, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(output, "list")
+    # stick as 2nd line layer (alpha aesthetic) with non-NULL geom.stick.base in the corresponding compartment
+    output <- saferGG::gg_scatter(
+        data1 = base::list(L1 = obs1, P1 = obs1, S1 = obs1),
+        x = base::list("x", "x", "x"),
+        y = base::list("y", "y", "y"),
+        geom = base::list("geom_line", "geom_point", "geom_stick"),
+        categ = base::list("grp", NULL, "grp"),
+        geom.stick.base = base::list(NULL, NULL, 5),
+        plot = FALSE,
+        return = TRUE,
+        safer_check = FALSE
+    )
+    testthat::expect_type(output, "list")
+    # stick as 3rd line layer (size aesthetic) with non-NULL geom.stick.base in the corresponding compartment
+    output <- saferGG::gg_scatter(
+        data1 = base::list(L1 = obs1, L2 = obs1, P1 = obs1, S1 = obs1),
+        x = base::list("x", "x", "x", "x"),
+        y = base::list("y", "y", "y", "y"),
+        geom = base::list("geom_line", "geom_line", "geom_point", "geom_stick"),
+        categ = base::list("grp", "grp", NULL, "grp"),
+        geom.stick.base = base::list(NULL, NULL, NULL, 5),
+        plot = FALSE,
+        return = TRUE,
+        safer_check = FALSE
+    )
+    testthat::expect_type(output, "list")
     # dot.shape in 21:24 with dot.border.color: border color used
     output <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", categ = "grp", dot.shape = 21, dot.border.color = "black", plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
@@ -592,6 +637,83 @@ testthat::test_that("gg_scatter draws scatter plots and returns the expected str
         grDevices::dev.off()
     }
     ## end errors
+    # x column of logical class: mode-not-numeric arg_check error
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = base::data.frame(x = base::rep(c(TRUE, FALSE), 5), y = 1:10, stringsAsFactors = TRUE), x = "x", y = "y", plot = FALSE, safer_check = FALSE), regexp = "MUST BE MODE numeric", fixed = TRUE)
+    # y column of logical class: idem
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = base::data.frame(x = 1:10, y = base::rep(c(TRUE, FALSE), 5), stringsAsFactors = TRUE), x = "x", y = "y", plot = FALSE, safer_check = FALSE), regexp = "MUST BE MODE numeric", fixed = TRUE)
+    # geom_hline with a duplicated-class factor categ: different-class-per-line error
+    obs_hdup <- base::data.frame(x = base::factor(c("A", "A", "B")), y = c(5, 5, 5), stringsAsFactors = TRUE)
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = obs_hdup, x = NULL, y = "y", geom = "geom_hline", categ = "x", x.lim = base::c(0, 10), y.lim = base::c(0, 10), plot = FALSE, safer_check = FALSE), regexp = "MUST HAVE A DIFFERENT CLASS PER LINE", fixed = TRUE)
+    # color of non character/factor/integer class: arg_check error
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", color = 1.5, plot = FALSE, safer_check = FALSE), regexp = "MUST BE A FACTOR OR CHARACTER VECTOR OR INTEGER VECTOR", fixed = TRUE)
+    # x.lim with Inf and x.log: log of Inf is Inf -> error
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", x.lim = base::c(0.5, Inf), x.log = "log10", plot = FALSE, safer_check = FALSE), regexp = "RETURNS INF/NA WITH THE x.log ARGUMENT", fixed = TRUE)
+    # y.lim with Inf and y.log: idem
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", y.lim = base::c(0.5, Inf), y.log = "log10", plot = FALSE, safer_check = FALSE), regexp = "RETURNS INF/NA WITH THE y.log ARGUMENT", fixed = TRUE)
+    # valid x.lim with x.log: x.lim log-transformed without error
+    output_xloglim <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", x.lim = base::c(1, 100), x.log = "log10", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_xloglim, "list")
+    # x.lim with Inf and x.log = "log2": log2 of Inf is Inf -> error (log2 branch)
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", x.lim = base::c(0.5, Inf), x.log = "log2", plot = FALSE, safer_check = FALSE), regexp = "RETURNS INF/NA WITH THE x.log ARGUMENT", fixed = TRUE)
+    # y.lim with Inf and y.log = "log2": idem
+    testthat::expect_error(object = saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", y.lim = base::c(0.5, Inf), y.log = "log2", plot = FALSE, safer_check = FALSE), regexp = "RETURNS INF/NA WITH THE y.log ARGUMENT", fixed = TRUE)
+    # x.lab and y.lab provided: used as axis labels
+    output_lab <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", x.lab = "X LABEL", y.lab = "Y LABEL", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_lab, "list")
+    # raster = TRUE with article = TRUE and grid = TRUE: aspect.ratio in the grid theme
+    if(base::requireNamespace(package = "Cairo", quietly = TRUE)){
+        output_rastergrid <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", raster = TRUE, grid = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+        testthat::expect_type(object = output_rastergrid, "list")
+        # raster = TRUE with article = FALSE: aspect.ratio in the non-article theme
+        output_rasterna <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", raster = TRUE, article = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+        testthat::expect_type(object = output_rasterna, "list")
+    }else{
+        testthat::skip(message = "Cairo package not available for raster drawing")
+    }
+    # log scales with decreasing limits on both axes: second-tick segment annotation else branches
+    output_revlog <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", x.log = "log10", x.lim = base::c(10, 1), y.log = "log10", y.lim = base::c(100, 1), plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_revlog, "list")
+    # return.ggplot = TRUE: ggplot object in output
+    output_ggp <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", return.ggplot = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_ggp, "list")
+    # x.include.zero = TRUE: x.lim includes 0
+    output_xzero <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", x.include.zero = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_xzero, "list")
+    # y.include.zero = TRUE: y.lim includes 0
+    output_yzero <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", y.include.zero = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_yzero, "list")
+    # raster = TRUE with a raster.threshold smaller than nrow(data1): gg_point_rast layer used
+    obs_rast <- base::data.frame(x = 1:30, y = (1:30)^2, stringsAsFactors = TRUE)
+    output_rast <- saferGG::gg_scatter(data1 = obs_rast, x = "x", y = "y", raster = TRUE, raster.threshold = 15, raster.ratio = 0.5, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_rast, "list")
+    # add argument with article = FALSE: non-article theme branch
+    output_art <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", add = "+ggplot2::coord_cartesian()", article = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_art, "list")
+    # plot = TRUE with legend.width = NULL: print branch (windows device must be open on Windows)
+    if(Sys.info()[["sysname"]] == "Windows"){
+        grDevices::windows(width = 7, height = 7)
+        output_print <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", plot = TRUE, return = TRUE, safer_check = FALSE)
+        testthat::expect_type(object = output_print, "list")
+        grDevices::dev.off()
+    }
+    # x column containing Inf without x.lim: Inf rows removed in the per-compartment loop, then range() of finite values
+    obs_xinf <- base::data.frame(x = base::c(1:9, Inf), y = 1:10, stringsAsFactors = TRUE)
+    output_xinf <- saferGG::gg_scatter(data1 = obs_xinf, x = "x", y = "y", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_xinf, "list")
+    # y column containing Inf without y.lim: idem
+    obs_yinf <- base::data.frame(x = 1:10, y = base::c(1:9, Inf), stringsAsFactors = TRUE)
+    output_yinf <- saferGG::gg_scatter(data1 = obs_yinf, x = "x", y = "y", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_yinf, "list")
+    # valid y.lim with y.log: y.lim log-transformed without error
+    output_yloglim <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", y.lim = base::c(1, 100), y.log = "log10", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_yloglim, "list")
+    # geom_stick with a categ: the per-class geom_segment stick layer branch (line.count == 1 block)
+    output_stickc <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", geom = "geom_stick", categ = "grp", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_stickc, "list")
+    # geom_stick as the THIRD line layer (point first, then 2 lines, then the stick): line.count == 3 block with stick xend/y paste
+    d_stick3 <- base::list(obs1, obs1, obs1, obs1)
+    output_stick3 <- saferGG::gg_scatter(data1 = d_stick3, x = base::list("x", "x", "x", "x"), y = base::list("y", "y", "y", "y"), geom = base::list("geom_point", "geom_line", "geom_line", "geom_stick"), categ = base::list("grp", "grp", "grp", "grp"), plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_stick3, "list")
     # cleanup of all files and devices created during the tests
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)

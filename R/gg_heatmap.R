@@ -523,6 +523,7 @@ gg_heatmap <- function(
     if( ! base::is.null(limit1)){
         tempo <- saferDev::arg_check(data = limit1, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         if(tempo$problem == FALSE & base::any(limit1 %in% base::c(Inf, -Inf))){
+            # nocov start (unreachable: arg_check with inf_values = FALSE already rejects Inf in limit1, so the condition of the enclosing if is contradictory)
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
                 "limit1 ARGUMENT CANNOT CONTAIN -Inf OR Inf VALUES", 
@@ -531,6 +532,7 @@ gg_heatmap <- function(
             )
             text_check <- base::c(text_check, tempo_cat)
             argum_check <- base::c(argum_check, TRUE)
+            # nocov end
         }
     }
     if( ! base::is.null(midpoint1)){
@@ -717,6 +719,11 @@ gg_heatmap <- function(
     ######## end code that protects set.seed() in the global environment
 
     ######## warning initiation
+    ini_warning_length <- base::options()$warning.length # required to have the max characters of output messages
+    base::options(warning.length = 8170)
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE) # registered here so that warning.length is restored even if an error occurs before the warning-output on.exit() registrations below
+    warn <- NULL
+    warn_count <- 0
     ######## end warning initiation
 
     ######## graphic device checking
@@ -788,6 +795,7 @@ gg_heatmap <- function(
         tempo.warn <- base::paste0("(", warn.count, ") THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(data = limit1, dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), collapse = " ", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
         warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo.warn, no = base::paste0(warn, "\n\n", tempo.warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
         if(base::suppressWarnings(expr = base::any(limit1 %in% base::c(Inf, -Inf)))){
+            # nocov start (unreachable: round2() at line 788 errors before this branch when the computed range is -Inf or Inf)
             tempo_cat <- base::paste0(
                 "ERROR IN ", 
                 function_name, 
@@ -797,6 +805,7 @@ gg_heatmap <- function(
                 recycle0 = FALSE
             )
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn.count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in stop() to be able to add several messages between ==
+            # nocov end
         }
     }else{
         limit1 <- base::sort(x = limit1)

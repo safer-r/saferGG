@@ -21,6 +21,12 @@ testthat::test_that("gg_donut draws donut plots and returns the expected structu
     output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.limit = 0.9, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     testthat::expect_true(object = base::all(base::c("data", "removed.row.nb", "removed.rows", "plot.data", "panel", "axes", "warn", "ggplot", "gtable") %in% base::names(x = output)))
+    # title displayed: title.grob built
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", title = "DONUT TITLE", safer_check = FALSE))
+    # return.gtable = FALSE: NULL gtable component
+    output_nogtable <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", return.gtable = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(output_nogtable, "list")
+    testthat::expect_null(object = output_nogtable$gtable)
     # legend.limit warning
     output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.limit = 0.9, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_true(object = base::grepl(x = output$warn, pattern = "legend.limit", fixed = TRUE))

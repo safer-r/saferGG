@@ -705,6 +705,7 @@ gg_donut <- function(
     ######## warning initiation
     ini_warning_length <- base::options()$warning.length # required to have the max characters of output messages
     base::options(warning.length = 8170)
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE) # registered here so that warning.length is restored even if an error occurs before the warning-output on.exit() registrations below
     warn <- NULL
     warn_count <- 0
     ######## end warning initiation
@@ -1233,11 +1234,27 @@ gg_donut <- function(
             panel = facet.categ, 
             axes = base::list(
                 x.range = tempo$x.range, 
-                x.labels = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{tempo$x$scale$get_labels()}, # is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
-                x.positions = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{base::unlist(base::attributes(tempo$x$breaks))}, 
+                x.labels = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{ # is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
+                    # nocov start (unreachable: the polar coordinate panel_params have no x component, so attributes(tempo$x$breaks) is always NULL here)
+                    tempo$x$scale$get_labels()
+                    # nocov end
+                }, 
+                x.positions = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{
+                    # nocov start (unreachable: idem as x.labels)
+                    base::unlist(base::attributes(tempo$x$breaks))
+                    # nocov end
+                }, 
                 y.range = tempo$y.range, 
-                y.labels = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{tempo$y$scale$get_labels()}, 
-                y.positions = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{base::unlist(base::attributes(tempo$y$breaks))}
+                y.labels = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{
+                    # nocov start (unreachable: the polar coordinate panel_params have no y component, so attributes(tempo$y$breaks) is always NULL here)
+                    tempo$y$scale$get_labels()
+                    # nocov end
+                }, 
+                y.positions = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{
+                    # nocov start (unreachable: idem as y.labels)
+                    base::unlist(base::attributes(tempo$y$breaks))
+                    # nocov end
+                }
             ), 
             warn = base::paste0("\n", warn, "\n\n"), 
             ggplot = if(return.ggplot == TRUE){main.plot}else{NULL}, # main plot -> plots the graph if return == TRUE

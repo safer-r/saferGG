@@ -7,6 +7,7 @@ testthat::test_that("gg_miami draws manhattan and miami plots", {
     tempo_dir <- testthat::test_path()
     # small synthetic TSV
     n <- 60
+    base::set.seed(seed = 1, kind = NULL, normal.kind = NULL, sample.kind = NULL) # to make the test data deterministic
     obs <- base::data.frame(
         CHROM = base::rep(x = base::c("chr1", "chr2"), times = c(30, 30)), 
         POS = base::c(base::seq(from = 1000, to = 20000, length.out = 30), base::seq(from = 1000, to = 15000, length.out = 30)), 
@@ -50,6 +51,10 @@ testthat::test_that("gg_miami draws manhattan and miami plots", {
     testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top.y.column = "PVAL1", bottom.y.column = NULL, vgrid = TRUE, y.threshold1 = 6, x_lim = "chr1:1000-10000", safer_check = FALSE))
     # miami with thresholds, no color.column, dot.border.color set (fill path)
     testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top.y.column = "PVAL1", bottom.y.column = "PVAL2", y.threshold1 = 6, y.threshold2 = 4, dot.border.color = "black", x_lim = "whole", warn.print = FALSE, safer_check = FALSE))
+    # y.log on both sides with default (non-reversed) orientation: FALSE branch of the limits if/else of both log scales
+    testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top.y.column = "PVAL1", bottom.y.column = "PVAL2", y.log1 = TRUE, y.log2 = TRUE, safer_check = FALSE))
+    # reversed orientation on both sides without y.log: TRUE branch of the limits if/else of both non-log scales
+    testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top.y.column = "PVAL1", bottom.y.column = "PVAL2", reverse1 = TRUE, reverse2 = TRUE, safer_check = FALSE))
     # miami with color.column but no dot.border.color (aes_string color path)
     testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top.y.column = "PVAL1", bottom.y.column = "PVAL2", color.column = "AF", warn.print = FALSE, safer_check = FALSE))
     # single top plot with color.column and dot.border.color (aes_string fill path)
@@ -133,6 +138,7 @@ testthat::test_that("gg_miami draws manhattan and miami plots", {
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "NO DEFAULT VALUE AND REQUIRE ONE", fixed = TRUE))
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "file", fixed = TRUE))
     ## end errors
-    base::unlink(x = c(file1, file2, file3, file4, file5, file6, file7, "miami.png"))
+    # cleanup of all files created during the tests
+    base::unlink(x = base::c(file1, file2, file3, file4, file5, file6, file7, "miami.png"))
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })

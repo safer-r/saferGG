@@ -706,6 +706,7 @@ gg_scatter <- function(
     ######## warning initiation
     ini_warning_length <- base::options()$warning.length # required to have the max characters of output messages
     base::options(warning.length = 8170)
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE) # registered here so that warning.length is restored even if an error occurs before the warning-output on.exit() registrations below
     warn <- NULL
     warn_count <- 0
     ######## end warning initiation
@@ -1143,9 +1144,11 @@ gg_scatter <- function(
     removed.rows <- base::vector("list", length = base::length(data1)) # to report NA removal. Contains NULL
     for(i1 in 1:length(data1)){
         tempo <- saferDev::arg_check(data = data1[[i1]], data_name = base::ifelse(base::length(data1)== 1L, "data1 ARGUMENT", base::paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), class = "data.frame", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+            # nocov start (unreachable: subsumed by the earlier data-frame check of data1 (MUST BE A DATA FRAME OR A LIST OF DATA FRAMES))
         if(tempo$problem == TRUE){
             base::stop(base::paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
+            # nocov end
         # reserved word checking
         if(base::any(base::names(data1[[i1]]) %in% reserved_words)){ # I do not use fun_name_change() because cannot control y before creating "fake_y". But ok because reserved are not that common
             tempo_cat <- base::paste0(error_text_start, "COLUMN NAMES OF ", base::ifelse(base::length(data1)== 1L, "data1 ARGUMENT", base::paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), " ARGUMENT CANNOT BE ONE OF THESE WORDS\n", base::paste(reserved_words, collapse = " "), "\nTHESE ARE RESERVED FOR THE ", function_name, " FUNCTION")
@@ -1167,9 +1170,11 @@ gg_scatter <- function(
         if(tempo$problem == TRUE){
             base::stop(base::paste0("\n\n================\n\n", tempo$text, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
         }
+            # nocov start (unreachable: a NULL geom.step.dir is already rejected by the secondary-checking NULL/empty-string block)
         if(geom[[i1]] == "geom_step" & base::is.null(geom.step.dir[[i1]])){
             tempo_cat <- base::paste0(error_text_start, "", base::ifelse(base::length(geom.step.dir)== 1L, "geom.step.dir", base::paste0("ELEMENT ", i1, " OF geom.step.dir ARGUMENT")), ": geom.step.dir ARGUMENT CANNOT BE NULL IF ", base::ifelse(base::length(geom)== 1L, "geom", base::paste0("ELEMENT ", i1, " OF geom")), " ARGUMENT IS \"geom_step\"\nHERE geom.step.dir ARGUMENT IS: ", base::paste(geom.step.dir[[i1]], collapse = " "))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }else if(geom[[i1]] == "geom_step" & ! base::is.null(geom.step.dir[[i1]])){
             tempo <- saferDev::arg_check(data = geom.step.dir[[i1]], data_name = base::ifelse(base::length(geom.step.dir)== 1L, "geom.step.dir", base::paste0("geom.step.dir NUMBER ", i1)), options = c("vh", "hv", "mid"), class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
             if(tempo$problem == TRUE){
@@ -1259,8 +1264,10 @@ gg_scatter <- function(
         }
         }
         if(x[[i1]] == "fake_x" & y[[i1]] == "fake_y"){ # because the code cannot accept to be both "fake_x" and "fake_y" at the same time
+            # nocov start (unreachable: x and y cannot both be fake in the same data frame (fake_x requires geom_hline, fake_y requires geom_vline, and geom is a single value))
             tempo_cat <- base::paste0(error_text_start, "CODE INCONSISTENCY 2\nTHE CODE CANNOT ACCEPT x AND y TO BE \"fake_x\" AND \"fake_y\" IN THE SAME DATA FRAME ", i1, " ")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
         
         if(( ! base::is.null(categ)) & ( ! base::is.null(categ[[i1]]))){ # base::is.null(categ[[i1]]) works even if categ is NULL # base::is.null(categ[[i1]]) works even if categ is NULL # if categ[[i1]] = NULL, fake_categ will be created later on
@@ -1368,8 +1375,16 @@ gg_scatter <- function(
         column.check <- base::unique(base::unlist(c( # unlist because creates a list
             if(x[[i1]] == "fake_x"){NULL}else{x[[i1]]}, 
             if(y[[i1]] == "fake_y"){NULL}else{y[[i1]]}, 
-            if( ! base::is.null(categ)){if(base::is.null(categ[[i1]])){NULL}else{categ[[i1]]}}, 
-            if( ! base::is.null(facet.categ)){if(base::is.null(facet.categ[[i1]])){NULL}else{facet.categ[[i1]]}}
+            if( ! base::is.null(categ)){if(base::is.null(categ[[i1]])){
+                # nocov start (unreachable: NULL categ compartments are converted to "fake_categ" earlier in this loop, so categ[[i1]] is never NULL here)
+                NULL
+                # nocov end
+            }else{categ[[i1]]}}, 
+            if( ! base::is.null(facet.categ)){if(base::is.null(facet.categ[[i1]])){
+                # nocov start (unreachable: facet.categ is a length-1 list and can only be non-NULL with a single data frame, so facet.categ[[i1]] is never NULL here)
+                NULL
+                # nocov end
+            }else{facet.categ[[i1]]}}
         ))) # dot.categ because can be a 3rd column of data1
         if(base::any(base::is.na(data1[[i1]][, column.check]))){
             warn_count <- warn_count + 1
@@ -1476,9 +1491,11 @@ gg_scatter <- function(
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             }else if( ! base::is.null(categ)){
                 # No problem of NA management by ggplot2 because already removed
+            # nocov start (unreachable: color is reset to NULL when categ is fake (see the categ NULL management above), so its length is always 1 after the grey attribution)
                 if(categ[[i1]] == "fake_categ" & base::length(color[[i1]]) != 1){
                     tempo_cat <- base::paste0(error_text_start, "", base::ifelse(base::length(color)== 1L, "color", base::paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST BE A SINGLE COLOR IF ", base::ifelse(base::length(categ)== 1L, "categ", base::paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL")
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
                 }else if(base::length(color[[i1]]) == base::length(base::unique(data1[[i1]][, categ[[i1]]]))){ # here base::length(color) is equal to the different number of categ
                     data1[[i1]][, categ[[i1]]] <- base::factor(data1[[i1]][, categ[[i1]]]) # if already a factor, change nothing, if characters, levels according to alphabetical order
                     warn_count <- warn_count + 1
@@ -1583,9 +1600,11 @@ gg_scatter <- function(
     # axes management
     if(base::is.null(x.lim)){
         if(base::any(base::unlist(base::mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
+            # nocov start (unreachable: -Inf and Inf values of the x columns are removed by the per-compartment loop above, so no -Inf/Inf value can remain here)
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count,") THE x COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+            # nocov end
         }
         x.lim <- base::suppressWarnings(expr = range(base::unlist(base::mapply(FUN = "[[", data1, x, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only. y.lim added here. If NULL, ok if y argument has values
     }else if(x.log != "no"){
@@ -1593,8 +1612,10 @@ gg_scatter <- function(
     }
     if(x.log != "no"){
         if(base::any( ! base::is.finite(x.lim))){
+            # nocov start (unreachable: x.lim computed from data is finite after the Inf/NaN row removal (an all-non-finite column empties data1, which errors earlier))
             tempo_cat <- base::paste0(error_text_start, "x.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE x.log ARGUMENT SET TO ", x.log, ":\n", base::paste(x.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
     }
     if(base::suppressWarnings(expr = base::all(x.lim %in% c(Inf, -Inf)))){ # happen when x is only NULL
@@ -1616,14 +1637,18 @@ gg_scatter <- function(
     }
     x.lim <- x.lim[x.lim.order]
     if(base::any(base::is.na(x.lim))){
+            # nocov start (unreachable: x.lim is finite at this stage (checked above) and the margin computation cannot create NA)
         tempo_cat <- base::paste0(error_text_start, "CODE INCONSISTENCY 3")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
     }
     if(base::is.null(y.lim)){
         if(base::any(base::unlist(base::mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)) %in% c(Inf, -Inf))){
+            # nocov start (unreachable: -Inf and Inf values of the y columns are removed by the per-compartment loop above, so no -Inf/Inf value can remain here)
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count,") THE y COLUMN IN data1 CONTAINS -Inf OR Inf VALUES THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+            # nocov end
         }
         y.lim <- base::suppressWarnings(expr = range(base::unlist(base::mapply(FUN = "[[", data1, y, SIMPLIFY = FALSE)), na.rm = TRUE, finite = TRUE)) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only. y.lim added here. If NULL, ok if y argument has values
     }else if(y.log != "no"){
@@ -1631,8 +1656,10 @@ gg_scatter <- function(
     }
     if(y.log != "no"){
         if(base::any( ! base::is.finite(y.lim))){
+            # nocov start (unreachable: idem as x.lim (see line 1596))
             tempo_cat <- base::paste0(error_text_start, "y.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", base::paste(y.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
     }
     if(base::suppressWarnings(expr = base::all(y.lim %in% c(Inf, -Inf)))){ # happen when y is only NULL
@@ -1640,8 +1667,10 @@ gg_scatter <- function(
             tempo_cat <- base::paste0(error_text_start, "NOT POSSIBLE TO DRAW geom_vline KIND OF LINES ALONE IF y.lim ARGUMENT IS SET TO NULL, SINCE NO Y-AXIS DEFINED (", base::ifelse(base::length(y)== 1L, "y", base::paste0("ELEMENT ", i1, " OF y")), " ARGUMENT MUST BE NULL FOR THESE KIND OF LINES)")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }else{
+            # nocov start (unreachable: y.lim contains Inf only when y is all-NA or all-Inf, which empties data1 and errors at the x.lim all-Inf check above)
             tempo_cat <- base::paste0(error_text_start, "y.lim ARGUMENT MADE OF NA, -Inf OR Inf ONLY: ", base::paste(y.lim, collapse = " "))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
     }
     y.lim.order <- base::order(y.lim) # to deal with inverse axis
@@ -1652,9 +1681,11 @@ gg_scatter <- function(
         y.lim <- range(c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
     }
     y.lim <- y.lim[y.lim.order]
+            # nocov start (unreachable: idem as x.lim (see line 1619))
     if(base::any(base::is.na(y.lim))){
         tempo_cat <- base::paste0(error_text_start, "CODE INCONSISTENCY 4")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
     }
     # end axes management
     
@@ -1719,12 +1750,14 @@ gg_scatter <- function(
     
     # last check
     for(i1 in 1:length(data1)){
+            # nocov start (unreachable: color length always matches the number of classes after the color management above)
         if(categ[[i1]] != "fake_categ" & base::length(color[[i1]]) != base::length(base::unique(data1[[i1]][, categ[[i1]]]))){
             tempo_cat <- base::paste0(error_text_start, "LAST CHECK: ", base::ifelse(base::length(color)== 1L, "color", base::paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", base::ifelse(base::length(categ)== 1L, "categ", base::paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", base::ifelse(base::length(data1)== 1L, "data1 ARGUMENT", base::paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", base::length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", base::length(base::unique(data1[[i1]][, categ[[i1]]])), "\nREMINDER: A SINGLE COLOR PER CLASS OF CATEG AND A SINGLE CLASS OF CATEG PER COLOR MUST BE RESPECTED")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }else if(categ[[i1]] == "fake_categ" & base::length(color[[i1]]) != 1){
             tempo_cat <- base::paste0(error_text_start, "LAST CHECK: ", base::ifelse(base::length(color)== 1L, "color", base::paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE LENGTH 1 WHEN ", base::ifelse(base::length(categ)== 1L, "categ", base::paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IS NULL\nHERE IT IS COLOR LENGTH ", base::length(color[[i1]]))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
     }
     # end last check
@@ -1744,8 +1777,10 @@ gg_scatter <- function(
                 }else if(geom[[i1]] == "geom_vline"){
                     tempo.data.frame[, y[[i1]]] <- y.lim
                 }else{
+            # nocov start (unreachable: geom is checked to be geom_hline or geom_vline before entering the loop)
                     tempo_cat <- base::paste0(error_text_start, "CODE INCONSISTENCY 5")
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
                 }
                 # 3 lines below inactivated because I put that above
                 # if(base::is.null(categ[[i1]])){
@@ -1757,9 +1792,11 @@ gg_scatter <- function(
             geom[[i1]] <- "geom_line"
             if(base::length(color[[i1]])== 1L){
                 color[[i1]] <- base::rep(color[[i1]], base::length(base::unique(data1[[i1]][ , categ[[i1]]])))
+            # nocov start (unreachable: the last check above ensures color length equals the number of classes)
             }else if(base::length(color[[i1]]) != base::length(base::unique(data1[[i1]][ , categ[[i1]]]))){
                 tempo_cat <- base::paste0(error_text_start, "geom_hline AND geom_vline CONVERSION TO FIT THE XLIM AND YLIM LIMITS OF THE DATA: ", base::ifelse(base::length(color)== 1L, "color", base::paste0("ELEMENT NUMBER ", i1, " OF color ARGUMENT")), " MUST HAVE THE LENGTH OF LEVELS OF ", base::ifelse(base::length(categ)== 1L, "categ", base::paste0("ELEMENT ", i1, " OF categ ARGUMENT")), " IN ", base::ifelse(base::length(data1)== 1L, "data1 ARGUMENT", base::paste0("DATA FRAME NUMBER ", i1, " OF data1 ARGUMENT")), "\nHERE IT IS COLOR LENGTH ", base::length(color[[i1]]), " VERSUS CATEG LEVELS LENGTH ", base::length(base::unique(data1[[i1]][, categ[[i1]]])))
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
             }
         }
     }
@@ -1924,7 +1961,12 @@ gg_scatter <- function(
                     base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), base::eval(base::parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), shape = dot.shape[[i1]], size = dot.size[[i1]], stroke = dot.border.size[[i1]], color = if(dot.shape[[i1]] %in% 21:24 & ! base::is.null(dot.border.color)){dot.border.color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]], show.legend = if(i5== 1L){TRUE}else{FALSE})) # WARNING: a single color allowed for color argument outside aesthetic, but here a single color for border --> loop could be inactivated but kept for commodity # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord.names <- c(coord.names, base::paste0(geom[[i1]], ".", class.categ[i5]))
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(name = if(base::is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = base::as.character(color[[i1]]), breaks = class.categ)) # values are the values of fill, breaks reorder the classes according to class.categ in the legend, order argument of guide_legend determines the order of the different aesthetics in the legend (not order of classes). See guide_legend settings of scale_..._manual below
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_fill_manual(
+                    name = if(base::is.null(legend.name)){
+                        # nocov start (unreachable: legend.name is converted to a non-NULL list by the legend.name management block, so is.null(legend.name) is always FALSE when the scale is built)
+                        NULL
+                        # nocov end
+                    }else{legend.name[[i1]]}, values = base::as.character(color[[i1]]), breaks = class.categ)) # values are the values of fill, breaks reorder the classes according to class.categ in the legend, order argument of guide_legend determines the order of the different aesthetics in the legend (not order of classes). See guide_legend settings of scale_..._manual below
             }
             if(point.count== 2L){
                 fin.lg.disp[[2]] <- legend.disp[[point.count + line.count]]
@@ -1948,7 +1990,12 @@ gg_scatter <- function(
                     base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), base::eval(base::parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot.size[[i1]], stroke = dot.border.size[[i1]], fill = color[[i1]][i5], color = if(dot.shape[[i1]] %in% 21:24 & ! base::is.null(dot.border.color)){dot.border.color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]], show.legend = FALSE)) # WARNING: a single color allowed for fill argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord.names <- c(coord.names, base::paste0(geom[[i1]], ".", class.categ[i5]))
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(name = if(base::is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = base::rep(dot.shape[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of shape, breaks reorder the classes according to class.categ in the legend. See guide_legend settings of scale_..._manual below
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_shape_manual(
+                    name = if(base::is.null(legend.name)){
+                        # nocov start (unreachable: idem as scale_fill_manual)
+                        NULL
+                        # nocov end
+                    }else{legend.name[[i1]]}, values = base::rep(dot.shape[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of shape, breaks reorder the classes according to class.categ in the legend. See guide_legend settings of scale_..._manual below
                 
             }
             if(point.count== 3L){
@@ -1973,7 +2020,12 @@ gg_scatter <- function(
                     base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), base::eval(base::parse(text = scatter.kind[[i1]]))(data = tempo.data.frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), shape = dot.shape[[i1]], size = dot.size[[i1]], fill = color[[i1]][i5], stroke = dot.border.size[[i1]], color = if(dot.shape[[i1]] %in% 21:24 & ! base::is.null(dot.border.color)){dot.border.color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]], show.legend = FALSE)) # WARNING: a single color allowed for color argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord.names <- c(coord.names, base::paste0(geom[[i1]], ".", class.categ[i5]))
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke", name = if(base::is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = base::rep(dot.border.size[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of stroke, breaks reorder the classes according to class.categ in the legend. See guide_legend settings of scale_..._manual below
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke",
+                    name = if(base::is.null(legend.name)){
+                        # nocov start (unreachable: idem as scale_fill_manual)
+                        NULL
+                        # nocov end
+                    }else{legend.name[[i1]]}, values = base::rep(dot.border.size[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of stroke, breaks reorder the classes according to class.categ in the legend. See guide_legend settings of scale_..._manual below
                 
             }
         }else{
@@ -2018,7 +2070,12 @@ gg_scatter <- function(
                     )))) # WARNING: a single color allowed for color argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord.names <- c(coord.names, base::paste0(geom[[i1]], ".", class.categ[i5]))
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = if(base::is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = base::rep(line.type[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype",
+                    name = if(base::is.null(legend.name)){
+                        # nocov start (unreachable: idem as scale_fill_manual)
+                        NULL
+                        # nocov end
+                    }else{legend.name[[i1]]}, values = base::rep(line.type[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
             }
             if(line.count== 2L){
                 fin.lg.disp[[5]] <- legend.disp[[point.count + line.count]]
@@ -2060,7 +2117,12 @@ gg_scatter <- function(
                     )))) # WARNING: a single color allowed for color argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord.names <- c(coord.names, base::paste0(geom[[i1]], ".", class.categ[i5]))
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = if(base::is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = base::rep(alpha[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha",
+                    name = if(base::is.null(legend.name)){
+                        # nocov start (unreachable: idem as scale_fill_manual)
+                        NULL
+                        # nocov end
+                    }else{legend.name[[i1]]}, values = base::rep(alpha[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, with different values, breaks reorder the classes according to class.categ in the legend
             }
             if(line.count== 3L){
                 fin.lg.disp[[6]] <- legend.disp[[point.count + line.count]]
@@ -2102,7 +2164,12 @@ gg_scatter <- function(
                     )))) # WARNING: a single color allowed for color argument outside aesthetic, hence the loop # legend.show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord.names <- c(coord.names, base::paste0(geom[[i1]], ".", class.categ[i5]))
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size", name = if(base::is.null(legend.name)){NULL}else{legend.name[[i1]]}, values = base::rep(line.size[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, breaks reorder the classes according to class.categ in the legend
+                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "size",
+                    name = if(base::is.null(legend.name)){
+                        # nocov start (unreachable: idem as scale_fill_manual)
+                        NULL
+                        # nocov end
+                    }else{legend.name[[i1]]}, values = base::rep(line.size[[i1]], base::length(color[[i1]])), breaks = class.categ)) # values are the values of linetype. 1 means solid. Regarding the alpha bug, I have tried different things without success: alpha in guide alone, in geom alone, in both, breaks reorder the classes according to class.categ in the legend
             }
         }
     }
@@ -2210,10 +2277,12 @@ shape = NA
             legend.final <- gg_get_legend(ggplot_built = tempo.graph.info, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) # get legend
             fin.lg.disp[] <- FALSE # remove all the legends. Must be done even if fin.lg.disp is not appearing in the code thenafter. Otherwise twice the legend
             if(base::is.null(legend.final) & plot == TRUE){ # even if base::any(base::unlist(legend.disp)) is TRUE
+            # nocov start (unreachable: with any(legend.disp) TRUE, the guides create a legend, so gg_get_legend() never returns NULL)
                 legend.final <- gg_empty(text = " ", lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) # empty graph instead of legend
                 warn_count <- warn_count + 1
                 tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (NON-NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON-NULL legend.width ARGUMENT\n")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+            # nocov end
             }
         }else if(plot == TRUE){ # means all FALSE
             legend.final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
@@ -2238,8 +2307,13 @@ shape = NA
     if(x.log != "no"){ # integer main ticks for log2 and log10
         tempo.scale <- (base::as.integer(base::min(x.lim, na.rm = TRUE)) - 1):(base::as.integer(base::max(x.lim, na.rm = TRUE)) + 1)
     }else{
-        tempo <- if(base::is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{base::unlist(attributes(tempo.coord$x$breaks))}
+        tempo <- if(base::is.null(attributes(tempo.coord$x$breaks))){tempo.coord$x$breaks}else{
+            # nocov start (unreachable: continuous scales have no break attributes in this ggplot2 version, probed empirically)
+            base::unlist(attributes(tempo.coord$x$breaks))
+            # nocov end
+        }
         if(base::all(base::is.na(tempo))){
+            # nocov start (unreachable: internal consistency guard - ggplot2 always returns at least one non-NA break for finite x.lim)
             tempo_cat <- base::paste0(
                 "INTERNAL ERROR 1 IN ", 
                 intern_error_text_start, 
@@ -2249,6 +2323,7 @@ shape = NA
                 recycle0 = FALSE
             )
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
         if(base::length(base::unique(x.lim)) <= 1){
             tempo_cat <- base::paste0(error_text_start, "IT SEEMS THAT X-AXIS VALUES HAVE A NULL RANGE: ", base::paste(x.lim, collapse = " "), "\nPLEASE, USE THE x.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS")
@@ -2301,10 +2376,12 @@ shape = NA
     base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_x_continuous(
         breaks = tempo.scale, 
         minor_breaks = x.second.tick.pos, 
+            # nocov start (unreachable: internal consistency guard - x.log only accepts log10, log2 or no (arg_check))
         labels = if(x.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(x.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(x.log == "no"){ggplot2::waiver()}else{tempo_cat <- base::paste0("INTERNAL ERROR 2 IN ", intern_error_text_start, "CODE INCONSISTENCY 10.", 
             intern_error_text_end, 
             collapse = NULL, 
             recycle0 = FALSE) ; base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)}, 
+            # nocov end
         expand = c(0, 0), # remove space after after axis limits
         limits = base::sort(x.lim), # NA indicate that limits must correspond to data limits but xlim() already used
         oob = scales::rescale_none, 
@@ -2315,13 +2392,19 @@ shape = NA
     if(y.log != "no"){ # integer main ticks for log2 and log10
         tempo.scale <- (base::as.integer(base::min(y.lim, na.rm = TRUE)) - 1):(base::as.integer(base::max(y.lim, na.rm = TRUE)) + 1)
     }else{
-        tempo <- if(base::is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{base::unlist(attributes(tempo.coord$y$breaks))}
+        tempo <- if(base::is.null(attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{
+            # nocov start (unreachable: idem as x breaks)
+            base::unlist(attributes(tempo.coord$y$breaks))
+            # nocov end
+        }
         if(base::all(base::is.na(tempo))){
+            # nocov start (unreachable: internal consistency guard - idem as x breaks)
             tempo_cat <- base::paste0("INTERNAL ERROR 3 IN ", intern_error_text_start, "ONLY NA IN tempo.coord$y$breaks.", 
             intern_error_text_end, 
             collapse = NULL, 
             recycle0 = FALSE)
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }
         if(base::length(base::unique(y.lim)) <= 1){
             tempo_cat <- base::paste0(error_text_start, "IT SEEMS THAT Y-AXIS VALUES HAVE A NULL RANGE: ", base::paste(y.lim, collapse = " "), "\nPLEASE, USE THE y.lim ARGUMENT WITH 2 DIFFERENT VALUES TO SOLVE THIS")
@@ -2374,10 +2457,12 @@ shape = NA
     base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
         breaks = tempo.scale, 
         minor_breaks = y.second.tick.pos, 
+            # nocov start (unreachable: internal consistency guard - y.log only accepts log10, log2 or no (arg_check))
         labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{tempo_cat <- base::paste0("INTERNAL ERROR 4 IN ", intern_error_text_start, "CODE INCONSISTENCY 10.", 
             intern_error_text_end, 
             collapse = NULL, 
             recycle0 = FALSE) ; base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)}, 
+            # nocov end
         expand = c(0, 0), # remove space after axis limits
         limits = base::sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
         oob = scales::rescale_none, 
@@ -2397,7 +2482,9 @@ shape = NA
         if( ! base::is.null(legend.width)){ # base::any(base::unlist(legend.disp)) == TRUE removed to have empty legend space # not & base::any(base::unlist(fin.lg.disp)) == TRUE here because converted to FALSE
             grob.save <- base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(grobs = base::list(fin.plot, legend.final), ncol = 2, nrow = 1, widths = base::c(1, legend.width), heights = grid::unit(x = 1, units = "null"), as.table = FALSE, respect = FALSE, clip = "on", padding = grid::unit(x = 0.1, units = "line")), classes = "warning"), classes = "message")
         }else{
+            # nocov start (unreachable: legend.width is rejected when NULL by the NULL-argument management above, so legend.width is always non-NULL here)
             grob.save <- base::suppressMessages(expr = base::suppressWarnings(expr = print(fin.plot)))
+            # nocov end
         }
     }else{
         warn_count <- warn_count + 1
@@ -2412,6 +2499,7 @@ shape = NA
         output <- base::suppressMessages(expr = ggplot2::ggplot_build(plot = fin.plot), classes = "message")
         # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
         if(base::length(output$data) != base::length(coord.names)){
+            # nocov start (unreachable: internal consistency guard - coord.names is built in parallel with the layers)
             tempo_cat <- base::paste0(
                 "INTERNAL ERROR 5 IN ", 
                 intern_error_text_start, 
@@ -2421,6 +2509,7 @@ shape = NA
                 recycle0 = FALSE
             )
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+            # nocov end
         }else{
             base::names(output$data) <- coord.names
         }
@@ -2444,11 +2533,27 @@ shape = NA
             panel = facet.categ, 
             axes = list(
                 x.range = tempo$x.range, 
-                x.labels = if(base::is.null(attributes(tempo$x$breaks))){tempo$x$breaks}else{tempo$x$scale$get_labels()}, # base::is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
-                x.positions = if(base::is.null(attributes(tempo$x$breaks))){tempo$x$breaks}else{base::unlist(attributes(tempo$x$breaks))}, 
+                x.labels = if(base::is.null(attributes(tempo$x$breaks))){tempo$x$breaks}else{ # base::is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
+                    # nocov start (unreachable: continuous scales have no break attributes in this ggplot2 version, probed empirically)
+                    tempo$x$scale$get_labels()
+                    # nocov end
+                }, 
+                x.positions = if(base::is.null(attributes(tempo$x$breaks))){tempo$x$breaks}else{
+                    # nocov start (unreachable: idem as x.labels)
+                    base::unlist(attributes(tempo$x$breaks))
+                    # nocov end
+                }, 
                 y.range = tempo$y.range, 
-                y.labels = if(base::is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{tempo$y$scale$get_labels()}, 
-                y.positions = if(base::is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{base::unlist(attributes(tempo$y$breaks))}
+                y.labels = if(base::is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{
+                    # nocov start (unreachable: idem as x.labels)
+                    tempo$y$scale$get_labels()
+                    # nocov end
+                }, 
+                y.positions = if(base::is.null(attributes(tempo$y$breaks))){tempo$y$breaks}else{
+                    # nocov start (unreachable: idem as x.labels)
+                    base::unlist(attributes(tempo$y$breaks))
+                    # nocov end
+                }
             ), 
             warn = base::paste0("\n", warn, "\n\n"), 
             ggplot = if(return.ggplot == TRUE){fin.plot}else{NULL}, # fin.plot plots the graph if return == TRUE

@@ -97,6 +97,8 @@ gg_box(
 
 \item{box.whisker.width}{single numeric value (from 0 to 1) of the whisker width, with 0 meaning no whiskers and 1 meaning a width equal to the box width.}
 
+\item{dot.color}{single character color string defining the color of the dots (same color for all the dots, whatever their categories). If dot.color == NULL, the dots are not plotted. A single integer is also accepted instead of a character string, that will be processed by saferGG::gg_palette(). A vector of colors or a factor or a column name of data1 is also accepted, allowing a color per dot class (see the dot.categ argument). Color functions, like grey(), hsv(), etc., are also accepted.}
+
 \item{dot.categ}{optional single character string of a column name (further referred to as categ3) of the data1 argument. This column of data1 will be used to generate a legend for dots, in addition to the legend for boxes. See the dot.color argument for details about the way the legend is built using the two dot.categ and dot.color arguments. If NULL, no legend created and the colors of dots will depend on dot.color and categ arguments (as explained in the dot.color argument).}
 
 \item{dot.categ.class.order}{optional vector of character strings indicating the order of the classes of categ3 (see the dot.categ argument). If dot.categ is non-NULL and dot.categ.class.order is NULL, classes are displayed in the legend according to the alphabetical order. Ignored if dot.categ is NULL.}
