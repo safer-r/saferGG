@@ -473,8 +473,8 @@ gg_heatmap <- function(
             tempo <- saferDev::arg_check(data = data1[, 3], class = NULL, typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         }
     }else{
-        tempo_check <- saferDev::arg_check(data = data1, class = "matrix", typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = arg_check_error_text)
-        tempo_check <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = arg_check_error_text)
+        tempo_check <- saferDev::arg_check(data = data1, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo_check <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
         tempo_cat <- base::paste0(
             arg_check_error_text, 
             "THE data1 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape2::melt() FUNCTION", 
@@ -618,8 +618,8 @@ gg_heatmap <- function(
                 argum_check <- base::c(argum_check, TRUE)
             }
         }else{
-            tempo_check <- saferDev::arg_check(data = data2, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = arg_check_error_text)
-            tempo_check <- saferDev::arg_check(data = data2, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = arg_check_error_text)
+            tempo_check <- saferDev::arg_check(data = data2, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+            tempo_check <- saferDev::arg_check(data = data2, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
                 "THE data2 ARGUMENT MUST BE A NUMERIC MATRIX OR A DATA FRAME OUTPUT OF THE reshape2::melt() FUNCTION", 
