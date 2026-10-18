@@ -1528,7 +1528,7 @@ gg_box <- function(
                 if( ! base::identical(ini.dot.categ, categ[base::length(categ)])){
                     tempo_cat <- base::paste0("ERROR IN ", function_name, "\nWHEN dot.color ARGUMENT IS \"same\", THE COLUMN NAME IN dot.categ ARGUMENT MUST BE IDENTICAL TO THE LAST COLUMN NAME IN categ ARGUMENT. HERE IT IS:\ndot.categ: ", base::paste(ini.dot.categ, collapse = " "), "\ncateg: ", base::paste(categ, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-                }else if( ! saferTool::comp_1d(base::unlist(categ.class.order[base::length(categ)]), dot.categ.class.order)$identical.content){
+                }else if( ! saferTool::comp_1d(base::unlist(categ.class.order[base::length(categ)]), dot.categ.class.order)$identical_content){
                     tempo_cat <- base::paste0("ERROR IN ", function_name, "\nWHEN dot.color ARGUMENT IS \"same\",\nLAST COMPARTMENT OF categ.class.order ARGUMENT AND dot.categ.class.order ARGUMENT CANNOT BE DIFFERENT:\nLAST COMPARTMENT OF categ.class.order: ", base::paste(base::unlist(categ.class.order[base::length(categ)]), collapse = " "), "\ndot.categ.class.order: ", base::paste(dot.categ.class.order, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }
@@ -2153,7 +2153,7 @@ gg_box <- function(
             # nocov end
             }
             dot.coord.rd3 <- base::merge(dot.coord.rd2, tempo.data1, by = base::intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have replaced by = "group" by intersect("group", "group") because of an error due to wrong group group merging in dot.coord.rd3
-            if(base::nrow(dot.coord.rd3) != base::nrow(dot.coord) | ( ! saferTool::comp_2d(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical.content)){
+            if(base::nrow(dot.coord.rd3) != base::nrow(dot.coord) | ( ! saferTool::comp_2d(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical_content)){
             # nocov start (unreachable: internal consistency guard - merge on group keys preserves row count)
                 tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
@@ -2412,7 +2412,7 @@ gg_box <- function(
             # nocov end
             }
             dot.coord.tidy3 <- base::merge(dot.coord.tidy2, tempo.data1, by = base::intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have tested intersect("group", "group") instead of by = "group". May be come back to by = "group" in case of error. But I did this because of an error in dot.coord.rd3 above
-            if(base::nrow(dot.coord.tidy3) != base::nrow(dot.coord) | ( ! saferTool::comp_2d(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical.content)){
+            if(base::nrow(dot.coord.tidy3) != base::nrow(dot.coord) | ( ! saferTool::comp_2d(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical_content)){
             # nocov start (unreachable: internal consistency guard - merge on group keys preserves row count)
                 tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
