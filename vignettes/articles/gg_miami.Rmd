@@ -1,0 +1,106 @@
+---
+title: "gg_miami"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+The `file` and `chr` arguments require real GWAS-like data files (a results table and a chromosome size file), that are not shipped with the package. The examples below are therefore only given as \dontrun-like snippets, to be adapted to local files (see also `?gg_miami`).
+
+```{r, eval = FALSE}
+gg_miami(
+    file = "C:/path/to/fisher.tsv", 
+    chr = "C:/path/to/hg19_grch37p5_chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
+    bottom_y_column = "AF"
+)
+```
+<br>
+
+### Arguments top_y_column and bottom_y_column
+
+```{r, eval = FALSE}
+# Top part only (no bottom_y_column).
+gg_miami(
+    file = "path/to/results.tsv", 
+    chr = "path/to/chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL"
+)
+# Top and bottom parts.
+gg_miami(
+    file = "path/to/results.tsv", 
+    chr = "path/to/chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
+    bottom_y_column = "AF"
+)
+```
+<br>
+
+### Arguments x_lim and vgrid
+
+```{r, eval = FALSE}
+gg_miami(
+    file = "path/to/results.tsv", 
+    chr = "path/to/chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
+    x_lim = c(100000000, 150000000), 
+    vgrid = c(100000000, 150000000)
+)
+```
+<br>
+
+### Arguments color_column, dot_border_color, y_lim1, y_lim2, reverse1 and reverse2
+
+```{r, eval = FALSE}
+gg_miami(
+    file = "path/to/results.tsv", 
+    chr = "path/to/chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
+    bottom_y_column = "AF", 
+    color_column = "CHR", 
+    dot_border_color = "gray50", 
+    y_lim1 = c(0, 20), 
+    y_lim2 = c(0, 1), 
+    reverse1 = TRUE, 
+    reverse2 = FALSE
+)
+```
+<br>
+
+### Arguments y_threshold1, y_threshold2, y_log1 and y_log2
+
+```{r, eval = FALSE}
+gg_miami(
+    file = "path/to/results.tsv", 
+    chr = "path/to/chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
+    bottom_y_column = "AF", 
+    y_threshold1 = -base::log10(x = 5e-08), 
+    y_log1 = "log10", 
+    y_log2 = "log10"
+)
+```
+<br>
+
+### Argument warn_print
+
+```{r, eval = FALSE}
+gg_miami(
+    file = "path/to/results.tsv", 
+    chr = "path/to/chr_size_cumul.txt", 
+    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
+    warn_print = TRUE
+)
+```
+<br>

@@ -1,0 +1,54 @@
+---
+title: "gg_get_legend"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+```{r}
+obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) # small dataset with a categorical column
+```
+<br>
+
+### Dataset info
+
+```{r}
+utils::head(obs1) # head of the dataset
+```
+<br>
+
+### Simple example
+
+```{r}
+p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time, fill = group)) # ggplot with a legend
+gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))
+```
+<br>
+
+### NULL result when no legend in the ggplot
+
+```{r}
+p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) # ggplot without legend
+gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))
+```
+<br>
+
+### Use with ggplot2::grid.arrange() (typical use case: one single legend for several plots)
+
+```{r, fig.height = 6}
+p1 <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time, color = group))
+legend <- gg_get_legend(ggplot_built = ggplot2::ggplot_build(p1))
+gridExtra::grid.arrange(grid::nullGrob(), p1, legend, layout_matrix = rbind(c(1, 2), c(3, 3)), widths = c(1, 4), heights = c(4, 1))
+```
+<br>

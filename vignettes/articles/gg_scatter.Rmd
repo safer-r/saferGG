@@ -1,0 +1,109 @@
+---
+title: "gg_scatter"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+```{r}
+set.seed(1) ; obs1 <- base::data.frame(Km = c(2, 1, 6, 5, 4, 7), Time = c(2, 1, 6, 5, 4, 7)^2, Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"), Color1 = base::rep(c("coral", "lightblue"), each = 3), stringsAsFactors = TRUE) ; set.seed(NULL) # small dataset of 6 points distributed in 2 categories
+```
+<br>
+
+### Dataset info
+
+```{r}
+obs1 # dataset of points
+```
+<br>
+
+### Simple example
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time")
+```
+<br>
+
+### Arguments categ, categ_class_order and color
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", categ = "Car", categ_class_order = c("WIIM", "TUUT"), color = c("coral", "lightblue"))
+```
+<br>
+
+### Arguments geom, geom_step_dir and geom_stick_base
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", geom = "geom_line")
+gg_scatter(data1 = obs1, x = "Km", y = "Time", geom = "geom_step", geom_step_dir = "hv")
+gg_scatter(data1 = obs1, x = "Km", y = "Time", geom = "geom_stick", geom_stick_base = 0)
+```
+<br>
+
+### Arguments alpha, dot_size, dot_shape, dot_border_size and dot_border_color
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", alpha = 0.8, dot_size = 5, dot_shape = 21, dot_border_size = 1, dot_border_color = "black")
+```
+<br>
+
+### Arguments line_size and line_type
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", geom = "geom_line", line_size = 2, line_type = "dashed")
+```
+<br>
+
+### Arguments x_lim, x_lab, x_log, x_tick_nb, x_second_tick_nb, x_include_zero, x_left_extra_margin, x_right_extra_margin and x_text_angle
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", x_lim = c(0, 8), x_lab = "KM", x_log = "no", x_tick_nb = 9, x_second_tick_nb = 2, x_include_zero = TRUE, x_left_extra_margin = 0.1, x_right_extra_margin = 0.1, x_text_angle = 45)
+```
+<br>
+
+### Arguments y_lim, y_lab, y_log, y_tick_nb, y_second_tick_nb, y_include_zero, y_top_extra_margin, y_bottom_extra_margin and y_text_angle
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", y_lim = c(0, 55), y_lab = "TIME", y_log = "no", y_tick_nb = 4, y_second_tick_nb = 2, y_include_zero = TRUE, y_top_extra_margin = 0.1, y_bottom_extra_margin = 0.1, y_text_angle = 45)
+```
+<br>
+
+### Log scale example (arguments y_lim, y_log and y_tick_nb)
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", y_lim = c(1, 55), y_log = "log10", y_tick_nb = 4)
+```
+<br>
+
+### Arguments raster, raster_ratio and raster_threshold
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", raster = TRUE, raster_ratio = 0.5, raster_threshold = 1000)
+```
+<br>
+
+### Arguments text_size, title, title_text_size, legend_show, legend_width and legend_name
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", categ = "Car", text_size = 12, title = "GRAPH 1", title_text_size = 14, legend_show = TRUE, legend_width = 3, legend_name = "CAR")
+```
+<br>
+
+### Arguments article, grid, add, return, return_ggplot, return_gtable and plot
+
+```{r}
+gg_scatter(data1 = obs1, x = "Km", y = "Time", article = TRUE, grid = FALSE, return = TRUE, plot = FALSE)
+gg_scatter(data1 = obs1, x = "Km", y = "Time", add = "+ggplot2::coord_fixed()", return_ggplot = TRUE, plot = FALSE)
+```
+<br>

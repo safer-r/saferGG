@@ -1,0 +1,34 @@
+---
+title: "saferGG"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{saferGG}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Description
+
+Set of functions to draw ggplot2 graphics, written according to the [safer-R project](https://github.com/safer-r) specifications.
+
+<br />
+
+## Content
+<br />
+
+| Function | Description |
+| :--- | :--- |
+| **gg_box()** | ggplot2 boxplot + dots + means + median/mean values. |
+| **gg_donut()** | ggplot2 donut. |
+| **gg_empty()** | generate an empty graphic device with text in the middle. |
+| **gg_get_legend()** | get the legend of ggplot objects. |
+| **gg_heatmap()** | ggplot2 heatmap with the possibility to overlay a mask. |
+| **gg_just()** | ggplot2 justification of annotated text or axis labeling, depending on angle. |
+| **gg_miami()** | ggplot2 miami plot (Manhattan plot with a top and a bottom part). |
+| **gg_palette()** | select colors on the ggplot2 default color palette. |
+| **gg_point_rast()** | ggplot2 raster scatterplot layer. |
+| **gg_scatter()** | ggplot2 scatterplot + lines (up to 6 overlays totally). |
+
+<br />
+
+See the articles for more examples of each function: [gg_box](https://safer-r.github.io/saferGG/articles/gg_box.html), [gg_donut](https://safer-r.github.io/saferGG/articles/gg_donut.html), [gg_empty](https://safer-r.github.io/saferGG/articles/gg_empty.html), [gg_get_legend](https://safer-r.github.io/saferGG/articles/gg_get_legend.html), [gg_heatmap](https://safer-r.github.io/saferGG/articles/gg_heatmap.html), [gg_just](https://safer-r.github.io/saferGG/articles/gg_just.html), [gg_miami](https://safer-r.github.io/saferGG/articles/gg_miami.html), [gg_palette](https://safer-r.github.io/saferGG/articles/gg_palette.html), [gg_point_rast](https://safer-r.github.io/saferGG/articles/gg_point_rast.html), [gg_scatter](https://safer-r.github.io/saferGG/articles/gg_scatter.html).

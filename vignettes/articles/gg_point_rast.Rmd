@@ -1,0 +1,67 @@
+---
+title: "gg_point_rast"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+```{r}
+set.seed(1) ; obs1 <- data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; set.seed(NULL) # large dataset of 100,000 random points
+```
+<br>
+
+### Dataset info
+
+```{r}
+utils::head(obs1) # head of the dataset
+```
+<br>
+
+### Simple example (as a ggplot2 layer)
+
+```{r}
+ggplot2::ggplot() + gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y))
+```
+<br>
+
+### Raster versus vectorial rendering (comparison of the file sizes)
+
+The interest of `gg_point_rast()` is to rasterize the dots layer, so that the exported file remains small even with a huge number of dots (here, 100,000 dots).
+
+```{r, eval = FALSE}
+# Two pdf in the current directory.
+saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y)) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = x, y = y)) ; base::dev.off() ; base::dev.off()
+```
+<br>
+
+### Arguments shape, size, stroke, color, fill and alpha
+
+```{r}
+ggplot2::ggplot() + gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), shape = 21, size = 1, stroke = 0.2, color = "black", fill = gg_palette(n = 1), alpha = 0.5)
+```
+<br>
+
+### Arguments raster_width, raster_height and raster_dpi
+
+```{r}
+ggplot2::ggplot() + gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), raster_width = 10, raster_height = 10, raster_dpi = 150)
+```
+<br>
+
+### Arguments na_rm, show_legend and inherit_aes
+
+```{r}
+ggplot2::ggplot() + gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y, color = x), na_rm = TRUE, show_legend = TRUE, inherit_aes = TRUE)
+```
+<br>

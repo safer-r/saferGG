@@ -1,0 +1,56 @@
+---
+title: "gg_palette"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Argument n
+
+```{r}
+gg_palette(n = 2) # output of the function
+gg_palette(n = 7)
+```
+<br>
+
+### Argument kind
+
+```{r}
+gg_palette(n = 7, kind = "std") # standard gg colors
+gg_palette(n = 7, kind = "dark") # darkened gg colors
+gg_palette(n = 7, kind = "light") # lighten gg colors
+```
+<br>
+
+### Use in plots
+
+```{r, fig.height = 8, fig.width = 8}
+plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)) # the ggplot2 palette when asking for 7 different colors
+plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
+plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
+plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
+```
+<br>
+
+### Argument safer_check
+
+```{r}
+gg_palette(n = 2, safer_check = TRUE)
+```
+<br>
+
+### Error example
+
+```{r, echo = TRUE, error = TRUE}
+gg_palette(n = 0) # error because n must be a strictly positive integer
+```
+<br>

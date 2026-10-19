@@ -1,0 +1,85 @@
+---
+title: "gg_heatmap"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+```{r}
+mat1 <- matrix(1:16, ncol = 4) # matrix of integers
+mat2 <- matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4) # diagonal matrix of 0 and 1
+mat3 <- matrix(rep(c(1,0,0,0), 4), ncol = 4) # binary mask matrix of 0 and 1
+```
+<br>
+
+### Dataset info
+
+```{r}
+mat1 # matrix of integers
+mat2 # diagonal matrix
+mat3 # binary mask matrix
+```
+<br>
+
+### Simple example
+
+```{r}
+gg_heatmap(data1 = mat1, title = "GRAPH 1")
+```
+<br>
+
+### Arguments legend_name1, text_size and title_text_size
+
+```{r}
+gg_heatmap(data1 = mat1, legend_name1 = "VALUE", title = "GRAPH 1", text_size = 5, title_text_size = 12)
+```
+<br>
+
+### Arguments low_color1, mid_color1, high_color1, limit1 and midpoint1
+
+```{r}
+gg_heatmap(data1 = mat1, low_color1 = "yellow", mid_color1 = "white", high_color1 = "darkgreen", limit1 = c(0, 16), midpoint1 = 8)
+```
+<br>
+
+### Arguments data2, color2, alpha2 and invert2
+
+```{r}
+gg_heatmap(data1 = mat1, data2 = mat3, color2 = "black", alpha2 = 0.5, invert2 = FALSE, return = TRUE)
+```
+<br>
+
+### Melted data frames as input (reshape2::melt())
+
+```{r}
+gg_heatmap(data1 = reshape2::melt(mat2))
+gg_heatmap(data1 = reshape2::melt(mat1), data2 = reshape2::melt(mat3))
+```
+<br>
+
+### Arguments show_scale, rotate, return and plot
+
+```{r}
+gg_heatmap(data1 = mat1, show_scale = FALSE)
+gg_heatmap(data1 = mat1, rotate = TRUE)
+gg_heatmap(data1 = mat1, return = TRUE, plot = FALSE)
+```
+<br>
+
+### Error example
+
+```{r, echo = TRUE, error = TRUE}
+gg_heatmap(data1 = mat1, data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5)) # error because data2 does not have the same dimension as data1
+```
+<br>

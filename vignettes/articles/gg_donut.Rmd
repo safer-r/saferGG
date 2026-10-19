@@ -1,0 +1,94 @@
+---
+title: "gg_donut"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+```{r}
+obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) # small dataset of frequencies and categories
+```
+<br>
+
+### Dataset info
+
+```{r}
+obs1 # dataset of frequencies and categories
+```
+<br>
+
+### Simple example
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car")
+```
+<br>
+
+### Argument annotation
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
+```
+<br>
+
+### Arguments fill_palette and fill_color
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_palette = "Spectral")
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = c("red", "blue", "green", "black"))
+```
+<br>
+
+### Arguments hole_size, hole_text and hole_text_size
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", hole_size = 0.3, hole_text = TRUE, hole_text_size = 10)
+```
+<br>
+
+### Arguments border_color and border_size
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", border_color = "black", border_size = 1)
+```
+<br>
+
+### Arguments title, title_text_size, annotation_distance, annotation_size and annotation_force_pull
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country", title = "GRAPH 1", title_text_size = 10, annotation_distance = 0.5, annotation_size = 4, annotation_force_pull = 10)
+```
+<br>
+
+### Arguments legend_show, legend_width, legend_name, legend_text_size, legend_box_size, legend_box_space, legend_limit and legend_add_prop
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_name = "CAR", legend_text_size = 10, legend_add_prop = TRUE)
+```
+<br>
+
+### Arguments return, plot and add
+
+```{r}
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", return = TRUE, plot = FALSE)
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", add = "+ggplot2::theme_void()", plot = FALSE)
+```
+<br>
+
+### Error example
+
+```{r, echo = TRUE, error = TRUE}
+gg_donut(data1 = obs1, freq = "Freq", categ = "Car") # error because Freq does not exist in obs1
+```
+<br>

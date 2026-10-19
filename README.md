@@ -47,6 +47,8 @@ Set of R functions to draw ggplot2 graphics, written according to the [safer-R p
 | **gg_box()** | ggplot2 boxplot + dots + means + median/mean values. |
 | **gg_scatter()** | ggplot2 scatterplot + lines (up to 6 overlays totally). |
 | **gg_donut()** | ggplot2 donut. |
+| **gg_heatmap()** | ggplot2 heatmap with the possibility to overlay a mask. |
+| **gg_miami()** | ggplot2 miami plot (Manhattan plot with a top and a bottom part). |
 | **gg_empty()** | generate an empty graphic device with text in the middle. |
 
 <br />

@@ -1,0 +1,100 @@
+---
+title: "gg_box"
+---
+<br>
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "> "
+)
+```
+
+```{r setup}
+library(saferGG)
+```
+<br>
+
+### Datasets
+
+```{r}
+set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) # random dataset of 80 values distributed in 2 categories of 2 classes each
+```
+<br>
+
+### Dataset info
+
+```{r}
+utils::head(obs1) # head of the dataset
+```
+<br>
+
+### Simple example
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1")
+```
+<br>
+
+### Argument categ_class_order
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", categ_class_order = list(c("DOG", "CAT")))
+```
+<br>
+
+### Argument categ_color
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", categ_color = c("coral", "lightblue"))
+```
+<br>
+
+### Arguments box_legend_name, box_fill, box_notch and box_mean
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", box_legend_name = "ANIMAL", box_fill = TRUE, box_notch = TRUE, box_mean = FALSE)
+```
+<br>
+
+### Arguments dot_categ, dot_categ_class_order and dot_color
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", dot_categ = "Categ2", dot_categ_class_order = c("D", "C", "B", "A"), dot_color = c("#9F2108", "#306100", "#007479", "#8500C0"))
+```
+<br>
+
+### Arguments x_lab, y_lab, x_angle and title
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", x_lab = "CATEGORY", y_lab = "TIME", x_angle = 45, title = "GRAPH 1")
+```
+<br>
+
+### Arguments y_lim, y_log, y_tick_nb, y_include_zero and y_top_extra_margin
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", y_lim = c(0, 600), y_log = "no", y_tick_nb = 4, y_include_zero = TRUE, y_top_extra_margin = 0.1)
+```
+<br>
+
+### Log scale example
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", y_lim = c(1, 600), y_log = "log10", y_tick_nb = 4)
+```
+<br>
+
+### Arguments stat_mean, stat_size, stat_dist, stat_angle and vertical
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", stat_mean = TRUE, stat_size = 4, stat_dist = 0.3, stat_angle = 90, vertical = TRUE)
+```
+<br>
+
+### Arguments return, return_ggplot, return_gtable, plot and add
+
+```{r}
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", return = TRUE, plot = FALSE)
+gg_box(data1 = obs1, y = "Time", categ = "Categ1", return_ggplot = TRUE, add = "+ggplot2::coord_flip()", plot = FALSE)
+```
+<br>
