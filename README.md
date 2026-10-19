@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![Codecov test coverage](https://codecov.io/github/safer-r/saferGG/coverage.svg?branch=master)](https://app.codecov.io/github/safer-r/saferGG?branch=master)
+[![Codecov test coverage](https://codecov.io/github/safer-r/saferGG/coverage.svg?branch=main)](https://app.codecov.io/github/safer-r/saferGG?branch=main)
 [![CRAN status](https://img.shields.io/cran/v/saferGG.svg)](https://cran.r-project.org/package=saferGG)
 [![downloads](https://cranlogs.r-pkg.org/badges/saferGG)](https://www.rdocumentation.org/trends)
 [![](https://img.shields.io/badge/license-GPL3.0-green.svg)](https://opensource.org/licenses/MITgpl-3-0)
