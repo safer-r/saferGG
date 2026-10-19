@@ -50,12 +50,16 @@ gg_miami(
 ### Arguments x_lim and vgrid
 
 ```{r, eval = FALSE}
+# x_lim accepts either "whole" (default) or a special character string,
+# like "chr7:100000000-150000000" (single region), "chr7" (whole chromosome),
+# or "chr7,chr1" (two chromosomes). vgrid is a single logical value that
+# displays the chromosome separators.
 gg_miami(
     file = "path/to/results.tsv", 
     chr = "path/to/chr_size_cumul.txt", 
     top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
-    x_lim = c(100000000, 150000000), 
-    vgrid = c(100000000, 150000000)
+    x_lim = "chr7:100000000-150000000", 
+    vgrid = TRUE
 )
 ```
 <br>
@@ -63,6 +67,10 @@ gg_miami(
 ### Arguments color_column, dot_border_color, y_lim1, y_lim2, reverse1 and reverse2
 
 ```{r, eval = FALSE}
+# color_column is the column used to alternate the dot colors per chromosome,
+# y_lim1/y_lim2 the y-axis ranges of the top/bottom panels (2 numeric values,
+# order matters for inverted axis) and reverse1/reverse2 single logical values
+# that flip the y-axis of the top/bottom panels.
 gg_miami(
     file = "path/to/results.tsv", 
     chr = "path/to/chr_size_cumul.txt", 
@@ -81,14 +89,17 @@ gg_miami(
 ### Arguments y_threshold1, y_threshold2, y_log1 and y_log2
 
 ```{r, eval = FALSE}
+# y_threshold1/y_threshold2 are single numeric values (y-axis thresholds beyond
+# which values are of interest) and y_log1/y_log2 single logical values for the
+# log10 scale of the y-axis of the top/bottom panels.
 gg_miami(
     file = "path/to/results.tsv", 
     chr = "path/to/chr_size_cumul.txt", 
     top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", 
     bottom_y_column = "AF", 
     y_threshold1 = -base::log10(x = 5e-08), 
-    y_log1 = "log10", 
-    y_log2 = "log10"
+    y_log1 = TRUE, 
+    y_log2 = TRUE
 )
 ```
 <br>
