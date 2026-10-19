@@ -774,10 +774,6 @@ gg_heatmap <- function(
     #### end second round of checking and data preparation
 
     #### main code
-    ini_warning_length <- base::options()$warning.length
-    base::options(warning.length = 8170)
-    warn <- NULL
-    warn_count <- 0
     if(base::all(base::is.matrix(data1))){
         data1 <- reshape2::melt(data1) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
     }
