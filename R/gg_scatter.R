@@ -1859,7 +1859,7 @@ gg_scatter <- function(
     if( ! base::is.null(add)){ # if add is NULL, then = 0
         if(base::grepl(pattern = "ggplot2::theme", add) == TRUE){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER\n-> article ARGUMENT WILL BE IGNORED\nIT IS RECOMMENDED TO USE \"+ theme(aspect_ratio = raster_ratio)\" IF RASTER MODE IS ACTIVATED")
+            tempo_warn <- base::paste0("(", warn_count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER\n-> article ARGUMENT WILL BE IGNORED\nIT IS RECOMMENDED TO USE \"+ theme(aspect.ratio = raster_ratio)\" IF RASTER MODE IS ACTIVATED")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             add_check <- FALSE
         }
@@ -1881,7 +1881,7 @@ gg_scatter <- function(
                 panel.grid.minor.y = ggplot2::element_line(colour = "grey90", linewidth = 0.25), 
                 axis.text.x = ggplot2::element_text(angle = x_tempo_just$angle, hjust = x_tempo_just$hjust, vjust = x_tempo_just$vjust),
                 axis.text.y = ggplot2::element_text(angle = y_tempo_just$angle, hjust = y_tempo_just$hjust, vjust = y_tempo_just$vjust), 
-                aspect_ratio = if(fix_ratio == TRUE){raster_ratio}else{NULL} # for raster
+                aspect.ratio = if(fix_ratio == TRUE){raster_ratio}else{NULL} # for raster
             ))
         }else{
             base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), m_gg <- ggplot2::theme(
@@ -1893,7 +1893,7 @@ gg_scatter <- function(
                 axis.line.x.bottom = ggplot2::element_line(colour = "black"), 
                 axis.text.x = ggplot2::element_text(angle = x_tempo_just$angle, hjust = x_tempo_just$hjust, vjust = x_tempo_just$vjust),
                 axis.text.y = ggplot2::element_text(angle = y_tempo_just$angle, hjust = y_tempo_just$hjust, vjust = y_tempo_just$vjust), 
-                aspect_ratio = if(fix_ratio == TRUE){raster_ratio}else{NULL} # for raster
+                aspect.ratio = if(fix_ratio == TRUE){raster_ratio}else{NULL} # for raster
             ))
         }
     }else if(add_check == TRUE & article == FALSE){
@@ -1912,7 +1912,7 @@ gg_scatter <- function(
             strip.background = ggplot2::element_rect(fill = "white", colour = "black"), 
             axis.text.x = ggplot2::element_text(angle = x_tempo_just$angle, hjust = x_tempo_just$hjust, vjust = x_tempo_just$vjust),
             axis.text.y = ggplot2::element_text(angle = y_tempo_just$angle, hjust = y_tempo_just$hjust, vjust = y_tempo_just$vjust), 
-            aspect_ratio = if(fix_ratio == TRUE){raster_ratio}else{NULL} # for raster
+            aspect.ratio = if(fix_ratio == TRUE){raster_ratio}else{NULL} # for raster
             # do not work -> legend.position = "none" # to remove the legend completely: https://www.datanovia.com/en/blog/how-to-remove-legend-from-a-ggplot/
         ))
     }
@@ -1958,7 +1958,7 @@ gg_scatter <- function(
                 class_categ <- base::levels(base::factor(data1[[i1]][, categ[[i1]]]))
                 for(i5 in 1:length(color[[i1]])){ # or base::length(class_categ). It is the same because already checked that lengths are the same
                     tempo_data_frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class_categ[i5], ]
-                    tempo_layer_fun <- base::eval(base::parse(text = scatter_kind[[i1]])) ; tempo_layer_args <- base::list(data = tempo_data_frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), shape = dot_shape[[i1]], size = dot_size[[i1]], stroke = dot_border_size[[i1]], color = if(dot_shape[[i1]] %in% 21:24 & ! base::is.null(dot_border_color)){dot_border_color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]]) ; tempo_layer_args[[base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "show_legend", no = "show.legend")]] <- if(i5== 1L){TRUE}else{FALSE} ; base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::do.call(what = base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "gg_point_rast", no = base::get(x = "geom_point", envir = base::asNamespace(ns = "ggplot2"))), args = tempo_layer_args)) # WARNING: a single color allowed for color argument outside aesthetic, but here a single color for border --> loop could be inactivated but kept for commodity # legend_show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
+                    tempo_layer_args <- base::list(data = tempo_data_frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], fill = categ[[i1]]), shape = dot_shape[[i1]], size = dot_size[[i1]], stroke = dot_border_size[[i1]], color = if(dot_shape[[i1]] %in% 21:24 & ! base::is.null(dot_border_color)){dot_border_color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]]) ; tempo_layer_args[[base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "show_legend", no = "show.legend")]] <- if(i5== 1L){TRUE}else{FALSE} ; base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::do.call(what = base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "gg_point_rast", no = base::get(x = "geom_point", envir = base::asNamespace(ns = "ggplot2"))), args = tempo_layer_args)) # WARNING: a single color allowed for color argument outside aesthetic, but here a single color for border --> loop could be inactivated but kept for commodity # legend_show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord_names <- c(coord_names, base::paste0(geom[[i1]], ".", class_categ[i5]))
                 }
                 base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_fill_manual(
@@ -1987,7 +1987,7 @@ gg_scatter <- function(
                 class_categ <- base::levels(base::factor(data1[[i1]][, categ[[i1]]]))
                 for(i5 in 1:length(color[[i1]])){ # or base::length(class_categ). It is the same because already checked that lengths are the same
                     tempo_data_frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class_categ[i5], ]
-                    tempo_layer_fun <- base::eval(base::parse(text = scatter_kind[[i1]])) ; tempo_layer_args <- base::list(data = tempo_data_frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot_size[[i1]], stroke = dot_border_size[[i1]], fill = color[[i1]][i5], color = if(dot_shape[[i1]] %in% 21:24 & ! base::is.null(dot_border_color)){dot_border_color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]]) ; tempo_layer_args[[base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "show_legend", no = "show.legend")]] <- FALSE ; base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::do.call(what = base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "gg_point_rast", no = base::get(x = "geom_point", envir = base::asNamespace(ns = "ggplot2"))), args = tempo_layer_args)) # WARNING: a single color allowed for fill argument outside aesthetic, hence the loop # legend_show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
+                    tempo_layer_args <- base::list(data = tempo_data_frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], shape = categ[[i1]]), size = dot_size[[i1]], stroke = dot_border_size[[i1]], fill = color[[i1]][i5], color = if(dot_shape[[i1]] %in% 21:24 & ! base::is.null(dot_border_color)){dot_border_color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]]) ; tempo_layer_args[[base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "show_legend", no = "show.legend")]] <- FALSE ; base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::do.call(what = base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "gg_point_rast", no = base::get(x = "geom_point", envir = base::asNamespace(ns = "ggplot2"))), args = tempo_layer_args)) # WARNING: a single color allowed for fill argument outside aesthetic, hence the loop # legend_show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord_names <- c(coord_names, base::paste0(geom[[i1]], ".", class_categ[i5]))
                 }
                 base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_shape_manual(
@@ -2017,7 +2017,7 @@ gg_scatter <- function(
                 class_categ <- base::levels(base::factor(data1[[i1]][, categ[[i1]]]))
                 for(i5 in 1:length(color[[i1]])){ # or base::length(class_categ). It is the same because already checked that lengths are the same
                     tempo_data_frame <- data1[[i1]][data1[[i1]][, categ[[i1]]] == class_categ[i5], ]
-                    tempo_layer_fun <- base::eval(base::parse(text = scatter_kind[[i1]])) ; tempo_layer_args <- base::list(data = tempo_data_frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), shape = dot_shape[[i1]], size = dot_size[[i1]], fill = color[[i1]][i5], stroke = dot_border_size[[i1]], color = if(dot_shape[[i1]] %in% 21:24 & ! base::is.null(dot_border_color)){dot_border_color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]]) ; tempo_layer_args[[base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "show_legend", no = "show.legend")]] <- FALSE ; base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::do.call(what = base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "gg_point_rast", no = base::get(x = "geom_point", envir = base::asNamespace(ns = "ggplot2"))), args = tempo_layer_args)) # WARNING: a single color allowed for color argument outside aesthetic, hence the loop # legend_show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
+                    tempo_layer_args <- base::list(data = tempo_data_frame, mapping = ggplot2::aes_string(x = x[[i1]], y = y[[i1]], stroke = categ[[i1]]), shape = dot_shape[[i1]], size = dot_size[[i1]], fill = color[[i1]][i5], stroke = dot_border_size[[i1]], color = if(dot_shape[[i1]] %in% 21:24 & ! base::is.null(dot_border_color)){dot_border_color[[i1]]}else{color[[i1]][i5]}, alpha = alpha[[i1]]) ; tempo_layer_args[[base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "show_legend", no = "show.legend")]] <- FALSE ; base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::do.call(what = base::ifelse(test = base::grepl(x = scatter_kind[[i1]], pattern = "gg_point_rast", fixed = TRUE), yes = "gg_point_rast", no = base::get(x = "geom_point", envir = base::asNamespace(ns = "ggplot2"))), args = tempo_layer_args)) # WARNING: a single color allowed for color argument outside aesthetic, hence the loop # legend_show option do not remove the legend, only the aesthetic of the legend (dot, line, etc.). Used here to avoid multiple layers of legend which corrupt transparency
                     coord_names <- c(coord_names, base::paste0(geom[[i1]], ".", class_categ[i5]))
                 }
                 base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "stroke",
