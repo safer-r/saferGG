@@ -1,6 +1,6 @@
 #' @title gg_point_rast
 #' @description
-#' equivalent to ggplot2::geom_point() but in raster mode use it like ggplot2::geom_point() with the main raster.dpi additional argument.
+#' equivalent to ggplot2::geom_point() but in raster mode use it like ggplot2::geom_point() with the main raster_dpi additional argument.
 #' @details
 #' can be long to generate the plot.
 #' use a square plot region. Otherwise, the dots will have ellipsoid shape.
@@ -10,18 +10,18 @@
 #' @param mapping idem
 #' @param stat idem
 #' @param position idem
-#' @param na.rm idem
-#' @param show.legend idem
-#' @param inherit.aes idem
+#' @param na_rm idem
+#' @param show_legend idem
+#' @param inherit_aes idem
 #' @param shape dot shape (as the shape argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param size dot size (as the size argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param stroke dot border size (as the stroke argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param color dot color or dot border color (as the color argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param fill dot fill color (as the fill argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param alpha dot transparency (as the alpha argument of ggplot2::geom_point()). If NULL (default), not used.
-#' @param raster.width width of the result image (in inches). Default: determined by the current device parameters.
-#' @param raster.height height of the result image (in inches). Default: determined by the current device parameters.
-#' @param raster.dpi resolution of the result image.
+#' @param raster_width width of the result image (in inches). Default: determined by the current device parameters.
+#' @param raster_height height of the result image (in inches). Default: determined by the current device parameters.
+#' @param raster_dpi resolution of the result image.
 #' @param lib_path Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{unique(c(new, .Library.site, .Library))}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.
 #' @param safer_check Single logical value. Perform some "safer" checks? If \code{TRUE}, checkings are performed before main code running (see the \href{https://github.com/safer-r}{safer-r project}): 1) correct \code{lib_path} argument value 2) required functions and related packages effectively present in local R libraries and 3) R classical operators (like \code{"<-"}) not overwritten by another package because of the R scope. Must be set to \code{FALSE} if this function is used inside another "safer" function to avoid pointless multiple checkings.
 #' @param error_text Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}. Of note, in \code{arg_check()}, \code{error_text} is also used at the end of the string returned when no problem is detected.
@@ -49,24 +49,24 @@ gg_point_rast <- function(
         mapping = NULL, 
         stat = "identity", 
         position = "identity", 
-        na.rm = FALSE, 
-        show.legend = NA, 
-        inherit.aes = TRUE, 
+        na_rm = FALSE, 
+        show_legend = NA, 
+        inherit_aes = TRUE, 
         shape = NULL, 
         size = NULL, 
         stroke = NULL, 
         color = NULL, 
         fill = NULL, 
         alpha = NULL, 
-        raster.width = NULL, 
-        raster.height = NULL, 
-        raster.dpi = 300, 
+        raster_width = NULL, 
+        raster_height = NULL, 
+        raster_dpi = 300, 
         lib_path = NULL, 
         safer_check = TRUE, 
         error_text = ""
 ){
     # DEBUGGING
-    # data = NULL ; mapping = NULL ; stat = "identity" ; position = "identity" ; na.rm = FALSE ; show.legend = NA ; inherit.aes = TRUE ; shape = NULL ; size = NULL ; stroke = NULL ; color = NULL ; fill = NULL ; alpha = NULL ; raster.width = NULL ; raster.height = NULL ; raster.dpi = 300 ; lib_path = NULL ; safer_check = TRUE ; error_text = ""
+    # data = NULL ; mapping = NULL ; stat = "identity" ; position = "identity" ; na_rm = FALSE ; show_legend = NA ; inherit_aes = TRUE ; shape = NULL ; size = NULL ; stroke = NULL ; color = NULL ; fill = NULL ; alpha = NULL ; raster_width = NULL ; raster_height = NULL ; raster_dpi = 300 ; lib_path = NULL ; safer_check = TRUE ; error_text = ""
 
     #### package name
     package_name <- "saferGG" # write NULL if the function developed is not in a package
@@ -188,14 +188,14 @@ gg_point_rast <- function(
     tempo_arg <-base::c(
         # "data", # inactivated because can be NULL
         # "mapping", # inactivated because can be NULL
-        # "raster.width", # inactivated because can be NULL
-        # "raster.height", # inactivated because can be NULL      
+        # "raster_width", # inactivated because can be NULL
+        # "raster_height", # inactivated because can be NULL      
         "stat",
         "position",
-        "na.rm",
-        "show.legend",
-        "inherit.aes",
-        "raster.dpi"
+        "na_rm",
+        "show_legend",
+        "inherit_aes",
+        "raster_dpi"
     )
     tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){base::is.null(x = x)}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because sapply(lapply())
     if(base::any(tempo_log, na.rm = TRUE)){ # normally no NA with base::is.null()
@@ -216,14 +216,14 @@ gg_point_rast <- function(
     tempo_arg <-base::c(
         # "data", # inactivated because can be empty
         # "mapping", # inactivated because can be empty
-        # "raster.width", # inactivated because can be empty
-        # "raster.height", # inactivated because can be empty
+        # "raster_width", # inactivated because can be empty
+        # "raster_height", # inactivated because can be empty
         "stat",
         "position",
-        "na.rm",
-        "show.legend",
-        "inherit.aes",
-        "raster.dpi"
+        "na_rm",
+        "show_legend",
+        "inherit_aes",
+        "raster_dpi"
     )
     tempo_arg_user_setting_eval <- arg_user_setting_eval[base::names(x = arg_user_setting_eval) %in% tempo_arg]
     if(base::length(x = tempo_arg_user_setting_eval) != 0){
@@ -270,7 +270,7 @@ gg_point_rast <- function(
                 USE.NAMES = TRUE
             ), 
             classes = "warning"
-        ) # no argument provided by the user can be just made of NA. is.na(NULL) returns logical(0), the reason why base::length(x = x) > 0 is used # warning: all(x = x, na.rm = TRUE) but normally no NA because base::is.na() used here. Warning: would not work if arg_user_setting_eval is a vector (because treat each element as a compartment), but ok because it is always a list, even if 0 or 1 argument in the developed function
+        ) # no argument provided by the user can be just made of NA. is.na(NULL) returns logical(0), the reason why base::length(x = x) > 0 is used # warning: all(x = x, na_rm = TRUE) but normally no NA because base::is.na() used here. Warning: would not work if arg_user_setting_eval is a vector (because treat each element as a compartment), but ok because it is always a list, even if 0 or 1 argument in the developed function
         if(base::any(tempo_log, na.rm = TRUE)){
             tempo_cat <- base::paste0(
                 error_text_start, 
@@ -402,25 +402,25 @@ gg_point_rast <- function(
     text_check <- NULL
     checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
     arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
-    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
+    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object_name))
     if( ! base::is.null(x = data)){
         tempo <- saferDev::arg_check(data = data, class = "data.frame", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     if( ! base::is.null(x = mapping)){
         tempo1 <- saferDev::arg_check(data = mapping, class = "uneval", typeof = "list", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # ggplot2 < 4.0.0
         tempo2 <- saferDev::arg_check(data = mapping, class = c("ggplot2::mapping", "uneval", "gg", "S7_object"), typeof = "list", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # ggplot2 >= 4.0.0
-        checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+        checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             argum_check <- base::c(argum_check, tempo1$problem)
             text_check <- base::c(text_check, tempo1$text)
         }
     }
     # stat and position not tested because too complicated
-    tempo <- saferDev::arg_check(data = na.rm, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.na(x = show.legend)){ # show.legend can be NA (ggplot2 convention meaning "deduce from aesthetics"): skip the check in this case, because arg_check() itself rejects NA-only arguments before any na_contain handling
-        tempo <- saferDev::arg_check(data = show.legend, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = na_rm, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.na(x = show_legend)){ # show_legend can be NA (ggplot2 convention meaning "deduce from aesthetics"): skip the check in this case, because arg_check() itself rejects NA-only arguments before any na_contain handling
+        tempo <- saferDev::arg_check(data = show_legend, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    tempo <- saferDev::arg_check(data = inherit.aes, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = inherit_aes, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     if( ! base::is.null(x = shape)){
         tempo <- saferDev::arg_check(data = shape, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
@@ -439,13 +439,13 @@ gg_point_rast <- function(
     if( ! base::is.null(x = alpha)){
         tempo <- saferDev::arg_check(data = alpha, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(x = raster.width)){
-        tempo <- saferDev::arg_check(data = raster.width, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(x = raster_width)){
+        tempo <- saferDev::arg_check(data = raster_width, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(x = raster.height)){
-        tempo <- saferDev::arg_check(data = raster.height, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(x = raster_height)){
+        tempo <- saferDev::arg_check(data = raster_height, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    tempo <- saferDev::arg_check(data = raster.dpi, class = NULL, typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = raster_dpi, class = NULL, typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     # lib_path already checked above
     # safer_check already checked above
     # error_text converted to single string above
@@ -527,16 +527,16 @@ gg_point_rast <- function(
 
     #### main code
     # additional functions
-    DrawGeomPointRast <- function(data, panel_params, coord, na.rm = FALSE, raster.width = NULL, raster.height = NULL, raster.dpi = raster.dpi){
-        if(base::is.null(x = raster.width)){
-            raster.width <- graphics::par("fin")[1]
+    DrawGeomPointRast <- function(data, panel_params, coord, na_rm = FALSE, raster_width = NULL, raster_height = NULL, raster_dpi = raster_dpi){
+        if(base::is.null(x = raster_width)){
+            raster_width <- graphics::par("fin")[1]
         }
-        if(base::is.null(x = raster.height)){
-            raster.height <- graphics::par("fin")[2]
+        if(base::is.null(x = raster_height)){
+            raster_height <- graphics::par("fin")[2]
         }
         prev_dev_id <- grDevices::dev.cur()
         p <- ggplot2::GeomPoint$draw_panel(data = data, panel_params = panel_params, coord = coord)
-        dev_id <- Cairo::Cairo(type = "raster", width = raster.width * raster.dpi, height = raster.height * raster.dpi, dpi = raster.dpi, units = "px", bg = "transparent")[1]
+        dev_id <- Cairo::Cairo(type = "raster", width = raster_width * raster_dpi, height = raster_height * raster_dpi, dpi = raster_dpi, units = "px", bg = "transparent")[1]
         grid::pushViewport(grid::viewport(width = 1, height = 1))
         grid::grid.points(x = p$x, y = p$y, pch = p$pch, size = p$size, name = p$name, gp = p$gp, vp = p$vp, draw = TRUE)
         grid::popViewport()
@@ -553,19 +553,19 @@ gg_point_rast <- function(
         stat = stat, 
         geom = GeomPointRast, 
         position = position, 
-        show.legend = show.legend, 
-        inherit.aes = inherit.aes, 
+        show.legend = show_legend, 
+        inherit.aes = inherit_aes, 
         params = base::list(
-            na.rm = na.rm, 
+            na.rm = na_rm, 
             shape = shape, 
             size = size, 
             stroke = stroke, 
             color = color, 
             fill = fill, 
             alpha = alpha, 
-            raster.width = raster.width, 
-            raster.height = raster.height, 
-            raster.dpi = raster.dpi
+            raster_width = raster_width, 
+            raster_height = raster_height, 
+            raster_dpi = raster_dpi
         )
     )
     # end main code

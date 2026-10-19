@@ -19,9 +19,9 @@ base_calls <- base::list(
     gg_empty = base::quote(gg_empty(text = "TEST", text_size = 12, title = "T", title_size = 8, safer_check = FALSE, error_text = "")),
     gg_get_legend = base::quote(gg_get_legend(ggplot_built = ggplot2::ggplot_build(ggplot2::ggplot(data = base::data.frame(x = 1:3, y = 1:3, stringsAsFactors = TRUE), ggplot2::aes(x = x, y = y))), safer_check = FALSE, error_text = "")),
     gg_point_rast = base::quote(gg_point_rast(data = base::data.frame(x = 1:3, y = 1:3, stringsAsFactors = TRUE), mapping = ggplot2::aes(x = x, y = y), safer_check = FALSE, error_text = "")),
-    gg_heatmap = base::quote(gg_heatmap(data1 = base::data.frame(a = 1:3, b = base::c("x", "y", "x"), c = 1:3, stringsAsFactors = TRUE), legend.name1 = "TEST", low.color1 = "blue", mid.color1 = "white", high.color1 = "red", limit1 = base::c(0, 3), safer_check = FALSE, error_text = "")),
+    gg_heatmap = base::quote(gg_heatmap(data1 = base::data.frame(a = 1:3, b = base::c("x", "y", "x"), c = 1:3, stringsAsFactors = TRUE), legend_name1 = "TEST", low_color1 = "blue", mid_color1 = "white", high_color1 = "red", limit1 = base::c(0, 3), safer_check = FALSE, error_text = "")),
     gg_donut = base::quote(gg_donut(data1 = base::data.frame(a = base::c(1, 2), stringsAsFactors = TRUE), freq = "a", categ = "a", safer_check = FALSE, error_text = "")),
-    gg_miami = base::quote(gg_miami(file = "BAD_FILE_PATH_DOES_NOT_EXIST", chr = "BAD_FILE_PATH_DOES_NOT_EXIST", top.y.column = "AF", x_lim = "whole", vgrid = FALSE, reverse1 = FALSE, reverse2 = FALSE, y.log1 = FALSE, y.log2 = FALSE, warn.print = FALSE, safer_check = FALSE, error_text = "")),
+    gg_miami = base::quote(gg_miami(file = "BAD_FILE_PATH_DOES_NOT_EXIST", chr = "BAD_FILE_PATH_DOES_NOT_EXIST", top_y_column = "AF", x_lim = "whole", vgrid = FALSE, reverse1 = FALSE, reverse2 = FALSE, y_log1 = FALSE, y_log2 = FALSE, warn_print = FALSE, safer_check = FALSE, error_text = "")),
     gg_box = base::quote(gg_box(data1 = base::data.frame(a = base::c(1, 2, 3), b = base::c("x", "y", "x"), stringsAsFactors = TRUE), y = "a", categ = "b", safer_check = FALSE, error_text = "")),
     gg_scatter = base::quote(gg_scatter(data1 = base::data.frame(x = 1:3, y = 1:3, stringsAsFactors = TRUE), x = "x", y = "y", safer_check = FALSE, error_text = ""))
 )
@@ -62,9 +62,9 @@ testthat::test_that("management of NULL arguments (backbone)", {
         gg_empty = "text_size",
         gg_get_legend = "ggplot_built",
         gg_point_rast = "stat",
-        gg_heatmap = "legend.name1",
+        gg_heatmap = "legend_name1",
         gg_donut = "freq",
-        gg_miami = "top.y.column",
+        gg_miami = "top_y_column",
         gg_box = "y",
         gg_scatter = "geom"
     )
@@ -83,7 +83,7 @@ testthat::test_that("management of empty non NULL arguments (backbone)", {
         gg_point_rast = "stat",
         gg_heatmap = "alpha2",
         gg_donut = "freq",
-        gg_miami = "top.y.column",
+        gg_miami = "top_y_column",
         gg_box = "y",
         gg_scatter = "y"
     )
@@ -100,7 +100,7 @@ testthat::test_that("management of NA arguments (backbone)", {
         gg_just = "angle",
         gg_empty = "text_size",
         gg_get_legend = "safer_check",
-        gg_point_rast = "raster.dpi",
+        gg_point_rast = "raster_dpi",
         gg_heatmap = "alpha2",
         gg_donut = "freq",
         gg_miami = "vgrid",

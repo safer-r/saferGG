@@ -15,32 +15,32 @@ testthat::test_that("gg_donut draws donut plots and returns the expected structu
     ## tests
     # basic donut drawn
     testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", safer_check = FALSE))
-    # annotation (hole.text) drawn
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", hole.text = TRUE, safer_check = FALSE))
+    # annotation (hole_text) drawn
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", hole_text = TRUE, safer_check = FALSE))
     # return structure
-    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.limit = 0.9, plot = FALSE, return = TRUE, safer_check = FALSE)
+    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_limit = 0.9, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
-    testthat::expect_true(object = base::all(base::c("data", "removed.row.nb", "removed.rows", "plot.data", "panel", "axes", "warn", "ggplot", "gtable") %in% base::names(x = output)))
+    testthat::expect_true(object = base::all(base::c("data", "removed_row_nb", "removed_rows", "plot_data", "panel", "axes", "warn", "ggplot", "gtable") %in% base::names(x = output)))
     # title displayed: title.grob built
     testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", title = "DONUT TITLE", safer_check = FALSE))
-    # return.gtable = FALSE: NULL gtable component
-    output_nogtable <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", return.gtable = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    # return_gtable = FALSE: NULL gtable component
+    output_nogtable <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", return_gtable = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output_nogtable, "list")
     testthat::expect_null(object = output_nogtable$gtable)
-    # legend.limit warning
-    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.limit = 0.9, plot = FALSE, return = TRUE, safer_check = FALSE)
-    testthat::expect_true(object = base::grepl(x = output$warn, pattern = "legend.limit", fixed = TRUE))
-    # fill.color provided
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = base::c("red", "blue", "green", "orange"), safer_check = FALSE))
-    # fill.palette used (fill.color NULL)
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.palette = "Set1", safer_check = FALSE))
-    # both fill.color and fill.palette -> fill.color wins
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = base::c("red", "blue", "green", "orange"), fill.palette = "Set1", safer_check = FALSE))
-    # legend.limit NULL with >= 10 categories (line 1138 branch)
+    # legend_limit warning
+    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_limit = 0.9, plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_true(object = base::grepl(x = output$warn, pattern = "legend_limit", fixed = TRUE))
+    # fill_color provided
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = base::c("red", "blue", "green", "orange"), safer_check = FALSE))
+    # fill_palette used (fill_color NULL)
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_palette = "Set1", safer_check = FALSE))
+    # both fill_color and fill_palette -> fill_color wins
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = base::c("red", "blue", "green", "orange"), fill_palette = "Set1", safer_check = FALSE))
+    # legend_limit NULL with >= 10 categories (line 1138 branch)
     obs10 <- base::data.frame(Km = 1:12, Car = base::paste0("CAT", 1:12), stringsAsFactors = TRUE)
     output <- saferGG::gg_donut(data1 = obs10, freq = "Km", categ = "Car", plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
-    # legend.limit NULL with < 10 categories (line 1140 branch)
+    # legend_limit NULL with < 10 categories (line 1140 branch)
     output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     # add with ggplot2::theme -> internal theme inactivated (warn branch)
@@ -51,10 +51,10 @@ testthat::test_that("gg_donut draws donut plots and returns the expected structu
     testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", add = "+ggplot2::facet_grid(rows = ~Country)", plot = FALSE, return = TRUE, safer_check = FALSE))
     # add with facet_grid but bad facet variable
     testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", add = "+ggplot2::facet_grid(rows = ~BADFACET)", plot = FALSE, safer_check = FALSE), regexp = "PROBLEM OF VARIABLE DETECTION", fixed = TRUE)
-    # legend.name provided
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.name = "MY LEGEND", plot = FALSE, return = TRUE, safer_check = FALSE))
-    # legend.name bad type
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.name = 12, plot = FALSE, safer_check = FALSE), regexp = "legend.name ARGUMENT MUST BE", fixed = FALSE)
+    # legend_name provided
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_name = "MY LEGEND", plot = FALSE, return = TRUE, safer_check = FALSE))
+    # legend_name bad type
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_name = 12, plot = FALSE, safer_check = FALSE), regexp = "legend_name ARGUMENT MUST BE", fixed = FALSE)
     # annotation provided -> annotation column check branches (duplicated values -> warn)
     obs_ann_dup <- obs1
     obs_ann_dup$Country <- base::c("FR", "FR", "US", NA)
@@ -89,38 +89,38 @@ testthat::test_that("gg_donut draws donut plots and returns the expected structu
     output <- saferGG::gg_donut(data1 = obs_na_categ, freq = "Km", categ = "Car", plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     testthat::expect_true(object = base::grepl(x = output$warn, pattern = "PRESENCE OF NA VALUES IN THE Car COLUMN", fixed = TRUE))
-    # warn.print = TRUE
-    testthat::expect_warning(object = saferGG::gg_donut(data1 = obs_na_categ, freq = "Km", categ = "Car", plot = FALSE, warn.print = TRUE, safer_check = FALSE), regexp = "PRESENCE OF NA", fixed = FALSE)
-    # return.ggplot = TRUE
-    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", plot = FALSE, return = TRUE, return.ggplot = TRUE, safer_check = FALSE)
+    # warn_print = TRUE
+    testthat::expect_warning(object = saferGG::gg_donut(data1 = obs_na_categ, freq = "Km", categ = "Car", plot = FALSE, warn_print = TRUE, safer_check = FALSE), regexp = "PRESENCE OF NA", fixed = FALSE)
+    # return_ggplot = TRUE
+    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", plot = FALSE, return = TRUE, return_ggplot = TRUE, safer_check = FALSE)
     testthat::expect_s3_class(object = output$ggplot, class = "ggplot")
     ## end tests
 
     ## errors
     # bad freq column
     testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "BAD", categ = "Car", plot = FALSE, safer_check = FALSE), regexp = "MUST BE A COLUMN NAME", fixed = TRUE)
-    # bad hole.size
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", hole.size = 2, plot = FALSE, safer_check = FALSE), regexp = "MUST BE|BETWEEN", fixed = FALSE)
+    # bad hole_size
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", hole_size = 2, plot = FALSE, safer_check = FALSE), regexp = "MUST BE|BETWEEN", fixed = FALSE)
     # add without +
     testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", add = "ggplot2::coord_flip()", plot = FALSE, safer_check = FALSE), regexp = "MUST START WITH", fixed = TRUE)
-    # bad fill.palette
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.palette = "BADPAL", plot = FALSE, safer_check = FALSE), regexp = "THE fill.palette ARGUMENT MUST BE SOME OF THESE OPTIONS", fixed = TRUE)
-    # bad fill.color (not color, not factor, not positive integer)
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = "BAD", plot = FALSE, safer_check = FALSE), regexp = "fill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS", fixed = TRUE)
-    # fill.color with Inf among integers: Inf is of mode double, so the dedicated integer check fails and the generic message fires
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = base::c(1L, Inf), plot = FALSE, safer_check = FALSE), regexp = "fill.color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS", fixed = TRUE)
-    # fill.color with 0 among integers
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = base::c(1L, 0L), plot = FALSE, safer_check = FALSE), regexp = "fill.color ARGUMENT CANNOT CONTAIN 0 AMONG POSITIVE INTEGER VALUES", fixed = TRUE)
-    # fill.color factor class accepted (as.character path)
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = base::factor(x = base::c("red", "blue", "green", "orange")), plot = FALSE, safer_check = FALSE))
-    # fill.color as positive integers accepted
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill.color = base::c(1L, 2L, 3L, 4L), plot = FALSE, safer_check = FALSE))
-    # border.color bad value (not a color name, not hex, not integer)
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", border.color = "BADCOL", plot = FALSE, safer_check = FALSE), regexp = "border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING", fixed = TRUE)
-    # border.color as integer accepted
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", border.color = 2L, plot = FALSE, safer_check = FALSE))
-    # border.color as factor rejected (must be single character string or integer)
-    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", border.color = base::factor(x = "red"), plot = FALSE, safer_check = FALSE), regexp = "border.color ARGUMENT MUST BE A SINGLE CHARACTER STRING OR POSITIVE INTEGER", fixed = TRUE)
+    # bad fill_palette
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_palette = "BADPAL", plot = FALSE, safer_check = FALSE), regexp = "THE fill_palette ARGUMENT MUST BE SOME OF THESE OPTIONS", fixed = TRUE)
+    # bad fill_color (not color, not factor, not positive integer)
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = "BAD", plot = FALSE, safer_check = FALSE), regexp = "fill_color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS", fixed = TRUE)
+    # fill_color with Inf among integers: Inf is of mode double, so the dedicated integer check fails and the generic message fires
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = base::c(1L, Inf), plot = FALSE, safer_check = FALSE), regexp = "fill_color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS", fixed = TRUE)
+    # fill_color with 0 among integers
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = base::c(1L, 0L), plot = FALSE, safer_check = FALSE), regexp = "fill_color ARGUMENT CANNOT CONTAIN 0 AMONG POSITIVE INTEGER VALUES", fixed = TRUE)
+    # fill_color factor class accepted (as.character path)
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = base::factor(x = base::c("red", "blue", "green", "orange")), plot = FALSE, safer_check = FALSE))
+    # fill_color as positive integers accepted
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", fill_color = base::c(1L, 2L, 3L, 4L), plot = FALSE, safer_check = FALSE))
+    # border_color bad value (not a color name, not hex, not integer)
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", border_color = "BADCOL", plot = FALSE, safer_check = FALSE), regexp = "border_color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING", fixed = TRUE)
+    # border_color as integer accepted
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", border_color = 2L, plot = FALSE, safer_check = FALSE))
+    # border_color as factor rejected (must be single character string or integer)
+    testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", border_color = base::factor(x = "red"), plot = FALSE, safer_check = FALSE), regexp = "border_color ARGUMENT MUST BE A SINGLE CHARACTER STRING OR POSITIVE INTEGER", fixed = TRUE)
     # annotation provided: valid column
     testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Car", plot = FALSE, safer_check = FALSE))
     # annotation not a column name
@@ -133,19 +133,19 @@ testthat::test_that("gg_donut draws donut plots and returns the expected structu
     testthat::expect_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", add = "+ggplot2::facet_wrap(facets = ~BADFACET)", plot = FALSE, safer_check = FALSE), regexp = "PROBLEM OF VARIABLE DETECTION", fixed = TRUE)
     # add with facet_wrap on a valid column
     testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", add = "+ggplot2::facet_wrap(facets = ~Country)", plot = FALSE, safer_check = FALSE))
-    # legend.limit too high -> warn + fallback branch
-    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.limit = 0.999, legend.width = 0.4, plot = FALSE, return = TRUE, safer_check = FALSE)
+    # legend_limit too high -> warn + fallback branch
+    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_limit = 0.999, legend_width = 0.4, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     testthat::expect_true(object = base::grepl(x = output$warn, pattern = "HIGHER THAN THE HIGHEST PROPORTION", fixed = TRUE))
-    # legend.show = FALSE with legend.width kept: empty legend space (device-leak regression check)
-    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.show = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
+    # legend_show = FALSE with legend_width kept: empty legend space (device-leak regression check)
+    output <- saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_show = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(output, "list")
-    # legend.limit = "all"
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.limit = "all", legend.width = 0.4, plot = FALSE, safer_check = FALSE))
-    # legend.show = FALSE
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.show = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE))
-    # legend.width = NULL -> legend.plot NULL path
-    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend.width = NULL, plot = FALSE, return = TRUE, safer_check = FALSE))
+    # legend_limit = "all"
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_limit = "all", legend_width = 0.4, plot = FALSE, safer_check = FALSE))
+    # legend_show = FALSE
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_show = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE))
+    # legend_width = NULL -> legend_plot NULL path
+    testthat::expect_no_error(object = saferGG::gg_donut(data1 = obs1, freq = "Km", categ = "Car", legend_width = NULL, plot = FALSE, return = TRUE, safer_check = FALSE))
     # annotation NA-only column error
     obs_na <- obs1
     obs_na$Car <- base::factor(x = base::rep(x = NA, times = 4))

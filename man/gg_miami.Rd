@@ -7,21 +7,21 @@
 gg_miami(
   file,
   chr,
-  top.y.column,
-  bottom.y.column = NULL,
+  top_y_column,
+  bottom_y_column = NULL,
   x_lim = "whole",
   vgrid = FALSE,
-  color.column = NULL,
-  dot.border.color = NULL,
+  color_column = NULL,
+  dot_border_color = NULL,
   y_lim1 = NULL,
   y_lim2 = NULL,
   reverse1 = FALSE,
   reverse2 = FALSE,
-  y.threshold1 = NULL,
-  y.threshold2 = NULL,
-  y.log1 = FALSE,
-  y.log2 = FALSE,
-  warn.print = FALSE,
+  y_threshold1 = NULL,
+  y_threshold2 = NULL,
+  y_log1 = FALSE,
+  y_log2 = FALSE,
+  warn_print = FALSE,
   lib_path = NULL,
   safer_check = TRUE,
   error_text = ""
@@ -32,35 +32,35 @@ gg_miami(
 
 \item{chr}{single character string of the human chromo infos file.tsv path. Example: chr_path = "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt".}
 
-\item{top.y.column}{single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.}
+\item{top_y_column}{single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.}
 
-\item{bottom.y.column}{as the top.y.column parameter but for the bottom manhattan plot of the miami plot. NULL (default) generates a simple manhattan plot.}
+\item{bottom_y_column}{as the top_y_column parameter but for the bottom manhattan plot of the miami plot. NULL (default) generates a simple manhattan plot.}
 
 \item{x_lim}{single character string of the x-axis limits. Either "whole" for the whole genome or a special character string to have the x-axis limited to the x_lim parameter. Write NULL to do not plot results. For special character strings,  write "chr1:11000-15000" for a single region, "chr1:11000-" for a single region non delimited on the right, "chr7:0-147000000,chr10:1000000-2000000" if two regions, "chr7" for a whole chromosome, "chr7,chr1" for two chromosomes.}
 
 \item{vgrid}{single logical value. Display the chromosome separators in the miami plot? Example: vgrid = TRUE.}
 
-\item{color.column}{single character string of one of the column name of the .tsv file (see bottom.y.column) in order to color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).}
+\item{color_column}{single character string of one of the column name of the .tsv file (see bottom_y_column) in order to color the dots. Write NULL if not required (dots will be alternatively grey and blue, according to chromo order).}
 
-\item{dot.border.color}{single color character string to color the border of the dots. Write NULL if not required.}
+\item{dot_border_color}{single color character string to color the border of the dots. Write NULL if not required.}
 
-\item{y_lim1}{2 numeric values indicating the range of the top y-axis. Order matters (for inverted axis). If NULL, the range of the values from top.y.column will be used.}
+\item{y_lim1}{2 numeric values indicating the range of the top y-axis. Order matters (for inverted axis). If NULL, the range of the values from top_y_column will be used.}
 
-\item{y_lim2}{2 numeric values indicating the range of the bottom y-axis. Order matters (for inverted axis). If NULL, the range of the values from bottom.y.column will be used.}
+\item{y_lim2}{2 numeric values indicating the range of the bottom y-axis. Order matters (for inverted axis). If NULL, the range of the values from bottom_y_column will be used.}
 
 \item{reverse1}{single logical value, y-axis coordinates flip for the top panel in the miami plot. Example: reverse1 = TRUE.}
 
 \item{reverse2}{single logical value, y-axis coordinates flip for the bottom panel in the miami plot. Example: reverse2 = TRUE.}
 
-\item{y.threshold1}{single numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y.threshold1 = 3. Write NULL for no particular threshold.}
+\item{y_threshold1}{single numeric value for the y-axis threshold of the top panel in the miami plot, beyond which values are of interest. Example: y_threshold1 = 3. Write NULL for no particular threshold.}
 
-\item{y.threshold2}{single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y.threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom.y.column is NULL.}
+\item{y_threshold2}{single numeric value for the y-axis threshold of the bottom panel in the miami plot, beyond which values are of interest. Example: y_threshold2 = 3. Write NULL for no particular threshold. Not considered if bottom_y_column is NULL.}
 
-\item{y.log1}{single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y.log1 = TRUE.}
+\item{y_log1}{single logical value TRUE or FALSE for the  y-axis log10 scale of the top panel in the miami plot. Example: y_log1 = TRUE.}
 
-\item{y.log2}{single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y.log2 = TRUE.}
+\item{y_log2}{single logical value TRUE or FALSE for the  y-axis log10 scale of the bottom panel in the miami plot. Example: y_log2 = TRUE.}
 
-\item{warn.print}{logical. Print warnings at the end of the execution? No print if no warning messages.}
+\item{warn_print}{logical. Print warnings at the end of the execution? No print if no warning messages.}
 
 \item{lib_path}{Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{unique(c(new, .Library.site, .Library))}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.}
 
@@ -76,6 +76,6 @@ Plot two ggplot2 manhattan plots in mirror.
 }
 \examples{
 \dontrun{
-gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv", chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top.y.column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom.y.column = "AF")
+gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv", chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom_y_column = "AF")
 }
 }

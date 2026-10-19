@@ -13,8 +13,8 @@ testthat::test_that("mandatory arg block of safer-r functions (public functions)
         gg_get_legend = base::quote(gg_get_legend(ggplot_built = ggplot2::ggplot_build(ggplot2::ggplot(data = base::data.frame(x = 1:3, y = 1:3, stringsAsFactors = TRUE), ggplot2::aes(x = x, y = y))), safer_check = FALSE, error_text = "")),
         gg_just = base::quote(gg_just(angle = 45, pos = "top", kind = "simple", safer_check = FALSE, error_text = "")),
         gg_palette = base::quote(gg_palette(n = 3, kind = "gg", safer_check = FALSE, error_text = "")),
-        gg_heatmap = base::quote(gg_heatmap(data1 = base::data.frame(a = 1:3, b = base::c("x", "y", "x"), c = 1:3, stringsAsFactors = TRUE), legend.name1 = "TEST", low.color1 = "blue", mid.color1 = "white", high.color1 = "red", limit1 = c(0, 3), safer_check = FALSE, error_text = "")),
-        gg_miami = base::quote(gg_miami(file = "BAD_FILE_PATH_DOES_NOT_EXIST", chr = "BAD_FILE_PATH_DOES_NOT_EXIST", top.y.column = "AF", safer_check = FALSE, error_text = "")),
+        gg_heatmap = base::quote(gg_heatmap(data1 = base::data.frame(a = 1:3, b = base::c("x", "y", "x"), c = 1:3, stringsAsFactors = TRUE), legend_name1 = "TEST", low_color1 = "blue", mid_color1 = "white", high_color1 = "red", limit1 = c(0, 3), safer_check = FALSE, error_text = "")),
+        gg_miami = base::quote(gg_miami(file = "BAD_FILE_PATH_DOES_NOT_EXIST", chr = "BAD_FILE_PATH_DOES_NOT_EXIST", top_y_column = "AF", safer_check = FALSE, error_text = "")),
         gg_scatter = base::quote(gg_scatter(data1 = base::data.frame(x = 1:3, y = 1:3, stringsAsFactors = TRUE), x = "x", y = "y", safer_check = FALSE, error_text = "")),
         gg_point_rast = base::quote(gg_point_rast(data = base::data.frame(x = 1:3, y = 1:3, stringsAsFactors = TRUE), mapping = ggplot2::aes(x = x, y = y), safer_check = FALSE, error_text = "")),
         gg_donut = base::quote(gg_donut(data1 = base::data.frame(a = base::c(1, 2), stringsAsFactors = TRUE), freq = "a", safer_check = FALSE, error_text = ""))

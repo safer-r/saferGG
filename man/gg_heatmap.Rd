@@ -6,25 +6,25 @@
 \usage{
 gg_heatmap(
   data1,
-  legend.name1 = "",
-  low.color1 = "blue",
-  mid.color1 = "white",
-  high.color1 = "red",
+  legend_name1 = "",
+  low_color1 = "blue",
+  mid_color1 = "white",
+  high_color1 = "red",
   limit1 = NULL,
   midpoint1 = NULL,
   data2 = NULL,
   color2 = "black",
   alpha2 = 0.5,
   invert2 = FALSE,
-  text.size = 12,
+  text_size = 12,
   title = "",
-  title.text.size = 12,
-  show.scale = TRUE,
+  title_text_size = 12,
+  show_scale = TRUE,
   rotate = FALSE,
   return = FALSE,
   plot = TRUE,
   add = NULL,
-  warn.print = FALSE,
+  warn_print = FALSE,
   lib_path = NULL,
   safer_check = TRUE,
   error_text = ""
@@ -33,17 +33,17 @@ gg_heatmap(
 \arguments{
 \item{data1}{numeric matrix or data frame resulting from the conversion of the numeric matrix by reshape2::melt().}
 
-\item{legend.name1}{character string of the data1 heatmap scale legend.}
+\item{legend_name1}{character string of the data1 heatmap scale legend.}
 
-\item{low.color1}{character string of the color (i.e., "blue" or "#0000FF") of the lowest scale value.}
+\item{low_color1}{character string of the color (i.e., "blue" or "#0000FF") of the lowest scale value.}
 
-\item{mid.color1}{same as low.color1 but for the middle scale value. If NULL, the middle color is the default color between low.color1 and high.color1. BEWARE: argument midpoint1 is not ignored, even if mid.color1 is NULL, meaning that the default mid color can still be controled.}
+\item{mid_color1}{same as low_color1 but for the middle scale value. If NULL, the middle color is the default color between low_color1 and high_color1. BEWARE: argument midpoint1 is not ignored, even if mid_color1 is NULL, meaning that the default mid color can still be controled.}
 
-\item{high.color1}{same as low.color1 but for the highest scale value.}
+\item{high_color1}{same as low_color1 but for the highest scale value.}
 
-\item{limit1}{2 numeric values defining the lowest and higest color scale values. If NULL, take the range of data1 values. Warning values are sorted by the function. Thus, use the low.color1 and high.color1 to reverse the scale color if necessary.}
+\item{limit1}{2 numeric values defining the lowest and higest color scale values. If NULL, take the range of data1 values. Warning values are sorted by the function. Thus, use the low_color1 and high_color1 to reverse the scale color if necessary.}
 
-\item{midpoint1}{single numeric value defining the value corresponding to the mid.color1 argument. A warning message is returned if midpoint1 does not correspond to the mean of limit1 values, because the color scale is not linear anymore. If NULL, takes the mean of limit1 values. Mean of data1, instead of mean of limit1, can be used here if required.}
+\item{midpoint1}{single numeric value defining the value corresponding to the mid_color1 argument. A warning message is returned if midpoint1 does not correspond to the mean of limit1 values, because the color scale is not linear anymore. If NULL, takes the mean of limit1 values. Mean of data1, instead of mean of limit1, can be used here if required.}
 
 \item{data2}{binary mask matrix (made of 0 and 1) of same dimension as data1 or a data frame resulting from the conversion of the binary mask matrix by reshape2::melt(). Value 1 of data2 will correspond to color2 argument (value 0 will be NA color), and the opposite if invert2 argument is TRUE (inverted mask).}
 
@@ -53,13 +53,13 @@ gg_heatmap(
 
 \item{invert2}{logical. Invert the mask (1 -> 0 and 0 -> 1)?.}
 
-\item{text.size}{numeric value of the size of the texts in scale.}
+\item{text_size}{numeric value of the size of the texts in scale.}
 
 \item{title}{character string of the graph title.}
 
-\item{title.text.size}{numeric value of the title size (in points).}
+\item{title_text_size}{numeric value of the title size (in points).}
 
-\item{show.scale}{logical. Show color scale?.}
+\item{show_scale}{logical. Show color scale?.}
 
 \item{rotate}{logical. Rotate the heatmap 90° clockwise?.}
 
@@ -69,7 +69,7 @@ gg_heatmap(
 
 \item{add}{character string allowing to add more ggplot2 features (dots, lines, themes, etc.). BEWARE: (1) must start with "+" just after the simple or double opening quote (no space, end of line, carriage return, etc., allowed), (2) must finish with ")" just before the simple or double closing quote (no space, end of line, carriage return, etc., allowed) and (3) each function must be preceded by "ggplot2::" (for instance: "ggplot2::coord_flip()). If the character string contains the "ggplot2::theme" string, then internal ggplot2 theme() and theme_classic() functions will be inactivated to be reused by add. BEWARE: handle this argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions.}
 
-\item{warn.print}{logical. Print warnings at the end of the execution? No print if no warning messages.}
+\item{warn_print}{logical. Print warnings at the end of the execution? No print if no warning messages.}
 
 \item{lib_path}{Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{unique(c(new, .Library.site, .Library))}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.}
 
@@ -90,7 +90,7 @@ ggplot2 heatmap with the possibility to overlay a mask, see also: draw : http://
 \examples{
 gg_heatmap(data1 = matrix(1:16, ncol = 4), title = "GRAPH 1")
 gg_heatmap(data1 = matrix(1:16, ncol = 4), return = TRUE)
-gg_heatmap(data1 = matrix(1:16, ncol = 4), legend.name1 = "VALUE", title = "GRAPH 1", text.size = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
+gg_heatmap(data1 = matrix(1:16, ncol = 4), legend_name1 = "VALUE", title = "GRAPH 1", text_size = 5, data2 = matrix(rep(c(1,0,0,0), 4), ncol = 4), invert2 = FALSE, return = TRUE)
 # diagonal matrix
 gg_heatmap(data1 = matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4))
 gg_heatmap(data1 = reshape2::melt(matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4)))

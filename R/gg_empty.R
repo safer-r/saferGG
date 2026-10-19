@@ -358,7 +358,7 @@ gg_empty <- function(
     text_check <- NULL
     checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
     arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
-    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
+    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object_name))
     if( ! base::is.null(x = text)){ 
         tempo <- saferDev::arg_check(data = text, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
@@ -400,7 +400,7 @@ gg_empty <- function(
             base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS ARE", no = "THIS ARGUMENT IS"), 
             " NOT CLASS \"character\":\n", 
             base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), 
-            "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n.HERE, ARGUMENTS ARE TYPE:\n", 
+            "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n_HERE, ARGUMENTS ARE TYPE:\n", 
             base::paste0(base::sapply(X = tempo_arg, FUN = function(x){base::paste0(x, ": \"", base::typeof(x = base::get(x = x, pos = -1L, envir = base::parent.frame(n = 3), mode = "any", inherits = FALSE)), '"', collapse = NULL, recycle0 = FALSE)}), collapse = "\n", recycle0 = FALSE), # parent.frame(n = 3) because the get() is evaluated inside the FUN closure of sapply. But sapply(FUN) calls lapply(FUN) internally !! So parent.frame(n = 1) is the internal lapply() frame called by sapply, parent.frame(n = 2) is sapply's frame, parent.frame(n = 3) is BACKBONE's frame. NB: paste0() and typeof() are primitives and add no frame.
             intern_error_text_end, 
             collapse = NULL, 
@@ -495,20 +495,20 @@ gg_empty <- function(
 
     #### main code
 
-    tempo.gg.name <- "gg.indiv.plot."
-    tempo.gg.count <- 0
+    tempo_gg_name <- "gg.indiv.plot."
+    tempo_gg_count <- 0
     # no need loop part
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggplot())
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ggplot())
     if( ! base::is.null(text)){
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(data = base::data.frame(x = 1, y = 1, stringsAsFactors = TRUE), ggplot2::aes(x = x, y = y, label = text), size = text_size))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_text(data = base::data.frame(x = 1, y = 1, stringsAsFactors = TRUE), ggplot2::aes(x = x, y = y, label = text), size = text_size))
     }
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_void())
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ggtitle(title))
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme_void())
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), m_gg <- ggplot2::theme(
         panel.background = ggplot2::element_rect(fill = "white", color = NA),
         plot.title = ggplot2::element_text(size = title_size) # stronger than text
     ))
-    final <- base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))
+    final <- base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "))))
     #### end main code
 
     #### warning output

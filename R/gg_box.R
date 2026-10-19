@@ -1,7 +1,7 @@
 # Error: class order not good when a class is removed due to NA
 # Error: line 136 in check 20201126 with add argument
 # Solve this: sometimes error messages can be more than the max display (8170). Thus, check every ERROR MESSAGE, and trunck the message if to big. In addition, add at the begining of the warning message that it is too long and see the $warn output for complete message. Add also this into gg_scatter
-# add dot.shape ? See with available aesthetic layers
+# add dot_shape ? See with available aesthetic layers
 # rasterise: https://cran.r-project.org/web/packages/ggrastr/vignettes/Raster_geoms.html
 # add horizontal argument and deal any conflict with vertical argument. Start with horizontal = NULL as default. If ! is.null() -> convert vertical if required
 # time for excecution : microbenchmark package. See also in RStudio time per line of code. See also https://stackoverflow.com/questions/7561362/what-can-cause-a-program-to-run-much-faster-the-second-time
@@ -12,66 +12,66 @@
 #' @param data1 data frame containing one column of quantitative values (see the y argument below) and one or two columns of categories (see the categ argument below). Duplicated column names are not allowed.
 #' @param y character string of the data1 column name for y-axis (column containing numeric values). Numeric values will be split according to the classes of the column names indicated in the categ argument to generate the boxes and will also be used to plot the dots.
 #' @param categ vector of character strings of the data1 column name for categories (column of characters or factors). Must be either one or two column names. If a single column name (further referred to as categ1), then one box per class of categ1. If two column names (further referred to as categ1 and categ2), then one box per class of categ2, which form a group of boxes in each class of categ1. WARNING: no empty classes allowed. To have a single box, create a factor column with a single class and specify the name of this column in the categ argument (here, no categ2 in categ argument). For a single set of grouped boxes, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1), in addition to the already used category (as categ2 in this situation).
-#' @param categ.class.order list indicating the order of the classes of categ1 and categ2 represented on the boxplot (the first compartment for categ1 and and the second for categ2). If categ.class.order == NULL, classes are represented according to the alphabetical order. Some compartments can be NULL and others not. See the categ argument for categ1 and categ2 description.
-#' @param categ.color vector of color character string for box frames (see the categ argument for categ1 and categ2 description). If categ.color == NULL, default colors of ggplot2, whatever categ1 and categ2. If categ.color is non-null and only categ1 in categ argument, categ.color can be either: (1) a single color string. All the boxes will have this color, whatever the number of classes of categ1; (2) a vector of string colors, one for each class of categ1. Each color will be associated according to categ.class.order of categ1; (3) a vector or factor of string colors, like if it was one of the column of data1 data frame. WARNING: a single color per class of categ1 and a single class of categ1 per color must be respected; Color functions, like grey(), hsv(), etc., are also accepted; Positive integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by saferGG::gg_palette() using the maximal integer value among all the integers in categ.color (see saferGG::gg_palette()); If categ.color is non-null and categ1 and categ2 are specified, all the rules described above will apply to categ2 instead of categ1 (colors will be determined for boxes inside a group of boxes)
-#' @param box.legend.name character string of the legend title. If box.legend.name is NULL, then box.legend.name <- categ1 if only categ1 is present, and box.legend.name <- categ2 if categ1 and categ2 are present in the categ argument. Write "" if no legend required. See the categ argument for categ1 and categ2 description.
-#' @param box.fill logical. Fill the box? If TRUE, the categ.color argument will be used to generate filled boxplots (the box frames being black) as well as filled outlier dots (the dot border being controlled by the dot.border.color argument). If all the dots are plotted (argument dot.color other than NULL), they will be over the boxes. If FALSE, the categ.color argument will be used to color the box frames and the outlier dot borders. If all the dots are plotted, they will be beneath the boxes.
-#' @param box.width single numeric value (from 0 to 1) of width of either boxes or group of boxes. When categ argument has a single categ1 element (i.e., separate boxes. See the categ argument for categ1 and categ2 description), then each class of categ1 is represented by a single box. In that case, box.width argument defines each box width, from 0 (no box width) to 1 (max box width), but also the space between boxes (the code uses 1 - box.width for the box spaces). Of note, xmin and xmax of the gg_box() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each box); When categ argument has a two categ1 and categ2 elements (i.e., grouped boxes), box.width argument defines the width allocated for each set of grouped boxes, from 0 (no group width) to 1 (max group width), but also the space between grouped boxes (the code uses 1 - box.width for the spaces). Of note, xmin and xmax of the gg_box() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped box)
-#' @param box.space single numeric value (from 0 to 1) indicating the box separation inside grouped boxes, when categ argument has a two categ1 and categ2 elements. 0 means no space and 1 means boxes shrunk to a vertical line. Ignored if categ argument has a single categ1 element.
-#' @param box.line.size single numeric value of line width of boxes and whiskers in mm.
-#' @param box.notch logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences.
-#' @param box.alpha single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). To remove boxplots, use box.alpha = 0.
-#' @param box.mean logical. Add mean value? If TRUE, a diamond-shaped dot, with the horizontal diagonal corresponding to the mean value, is displayed over each boxplot.
-#' @param box.whisker.kind range of the whiskers. Either "no" (no whiskers), or "std" (length of each whisker equal to 1.5 x Inter Quartile Range (IQR)), or "max" (length of the whiskers up or down to the most distant dot).
-#' @param box.whisker.width single numeric value (from 0 to 1) of the whisker width, with 0 meaning no whiskers and 1 meaning a width equal to the box width.
-#' @param dot.color single character color string defining the color of the dots (same color for all the dots, whatever their categories). If dot.color == NULL, the dots are not plotted. A single integer is also accepted instead of a character string, that will be processed by saferGG::gg_palette(). A vector of colors or a factor or a column name of data1 is also accepted, allowing a color per dot class (see the dot.categ argument). Color functions, like grey(), hsv(), etc., are also accepted.
-#' @param dot.categ optional single character string of a column name (further referred to as categ3) of the data1 argument. This column of data1 will be used to generate a legend for dots, in addition to the legend for boxes. See the dot.color argument for details about the way the legend is built using the two dot.categ and dot.color arguments. If NULL, no legend created and the colors of dots will depend on dot.color and categ arguments (as explained in the dot.color argument).
-#' @param dot.categ.class.order optional vector of character strings indicating the order of the classes of categ3 (see the dot.categ argument). If dot.categ is non-NULL and dot.categ.class.order is NULL, classes are displayed in the legend according to the alphabetical order. Ignored if dot.categ is NULL.
-#' @param dot.legend.name optional character string of the legend title for categ3 (see the dot.categ argument). If dot.legend.name == NULL, dot.categ value is used (name of the column in data1). Write "" if no legend required. Ignored if dot.categ is NULL.
-#' @param dot.tidy logical. Nice dot spreading? If TRUE, use the geom_dotplot() function for a nice representation. WARNING: change the true quantitative coordinates of dots (i.e., y-axis values for vertical display) because of binning. Thus, the gain in aestheticism is associated with a loss in precision that can be very important. If FALSE, dots are randomly spread on the qualitative axis, using the dot.jitter argument (see below) keeping the true quantitative coordinates.
-#' @param dot.tidy.bin.nb positive integer indicating the number of bins (i.e., nb of separations) of the y.lim range. Each dot will then be put in one of the bin, with a diameter of the width of the bin. In other words, increase the number of bins to have smaller dots. Not considered if dot.tidy is FALSE.
-#' @param dot.jitter numeric value (from 0 to 1) of random dot horizontal dispersion (for vertical display), with 0 meaning no dispersion and 1 meaning dispersion in the corresponding box width interval. Not considered if dot.tidy is TRUE.
-#' @param dot_seed integer value that set the random seed. Using the same number will generate the same dot jittering. Write NULL to have different jittering each time the same instruction is run. Ignored if dot.tidy is TRUE.
-#' @param dot.size numeric value of dot diameter in mm. Not considered if dot.tidy is TRUE.
-#' @param dot.alpha numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively).
-#' @param dot.border.size numeric value of border dot width in mm. Write zero for no dot border. If dot.tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature).
-#' @param dot.border.color single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot.border.color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by saferGG::gg_palette().
-#' @param x.lab a character string or expression for x-axis legend. If NULL, character string of categ1 (see the categ argument for categ1 and categ2 description).
-#' @param x.angle integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
-#' @param y.lab a character string or expression for y-axis legend. If NULL, character string of the y argument.
-#' @param y.lim 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used.
-#' @param y.log either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881).
-#' @param y.tick.nb approximate number of desired values labeling the y-axis (i.e., main ticks, see the n argument of the the cute::saferGraph::scale2() function). If NULL and if y.log is "no", then the number of labeling values is set by ggplot2. If NULL and if y.log is "log2" or "log10", then the number of labeling values corresponds to all the exposant integers in the y.lim range (e.g., 10^1, 10^2 and 10^3, meaning 3 main ticks for y.lim = c(9, 1200)). WARNING: if non-NULL and if y.log is "log2" or "log10", labeling can be difficult to read (e.g., ..., 10^2, 10^2.5, 10^3, ...).
-#' @param y.second.tick.nb number of desired secondary ticks between main ticks. Ignored if y.log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y.second.tick.values to have the values associated to secondary ticks. IF NULL, no secondary ticks.
-#' @param y.include.zero logical. Does y.lim range include 0? Ignored if y.log is "log2" or "log10".
-#' @param y.top.extra.margin single proportion (between 0 and 1) indicating if extra margins must be added to y.lim. If different from 0, add the range of the axis multiplied by y.top.extra.margin (e.g., abs(y.lim[2] - y.lim[1]) * y.top.extra.margin) to the top of y-axis.
-#' @param y.bottom.extra.margin idem as y.top.extra.margin but to the bottom of y-axis.
-#' @param y.second.tick.positions coordinates of secondary ticks (only if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no").
-#' @param y.second.tick.values values of secondary ticks. NULL except if y.second.tick.nb argument is non-NULL or if y.log argument is different from "no").
-#' @param stat.pos add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box).
-#' @param stat.mean logical. Display mean numbers instead of median numbers? Ignored if stat.pos is NULL.
-#' @param stat.size numeric value of the stat font size in mm. Ignored if stat.pos is NULL.
-#' @param stat.dist numeric value of the stat distance in percentage of the y-axis range (stat.dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat.pos is NULL or "top".
-#' @param stat.angle integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
-#' @param vertical logical. Vertical boxes? WARNING: will be automatically set to TRUE if y.log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881).
-#' @param text.size numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm).
+#' @param categ_class_order list indicating the order of the classes of categ1 and categ2 represented on the boxplot (the first compartment for categ1 and and the second for categ2). If categ_class_order == NULL, classes are represented according to the alphabetical order. Some compartments can be NULL and others not. See the categ argument for categ1 and categ2 description.
+#' @param categ_color vector of color character string for box frames (see the categ argument for categ1 and categ2 description). If categ_color == NULL, default colors of ggplot2, whatever categ1 and categ2. If categ_color is non-null and only categ1 in categ argument, categ_color can be either: (1) a single color string. All the boxes will have this color, whatever the number of classes of categ1; (2) a vector of string colors, one for each class of categ1. Each color will be associated according to categ_class_order of categ1; (3) a vector or factor of string colors, like if it was one of the column of data1 data frame. WARNING: a single color per class of categ1 and a single class of categ1 per color must be respected; Color functions, like grey(), hsv(), etc., are also accepted; Positive integers are also accepted instead of character strings, as long as above rules about length are respected. Integers will be processed by saferGG::gg_palette() using the maximal integer value among all the integers in categ_color (see saferGG::gg_palette()); If categ_color is non-null and categ1 and categ2 are specified, all the rules described above will apply to categ2 instead of categ1 (colors will be determined for boxes inside a group of boxes)
+#' @param box_legend_name character string of the legend title. If box_legend_name is NULL, then box_legend_name <- categ1 if only categ1 is present, and box_legend_name <- categ2 if categ1 and categ2 are present in the categ argument. Write "" if no legend required. See the categ argument for categ1 and categ2 description.
+#' @param box_fill logical. Fill the box? If TRUE, the categ_color argument will be used to generate filled boxplots (the box frames being black) as well as filled outlier dots (the dot border being controlled by the dot_border_color argument). If all the dots are plotted (argument dot_color other than NULL), they will be over the boxes. If FALSE, the categ_color argument will be used to color the box frames and the outlier dot borders. If all the dots are plotted, they will be beneath the boxes.
+#' @param box_width single numeric value (from 0 to 1) of width of either boxes or group of boxes. When categ argument has a single categ1 element (i.e., separate boxes. See the categ argument for categ1 and categ2 description), then each class of categ1 is represented by a single box. In that case, box_width argument defines each box width, from 0 (no box width) to 1 (max box width), but also the space between boxes (the code uses 1 - box_width for the box spaces). Of note, xmin and xmax of the gg_box() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each box); When categ argument has a two categ1 and categ2 elements (i.e., grouped boxes), box_width argument defines the width allocated for each set of grouped boxes, from 0 (no group width) to 1 (max group width), but also the space between grouped boxes (the code uses 1 - box_width for the spaces). Of note, xmin and xmax of the gg_box() output report the box boundaries (around x-axis unit 1, 2, 3, etc., for each set of grouped box)
+#' @param box_space single numeric value (from 0 to 1) indicating the box separation inside grouped boxes, when categ argument has a two categ1 and categ2 elements. 0 means no space and 1 means boxes shrunk to a vertical line. Ignored if categ argument has a single categ1 element.
+#' @param box_line_size single numeric value of line width of boxes and whiskers in mm.
+#' @param box_notch logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences.
+#' @param box_alpha single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). To remove boxplots, use box_alpha = 0.
+#' @param box_mean logical. Add mean value? If TRUE, a diamond-shaped dot, with the horizontal diagonal corresponding to the mean value, is displayed over each boxplot.
+#' @param box_whisker_kind range of the whiskers. Either "no" (no whiskers), or "std" (length of each whisker equal to 1.5 x Inter Quartile Range (IQR)), or "max" (length of the whiskers up or down to the most distant dot).
+#' @param box_whisker_width single numeric value (from 0 to 1) of the whisker width, with 0 meaning no whiskers and 1 meaning a width equal to the box width.
+#' @param dot_color single character color string defining the color of the dots (same color for all the dots, whatever their categories). If dot_color == NULL, the dots are not plotted. A single integer is also accepted instead of a character string, that will be processed by saferGG::gg_palette(). A vector of colors or a factor or a column name of data1 is also accepted, allowing a color per dot class (see the dot_categ argument). Color functions, like grey(), hsv(), etc., are also accepted.
+#' @param dot_categ optional single character string of a column name (further referred to as categ3) of the data1 argument. This column of data1 will be used to generate a legend for dots, in addition to the legend for boxes. See the dot_color argument for details about the way the legend is built using the two dot_categ and dot_color arguments. If NULL, no legend created and the colors of dots will depend on dot_color and categ arguments (as explained in the dot_color argument).
+#' @param dot_categ_class_order optional vector of character strings indicating the order of the classes of categ3 (see the dot_categ argument). If dot_categ is non-NULL and dot_categ_class_order is NULL, classes are displayed in the legend according to the alphabetical order. Ignored if dot_categ is NULL.
+#' @param dot_legend_name optional character string of the legend title for categ3 (see the dot_categ argument). If dot_legend_name == NULL, dot_categ value is used (name of the column in data1). Write "" if no legend required. Ignored if dot_categ is NULL.
+#' @param dot_tidy logical. Nice dot spreading? If TRUE, use the geom_dotplot() function for a nice representation. WARNING: change the true quantitative coordinates of dots (i.e., y-axis values for vertical display) because of binning. Thus, the gain in aestheticism is associated with a loss in precision that can be very important. If FALSE, dots are randomly spread on the qualitative axis, using the dot_jitter argument (see below) keeping the true quantitative coordinates.
+#' @param dot_tidy_bin_nb positive integer indicating the number of bins (i.e., nb of separations) of the y_lim range. Each dot will then be put in one of the bin, with a diameter of the width of the bin. In other words, increase the number of bins to have smaller dots. Not considered if dot_tidy is FALSE.
+#' @param dot_jitter numeric value (from 0 to 1) of random dot horizontal dispersion (for vertical display), with 0 meaning no dispersion and 1 meaning dispersion in the corresponding box width interval. Not considered if dot_tidy is TRUE.
+#' @param dot_seed integer value that set the random seed. Using the same number will generate the same dot jittering. Write NULL to have different jittering each time the same instruction is run. Ignored if dot_tidy is TRUE.
+#' @param dot_size numeric value of dot diameter in mm. Not considered if dot_tidy is TRUE.
+#' @param dot_alpha numeric value (from 0 to 1) of dot transparency (full transparent to full opaque, respectively).
+#' @param dot_border_size numeric value of border dot width in mm. Write zero for no dot border. If dot_tidy is TRUE, value 0 remove the border and other values leave the border without size control (geom_doplot() feature).
+#' @param dot_border_color single character color string defining the color of the dot border (same color for all the dots, whatever their categories). If dot_border_color == NULL, the border color will be the same as the dot color. A single integer is also accepted instead of a character string, that will be processed by saferGG::gg_palette().
+#' @param x_lab a character string or expression for x-axis legend. If NULL, character string of categ1 (see the categ argument for categ1 and categ2 description).
+#' @param x_angle integer value of the text angle for the x-axis numbers, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
+#' @param y_lab a character string or expression for y-axis legend. If NULL, character string of the y argument.
+#' @param y_lim 2 numeric values indicating the range of the y-axis. Order matters (for inverted axis). If NULL, the range of the x column name of data1 will be used.
+#' @param y_log either "no", "log2" (values in the y argument column of the data1 data frame will be log2 transformed and y-axis will be log2 scaled) or "log10" (values in the y argument column of the data1 data frame will be log10 transformed and y-axis will be log10 scaled). WARNING: not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881).
+#' @param y_tick_nb approximate number of desired values labeling the y-axis (i.e., main ticks, see the n argument of the the cute::saferGraph::scale2() function). If NULL and if y_log is "no", then the number of labeling values is set by ggplot2. If NULL and if y_log is "log2" or "log10", then the number of labeling values corresponds to all the exposant integers in the y_lim range (e.g., 10^1, 10^2 and 10^3, meaning 3 main ticks for y_lim = c(9, 1200)). WARNING: if non-NULL and if y_log is "log2" or "log10", labeling can be difficult to read (e.g., ..., 10^2, 10^2.5, 10^3, ...).
+#' @param y_second_tick_nb number of desired secondary ticks between main ticks. Ignored if y_log is other than "no" (log scale plotted). Use argument return = TRUE and see $plot$y_second_tick_values to have the values associated to secondary ticks. IF NULL, no secondary ticks.
+#' @param y_include_zero logical. Does y_lim range include 0? Ignored if y_log is "log2" or "log10".
+#' @param y_top_extra_margin single proportion (between 0 and 1) indicating if extra margins must be added to y_lim. If different from 0, add the range of the axis multiplied by y_top_extra_margin (e.g., abs(y_lim[2] - y_lim[1]) * y_top_extra_margin) to the top of y-axis.
+#' @param y_bottom_extra_margin idem as y_top_extra_margin but to the bottom of y-axis.
+#' @param y_second_tick_positions coordinates of secondary ticks (only if y_second_tick_nb argument is non-NULL or if y_log argument is different from "no").
+#' @param y_second_tick_values values of secondary ticks. NULL except if y_second_tick_nb argument is non-NULL or if y_log argument is different from "no").
+#' @param stat_pos add the median number above the corresponding box. Either NULL (no number shown), "top" (at the top of the plot region) or "above" (above each box).
+#' @param stat_mean logical. Display mean numbers instead of median numbers? Ignored if stat_pos is NULL.
+#' @param stat_size numeric value of the stat font size in mm. Ignored if stat_pos is NULL.
+#' @param stat_dist numeric value of the stat distance in percentage of the y-axis range (stat_dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat_pos is NULL or "top".
+#' @param stat_angle integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.
+#' @param vertical logical. Vertical boxes? WARNING: will be automatically set to TRUE if y_log argument is other than "no". Indeed, not possible to have horizontal boxes with a log axis, due to a bug in ggplot2 (see https://github.com/tidyverse/ggplot2/issues/881).
+#' @param text_size numeric value of the font size of the (1) axis numbers, (2) axis labels and (3) texts in the graphic legend (in mm).
 #' @param title character string of the graph title.
-#' @param title.text.size numeric value of the title font size in mm.
-#' @param legend.show logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend, excepted if legend.width argument is non-NULL. In that specific case (categ is NULL, legend.show is TRUE and legend.width is non-NULL), an empty legend space is created. This can be useful when desiring graphs of exactly the same width, whatever they have legends or not.
-#' @param legend.width single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend.
+#' @param title_text_size numeric value of the title font size in mm.
+#' @param legend_show logical. Show legend? Not considered if categ argument is NULL, because this already generate no legend, excepted if legend_width argument is non-NULL. In that specific case (categ is NULL, legend_show is TRUE and legend_width is non-NULL), an empty legend space is created. This can be useful when desiring graphs of exactly the same width, whatever they have legends or not.
+#' @param legend_width single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend.
 #' @param article logical. If TRUE, use an article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (e.g., add = "+ggplot2::theme_classic()" for the exact classic ggplot theme.
 #' @param grid logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present).
-#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()". If the character string contains the "ggplot2::theme" string, then the article argument of gg_box() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x.angle (check all the arguments). Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions. The call of objects inside the quotes of add can lead to an error if the name of these objects are some of the gg_box() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'    
+#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()". If the character string contains the "ggplot2::theme" string, then the article argument of gg_box() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x_angle (check all the arguments). Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions. The call of objects inside the quotes of add can lead to an error if the name of these objects are some of the gg_box() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'    
 #' @param return logical. Return the graph parameters?.
-#' @param return.ggplot logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the gg_box() function (e.g., a <- gg_box()) if return.ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details.
-#' @param return.gtable logical. Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details.
+#' @param return_ggplot logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the gg_box() function (e.g., a <- gg_box()) if return_ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details.
+#' @param return_gtable logical. Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details.
 #' @param plot logical. Plot the graphic? If FALSE and return argument is TRUE, graphical parameters and associated warnings are provided without plotting.
-#' @param warn.print logical. Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE.
+#' @param warn_print logical. Print warnings at the end of the execution? ? If FALSE, warning messages are never printed, but can still be recovered in the returned list. Some of the warning messages (those delivered by the internal ggplot2 functions) are not apparent when using the argument plot = FALSE.
 #' @param safer_check Single logical value. Perform the "safer" checks? If \code{TRUE}, checkings are performed before main code running (see the \href{https://github.com/safer-r}{safer-r project}): 1) correct \code{lib_path} argument value 2) required functions and related packages effectively present in local R libraries and 3) R classical operators (like \code{"<-"}) not overwritten by another package because of the R scope. Warning: must be set to \code{FALSE} if this function is used inside another "safer" function to avoid pointless multiple checkings.
 #' @param lib_path Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{c(lib_path, .libPaths())}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.
 #' @param error_text Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}.
 #' @returns A boxplot if plot argument is TRUE.
-#' @returns A list of the graph info if return argument is TRUE: $data: the initial data with graphic information added; $stat: the graphic statistics (mostly equivalent to ggplot_build()$data[[2]]); $removed.row.nb: which rows have been removed due to NA/Inf detection in y and categ columns (NULL if no row removed); $removed.rows: removed rows (NULL if no row removed); $plot: the graphic box and dot coordinates; $dots: dot coordinates; $main.box: coordinates of boxes; $median: median coordinates; $sup.whisker: coordinates of top whiskers (y for base and y.end for extremities); $inf.whisker: coordinates of bottom whiskers (y for base and y.end for extremities); $sup.whisker.edge: coordinates of top whisker edges (x and xend); $inf.whisker.edge: coordinates of bottom whisker edges(x and xend); $mean: diamond mean coordinates (only if box.mean argument is TRUE); $stat.pos: coordinates of stat numbers (only if stat.pos argument is not NULL); $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0; $axes: the x-axis and y-axis info; $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE; $ggplot: ggplot object that can be used for reprint (use print(...$ggplot) or update (use ...$ggplot + ggplot2::...). NULL if return.ggplot argument is FALSE. Of note, a non-NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot; $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return.ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot; 
+#' @returns A list of the graph info if return argument is TRUE: $data: the initial data with graphic information added; $stat: the graphic statistics (mostly equivalent to ggplot_build()$data[[2]]); $removed_row_nb: which rows have been removed due to NA/Inf detection in y and categ columns (NULL if no row removed); $removed_rows: removed rows (NULL if no row removed); $plot: the graphic box and dot coordinates; $dots: dot coordinates; $main.box: coordinates of boxes; $median: median coordinates; $sup.whisker: coordinates of top whiskers (y for base and y.end for extremities); $inf.whisker: coordinates of bottom whiskers (y for base and y.end for extremities); $sup.whisker.edge: coordinates of top whisker edges (x and xend); $inf.whisker.edge: coordinates of bottom whisker edges(x and xend); $mean: diamond mean coordinates (only if box_mean argument is TRUE); $stat_pos: coordinates of stat numbers (only if stat_pos argument is not NULL); $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0; $axes: the x-axis and y-axis info; $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE; $ggplot: ggplot object that can be used for reprint (use print(...$ggplot) or update (use ...$ggplot + ggplot2::...). NULL if return_ggplot argument is FALSE. Of note, a non-NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot; $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return_ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot; 
 #' @examples
 #' set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; gg_box(data1 = obs1, y = "Time", categ = "Categ1")
 #' @importFrom ggplot2 aes
@@ -119,74 +119,74 @@
 #' - Rows containing NA in data1[, c(freq, categ)] will be removed before processing, with a warning (see below).
 #' -Hinges are not computed like in the classical boxplot() function of R. See https://ggplot2.tidyverse.org/reference/geom_boxplot.html.
 #' -To have a single box, please create a factor column with a single class and specify the name of this column in the categ argument. For a single set of grouped boxes, create a factor column with a single class and specify this column in categ argument as first element (i.e., as categ1, knowing that categ2 must also be specified in this situation). See categ argument below.
-#" -The dot.alpha argument can alter the display of the color boxes when using pdf output"
-#' - Size arguments (hole.text.size, border.size, title.text.size and annotation.size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE)).
+#" -The dot_alpha argument can alter the display of the color boxes when using pdf output"
+#' - Size arguments (hole_text_size, border_size, title_text_size and annotation_size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE)).
 #' -Display seems to be done twice on Windows devices (like a blink). However, no double plots on pdf devices. Thus, the blink remains mysterious.
-#' -To remove boxes and have only dots, use box.alpha = 0
+#' -To remove boxes and have only dots, use box_alpha = 0
 #' @export
 gg_box <- function(
     data1, 
     y, 
     categ, 
-    categ.class.order = NULL, 
-    categ.color = NULL, 
-    box.legend.name = NULL, 
-    box.fill = FALSE, 
-    box.width = 0.5, 
-    box.space = 0.1, 
-    box.line.size = 0.75, 
-    box.notch = FALSE, 
-    box.alpha = 1, 
-    box.mean = TRUE, 
-    box.whisker.kind = "std", 
-    box.whisker.width = 0, 
-    dot.color = grDevices::grey(0.25), 
-    dot.categ = NULL, 
-    dot.categ.class.order = NULL, 
-    dot.legend.name = NULL, 
-    dot.tidy = FALSE, 
-    dot.tidy.bin.nb = 50, 
-    dot.jitter = 0.5, 
+    categ_class_order = NULL, 
+    categ_color = NULL, 
+    box_legend_name = NULL, 
+    box_fill = FALSE, 
+    box_width = 0.5, 
+    box_space = 0.1, 
+    box_line_size = 0.75, 
+    box_notch = FALSE, 
+    box_alpha = 1, 
+    box_mean = TRUE, 
+    box_whisker_kind = "std", 
+    box_whisker_width = 0, 
+    dot_color = grDevices::grey(0.25), 
+    dot_categ = NULL, 
+    dot_categ_class_order = NULL, 
+    dot_legend_name = NULL, 
+    dot_tidy = FALSE, 
+    dot_tidy_bin_nb = 50, 
+    dot_jitter = 0.5, 
     dot_seed = 2, 
-    dot.size = 3, 
-    dot.alpha = 0.5, 
-    dot.border.size = 0.5, 
-    dot.border.color = NULL, 
-    x.lab = NULL, 
-    x.angle = 0, 
-    y.lab = NULL, 
-    y.lim = NULL, 
-    y.log = "no", 
-    y.tick.nb = NULL, 
-    y.second.tick.nb = 1, 
-    y.include.zero = FALSE, 
-    y.top.extra.margin = 0.05, 
-    y.bottom.extra.margin = 0.05, 
-    stat.pos = "top", 
-    stat.mean = FALSE, 
-    stat.size = 4, 
-    stat.dist = 5, 
-    stat.angle = 0, 
+    dot_size = 3, 
+    dot_alpha = 0.5, 
+    dot_border_size = 0.5, 
+    dot_border_color = NULL, 
+    x_lab = NULL, 
+    x_angle = 0, 
+    y_lab = NULL, 
+    y_lim = NULL, 
+    y_log = "no", 
+    y_tick_nb = NULL, 
+    y_second_tick_nb = 1, 
+    y_include_zero = FALSE, 
+    y_top_extra_margin = 0.05, 
+    y_bottom_extra_margin = 0.05, 
+    stat_pos = "top", 
+    stat_mean = FALSE, 
+    stat_size = 4, 
+    stat_dist = 5, 
+    stat_angle = 0, 
     vertical = TRUE, 
-    text.size = 12, 
+    text_size = 12, 
     title = "", 
-    title.text.size = 8, 
-    legend.show = TRUE, 
-    legend.width = 0.5, 
+    title_text_size = 8, 
+    legend_show = TRUE, 
+    legend_width = 0.5, 
     article = TRUE, 
     grid = FALSE, 
     add = NULL, 
     return = FALSE, 
-    return.ggplot = FALSE,
-    return.gtable = TRUE,
+    return_ggplot = FALSE,
+    return_gtable = TRUE,
     plot = TRUE, 
-    warn.print = FALSE, 
+    warn_print = FALSE, 
     safer_check = TRUE, 
     lib_path = NULL, 
     error_text = ""
 ){
     # DEBUGGING
-    # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ.class.order = NULL ; categ.color = NULL ; box.legend.name = NULL ; box.fill = FALSE ; box.width = 0.5 ; box.space = 0.1 ; box.line.size = 0.75 ; box.notch = FALSE ; box.alpha = 1 ; box.mean = TRUE ; box.whisker.kind = "std" ; box.whisker.width = 0 ; dot.color = grey(0.25) ; dot.categ = NULL ; dot.categ.class.order = NULL ; dot.legend.name = NULL ; dot.tidy = FALSE ; dot.tidy.bin.nb = 50 ; dot.jitter = 0.5 ; dot_seed = 2 ; dot.size = 3 ; dot.alpha = 0.5 ; dot.border.size = 0.5 ; dot.border.color = NULL ; x.lab = NULL ; x.angle = 0 ; y.lab = NULL ; y.lim = NULL ; y.log = "no" ; y.tick.nb = NULL ; y.second.tick.nb = 1 ; y.include.zero = FALSE ; y.top.extra.margin = 0.05 ; y.bottom.extra.margin = 0.05 ; stat.pos = "top" ; stat.mean = FALSE ; stat.size = 4 ; stat.dist = 5 ; stat.angle = 0 ; vertical = TRUE ; text.size = 12 ; title = "" ; title.text.size = 8 ; legend.show = TRUE ; legend.width = 0.5 ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return.ggplot = FALSE ; return.gtable = TRUE ; plot = TRUE ; warn.print = FALSE ; safer_check = FALSE ; lib_path = NULL ; error_text = ""
+    # set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(10), rnorm(10) + 2), Categ1 = rep(c("G", "H"), each = 10), stringsAsFactors = TRUE) ; set.seed(NULL) ; obs1$Time[1:10] <- NA ; data1 = obs1 ; y = "Time" ; categ = c("Categ1") ; categ_class_order = NULL ; categ_color = NULL ; box_legend_name = NULL ; box_fill = FALSE ; box_width = 0.5 ; box_space = 0.1 ; box_line_size = 0.75 ; box_notch = FALSE ; box_alpha = 1 ; box_mean = TRUE ; box_whisker_kind = "std" ; box_whisker_width = 0 ; dot_color = grey(0.25) ; dot_categ = NULL ; dot_categ_class_order = NULL ; dot_legend_name = NULL ; dot_tidy = FALSE ; dot_tidy_bin_nb = 50 ; dot_jitter = 0.5 ; dot_seed = 2 ; dot_size = 3 ; dot_alpha = 0.5 ; dot_border_size = 0.5 ; dot_border_color = NULL ; x_lab = NULL ; x_angle = 0 ; y_lab = NULL ; y_lim = NULL ; y_log = "no" ; y_tick_nb = NULL ; y_second_tick_nb = 1 ; y_include_zero = FALSE ; y_top_extra_margin = 0.05 ; y_bottom_extra_margin = 0.05 ; stat_pos = "top" ; stat_mean = FALSE ; stat_size = 4 ; stat_dist = 5 ; stat_angle = 0 ; vertical = TRUE ; text_size = 12 ; title = "" ; title_text_size = 8 ; legend_show = TRUE ; legend_width = 0.5 ; article = TRUE ; grid = FALSE ; add = NULL ; return = FALSE ; return_ggplot = FALSE ; return_gtable = TRUE ; plot = TRUE ; warn_print = FALSE ; safer_check = FALSE ; lib_path = NULL ; error_text = ""
 
 
 
@@ -330,59 +330,59 @@ gg_box <- function(
         "data1", 
         "y", 
         "categ", 
-        # "categ.class.order", 
-        # "categ.color", 
-        # "box.legend.name", 
-        "box.fill", 
-        "box.width", 
-        "box.space", 
-        "box.line.size", 
-        "box.notch", 
-        "box.alpha", 
-        "box.mean", 
-        "box.whisker.kind", 
-        "box.whisker.width", 
-        # "dot.color", 
-        # "dot.categ", 
-        # "dot.categ.class.order", 
-        # "dot.legend.name", 
-        "dot.tidy", 
-        "dot.tidy.bin.nb", 
-        "dot.jitter", 
+        # "categ_class_order", 
+        # "categ_color", 
+        # "box_legend_name", 
+        "box_fill", 
+        "box_width", 
+        "box_space", 
+        "box_line_size", 
+        "box_notch", 
+        "box_alpha", 
+        "box_mean", 
+        "box_whisker_kind", 
+        "box_whisker_width", 
+        # "dot_color", 
+        # "dot_categ", 
+        # "dot_categ_class_order", 
+        # "dot_legend_name", 
+        "dot_tidy", 
+        "dot_tidy_bin_nb", 
+        "dot_jitter", 
         # "dot_seed", 
-        "dot.size", 
-        "dot.alpha", 
-        "dot.border.size", 
-        # "dot.border.color", 
-        # "x.lab", 
-        "x.angle", 
-        # "y.lab", 
-        # "y.lim", 
-        "y.log", 
-        # "y.tick.nb", 
-        # "y.second.tick.nb", 
-        "y.include.zero", 
-        "y.top.extra.margin", 
-        "y.bottom.extra.margin", 
-        # "stat.pos", 
-        "stat.mean", 
-        "stat.size", 
-        "stat.dist", 
-        "stat.angle", 
+        "dot_size", 
+        "dot_alpha", 
+        "dot_border_size", 
+        # "dot_border_color", 
+        # "x_lab", 
+        "x_angle", 
+        # "y_lab", 
+        # "y_lim", 
+        "y_log", 
+        # "y_tick_nb", 
+        # "y_second_tick_nb", 
+        "y_include_zero", 
+        "y_top_extra_margin", 
+        "y_bottom_extra_margin", 
+        # "stat_pos", 
+        "stat_mean", 
+        "stat_size", 
+        "stat_dist", 
+        "stat_angle", 
         "vertical", 
-        "text.size", 
+        "text_size", 
         "title", 
-        "title.text.size", 
-        "legend.show", 
-        # "legend.width", 
+        "title_text_size", 
+        "legend_show", 
+        # "legend_width", 
         "article", 
         "grid", 
         # "add", 
         "return", 
-        "return.ggplot", 
-        "return.gtable", 
+        "return_ggplot", 
+        "return_gtable", 
         "plot", 
-        "warn.print", 
+        "warn_print", 
         "safer_check" 
         # "lib_path", # inactivated because can be NULL
         # "error_text" # inactivated because NULL converted to "" above
@@ -407,59 +407,59 @@ gg_box <- function(
         "data1", 
         "y", 
         "categ", 
-        "categ.class.order", 
-        "categ.color", 
-        "box.legend.name", 
-        "box.fill", 
-        "box.width", 
-        "box.space", 
-        "box.line.size", 
-        "box.notch", 
-        "box.alpha", 
-        "box.mean", 
-        "box.whisker.kind", 
-        "box.whisker.width", 
-        "dot.color", 
-        "dot.categ", 
-        "dot.categ.class.order", 
-        "dot.legend.name", 
-        "dot.tidy", 
-        "dot.tidy.bin.nb", 
-        "dot.jitter", 
+        "categ_class_order", 
+        "categ_color", 
+        "box_legend_name", 
+        "box_fill", 
+        "box_width", 
+        "box_space", 
+        "box_line_size", 
+        "box_notch", 
+        "box_alpha", 
+        "box_mean", 
+        "box_whisker_kind", 
+        "box_whisker_width", 
+        "dot_color", 
+        "dot_categ", 
+        "dot_categ_class_order", 
+        "dot_legend_name", 
+        "dot_tidy", 
+        "dot_tidy_bin_nb", 
+        "dot_jitter", 
         "dot_seed", 
-        "dot.size", 
-        "dot.alpha", 
-        "dot.border.size", 
-        "dot.border.color", 
-        "x.lab", 
-        "x.angle", 
-        "y.lab", 
-        "y.lim", 
-        "y.log", 
-        "y.tick.nb", 
-        "y.second.tick.nb", 
-        "y.include.zero", 
-        "y.top.extra.margin", 
-        "y.bottom.extra.margin", 
-        "stat.pos", 
-        "stat.mean", 
-        "stat.size", 
-        "stat.dist", 
-        "stat.angle", 
+        "dot_size", 
+        "dot_alpha", 
+        "dot_border_size", 
+        "dot_border_color", 
+        "x_lab", 
+        "x_angle", 
+        "y_lab", 
+        "y_lim", 
+        "y_log", 
+        "y_tick_nb", 
+        "y_second_tick_nb", 
+        "y_include_zero", 
+        "y_top_extra_margin", 
+        "y_bottom_extra_margin", 
+        "stat_pos", 
+        "stat_mean", 
+        "stat_size", 
+        "stat_dist", 
+        "stat_angle", 
         "vertical", 
-        "text.size", 
+        "text_size", 
         "title", 
-        "title.text.size", 
-        "legend.show", 
-        "legend.width", 
+        "title_text_size", 
+        "legend_show", 
+        "legend_width", 
         "article", 
         "grid", 
         "add", 
         "return", 
-        "return.ggplot", 
-        "return.gtable", 
+        "return_ggplot", 
+        "return_gtable", 
         "plot", 
-        "warn.print", 
+        "warn_print", 
         "safer_check", 
         "lib_path"
         # "error_text" # inactivated because empty value converted to "" above
@@ -673,40 +673,40 @@ gg_box <- function(
     text_check <- NULL
     checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
     arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
-    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object.name))
+    ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object_name))
     # copy - paste ththe line below as much, one for each of the arguments of your own function
     tempo <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = y, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = categ, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(categ.class.order)){
-        tempo <- saferDev::arg_check(data = categ.class.order, class = "list", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(categ_class_order)){
+        tempo <- saferDev::arg_check(data = categ_class_order, class = "list", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "categ.class.order")
+        checked_arg_names <- base::c(checked_arg_names, "categ_class_order")
     }
-    if( ! base::is.null(box.legend.name)){
-        tempo <- saferDev::arg_check(data = box.legend.name, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(box_legend_name)){
+        tempo <- saferDev::arg_check(data = box_legend_name, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "box.legend.name")
+        checked_arg_names <- base::c(checked_arg_names, "box_legend_name")
     }
-    if( ! base::is.null(categ.color)){
-        tempo1 <- saferDev::arg_check(data = categ.color, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        tempo2 <- saferDev::arg_check(data = categ.color, class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+    if( ! base::is.null(categ_color)){
+        tempo1 <- saferDev::arg_check(data = categ_color, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo2 <- saferDev::arg_check(data = categ_color, class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-            tempo.check.color <- saferDev::arg_check(data = categ.color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
-            if(tempo.check.color == TRUE){
+            tempo_check_color <- saferDev::arg_check(data = categ_color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
+            if(tempo_check_color == TRUE){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "categ.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
+                    "categ_color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
-            }else if(base::any(categ.color == 0L, na.rm = TRUE)){
+            }else if(base::any(categ_color == 0L, na.rm = TRUE)){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "categ.color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
+                    "categ_color ARGUMENT MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
@@ -715,36 +715,36 @@ gg_box <- function(
             }
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "categ.color")
+        checked_arg_names <- base::c(checked_arg_names, "categ_color")
     }
-    tempo <- saferDev::arg_check(data = box.fill, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.space, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.line.size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.notch, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.alpha, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.mean, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.whisker.kind, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = c("no", "std", "max"), all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = "") ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = box.whisker.width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(dot.color)){
-        tempo1 <- saferDev::arg_check(data = dot.color, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        tempo2 <- saferDev::arg_check(data = dot.color, class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+    tempo <- saferDev::arg_check(data = box_fill, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_space, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_line_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_notch, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_alpha, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_mean, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_whisker_kind, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = c("no", "std", "max"), all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = "") ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = box_whisker_width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(dot_color)){
+        tempo1 <- saferDev::arg_check(data = dot_color, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo2 <- saferDev::arg_check(data = dot_color, class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
-            tempo.check.color <- saferDev::arg_check(data = dot.color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
-            if(tempo.check.color == TRUE){
+            tempo_check_color <- saferDev::arg_check(data = dot_color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
+            if(tempo_check_color == TRUE){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "dot.color MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
+                    "dot_color MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
-            }else if(base::any(dot.color == 0L, na.rm = TRUE)){
+            }else if(base::any(dot_color == 0L, na.rm = TRUE)){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "dot.color MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
+                    "dot_color MUST BE A FACTOR OR CHARACTER VECTOR OR POSITVE INTEGER VECTOR",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
@@ -753,30 +753,30 @@ gg_box <- function(
             }
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "dot.color")
+        checked_arg_names <- base::c(checked_arg_names, "dot_color")
     }
-    if( ! base::is.null(dot.categ)){
-        tempo <- saferDev::arg_check(data = dot.categ, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(dot_categ)){
+        tempo <- saferDev::arg_check(data = dot_categ, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "dot.categ")
+        checked_arg_names <- base::c(checked_arg_names, "dot_categ")
     }
-    if( ! base::is.null(dot.categ.class.order)){
-        tempo <- saferDev::arg_check(data = dot.categ.class.order, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(dot_categ_class_order)){
+        tempo <- saferDev::arg_check(data = dot_categ_class_order, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "dot.categ.class.order")
+        checked_arg_names <- base::c(checked_arg_names, "dot_categ_class_order")
     }
-    if( ! base::is.null(dot.legend.name)){
-        tempo <- saferDev::arg_check(data = dot.legend.name, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(dot_legend_name)){
+        tempo <- saferDev::arg_check(data = dot_legend_name, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "dot.legend.name")
+        checked_arg_names <- base::c(checked_arg_names, "dot_legend_name")
     }
-    tempo <- saferDev::arg_check(data = dot.tidy, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = dot.tidy.bin.nb, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = dot_tidy, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = dot_tidy_bin_nb, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     if(tempo$problem == FALSE){
-        if(dot.tidy.bin.nb == 0L){ # length and NA checked above
+        if(dot_tidy_bin_nb == 0L){ # length and NA checked above
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
-                "dot.tidy.bin.nb ARGUMENT MUST BE A NON-NULL AND POSITVE INTEGER VALUE",
+                "dot_tidy_bin_nb ARGUMENT MUST BE A NON-NULL AND POSITVE INTEGER VALUE",
                 collapse = NULL, 
                 recycle0 = FALSE
             )
@@ -784,33 +784,33 @@ gg_box <- function(
             argum_check <- base::c(argum_check, TRUE)
         }
     }
-    tempo <- saferDev::arg_check(data = dot.jitter, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = dot_jitter, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     if( ! base::is.null(dot_seed)){
         tempo <- saferDev::arg_check(data = dot_seed, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
         checked_arg_names <- base::c(checked_arg_names, "dot_seed")
     }
-    tempo <- saferDev::arg_check(data = dot.size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = dot.alpha, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = dot.border.size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(dot.border.color)){
-        tempo1 <- saferDev::arg_check(data = dot.border.color, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        tempo2 <- saferDev::arg_check(data = dot.border.color, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+    tempo <- saferDev::arg_check(data = dot_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = dot_alpha, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = dot_border_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(dot_border_color)){
+        tempo1 <- saferDev::arg_check(data = dot_border_color, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo2 <- saferDev::arg_check(data = dot_border_color, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
-                "dot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY grDevices::colors(), OR (3) AN INTEGER VALUE",
+                "dot_border_color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY grDevices::colors(), OR (3) AN INTEGER VALUE",
                 collapse = NULL, 
                 recycle0 = FALSE
             )
             text_check <- base::c(text_check, tempo_cat)
             argum_check <- base::c(argum_check, TRUE)
         }else if(tempo1$problem == FALSE & tempo2$problem == TRUE){
-            if( ! base::all(dot.border.color %in% grDevices::colors() | base::grepl(pattern = "^#", dot.border.color), na.rm = TRUE)){
+            if( ! base::all(dot_border_color %in% grDevices::colors() | base::grepl(pattern = "^#", dot_border_color), na.rm = TRUE)){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "dot.border.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY grDevices::colors(), OR (3) AN INTEGER VALUE",
+                    "dot_border_color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY grDevices::colors(), OR (3) AN INTEGER VALUE",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
@@ -819,16 +819,16 @@ gg_box <- function(
             }
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "dot.border.color")
+        checked_arg_names <- base::c(checked_arg_names, "dot_border_color")
     }
-    if( ! base::is.null(x.lab)){
-        tempo1 <- saferDev::arg_check(data = x.lab, class = "expression", typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        tempo2 <- saferDev::arg_check(data = x.lab, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+    if( ! base::is.null(x_lab)){
+        tempo1 <- saferDev::arg_check(data = x_lab, class = "expression", typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo2 <- saferDev::arg_check(data = x_lab, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
-                "x.lab ARGUMENT MUST BE A SINGLE CHARACTER STRING OR EXPRESSION",
+                "x_lab ARGUMENT MUST BE A SINGLE CHARACTER STRING OR EXPRESSION",
                 collapse = NULL, 
                 recycle0 = FALSE
             )
@@ -836,17 +836,17 @@ gg_box <- function(
             argum_check <- base::c(argum_check, TRUE)
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "x.lab")
+        checked_arg_names <- base::c(checked_arg_names, "x_lab")
     }
-    tempo <- saferDev::arg_check(data = x.angle, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(y.lab)){
-        tempo1 <- saferDev::arg_check(data = y.lab, class = "expression", typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        tempo2 <- saferDev::arg_check(data = y.lab, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-        checked_arg_names <- base::c(checked_arg_names, tempo2$object.name)
+    tempo <- saferDev::arg_check(data = x_angle, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(y_lab)){
+        tempo1 <- saferDev::arg_check(data = y_lab, class = "expression", typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo2 <- saferDev::arg_check(data = y_lab, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
-                "y.lab ARGUMENT MUST BE A SINGLE CHARACTER STRING OR EXPRESSION",
+                "y_lab ARGUMENT MUST BE A SINGLE CHARACTER STRING OR EXPRESSION",
                 collapse = NULL, 
                 recycle0 = FALSE
             )
@@ -854,21 +854,21 @@ gg_box <- function(
             argum_check <- base::c(argum_check, TRUE)
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "y.lab")
+        checked_arg_names <- base::c(checked_arg_names, "y_lab")
     }
-    if( ! base::is.null(y.lim)){
-        tempo <- saferDev::arg_check(data = y.lim, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(y_lim)){
+        tempo <- saferDev::arg_check(data = y_lim, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "y.lim")
+        checked_arg_names <- base::c(checked_arg_names, "y_lim")
     }
-    tempo <- saferDev::arg_check(data = y.log, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = base::c("no", "log2", "log10"), all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = "") ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(y.tick.nb)){
-        tempo <- saferDev::arg_check(data = y.tick.nb, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = y_log, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = base::c("no", "log2", "log10"), all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = "") ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(y_tick_nb)){
+        tempo <- saferDev::arg_check(data = y_tick_nb, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         if(tempo$problem == FALSE){
-            if(y.tick.nb < 0){
+            if(y_tick_nb < 0){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "y.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER",
+                    "y_tick_nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
@@ -877,15 +877,15 @@ gg_box <- function(
             }
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "y.tick.nb")
+        checked_arg_names <- base::c(checked_arg_names, "y_tick_nb")
     }
-    if( ! base::is.null(y.second.tick.nb)){
-        tempo <- saferDev::arg_check(data = y.second.tick.nb, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(y_second_tick_nb)){
+        tempo <- saferDev::arg_check(data = y_second_tick_nb, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         if(tempo$problem == FALSE){
-            if(y.second.tick.nb <= 0){
+            if(y_second_tick_nb <= 0){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "y.second.tick.nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER",
+                    "y_second_tick_nb ARGUMENT MUST BE A NON NULL POSITIVE INTEGER",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
@@ -894,29 +894,29 @@ gg_box <- function(
             }
         }
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "y.second.tick.nb")
+        checked_arg_names <- base::c(checked_arg_names, "y_second_tick_nb")
     }
-    tempo <- saferDev::arg_check(data = y.include.zero, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = y.top.extra.margin, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = y.bottom.extra.margin, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(stat.pos)){
-        tempo <- saferDev::arg_check(data = stat.pos, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = c("top", "above"), all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = "") ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = y_include_zero, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = y_top_extra_margin, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = y_bottom_extra_margin, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(stat_pos)){
+        tempo <- saferDev::arg_check(data = stat_pos, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = c("top", "above"), all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = "") ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "stat.pos")
+        checked_arg_names <- base::c(checked_arg_names, "stat_pos")
     }
-    tempo <- saferDev::arg_check(data = stat.mean, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = stat.size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = stat.dist, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = stat.angle, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = stat_mean, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = stat_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = stat_dist, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = stat_angle, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = vertical, class = NULL, typeof = NULL, mode = "logical", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = text.size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = text_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = title, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = title.text.size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = legend.show, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(legend.width)){
-        tempo <- saferDev::arg_check(data = legend.width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = title_text_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = legend_show, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(legend_width)){
+        tempo <- saferDev::arg_check(data = legend_width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }else{
-        checked_arg_names <- base::c(checked_arg_names, "legend.width")
+        checked_arg_names <- base::c(checked_arg_names, "legend_width")
     }
     tempo <- saferDev::arg_check(data = article, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = grid, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
@@ -926,10 +926,10 @@ gg_box <- function(
         checked_arg_names <- base::c(checked_arg_names, "add")
     }
     tempo <- saferDev::arg_check(data = return, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = return.ggplot, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = return.gtable, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = return_ggplot, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = return_gtable, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = plot, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    tempo <- saferDev::arg_check(data = warn.print, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    tempo <- saferDev::arg_check(data = warn_print, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     # lib_path already checked above
     # safer_check already checked above
     # error_text converted to single string above
@@ -948,10 +948,10 @@ gg_box <- function(
     tempo_arg <- base::c(
         "y", 
         "categ", 
-        "box.legend.name", 
-        "dot.categ", 
-        "dot.categ.class.order", 
-        "dot.legend.name", 
+        "box_legend_name", 
+        "dot_categ", 
+        "dot_categ_class_order", 
+        "dot_legend_name", 
         # "title", 
         "add"
         # "lib_path" # inactivated because already checked above
@@ -969,7 +969,7 @@ gg_box <- function(
             base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS ARE", no = "THIS ARGUMENT IS"), 
             " NOT CLASS \"character\":\n", 
             base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), 
-            "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n.HERE, ARGUMENTS ARE TYPE:\n", 
+            "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n_HERE, ARGUMENTS ARE TYPE:\n", 
             base::paste0(base::sapply(X = tempo_arg, FUN = function(x){base::paste0(x, ": \"", base::typeof(x = base::get(x = x, pos = -1L, envir = base::parent.frame(n = 3), mode = "any", inherits = FALSE)), '"', collapse = NULL, recycle0 = FALSE)}), collapse = "\n", recycle0 = FALSE), # parent.frame(n = 3) because the get() is evaluated inside the FUN closure of sapply. But sapply(FUN) calls lapply(FUN) internally !! So parent.frame(n = 1) is the internal lapply() frame called by sapply, parent.frame(n = 2) is sapply's frame, parent.frame(n = 3) is BACKBONE's frame. NB: paste0() and typeof() are primitives and add no frame.
             intern_error_text_end, 
             collapse = NULL, 
@@ -993,11 +993,11 @@ gg_box <- function(
     }
     # Warning: backbone modified here
     tempo_arg <- base::c(
-        "categ.color", 
-        "dot.color", 
-        "dot.border.color"
-        # "x.lab", 
-        # "y.lab", 
+        "categ_color", 
+        "dot_color", 
+        "dot_border_color"
+        # "x_lab", 
+        # "y_lab", 
     )
     # Warning: backbone modified here
     tempo_log <- base::sapply(X = base::lapply(X = tempo_arg, FUN = function(x){base::get(x = x, pos = -1L, envir = base::parent.frame(n = 2), mode = "any", inherits = FALSE)}), FUN = function(x){if(base::is.null(x = x)){base::return(TRUE)}else{base::all(base::mode(x = x) == "character", na.rm = TRUE)}}, simplify = TRUE, USE.NAMES = TRUE) # parent.frame(n = 2) because get() is evaluated inside the FUN closure of the inner lapply: parent.frame(n = 1) is lapply's frame, parent.frame(n = 2) is BACKBONE's frame.
@@ -1028,8 +1028,8 @@ gg_box <- function(
     # Warning: code changed compared to backbone seed -> dot_seed
     if (base::exists(x = ".Random.seed", where = -1, envir = .GlobalEnv, frame = , mode = "any", inherits = TRUE)) {
         # if .Random.seed does not exists, it means that no random operation has been performed yet in any R environment
-        tempo.random.seed <- .Random.seed
-        base::on.exit(expr = base::assign(x = ".Random.seed", value = tempo.random.seed, pos = -1, envir = .GlobalEnv, inherits = FALSE, immediate = TRUE), add = TRUE, after = TRUE)
+        tempo_random_seed <- .Random.seed
+        base::on.exit(expr = base::assign(x = ".Random.seed", value = tempo_random_seed, pos = -1, envir = .GlobalEnv, inherits = FALSE, immediate = TRUE), add = TRUE, after = TRUE)
     }else{
         base::on.exit(expr = base::set.seed(seed = NULL, kind = NULL, normal.kind = NULL, sample.kind = NULL), add = TRUE, after = TRUE) # inactivate seeding -> return to complete randomness
     }
@@ -1050,7 +1050,7 @@ gg_box <- function(
 
     ######## other checkings
     # reserved word checking to avoid bugs (names of dataframe columns used in this function)
-    reserved_words <- base::c("categ.check", "categ.color", "dot.color", "dot.categ", "dot.max", "dot.min", "group", "PANEL", "group.check", "MEAN", "tempo_categ1", "tempo_categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y.check", "y_from.dot.max", "ymax", "tidy_group", "binwidth")
+    reserved_words <- base::c("categ_check", "categ_color", "dot_color", "dot_categ", "dot.max", "dot.min", "group", "PANEL", "group.check", "MEAN", "tempo_categ1", "tempo_categ2", "text.max.pos", "text.min.pos", "x", "x.y", "y", "y_check", "y_from.dot.max", "ymax", "tidy_group", "binwidth")
     if(base::any(base::names(data1) %in% reserved_words, na.rm = TRUE)){
         if(base::any(base::duplicated(base::names(data1)), na.rm = TRUE)){
             tempo_cat <- base::paste0(
@@ -1062,44 +1062,44 @@ gg_box <- function(
             )
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
-        if( ! base::is.null(dot.categ)){
-            if(dot.categ %in% categ){
-                reserved_words <- base::c(reserved_words, base::paste0(dot.categ, "_DOT")) # paste0(dot.categ, "_DOT") is added to the reserved words because in such situation, a new column will be added to data1 that is named paste0(dot.categ, "_DOT")
+        if( ! base::is.null(dot_categ)){
+            if(dot_categ %in% categ){
+                reserved_words <- base::c(reserved_words, base::paste0(dot_categ, "_DOT")) # paste0(dot_categ, "_DOT") is added to the reserved words because in such situation, a new column will be added to data1 that is named paste0(dot_categ, "_DOT")
             }
         }
-        tempo.output <- saferTool::name_change(base::names(data1), reserved_words)
-        for(i2 in 1:base::length(tempo.output$ini)){ # a loop to be sure to take the good ones
-            base::names(data1)[base::names(data1) == tempo.output$ini[i2]] <- tempo.output$post[i2]
-            if(base::any(y == tempo.output$ini[i2])){ # any() without na.rm -> ok because y cannot be NA (tested above)
-                y[y == tempo.output$ini[i2]] <- tempo.output$post[i2]
+        tempo_output <- saferTool::name_change(base::names(data1), reserved_words)
+        for(i2 in 1:base::length(tempo_output$ini)){ # a loop to be sure to take the good ones
+            base::names(data1)[base::names(data1) == tempo_output$ini[i2]] <- tempo_output$post[i2]
+            if(base::any(y == tempo_output$ini[i2])){ # any() without na.rm -> ok because y cannot be NA (tested above)
+                y[y == tempo_output$ini[i2]] <- tempo_output$post[i2]
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function_name, " FUNCTION")
+                tempo_warn <- base::paste0("(", warn_count,") IN y ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo_output$ini[i2], " HAS BEEN REPLACED BY ", tempo_output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN y ARGUMENT ARE RESERVED WORD USED BY THE ", function_name, " FUNCTION")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
             # WARNING: names of y argument potentially replaced
-            if(base::any(categ == tempo.output$ini[i2])){ # any() without na.rm -> ok because categ cannot be NA (tested above)
-                categ[categ == tempo.output$ini[i2]] <- tempo.output$post[i2]
+            if(base::any(categ == tempo_output$ini[i2])){ # any() without na.rm -> ok because categ cannot be NA (tested above)
+                categ[categ == tempo_output$ini[i2]] <- tempo_output$post[i2]
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function_name, " FUNCTION")
+                tempo_warn <- base::paste0("(", warn_count,") IN categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo_output$ini[i2], " HAS BEEN REPLACED BY ", tempo_output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN categ ARGUMENT ARE RESERVED WORD USED BY THE ", function_name, " FUNCTION")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
             # WARNING: names of categ argument potentially replaced
-            if( ! base::is.null(dot.categ)){
-                if(base::any(dot.categ == tempo.output$ini[i2])){ # any() without na.rm -> ok because dot.categ cannot be NA (tested above)
-                    dot.categ[dot.categ == tempo.output$ini[i2]] <- tempo.output$post[i2]
+            if( ! base::is.null(dot_categ)){
+                if(base::any(dot_categ == tempo_output$ini[i2])){ # any() without na.rm -> ok because dot_categ cannot be NA (tested above)
+                    dot_categ[dot_categ == tempo_output$ini[i2]] <- tempo_output$post[i2]
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") IN dot.categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo.output$ini[i2], " HAS BEEN REPLACED BY ", tempo.output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN dot.categ ARGUMENT ARE RESERVED WORD USED BY THE ", function_name, " FUNCTION")
+                    tempo_warn <- base::paste0("(", warn_count,") IN dot_categ ARGUMENT (COLUMN NAMES OF data1 ARGUMENT),\n", tempo_output$ini[i2], " HAS BEEN REPLACED BY ", tempo_output$post[i2], "\nBECAUSE RISK OF BUG AS SOME NAMES IN dot_categ ARGUMENT ARE RESERVED WORD USED BY THE ", function_name, " FUNCTION")
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
             }
-            # WARNING: names of dot.categ argument potentially replaced
+            # WARNING: names of dot_categ argument potentially replaced
         }
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") REGARDING COLUMN NAMES REPLACEMENT, THE NAMES\n", base::paste(tempo.output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", base::paste(tempo.output$post, collapse = " "))
+        tempo_warn <- base::paste0("(", warn_count,") REGARDING COLUMN NAMES REPLACEMENT, THE NAMES\n", base::paste(tempo_output$ini, collapse = " "), "\nHAVE BEEN REPLACED BY\n", base::paste(tempo_output$post, collapse = " "))
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        if( ! (base::is.null(add) | base::is.null(tempo.output$ini))){
-            if(base::grepl(x = add, pattern = base::paste(tempo.output$ini, collapse = "|"))){
-                tempo_cat <- base::paste0("ERROR IN ", function_name, "\nDETECTION OF COLUMN NAMES OF data1 IN THE add ARGUMENT STRING, THAT CORRESPOND TO RESERVED STRINGS FOR ", function_name, "\nCOLUMN NAMES HAVE TO BE CHANGED\nTHE PROBLEMATIC COLUMN NAMES ARE SOME OF THESE NAMES:\n", base::paste(tempo.output$ini, collapse = " "), "\nIN THE DATA FRAME OF data1 AND IN THE STRING OF add ARGUMENT, TRY TO REPLACE NAMES BY:\n", base::paste(tempo.output$post, collapse = " "), "\n\nFOR INFORMATION, THE RESERVED WORDS ARE:\n", base::paste(reserved_words, collapse = "\n"))
+        if( ! (base::is.null(add) | base::is.null(tempo_output$ini))){
+            if(base::grepl(x = add, pattern = base::paste(tempo_output$ini, collapse = "|"))){
+                tempo_cat <- base::paste0("ERROR IN ", function_name, "\nDETECTION OF COLUMN NAMES OF data1 IN THE add ARGUMENT STRING, THAT CORRESPOND TO RESERVED STRINGS FOR ", function_name, "\nCOLUMN NAMES HAVE TO BE CHANGED\nTHE PROBLEMATIC COLUMN NAMES ARE SOME OF THESE NAMES:\n", base::paste(tempo_output$ini, collapse = " "), "\nIN THE DATA FRAME OF data1 AND IN THE STRING OF add ARGUMENT, TRY TO REPLACE NAMES BY:\n", base::paste(tempo_output$post, collapse = " "), "\n\nFOR INFORMATION, THE RESERVED WORDS ARE:\n", base::paste(reserved_words, collapse = "\n"))
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
         }
@@ -1134,13 +1134,13 @@ gg_box <- function(
         tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", base::paste(categ, collapse = " "))
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
-        # nocov start (unreachable: arg_check enforces dot.categ length 1 in the mandatory argument section, so this branch can never fire)
-    if(base::length(dot.categ) > 1){
-        tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot.categ ARGUMENT CANNOT HAVE MORE THAN 1 COLUMN NAMES OF data1")
+        # nocov start (unreachable: arg_check enforces dot_categ length 1 in the mandatory argument section, so this branch can never fire)
+    if(base::length(dot_categ) > 1){
+        tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot_categ ARGUMENT CANNOT HAVE MORE THAN 1 COLUMN NAMES OF data1")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         # nocov end
-    }else if( ! base::all(dot.categ %in% base::names(data1))){ # all() without na.rm -> ok because dot.categ cannot be NA (tested above)
-        tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot.categ ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", base::paste(dot.categ, collapse = " "))
+    }else if( ! base::all(dot_categ %in% base::names(data1))){ # all() without na.rm -> ok because dot_categ cannot be NA (tested above)
+        tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot_categ ARGUMENT MUST BE COLUMN NAMES OF data1. HERE IT IS:\n", base::paste(dot_categ, collapse = " "))
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
     # verif of add
@@ -1158,26 +1158,26 @@ gg_box <- function(
     }
     # end verif of add
     # management of add containing facet
-    facet.categ <- NULL
+    facet_categ <- NULL
     if( ! base::is.null(add)){
-        facet.check <- TRUE
+        facet_check <- TRUE
         tempo <- base::unlist(base::strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
         tempo <- base::sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
         tempo <- base::sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
         tempo <- base::sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
         if(base::any(base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"), na.rm = TRUE)){
             tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")])))
-            facet.categ <- base::names(tempo1$params$facets)
-            tempo.text <- "facet_wrap OR facet_rep_wrap"
-            facet.check <- FALSE
+            facet_categ <- base::names(tempo1$params$facets)
+            tempo_text <- "facet_wrap OR facet_rep_wrap"
+            facet_check <- FALSE
         }else if(base::grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
             tempo1 <- base::suppressWarnings(base::eval(base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")])))
-            facet.categ <- base::c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))
-            tempo.text <- "facet_grid OR facet_rep_grid"
-            facet.check <- FALSE
+            facet_categ <- base::c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))
+            tempo_text <- "facet_grid OR facet_rep_grid"
+            facet_check <- FALSE
         }
-        if(facet.check == FALSE & ! base::all(facet.categ %in% base::names(data1))){ # WARNING: all(facet.categ %in% names(data1)) is TRUE when facet.categ is NULL # all() without na.rm -> ok because facet.categ cannot be NA (tested above)
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\nDETECTION OF \"", tempo.text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", base::paste(facet.categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", base::paste(base::names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
+        if(facet_check == FALSE & ! base::all(facet_categ %in% base::names(data1))){ # WARNING: all(facet_categ %in% names(data1)) is TRUE when facet_categ is NULL # all() without na.rm -> ok because facet_categ cannot be NA (tested above)
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\nDETECTION OF \"", tempo_text, "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", base::paste(facet_categ, collapse = " "), "\nTHE data1 COLUMN NAMES ARE:\n", base::paste(base::names(data1), collapse = " "), "\nPLEASE REWRITE THE add STRING AND RERUN")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }
@@ -1196,7 +1196,7 @@ gg_box <- function(
             )
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else if(tempo1$problem == FALSE){ # character vector
-            if(box.alpha != 0){
+            if(box_alpha != 0){
                 warn_count <- warn_count + 1
                 tempo_warn <- base::paste0("(", warn_count,") IN categ NUMBER ", i1, " IN data1, THE CHARACTER COLUMN HAS BEEN CONVERTED TO FACTOR, WITH LEVELS ACCORDING TO THE ALPHABETICAL ORDER")
                 warn <-base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
@@ -1210,533 +1210,533 @@ gg_box <- function(
     # management of log scale and Inf removal
     if(base::any(( ! base::is.finite(data1[, y])) & ( ! base::is.na(data1[, y])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf  # normally no NA with is.finite0() and is.na()
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF -Inf OR Inf VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+        tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF -Inf OR Inf VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
     }
-    data1.ini <- data1 # strictly identical to data1 except that in data1 y is log converted if and only if y.log != "no"
-    if(y.log != "no"){
+    data1_ini <- data1 # strictly identical to data1 except that in data1 y is log converted if and only if y_log != "no"
+    if(y_log != "no"){
         tempo1 <- ! base::is.finite(data1[, y]) # where are initial NA and Inf
-        data1[, y] <- base::suppressWarnings(base::get(y.log)(data1[, y]))# no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+        data1[, y] <- base::suppressWarnings(base::get(y_log)(data1[, y]))# no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
         if(base::any( ! (tempo1 | base::is.finite(data1[, y])))){ # normally no NA with is.finite
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+            tempo_warn <- base::paste0("(", warn_count,") LOG CONVERSION INTRODUCED -Inf OR Inf OR NaN VALUES IN THE ", y, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
     }
     # Inf removal
     if(base::any(( ! base::is.finite(data1[, y])) & ( ! base::is.na(data1[, y])))){ # is.finite also detects NA: ( ! is.finite(data1[, y])) & ( ! is.na(data1[, y])) detects only Inf # normally no NA with is.finite
-        removed.row.nb <- base::which(( ! base::is.finite(data1[, y])) & ( ! base::is.na(data1[, y])))
-        removed.rows <- data1.ini[removed.row.nb, ] # here data1.ini used to have the y = O rows that will be removed because of Inf creation after log transformation
-        data1 <- data1[-removed.row.nb, ] #
-        data1.ini <- data1.ini[-removed.row.nb, ] #
+        removed_row_nb <- base::which(( ! base::is.finite(data1[, y])) & ( ! base::is.na(data1[, y])))
+        removed_rows <- data1_ini[removed_row_nb, ] # here data1_ini used to have the y = O rows that will be removed because of Inf creation after log transformation
+        data1 <- data1[-removed_row_nb, ] #
+        data1_ini <- data1_ini[-removed_row_nb, ] #
     }else{
-        removed.row.nb <- NULL
-        removed.rows <- base::data.frame(stringsAsFactors = FALSE)
+        removed_row_nb <- NULL
+        removed_rows <- base::data.frame(stringsAsFactors = FALSE)
     }
-    # From here, data1 and data.ini have no more Inf
+    # From here, data1 and data_ini have no more Inf
     # end Inf removal
-    if(y.log != "no" & ! base::is.null(y.lim)){
-        if(base::any(y.lim <= 0)){ # any() without na.rm -> ok because y.lim cannot be NA (tested above)
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", base::paste(y.lim, collapse = " "))
+    if(y_log != "no" & ! base::is.null(y_lim)){
+        if(base::any(y_lim <= 0)){ # any() without na.rm -> ok because y_lim cannot be NA (tested above)
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ny_lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y_log ARGUMENT SET TO ", y_log, ":\n", base::paste(y_lim, collapse = " "))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-            # nocov start (unreachable: y.lim <= 0 is caught by the previous branch, and log10/log2 of a positive finite value is always finite)
-        }else if(base::any( ! base::is.finite(if(y.log == "log10"){base::log10(y.lim)}else{base::log2(y.lim)}))){ # normally no NA with is.finite
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ny.lim ARGUMENT RETURNS INF/NA WITH THE y.log ARGUMENT SET TO ", y.log, "\nAS SCALE COMPUTATION IS ", base::ifelse(y.log == "log10", "log10", "log2"), ":\n", base::paste(if(y.log == "log10"){base::log10(y.lim)}else{base::log2(y.lim)}, collapse = " "))
+            # nocov start (unreachable: y_lim <= 0 is caught by the previous branch, and log10/log2 of a positive finite value is always finite)
+        }else if(base::any( ! base::is.finite(if(y_log == "log10"){base::log10(y_lim)}else{base::log2(y_lim)}))){ # normally no NA with is.finite
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ny_lim ARGUMENT RETURNS INF/NA WITH THE y_log ARGUMENT SET TO ", y_log, "\nAS SCALE COMPUTATION IS ", base::ifelse(y_log == "log10", "log10", "log2"), ":\n", base::paste(if(y_log == "log10"){base::log10(y_lim)}else{base::log2(y_lim)}, collapse = " "))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }
     }
-    if(y.log != "no" & y.include.zero == TRUE){
+    if(y_log != "no" & y_include_zero == TRUE){
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") y.log ARGUMENT SET TO ", y.log, " AND y.include.zero ARGUMENT SET TO TRUE -> y.include.zero ARGUMENT RESET TO FALSE BECAUSE 0 VALUE CANNOT BE REPRESENTED IN LOG SCALE")
+        tempo_warn <- base::paste0("(", warn_count,") y_log ARGUMENT SET TO ", y_log, " AND y_include_zero ARGUMENT SET TO TRUE -> y_include_zero ARGUMENT RESET TO FALSE BECAUSE 0 VALUE CANNOT BE REPRESENTED IN LOG SCALE")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        y.include.zero <- FALSE
+        y_include_zero <- FALSE
     }
-    if(y.log != "no" & vertical == FALSE){
+    if(y_log != "no" & vertical == FALSE){
         vertical <- TRUE
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BOXES HORIZONTALLY WITH A Y.LOG SCALE -> vertical ARGUMENT RESET TO TRUE")
+        tempo_warn <- base::paste0("(", warn_count,") BECAUSE OF A BUG IN ggplot2, CANNOT FLIP BOXES HORIZONTALLY WITH A Y_LOG2 SCALE -> vertical ARGUMENT RESET TO TRUE")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
     }
     # end management of log scale and Inf removal
     # na detection and removal (done now to be sure of the correct length of categ)
-    column.check <- base::unique(base::c(y, categ, if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){dot.categ}, if( ! base::is.null(facet.categ)){facet.categ})) # dot.categ because can be a 3rd column of data1, categ.color and dot.color will be tested later
-    if(base::any(base::is.na(data1[, column.check]))){ # data1 used here instead of data1.ini in case of new NaN created by log conversion (neg values) # normally no NA with is.na
+    column_check <- base::unique(base::c(y, categ, if( ! base::is.null(dot_color) & ! base::is.null(dot_categ)){dot_categ}, if( ! base::is.null(facet_categ)){facet_categ})) # dot_categ because can be a 3rd column of data1, categ_color and dot_color will be tested later
+    if(base::any(base::is.na(data1[, column_check]))){ # data1 used here instead of data1_ini in case of new NaN created by log conversion (neg values) # normally no NA with is.na
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") NA DETECTED IN COLUMNS OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+        tempo_warn <- base::paste0("(", warn_count,") NA DETECTED IN COLUMNS OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        for(i2 in 1:base::length(column.check)){
-            if(base::any(base::is.na(data1[, column.check[i2]]))){ # normally no NA with is.na
-                tempo_warn <- base::paste0("NA REMOVAL DUE TO COLUMN ", column.check[i2], " OF data1")
+        for(i2 in 1:base::length(column_check)){
+            if(base::any(base::is.na(data1[, column_check[i2]]))){ # normally no NA with is.na
+                tempo_warn <- base::paste0("NA REMOVAL DUE TO COLUMN ", column_check[i2], " OF data1")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n", tempo_warn)))
             }
         }
-        tempo <- base::unique(base::unlist(base::lapply(base::lapply(base::c(data1[column.check]), FUN = is.na), FUN = which)))
-        removed.row.nb <- base::c(removed.row.nb, tempo) # removed.row.nb created to remove Inf
-        removed.rows <- base::rbind(removed.rows, data1.ini[tempo, ], stringsAsFactors = FALSE) # here data1.ini used to have the non NA rows that will be removed because of NAN creation after log transformation (neg values for instance)
-        column.check <- column.check[ ! column.check == y] # remove y to keep quali columns
+        tempo <- base::unique(base::unlist(base::lapply(base::lapply(base::c(data1[column_check]), FUN = is.na), FUN = which)))
+        removed_row_nb <- base::c(removed_row_nb, tempo) # removed_row_nb created to remove Inf
+        removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE) # here data1_ini used to have the non NA rows that will be removed because of NAN creation after log transformation (neg values for instance)
+        column_check <- column_check[ ! column_check == y] # remove y to keep quali columns
         if(base::length(tempo) != 0){
-            data1 <- data1[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
-            data1.ini <- data1.ini[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers than the former
-            for(i3 in 1:base::length(column.check)){
-                if(base::any( ! base::unique(removed.rows[, column.check[i3]]) %in% base::unique(data1[, column.check[i3]]), na.rm = TRUE)){
+            data1 <- data1[-tempo, ] # WARNING tempo here and not removed_row_nb because the latter contain more numbers thant the former
+            data1_ini <- data1_ini[-tempo, ] # WARNING tempo here and not removed_row_nb because the latter contain more numbers than the former
+            for(i3 in 1:base::length(column_check)){
+                if(base::any( ! base::unique(removed_rows[, column_check[i3]]) %in% base::unique(data1[, column_check[i3]]), na.rm = TRUE)){
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") IN COLUMN ", column.check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA/Inf REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", base::paste(base::unique(removed.rows[, column.check[i3]])[ ! base::unique(removed.rows[, column.check[i3]]) %in% base::unique(data1[, column.check[i3]])], collapse = " "))
+                    tempo_warn <- base::paste0("(", warn_count,") IN COLUMN ", column_check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA/Inf REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", base::paste(base::unique(removed_rows[, column_check[i3]])[ ! base::unique(removed_rows[, column_check[i3]]) %in% base::unique(data1[, column_check[i3]])], collapse = " "))
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
             }
         }
-        count.categ <- 0
-        for(i2 in 1:base::length(column.check)){
-            if(column.check[i2] %in% categ){
-                count.categ <- count.categ + 1
+        count_categ <- 0
+        for(i2 in 1:base::length(column_check)){
+            if(column_check[i2] %in% categ){
+                count_categ <- count_categ + 1
             }
-            if(column.check[i2] == categ[count.categ]){
-                categ.class.order[count.categ] <- base::list(base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(data1[, column.check[i2]])]) # remove the absent color in the character vector
-                data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = base::unique(categ.class.order[[count.categ]]))
+            if(column_check[i2] == categ[count_categ]){
+                categ_class_order[count_categ] <- base::list(base::levels(data1[, column_check[i2]])[base::levels(data1[, column_check[i2]]) %in% base::unique(data1[, column_check[i2]])]) # remove the absent color in the character vector
+                data1[, column_check[i2]] <- base::factor(base::as.character(data1[, column_check[i2]]), levels = base::unique(categ_class_order[[count_categ]]))
             }
-            if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){ # reminder : dot.categ cannot be a column name of categ anymore (because in that case dot.categ name is changed into "..._DOT"
-                if(column.check[i2] == dot.categ){
-                    dot.categ.class.order <- base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(data1[, column.check[i2]])] # remove the absent color in the character vector
-                    data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = base::unique(dot.categ.class.order))
+            if( ! base::is.null(dot_color) & ! base::is.null(dot_categ)){ # reminder : dot_categ cannot be a column name of categ anymore (because in that case dot_categ name is changed into "..._DOT"
+                if(column_check[i2] == dot_categ){
+                    dot_categ_class_order <- base::levels(data1[, column_check[i2]])[base::levels(data1[, column_check[i2]]) %in% base::unique(data1[, column_check[i2]])] # remove the absent color in the character vector
+                    data1[, column_check[i2]] <- base::factor(base::as.character(data1[, column_check[i2]]), levels = base::unique(dot_categ_class_order))
                 }
             }
-            if(column.check[i2] %in% facet.categ){ # works if facet.categ == NULL this method should keep the order of levels when removing some levels
-                tempo.levels <- base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(base::as.character(data1[, column.check[i2]]))]
-                data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = tempo.levels)
+            if(column_check[i2] %in% facet_categ){ # works if facet_categ == NULL this method should keep the order of levels when removing some levels
+                tempo_levels <- base::levels(data1[, column_check[i2]])[base::levels(data1[, column_check[i2]]) %in% base::unique(base::as.character(data1[, column_check[i2]]))]
+                data1[, column_check[i2]] <- base::factor(base::as.character(data1[, column_check[i2]]), levels = tempo_levels)
             }
         }
     }
     # end na detection and removal (done now to be sure of the correct length of categ)
-    # From here, data1 and data.ini have no more NA or NaN in y, categ, dot.categ (if dot.color != NULL) and facet.categ
+    # From here, data1 and data_ini have no more NA or NaN in y, categ, dot_categ (if dot_color != NULL) and facet_categ
     
-    if( ! base::is.null(categ.class.order)){
-        if(base::length(categ.class.order) != base::length(categ)){
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg.class.order ARGUMENT MUST BE A LIST OF LENGTH EQUAL TO LENGTH OF categ\nHERE IT IS LENGTH: ", base::length(categ.class.order), " VERSUS ", base::length(categ))
+    if( ! base::is.null(categ_class_order)){
+        if(base::length(categ_class_order) != base::length(categ)){
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg_class_order ARGUMENT MUST BE A LIST OF LENGTH EQUAL TO LENGTH OF categ\nHERE IT IS LENGTH: ", base::length(categ_class_order), " VERSUS ", base::length(categ))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
-            for(i3 in 1:base::length(categ.class.order)){
-                if(base::is.null(categ.class.order[[i3]])){
+            for(i3 in 1:base::length(categ_class_order)){
+                if(base::is.null(categ_class_order[[i3]])){
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") THE categ.class.order COMPARTMENT ", i3, " IS NULL. ALPHABETICAL ORDER WILL BE APPLIED")
+                    tempo_warn <- base::paste0("(", warn_count,") THE categ_class_order COMPARTMENT ", i3, " IS NULL. ALPHABETICAL ORDER WILL BE APPLIED")
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                     data1[, categ[i3]] <- base::factor(base::as.character(data1[, categ[i3]])) # if already a factor, change nothing, if characters, levels according to alphabetical order
-                    categ.class.order[[i3]] <- base::levels(data1[, categ[i3]]) # character vector that will be used later
+                    categ_class_order[[i3]] <- base::levels(data1[, categ[i3]]) # character vector that will be used later
                 }else{
-                    tempo <- saferDev::arg_check(data = categ.class.order[[i3]], class = NULL, typeof = NULL, mode = "character", length = base::length(base::levels(data1[, categ[i3]])), prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0("COMPARTMENT ", i3 , " OF categ.class.order ARGUMENT"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)# length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
+                    tempo <- saferDev::arg_check(data = categ_class_order[[i3]], class = NULL, typeof = NULL, mode = "character", length = base::length(base::levels(data1[, categ[i3]])), prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0("COMPARTMENT ", i3 , " OF categ_class_order ARGUMENT"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)# length(data1[, categ[i1]) -> if data1[, categ[i1] was initially character vector, then conversion as factor after the NA removal, thus class number ok. If data1[, categ[i1] was initially factor, no modification after the NA removal, thus class number ok
                     if(tempo$problem == TRUE){
                         tempo_cat <- tempo$text
                         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
                     }
                 }
-                if(base::any(base::duplicated(categ.class.order[[i3]]), na.rm = TRUE)){
-                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", base::paste(categ.class.order[[i3]], collapse = " "))
+                if(base::any(base::duplicated(categ_class_order[[i3]]), na.rm = TRUE)){
+                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nCOMPARTMENT ", i3, " OF categ_class_order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", base::paste(categ_class_order[[i3]], collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-                }else if( ! (base::all(categ.class.order[[i3]] %in% base::unique(data1[, categ[i3]]), na.rm = TRUE) & base::all(base::unique(data1[, categ[i3]]) %in% categ.class.order[[i3]], na.rm = TRUE))){
-                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nCOMPARTMENT ", i3, " OF categ.class.order ARGUMENT MUST BE CLASSES OF ELEMENT ", i3, " OF categ ARGUMENT\nHERE IT IS:\n", base::paste(categ.class.order[[i3]], collapse = " "), "\nFOR COMPARTMENT ", i3, " OF categ.class.order AND IT IS:\n", base::paste(base::unique(data1[, categ[i3]]), collapse = " "), "\nFOR COLUMN ", categ[i3], " OF data1")
+                }else if( ! (base::all(categ_class_order[[i3]] %in% base::unique(data1[, categ[i3]]), na.rm = TRUE) & base::all(base::unique(data1[, categ[i3]]) %in% categ_class_order[[i3]], na.rm = TRUE))){
+                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nCOMPARTMENT ", i3, " OF categ_class_order ARGUMENT MUST BE CLASSES OF ELEMENT ", i3, " OF categ ARGUMENT\nHERE IT IS:\n", base::paste(categ_class_order[[i3]], collapse = " "), "\nFOR COMPARTMENT ", i3, " OF categ_class_order AND IT IS:\n", base::paste(base::unique(data1[, categ[i3]]), collapse = " "), "\nFOR COLUMN ", categ[i3], " OF data1")
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }else{
-                    data1[, categ[i3]] <- base::factor(data1[, categ[i3]], levels = categ.class.order[[i3]]) # reorder the factor
+                    data1[, categ[i3]] <- base::factor(data1[, categ[i3]], levels = categ_class_order[[i3]]) # reorder the factor
                     
                 }
-                base::names(categ.class.order)[i3] <- categ[i3]
+                base::names(categ_class_order)[i3] <- categ[i3]
             }
         }
     }else{
-        categ.class.order <- base::vector("list", length = base::length(categ))
-        tempo_categ.class.order <- NULL
-        for(i2 in 1:base::length(categ.class.order)){
-            categ.class.order[[i2]] <- base::levels(data1[, categ[i2]])
-            base::names(categ.class.order)[i2] <- categ[i2]
-            tempo_categ.class.order <- c(tempo_categ.class.order, base::ifelse(i2 != 1, "\n", ""), categ.class.order[[i2]])
+        categ_class_order <- base::vector("list", length = base::length(categ))
+        tempo_categ_class_order <- NULL
+        for(i2 in 1:base::length(categ_class_order)){
+            categ_class_order[[i2]] <- base::levels(data1[, categ[i2]])
+            base::names(categ_class_order)[i2] <- categ[i2]
+            tempo_categ_class_order <- c(tempo_categ_class_order, base::ifelse(i2 != 1, "\n", ""), categ_class_order[[i2]])
         }
-        if(box.alpha != 0){
+        if(box_alpha != 0){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") THE categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR BOX ORDERING:\n", base::paste(tempo_categ.class.order, collapse = " "))
+            tempo_warn <- base::paste0("(", warn_count,") THE categ_class_order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR BOX ORDERING:\n", base::paste(tempo_categ_class_order, collapse = " "))
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
     }
-    # categ.class.order not NULL anymore (list)
-    if(base::is.null(box.legend.name) & box.alpha != 0){
+    # categ_class_order not NULL anymore (list)
+    if(base::is.null(box_legend_name) & box_alpha != 0){
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") THE box.legend.name SETTING IS NULL. NAMES OF categ WILL BE USED: ", base::paste(categ, collapse = " "))
+        tempo_warn <- base::paste0("(", warn_count,") THE box_legend_name SETTING IS NULL. NAMES OF categ WILL BE USED: ", base::paste(categ, collapse = " "))
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        box.legend.name <- categ[base::length(categ)] # if only categ1, then legend name of categ1, if length(categ) == 2L, then legend name of categ2
+        box_legend_name <- categ[base::length(categ)] # if only categ1, then legend name of categ1, if length(categ) == 2L, then legend name of categ2
     }
-    # box.legend.name not NULL anymore (character string)
-    # management of categ.color
-    if( ! base::is.null(categ.color)){
+    # box_legend_name not NULL anymore (character string)
+    # management of categ_color
+    if( ! base::is.null(categ_color)){
         # check the nature of color
         # integer colors into gg_palette
-        tempo.check.color <- saferDev::arg_check(data = categ.color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = "y COLUMN OF data1", data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
-        if(tempo.check.color == FALSE){
+        tempo_check_color <- saferDev::arg_check(data = categ_color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = "y COLUMN OF data1", data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
+        if(tempo_check_color == FALSE){
             # convert integers into colors
-            categ.color <- saferGG::gg_palette(base::max(categ.color, na.rm = TRUE))[categ.color]
+            categ_color <- saferGG::gg_palette(base::max(categ_color, na.rm = TRUE))[categ_color]
         }
         # end integer colors into gg_palette
-        if( ! (base::all(categ.color %in% grDevices::colors() | base::grepl(pattern = "^#", categ.color) | base::is.na(categ.color)))){ # check that all strings of low.color start by #. NA allowed (grepl() returns FALSE for NA, so na.rm would not help): NA warned below
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg.color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors() OR A COLUMN NAME OF THE data1 PARAMETER: ", base::paste(base::unique(categ.color), collapse = " "))
+        if( ! (base::all(categ_color %in% grDevices::colors() | base::grepl(pattern = "^#", categ_color) | base::is.na(categ_color)))){ # check that all strings of low.color start by #. NA allowed (grepl() returns FALSE for NA, so na.rm would not help): NA warned below
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg_color ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors() OR A COLUMN NAME OF THE data1 PARAMETER: ", base::paste(base::unique(categ_color), collapse = " "))
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
-        if(base::any(base::is.na(categ.color)) & box.alpha != 0){ # normally no NA with is.na
+        if(base::any(base::is.na(categ_color)) & box_alpha != 0){ # normally no NA with is.na
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") categ.color ARGUMENT CONTAINS NA")
+            tempo_warn <- base::paste0("(", warn_count,") categ_color ARGUMENT CONTAINS NA")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
         # end check the nature of color
         # check the length of color
-        categ.len <- base::length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
-        if(base::length(data1[, categ[categ.len]]) == base::length(base::levels(data1[, categ[categ.len]])) & base::length(categ.color) == base::length(data1[, categ[categ.len]])){
+        categ_len <- base::length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
+        if(base::length(data1[, categ[categ_len]]) == base::length(base::levels(data1[, categ[categ_len]])) & base::length(categ_color) == base::length(data1[, categ[categ_len]])){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") THE NUMBER OF CLASSES OF THE COLUMN ", categ[categ.len], " THE NUMBER OF ROWS OF THIS COLUMN AND THE NUMBER OF COLORS OF THE categ.color ARGUMENT ARE ALL EQUAL. BOX COLORS WILL BE ATTRIBUTED ACCORDING THE LEVELS OF ", categ[categ.len], ", NOT ACCORDING TO THE ROWS OF ", categ[categ.len])
+            tempo_warn <- base::paste0("(", warn_count,") THE NUMBER OF CLASSES OF THE COLUMN ", categ[categ_len], " THE NUMBER OF ROWS OF THIS COLUMN AND THE NUMBER OF COLORS OF THE categ_color ARGUMENT ARE ALL EQUAL. BOX COLORS WILL BE ATTRIBUTED ACCORDING THE LEVELS OF ", categ[categ_len], ", NOT ACCORDING TO THE ROWS OF ", categ[categ_len])
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
-        if(base::length(categ.color) == base::length(base::levels(data1[, categ[categ.len]]))){ # here length(categ.color) is equal to the different number of categ
-            # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-            data1 <- base::data.frame(data1, categ.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)  # no need stringsAsFactors here for stat.nolog as factors remain factors
-            data1$categ.color <- base::factor(base::as.character(data1$categ.color), levels = base::levels(data1[, categ[categ.len]]), labels = categ.color) # replace the characters of data1[, categ[categ.len]] put in the categ.color column by the categ.color (explicit levels keep the labels length-matched if some classes have disappeared after NA/Inf removal)
-            if(box.alpha != 0){
+        if(base::length(categ_color) == base::length(base::levels(data1[, categ[categ_len]]))){ # here length(categ_color) is equal to the different number of categ
+            # data1[, categ[categ_len]] <- factor(data1[, categ[categ_len]]) # not required because sure that is is a factor
+            data1 <- base::data.frame(data1, categ_color = data1[, categ[categ_len]], stringsAsFactors = TRUE)  # no need stringsAsFactors here for stat_nolog as factors remain factors
+            data1$categ_color <- base::factor(base::as.character(data1$categ_color), levels = base::levels(data1[, categ[categ_len]]), labels = categ_color) # replace the characters of data1[, categ[categ_len]] put in the categ_color column by the categ_color (explicit levels keep the labels length-matched if some classes have disappeared after NA/Inf removal)
+            if(box_alpha != 0){
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", base::paste(categ.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", base::paste(base::levels(base::factor(data1[, categ[categ.len]])), collapse = " "))
+                tempo_warn <- base::paste0("(", warn_count,") IN ", categ[categ_len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", base::paste(categ_color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", base::paste(base::levels(base::factor(data1[, categ[categ_len]])), collapse = " "))
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
-        }else if(base::length(categ.color) == base::length(data1[, categ[categ.len]])){# here length(categ.color) is equal to nrow(data1) -> Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
-            data1 <- base::data.frame(data1, categ.color = categ.color, stringsAsFactors = TRUE)
-            tempo.check <- base::unique(data1[ , base::c(categ[categ.len], "categ.color")])
-            if( ! (base::nrow(tempo.check) == base::length(base::unique(categ.color)) & base::nrow(tempo.check) == base::length(base::unique(data1[ , categ[categ.len]])))){
-                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], ":\n", base::paste(base::unique(base::mapply(FUN = "paste", data1[ ,categ[categ.len]], data1[ ,"categ.color"])), collapse = "\n"))
+        }else if(base::length(categ_color) == base::length(data1[, categ[categ_len]])){# here length(categ_color) is equal to nrow(data1) -> Modif to have length(categ_color) equal to the different number of categ (length(categ_color) == length(levels(data1[, categ[categ_len]])))
+            data1 <- base::data.frame(data1, categ_color = categ_color, stringsAsFactors = TRUE)
+            tempo_check <- base::unique(data1[ , base::c(categ[categ_len], "categ_color")])
+            if( ! (base::nrow(tempo_check) == base::length(base::unique(categ_color)) & base::nrow(tempo_check) == base::length(base::unique(data1[ , categ[categ_len]])))){
+                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg_color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nBUT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF categ ", categ[categ_len], ":\n", base::paste(base::unique(base::mapply(FUN = "paste", data1[ ,categ[categ_len]], data1[ ,"categ_color"])), collapse = "\n"))
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             }else{
-                # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-                categ.color <- base::unique(data1$categ.color[base::order(data1[, categ[categ.len]])]) # Modif to have length(categ.color) equal to the different number of categ (length(categ.color) == length(levels(data1[, categ[categ.len]])))
-                if(box.alpha != 0){
+                # data1[, categ[categ_len]] <- factor(data1[, categ[categ_len]]) # not required because sure that is is a factor
+                categ_color <- base::unique(data1$categ_color[base::order(data1[, categ[categ_len]])]) # Modif to have length(categ_color) equal to the different number of categ (length(categ_color) == length(levels(data1[, categ[categ_len]])))
+                if(box_alpha != 0){
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") categ.color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[categ.len], " AS:\n", base::paste(base::levels(base::factor(data1[, categ[categ.len]])), collapse = " "), "\n", base::paste(categ.color, collapse = " "))
+                    tempo_warn <- base::paste0("(", warn_count,") categ_color ARGUMENT HAS THE LENGTH OF data1 ROW NUMBER\nCOLORS HAVE BEEN RESPECTIVELY ASSOCIATED TO EACH CLASS OF categ ", categ[categ_len], " AS:\n", base::paste(base::levels(base::factor(data1[, categ[categ_len]])), collapse = " "), "\n", base::paste(categ_color, collapse = " "))
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
             }
-        }else if(base::length(categ.color) == 1L){
-            # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-            data1 <- base::data.frame(data1, categ.color = categ.color, stringsAsFactors = TRUE)
-            categ.color <- base::rep(categ.color, base::length(base::levels(data1[, categ[categ.len]])))
-            if(box.alpha != 0){
+        }else if(base::length(categ_color) == 1L){
+            # data1[, categ[categ_len]] <- factor(data1[, categ[categ_len]]) # not required because sure that is is a factor
+            data1 <- base::data.frame(data1, categ_color = categ_color, stringsAsFactors = TRUE)
+            categ_color <- base::rep(categ_color, base::length(base::levels(data1[, categ[categ_len]])))
+            if(box_alpha != 0){
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") categ.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", base::paste(base::levels(base::factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", base::paste(categ.color, collapse = " "))
+                tempo_warn <- base::paste0("(", warn_count,") categ_color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ_len], "\n", base::paste(base::levels(base::factor(data1[, categ[categ_len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", base::paste(categ_color, collapse = " "))
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
         }else{
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", base::length(categ.color), " VERSUS CATEG LENGTH ", base::length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", base::length(base::unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ncateg_color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ_len], " COLUMN. HERE IT IS COLOR LENGTH ", base::length(categ_color), " VERSUS CATEG LENGTH ", base::length(data1[, categ[categ_len]]), " AND CATEG CLASS LENGTH ", base::length(base::unique(data1[, categ[categ_len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
     }else{
-        categ.len <- base::length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
-        # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-        categ.color <- saferGG::gg_palette(base::length(base::levels(data1[, categ[categ.len]])))
-        data1 <- base::data.frame(data1, categ.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)
-        data1$categ.color <- base::factor(base::as.character(data1$categ.color), levels = base::levels(data1[, categ[categ.len]]), labels = categ.color)  # replace the characters of data1[, categ[categ.len]] put in the categ.color column by the categ.color (explicit levels keep the labels length-matched if some classes have disappeared after NA/Inf removal)
-        if(box.alpha != 0){
+        categ_len <- base::length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
+        # data1[, categ[categ_len]] <- factor(data1[, categ[categ_len]]) # not required because sure that is is a factor
+        categ_color <- saferGG::gg_palette(base::length(base::levels(data1[, categ[categ_len]])))
+        data1 <- base::data.frame(data1, categ_color = data1[, categ[categ_len]], stringsAsFactors = TRUE)
+        data1$categ_color <- base::factor(base::as.character(data1$categ_color), levels = base::levels(data1[, categ[categ_len]]), labels = categ_color)  # replace the characters of data1[, categ[categ_len]] put in the categ_color column by the categ_color (explicit levels keep the labels length-matched if some classes have disappeared after NA/Inf removal)
+        if(box_alpha != 0){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") NULL categ.color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[categ.len], " IN data1:\n", base::paste(categ.color, collapse = " "), "\n", base::paste(base::levels(data1[, categ[categ.len]]), collapse = " "))
+            tempo_warn <- base::paste0("(", warn_count,") NULL categ_color ARGUMENT -> COLORS RESPECTIVELY ATTRIBUTED TO EACH CLASS OF ", categ[categ_len], " IN data1:\n", base::paste(categ_color, collapse = " "), "\n", base::paste(base::levels(data1[, categ[categ_len]]), collapse = " "))
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
     }
-    # categ.color not NULL anymore
-    categ.color <- base::as.character(categ.color)
-    # categ.color is a character string representing the diff classes
-    data1$categ.color <- base::factor(data1$categ.color, levels = base::unique(categ.color)) # ok because if categ.color is a character string, the order make class 1, class 2, etc. unique() because no duplicates allowed
-    # data1$categ.color is a factor with order of levels -> categ.color
-    # end management of categ.color
-    # management of dot.color
-    if( ! base::is.null(dot.color)){
+    # categ_color not NULL anymore
+    categ_color <- base::as.character(categ_color)
+    # categ_color is a character string representing the diff classes
+    data1$categ_color <- base::factor(data1$categ_color, levels = base::unique(categ_color)) # ok because if categ_color is a character string, the order make class 1, class 2, etc. unique() because no duplicates allowed
+    # data1$categ_color is a factor with order of levels -> categ_color
+    # end management of categ_color
+    # management of dot_color
+    if( ! base::is.null(dot_color)){
         # optional legend of dot colors
-        if( ! base::is.null(dot.categ)){
-            ini.dot.categ <- dot.categ
-            # nocov start (unreachable: the dot.categ checking block above catches all missing columns; reserved-word renames keep dot.categ aligned with data1 column names)
-        if( ! dot.categ %in% base::names(data1)){ # no need to use all() because length(dot.categ) = 1
-                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot.categ ARGUMENT MUST BE A COLUMN NAME OF data1. HERE IT IS:\n", dot.categ)
+        if( ! base::is.null(dot_categ)){
+            ini_dot_categ <- dot_categ
+            # nocov start (unreachable: the dot_categ checking block above catches all missing columns; reserved-word renames keep dot_categ aligned with data1 column names)
+        if( ! dot_categ %in% base::names(data1)){ # no need to use all() because length(dot_categ) = 1
+                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot_categ ARGUMENT MUST BE A COLUMN NAME OF data1. HERE IT IS:\n", dot_categ)
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-            }else if(dot.categ %in% categ){ # no need to use all() because length(dot.categ) = 1. Do not use dot.categ %in% categ[length(categ)] -> error
+            }else if(dot_categ %in% categ){ # no need to use all() because length(dot_categ) = 1. Do not use dot_categ %in% categ[length(categ)] -> error
             # nocov end
-                # management of dot legend if dot.categ %in% categ (because legends with the same name are joined in ggplot2) 
+                # management of dot legend if dot_categ %in% categ (because legends with the same name are joined in ggplot2) 
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") THE COLUMN NAME OF data1 INDICATED IN THE dot.categ ARGUMENT (", dot.categ, ") HAS BEEN REPLACED BY ", base::paste0(dot.categ, "_DOT"), " TO AVOID MERGED LEGEND BY GGPLOT2")
+                tempo_warn <- base::paste0("(", warn_count,") THE COLUMN NAME OF data1 INDICATED IN THE dot_categ ARGUMENT (", dot_categ, ") HAS BEEN REPLACED BY ", base::paste0(dot_categ, "_DOT"), " TO AVOID MERGED LEGEND BY GGPLOT2")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-                data1 <- base::data.frame(data1, dot.categ = data1[, dot.categ], stringsAsFactors = TRUE) # dot.categ is not a column name of data1 (checked above with reserved words)
-                dot.categ <- base::paste0(dot.categ, "_DOT")
-                base::names(data1)[base::names(data1) == "dot.categ"] <- dot.categ # paste0(dot.categ, "_DOT") is not a column name of data1 (checked above with reserved words)
-                # tempo_cat <- paste0("ERROR IN ", function_name, "\ndot.categ ARGUMENT CANNOT BE A COLUMN NAME OF data1 ALREADY SPECIFIED IN THE categ ARGUMENT:\n", dot.categ, "\nINDEED, dot.categ ARGUMENT IS MADE TO HAVE MULTIPLE DOT COLORS NOT RELATED TO THE BOXPLOT CATEGORIES")
+                data1 <- base::data.frame(data1, dot_categ = data1[, dot_categ], stringsAsFactors = TRUE) # dot_categ is not a column name of data1 (checked above with reserved words)
+                dot_categ <- base::paste0(dot_categ, "_DOT")
+                base::names(data1)[base::names(data1) == "dot_categ"] <- dot_categ # paste0(dot_categ, "_DOT") is not a column name of data1 (checked above with reserved words)
+                # tempo_cat <- paste0("ERROR IN ", function_name, "\ndot_categ ARGUMENT CANNOT BE A COLUMN NAME OF data1 ALREADY SPECIFIED IN THE categ ARGUMENT:\n", dot_categ, "\nINDEED, dot_categ ARGUMENT IS MADE TO HAVE MULTIPLE DOT COLORS NOT RELATED TO THE BOXPLOT CATEGORIES")
                 # stop(paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
         # nocov start (unreachable: data1[, categ] is converted to factor at the categ conversion block above, so tempo2$problem can never be TRUE here)
-            tempo1 <- saferDev::arg_check(data = data1[, dot.categ], class = NULL, typeof = NULL, mode = "character", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0(dot.categ, " COLUMN OF data1"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
-            tempo2 <- saferDev::arg_check(data = data1[, categ[i1]], class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0(dot.categ, " COLUMN OF data1"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+            tempo1 <- saferDev::arg_check(data = data1[, dot_categ], class = NULL, typeof = NULL, mode = "character", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0(dot_categ, " COLUMN OF data1"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+            tempo2 <- saferDev::arg_check(data = data1[, categ[i1]], class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0(dot_categ, " COLUMN OF data1"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
             if(tempo1$problem == TRUE & tempo2$problem == TRUE){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
-                    "dot.categ COLUMN MUST BE A FACTOR OR CHARACTER VECTOR.",
+                    "dot_categ COLUMN MUST BE A FACTOR OR CHARACTER VECTOR.",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
         # nocov end
-            data1[, dot.categ] <- base::factor(data1[, dot.categ]) # if already a factor, change nothing, if characters, levels according to alphabetical order
-            # dot.categ column of data1 is factor from here
-            if( ! base::is.null(dot.categ.class.order)){
-                if(base::any(base::duplicated(dot.categ.class.order), na.rm = TRUE)){
+            data1[, dot_categ] <- base::factor(data1[, dot_categ]) # if already a factor, change nothing, if characters, levels according to alphabetical order
+            # dot_categ column of data1 is factor from here
+            if( ! base::is.null(dot_categ_class_order)){
+                if(base::any(base::duplicated(dot_categ_class_order), na.rm = TRUE)){
                     tempo_cat <- base::paste0(
                         error_text_start, 
-                        "dot.categ.class.order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", base::paste(dot.categ.class.order, collapse = " ", recycle0 = FALSE),
+                        "dot_categ_class_order ARGUMENT CANNOT HAVE DUPLICATED CLASSES: ", base::paste(dot_categ_class_order, collapse = " ", recycle0 = FALSE),
                         collapse = NULL, 
                         recycle0 = FALSE
                     )
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-                }else if( ! (base::all(dot.categ.class.order %in% base::levels(data1[, dot.categ])) & base::all(base::levels(data1[, dot.categ]) %in% dot.categ.class.order, na.rm = TRUE))){
+                }else if( ! (base::all(dot_categ_class_order %in% base::levels(data1[, dot_categ])) & base::all(base::levels(data1[, dot_categ]) %in% dot_categ_class_order, na.rm = TRUE))){
                     tempo_cat <- base::paste0(
                         error_text_start, 
-                        "dot.categ.class.order ARGUMENT MUST BE CLASSES OF dot.categ ARGUMENT\nHERE IT IS:\n", 
-                        base::paste(dot.categ.class.order, collapse = " "), 
-                        "\nFOR dot.categ.class.order AND IT IS:\n", 
-                        base::paste(base::levels(data1[, dot.categ]), collapse = " "), 
-                        "\nFOR dot.categ COLUMN (", 
-                        ini.dot.categ, 
+                        "dot_categ_class_order ARGUMENT MUST BE CLASSES OF dot_categ ARGUMENT\nHERE IT IS:\n", 
+                        base::paste(dot_categ_class_order, collapse = " "), 
+                        "\nFOR dot_categ_class_order AND IT IS:\n", 
+                        base::paste(base::levels(data1[, dot_categ]), collapse = " "), 
+                        "\nFOR dot_categ COLUMN (", 
+                        ini_dot_categ, 
                         ") OF data1",
                         collapse = NULL, 
                         recycle0 = FALSE
                     )
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }else{
-                    data1[, dot.categ] <- base::factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
+                    data1[, dot_categ] <- base::factor(data1[, dot_categ], levels = dot_categ_class_order) # reorder the factor
                 }
             }else{
-                if(base::all(dot.color == "same") & base::length(dot.color)== 1L){ # all() without na.rm -> ok because dot.color cannot be NA (tested above)
-                    dot.categ.class.order <-base::unlist(categ.class.order[base::length(categ)])
-                    data1[, dot.categ] <- base::factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
+                if(base::all(dot_color == "same") & base::length(dot_color)== 1L){ # all() without na.rm -> ok because dot_color cannot be NA (tested above)
+                    dot_categ_class_order <-base::unlist(categ_class_order[base::length(categ)])
+                    data1[, dot_categ] <- base::factor(data1[, dot_categ], levels = dot_categ_class_order) # reorder the factor
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") THE dot.categ.class.order SETTING IS NULL AND dot.color IS \"same\". ORDER OF categ.class.order WILL BE APPLIED FOR LEGEND DISPLAY: ", base::paste(dot.categ.class.order, collapse = " "))
+                    tempo_warn <- base::paste0("(", warn_count,") THE dot_categ_class_order SETTING IS NULL AND dot_color IS \"same\". ORDER OF categ_class_order WILL BE APPLIED FOR LEGEND DISPLAY: ", base::paste(dot_categ_class_order, collapse = " "))
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }else{
-                    dot.categ.class.order <- base::sort(base::levels(data1[, dot.categ]))
-                    data1[, dot.categ] <- base::factor(data1[, dot.categ], levels = dot.categ.class.order) # reorder the factor
+                    dot_categ_class_order <- base::sort(base::levels(data1[, dot_categ]))
+                    data1[, dot_categ] <- base::factor(data1[, dot_categ], levels = dot_categ_class_order) # reorder the factor
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") THE dot.categ.class.order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR LEGEND DISPLAY: ", base::paste(dot.categ.class.order, collapse = " "))
+                    tempo_warn <- base::paste0("(", warn_count,") THE dot_categ_class_order SETTING IS NULL. ALPHABETICAL ORDER WILL BE APPLIED FOR LEGEND DISPLAY: ", base::paste(dot_categ_class_order, collapse = " "))
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
             }
-            # dot.categ.class.order not NULL anymore (character string) if dot.categ is not NULL
-            if(base::all(dot.color == "same") & base::length(dot.color)== 1L){ # all() without na.rm -> ok because dot.color cannot be NA (tested above)
-                if( ! base::identical(ini.dot.categ, categ[base::length(categ)])){
-                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nWHEN dot.color ARGUMENT IS \"same\", THE COLUMN NAME IN dot.categ ARGUMENT MUST BE IDENTICAL TO THE LAST COLUMN NAME IN categ ARGUMENT. HERE IT IS:\ndot.categ: ", base::paste(ini.dot.categ, collapse = " "), "\ncateg: ", base::paste(categ, collapse = " "))
+            # dot_categ_class_order not NULL anymore (character string) if dot_categ is not NULL
+            if(base::all(dot_color == "same") & base::length(dot_color)== 1L){ # all() without na.rm -> ok because dot_color cannot be NA (tested above)
+                if( ! base::identical(ini_dot_categ, categ[base::length(categ)])){
+                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nWHEN dot_color ARGUMENT IS \"same\", THE COLUMN NAME IN dot_categ ARGUMENT MUST BE IDENTICAL TO THE LAST COLUMN NAME IN categ ARGUMENT. HERE IT IS:\ndot_categ: ", base::paste(ini_dot_categ, collapse = " "), "\ncateg: ", base::paste(categ, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-                }else if( ! saferTool::comp_1d(base::unlist(categ.class.order[base::length(categ)]), dot.categ.class.order)$identical_content){
-                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nWHEN dot.color ARGUMENT IS \"same\",\nLAST COMPARTMENT OF categ.class.order ARGUMENT AND dot.categ.class.order ARGUMENT CANNOT BE DIFFERENT:\nLAST COMPARTMENT OF categ.class.order: ", base::paste(base::unlist(categ.class.order[base::length(categ)]), collapse = " "), "\ndot.categ.class.order: ", base::paste(dot.categ.class.order, collapse = " "))
+                }else if( ! saferTool::comp_1d(base::unlist(categ_class_order[base::length(categ)]), dot_categ_class_order)$identical_content){
+                    tempo_cat <- base::paste0("ERROR IN ", function_name, "\nWHEN dot_color ARGUMENT IS \"same\",\nLAST COMPARTMENT OF categ_class_order ARGUMENT AND dot_categ_class_order ARGUMENT CANNOT BE DIFFERENT:\nLAST COMPARTMENT OF categ_class_order: ", base::paste(base::unlist(categ_class_order[base::length(categ)]), collapse = " "), "\ndot_categ_class_order: ", base::paste(dot_categ_class_order, collapse = " "))
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
                 }
             }
             for(i3 in 1:base::length(categ)){
-                if(base::identical(categ[i3], ini.dot.categ) & ! base::identical(base::as.character(base::unlist(categ.class.order[i3])), dot.categ.class.order) & base::identical(base::sort(base::as.character(base::unlist(categ.class.order[i3]))), base::sort(dot.categ.class.order))){
+                if(base::identical(categ[i3], ini_dot_categ) & ! base::identical(base::as.character(base::unlist(categ_class_order[i3])), dot_categ_class_order) & base::identical(base::sort(base::as.character(base::unlist(categ_class_order[i3]))), base::sort(dot_categ_class_order))){
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") THE dot.categ ARGUMENT SETTING IS PRESENT IN THE categ ARGUMENT SETTING, BUT ORDER OF THE CLASSES IS NOT THE SAME:\ncateg.class.order: ", paste(base::unlist(categ.class.order[i3]), collapse = " "), "\ndot.categ.class.order: ", base::paste(dot.categ.class.order, collapse = " "), "\nNOTE THAT ORDER OF categ.class.order IS THE ONE USED FOR THE AXIS REPRESENTATION")
+                    tempo_warn <- base::paste0("(", warn_count,") THE dot_categ ARGUMENT SETTING IS PRESENT IN THE categ ARGUMENT SETTING, BUT ORDER OF THE CLASSES IS NOT THE SAME:\ncateg_class_order: ", paste(base::unlist(categ_class_order[i3]), collapse = " "), "\ndot_categ_class_order: ", base::paste(dot_categ_class_order, collapse = " "), "\nNOTE THAT ORDER OF categ_class_order IS THE ONE USED FOR THE AXIS REPRESENTATION")
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
             }
-            if(base::is.null(dot.legend.name)){
-                dot.legend.name <- if(ini.dot.categ %in% categ[base::length(categ)]){dot.categ}else{ini.dot.categ} #
+            if(base::is.null(dot_legend_name)){
+                dot_legend_name <- if(ini_dot_categ %in% categ[base::length(categ)]){dot_categ}else{ini_dot_categ} #
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") THE dot.legend.name SETTING IS NULL -> ", dot.legend.name, " WILL BE USED AS LEGEND TITLE OF DOTS")
+                tempo_warn <- base::paste0("(", warn_count,") THE dot_legend_name SETTING IS NULL -> ", dot_legend_name, " WILL BE USED AS LEGEND TITLE OF DOTS")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
-            # dot.legend.name not NULL anymore (character string)
+            # dot_legend_name not NULL anymore (character string)
         }else{
-            if( ! base::is.null(dot.categ.class.order)){
+            if( ! base::is.null(dot_categ_class_order)){
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") THE dot.categ.class.order ARGUMENT IS NOT NULL, BUT IS THE dot.categ ARGUMENT\n-> dot.categ.class.order NOT CONSIDERED AS NO LEGEND WILL BE DRAWN")
+                tempo_warn <- base::paste0("(", warn_count,") THE dot_categ_class_order ARGUMENT IS NOT NULL, BUT IS THE dot_categ ARGUMENT\n-> dot_categ_class_order NOT CONSIDERED AS NO LEGEND WILL BE DRAWN")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
-            # But dot.categ.class.order will be converted to NULL below (not now)
+            # But dot_categ_class_order will be converted to NULL below (not now)
         }
         # end optional legend of dot colors
         # check the nature of color
         # integer colors into gg_palette
-        tempo.check.color <- saferDev::arg_check(data = dot.color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0(dot.categ, " COLUMN OF data1"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
-        if(tempo.check.color == FALSE){
+        tempo_check_color <- saferDev::arg_check(data = dot_color, class = "integer", typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = base::paste0(dot_categ, " COLUMN OF data1"), data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)$problem
+        if(tempo_check_color == FALSE){
             # convert integers into colors
-            dot.color <- saferGG::gg_palette(base::max(dot.color, na.rm = TRUE))[dot.color]
+            dot_color <- saferGG::gg_palette(base::max(dot_color, na.rm = TRUE))[dot_color]
         }
         # end integer colors into gg_palette
-        if(base::all(dot.color == "same") & base::length(dot.color)== 1L){# all() without na.rm -> ok because dot.color cannot be NA (tested above)
-            dot.color <- categ.color # same color of the dots as the corresponding box color
+        if(base::all(dot_color == "same") & base::length(dot_color)== 1L){# all() without na.rm -> ok because dot_color cannot be NA (tested above)
+            dot_color <- categ_color # same color of the dots as the corresponding box color
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") dot.color ARGUMENT HAS BEEN SET TO \"same\"\nTHUS, DOTS WILL HAVE THE SAME COLORS AS THE CORRESPONDING BOXPLOT")
+            tempo_warn <- base::paste0("(", warn_count,") dot_color ARGUMENT HAS BEEN SET TO \"same\"\nTHUS, DOTS WILL HAVE THE SAME COLORS AS THE CORRESPONDING BOXPLOT")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        }else if( ! (base::all(dot.color %in% grDevices::colors() | base::grepl(pattern = "^#", dot.color) | base::is.na(dot.color)))){ # check that all strings of low.color start by #. NA allowed (grepl() returns FALSE for NA, so na.rm would not help): NA warned below
+        }else if( ! (base::all(dot_color %in% grDevices::colors() | base::grepl(pattern = "^#", dot_color) | base::is.na(dot_color)))){ # check that all strings of low.color start by #. NA allowed (grepl() returns FALSE for NA, so na.rm would not help): NA warned below
             tempo_cat <- base::paste0(
                 error_text_start, 
-                "dot.color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY grDevices::colors(), OR (3) INTEGERS, OR THE STRING \"same\"\nHERE IT IS: ", base::paste(base::unique(dot.color), collapse = " ", recycle0 = FALSE),
+                "dot_color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR VECTOR STARTING BY #, OR (2) COLOR NAMES GIVEN BY grDevices::colors(), OR (3) INTEGERS, OR THE STRING \"same\"\nHERE IT IS: ", base::paste(base::unique(dot_color), collapse = " ", recycle0 = FALSE),
                 collapse = NULL, 
                 recycle0 = FALSE
             )
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }
-        if(base::any(base::is.na(dot.color))){ # normally no NA with is.finite
+        if(base::any(base::is.na(dot_color))){ # normally no NA with is.finite
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") dot.color ARGUMENT CONTAINS NA")
+            tempo_warn <- base::paste0("(", warn_count,") dot_color ARGUMENT CONTAINS NA")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
         # end check the nature of color
         # check the length of color
-        if( ! base::is.null(dot.categ)){
+        if( ! base::is.null(dot_categ)){
             # optional legend of dot colors
-            if(base::length(data1[, dot.categ]) == base::length(base::levels(data1[, dot.categ])) & base::length(dot.color) == base::length(data1[, dot.categ])){
+            if(base::length(data1[, dot_categ]) == base::length(base::levels(data1[, dot_categ])) & base::length(dot_color) == base::length(data1[, dot_categ])){
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") THE NUMBER OF CLASSES OF THE COLUMN ", dot.categ, " THE NUMBER OF ROWS OF THIS COLUMN AND THE NUMBER OF COLORS OF THE dot.color ARGUMENT ARE ALL EQUAL. DOT COLORS WILL BE ATTRIBUTED ACCORDING THE LEVELS OF ", dot.categ, ", NOT ACCORDING TO THE ROWS OF ", dot.categ)
+                tempo_warn <- base::paste0("(", warn_count,") THE NUMBER OF CLASSES OF THE COLUMN ", dot_categ, " THE NUMBER OF ROWS OF THIS COLUMN AND THE NUMBER OF COLORS OF THE dot_color ARGUMENT ARE ALL EQUAL. DOT COLORS WILL BE ATTRIBUTED ACCORDING THE LEVELS OF ", dot_categ, ", NOT ACCORDING TO THE ROWS OF ", dot_categ)
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
-            if(base::length(dot.color) > 1 & ! (base::length(dot.color) == base::length(base::unique(data1[, dot.categ])) | base::length(dot.color) == base::length(data1[, dot.categ]))){
+            if(base::length(dot_color) > 1 & ! (base::length(dot_color) == base::length(base::unique(data1[, dot_categ])) | base::length(dot_color) == base::length(data1[, dot_categ]))){
                 tempo_cat <- base::paste0(
                     error_text_start, 
-                    "WHEN LENGTH OF THE dot.color ARGUMENT IS MORE THAN 1, IT MUST BE EQUAL TO THE NUMBER OF 1) ROWS OR 2) LEVELS OF dot.categ COLUMN (", dot.categ, "):\ndot.color: ", base::paste(dot.color, collapse = " "), "\ndot.categ LEVELS: ", base::paste(base::levels(data1[, dot.categ]), collapse = " ", recycle0 = FALSE),
+                    "WHEN LENGTH OF THE dot_color ARGUMENT IS MORE THAN 1, IT MUST BE EQUAL TO THE NUMBER OF 1) ROWS OR 2) LEVELS OF dot_categ COLUMN (", dot_categ, "):\ndot_color: ", base::paste(dot_color, collapse = " "), "\ndot_categ LEVELS: ", base::paste(base::levels(data1[, dot_categ]), collapse = " ", recycle0 = FALSE),
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
-            }else if(base::length(dot.color) > 1 & base::length(dot.color) == base::length(base::unique(data1[, dot.categ]))){
-                data1 <-base::data.frame(data1, dot.color = data1[, dot.categ], stringsAsFactors = TRUE)
-                data1$dot.color <- base::factor(data1$dot.color, labels = dot.color) # do not use labels = unique(dot.color). Otherwise, we can have green1 green2 when dot.color is c("green", "green")
-            }else if(base::length(dot.color) > 1 & base::length(dot.color) == base::length(data1[, dot.categ])){
-                data1 <- base::data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
-            }else if(base::length(dot.color)== 1L){ # to deal with single color. Warning: & length(dot.categ.class.order) > 1 removed because otherwise, the data1 is not with dot.color column when length(dot.categ.class.order) == 1
-                data1 <- base::data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
+            }else if(base::length(dot_color) > 1 & base::length(dot_color) == base::length(base::unique(data1[, dot_categ]))){
+                data1 <-base::data.frame(data1, dot_color = data1[, dot_categ], stringsAsFactors = TRUE)
+                data1$dot_color <- base::factor(data1$dot_color, labels = dot_color) # do not use labels = unique(dot_color). Otherwise, we can have green1 green2 when dot_color is c("green", "green")
+            }else if(base::length(dot_color) > 1 & base::length(dot_color) == base::length(data1[, dot_categ])){
+                data1 <- base::data.frame(data1, dot_color = dot_color, stringsAsFactors = TRUE)
+            }else if(base::length(dot_color)== 1L){ # to deal with single color. Warning: & length(dot_categ_class_order) > 1 removed because otherwise, the data1 is not with dot_color column when length(dot_categ_class_order) == 1
+                data1 <- base::data.frame(data1, dot_color = dot_color, stringsAsFactors = TRUE)
             }
-            dot.color <- base::as.character(base::unique(data1$dot.color[base::order(data1[, dot.categ])])) # reorder the dot.color character vector
-            if(base::length(dot.color)== 1L & base::length(dot.categ.class.order) > 1){ # to deal with single color
-                dot.color <- base::rep(dot.color, base::length(dot.categ.class.order))
+            dot_color <- base::as.character(base::unique(data1$dot_color[base::order(data1[, dot_categ])])) # reorder the dot_color character vector
+            if(base::length(dot_color)== 1L & base::length(dot_categ_class_order) > 1){ # to deal with single color
+                dot_color <- base::rep(dot_color, base::length(dot_categ_class_order))
             }
-            tempo.check <- base::unique(data1[ , base::c(dot.categ, "dot.color")])
-            if(base::length(base::unique(data1[ , "dot.color"])) > 1 & ( ! (base::nrow(tempo.check) == base::length(base::unique(data1[ , "dot.color"])) & base::nrow(tempo.check) == base::length(base::unique(data1[ , dot.categ]))))){ # length(unique(data1[ , "dot.color"])) > 1 because if only one color, can be attributed to each class of dot.categ
-                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot.color ARGUMENT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF dot.categ (", dot.categ, ") COLUMN:\n", base::paste(base::unique(base::mapply(FUN = "paste", data1[ , dot.categ], data1[ ,"dot.color"])), collapse = "\n"))
+            tempo_check <- base::unique(data1[ , base::c(dot_categ, "dot_color")])
+            if(base::length(base::unique(data1[ , "dot_color"])) > 1 & ( ! (base::nrow(tempo_check) == base::length(base::unique(data1[ , "dot_color"])) & base::nrow(tempo_check) == base::length(base::unique(data1[ , dot_categ]))))){ # length(unique(data1[ , "dot_color"])) > 1 because if only one color, can be attributed to each class of dot_categ
+                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot_color ARGUMENT IS INCORRECTLY ASSOCIATED TO EACH CLASS OF dot_categ (", dot_categ, ") COLUMN:\n", base::paste(base::unique(base::mapply(FUN = "paste", data1[ , dot_categ], data1[ ,"dot_color"])), collapse = "\n"))
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             }else{
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") IN dot.categ ARGUMENT (", ini.dot.categ, "), THE FOLLOWING COLORS OF DOTS:\n", base::paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", base::paste(base::levels(data1[, dot.categ]), collapse = " "))
+                tempo_warn <- base::paste0("(", warn_count,") IN dot_categ ARGUMENT (", ini_dot_categ, "), THE FOLLOWING COLORS OF DOTS:\n", base::paste(dot_color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", base::paste(base::levels(data1[, dot_categ]), collapse = " "))
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }
-            # dot.color is a character string representing the diff classes of dot.categ
-            # data1$dot.color is a factor with order of levels -> dot.categ
+            # dot_color is a character string representing the diff classes of dot_categ
+            # data1$dot_color is a factor with order of levels -> dot_categ
             # end optional legend of dot colors
         }else{
-            categ.len <- base::length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
-            if(base::length(dot.color) == base::length(base::levels(data1[, categ[categ.len]]))){ # here length(dot.color) is equal to the different number of categ
-                # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-                data1 <- base::data.frame(data1, dot.color = data1[, categ[categ.len]], stringsAsFactors = TRUE)
-                data1$dot.color <- base::factor(base::as.character(data1$dot.color), levels = base::levels(data1[, categ[categ.len]]), labels = dot.color)
-                if(box.alpha != 0){
+            categ_len <- base::length(categ) # if only categ1, then colors for classes of categ1, if length(categ) == 2L, then colors for classes of categ2
+            if(base::length(dot_color) == base::length(base::levels(data1[, categ[categ_len]]))){ # here length(dot_color) is equal to the different number of categ
+                # data1[, categ[categ_len]] <- factor(data1[, categ[categ_len]]) # not required because sure that is is a factor
+                data1 <- base::data.frame(data1, dot_color = data1[, categ[categ_len]], stringsAsFactors = TRUE)
+                data1$dot_color <- base::factor(base::as.character(data1$dot_color), levels = base::levels(data1[, categ[categ_len]]), labels = dot_color)
+                if(box_alpha != 0){
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") IN ", categ[categ.len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", base::paste(dot.color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", base::paste(base::levels(base::factor(data1[, categ[categ.len]])), collapse = " "))
+                    tempo_warn <- base::paste0("(", warn_count,") IN ", categ[categ_len], " OF categ ARGUMENT, THE FOLLOWING COLORS:\n", base::paste(dot_color, collapse = " "), "\nHAVE BEEN ATTRIBUTED TO THESE CLASSES:\n", base::paste(base::levels(base::factor(data1[, categ[categ_len]])), collapse = " "))
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
-            }else if(base::length(dot.color) == base::length(data1[, categ[categ.len]])){# here length(dot.color) is equal to nrow(data1) -> Modif to have length(dot.color) equal to the different number of categ (length(dot.color) == length(levels(data1[, categ[categ.len]])))
-                data1 <- base::data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
-            }else if(base::length(dot.color)== 1L & ! base::all(dot.color == "same")){ # all() without na.rm -> ok because dot.color cannot be NA (tested above)
-                # data1[, categ[categ.len]] <- factor(data1[, categ[categ.len]]) # not required because sure that is is a factor
-                data1 <- base::data.frame(data1, dot.color = dot.color, stringsAsFactors = TRUE)
-                dot.color <- base::rep(dot.color, base::length(base::levels(data1[, categ[categ.len]])))
+            }else if(base::length(dot_color) == base::length(data1[, categ[categ_len]])){# here length(dot_color) is equal to nrow(data1) -> Modif to have length(dot_color) equal to the different number of categ (length(dot_color) == length(levels(data1[, categ[categ_len]])))
+                data1 <- base::data.frame(data1, dot_color = dot_color, stringsAsFactors = TRUE)
+            }else if(base::length(dot_color)== 1L & ! base::all(dot_color == "same")){ # all() without na.rm -> ok because dot_color cannot be NA (tested above)
+                # data1[, categ[categ_len]] <- factor(data1[, categ[categ_len]]) # not required because sure that is is a factor
+                data1 <- base::data.frame(data1, dot_color = dot_color, stringsAsFactors = TRUE)
+                dot_color <- base::rep(dot_color, base::length(base::levels(data1[, categ[categ_len]])))
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") dot.color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ.len], "\n", base::paste(base::levels(base::factor(data1[, categ[categ.len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", base::paste(dot.color, collapse = " "))
+                tempo_warn <- base::paste0("(", warn_count,") dot_color ARGUMENT HAS LENGTH 1, MEANING THAT ALL THE DIFFERENT CLASSES OF ", categ[categ_len], "\n", base::paste(base::levels(base::factor(data1[, categ[categ_len]])), collapse = " "), "\nWILL HAVE THE SAME COLOR\n", base::paste(dot_color, collapse = " "))
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             }else{
-                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot.color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ.len], " COLUMN. HERE IT IS COLOR LENGTH ", base::length(dot.color), " VERSUS CATEG LENGTH ", base::length(data1[, categ[categ.len]]), " AND CATEG CLASS LENGTH ", base::length(base::unique(data1[, categ[categ.len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
+                tempo_cat <- base::paste0("ERROR IN ", function_name, "\ndot_color ARGUMENT MUST BE (1) LENGTH 1, OR (2) THE LENGTH OF data1 NROWS AFTER NA/Inf REMOVAL, OR (3) THE LENGTH OF THE CLASSES IN THE categ ", categ[categ_len], " COLUMN. HERE IT IS COLOR LENGTH ", base::length(dot_color), " VERSUS CATEG LENGTH ", base::length(data1[, categ[categ_len]]), " AND CATEG CLASS LENGTH ", base::length(base::unique(data1[, categ[categ_len]])), "\nPRESENCE OF NA/Inf COULD BE THE PROBLEM")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             }
             # end check the length of color
-            dot.color <- base::as.character(dot.color)
-            # dot.color is a character string representing the diff classes
-            data1$dot.color <- base::factor(data1$dot.color, levels = base::unique(dot.color)) # ok because if dot.color is a character string, the order make class 1, class 2, etc. If dot.color is a column of data1, then levels will be created, without incidence, except if dot.categ specified (see below). unique() because no duplicates allowed
-            # data1$dot.color is a factor with order of levels -> dot.color
+            dot_color <- base::as.character(dot_color)
+            # dot_color is a character string representing the diff classes
+            data1$dot_color <- base::factor(data1$dot_color, levels = base::unique(dot_color)) # ok because if dot_color is a character string, the order make class 1, class 2, etc. If dot_color is a column of data1, then levels will be created, without incidence, except if dot_categ specified (see below). unique() because no duplicates allowed
+            # data1$dot_color is a factor with order of levels -> dot_color
         }
         # end optional legend of dot colors
-    }else if(base::is.null(dot.color) & ! (base::is.null(dot.categ) & base::is.null(dot.categ.class.order) & base::is.null(dot.legend.name))){
+    }else if(base::is.null(dot_color) & ! (base::is.null(dot_categ) & base::is.null(dot_categ_class_order) & base::is.null(dot_legend_name))){
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") dot.categ OR dot.categ.class.order OR dot.legend.name ARGUMENT HAS BEEN SPECIFIED BUT dot.color ARGUMENT IS NULL (NO DOT PLOTTED)")
+        tempo_warn <- base::paste0("(", warn_count,") dot_categ OR dot_categ_class_order OR dot_legend_name ARGUMENT HAS BEEN SPECIFIED BUT dot_color ARGUMENT IS NULL (NO DOT PLOTTED)")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
     }
-    # dot.color either NULL (no dot plotted) or character string (potentially representing the diff classes of dot.categ)
-    # data1$dot.color is either NA or a factor (with order of levels -> depending on dot.categ or categ[length(categ)], or other
-    if(base::is.null(dot.categ)){
-        dot.categ.class.order <- NULL # because not used anyway
+    # dot_color either NULL (no dot plotted) or character string (potentially representing the diff classes of dot_categ)
+    # data1$dot_color is either NA or a factor (with order of levels -> depending on dot_categ or categ[length(categ)], or other
+    if(base::is.null(dot_categ)){
+        dot_categ_class_order <- NULL # because not used anyway
     }
-    # dot.categ.class.order either NULL if dot.categ is NULL (no legend displayed) or character string (potentially representing the diff classes of dot.categ)
-    # end management of dot.color
-    if(base::is.null(dot.color) & box.fill == FALSE & dot.alpha <= 0.025){
+    # dot_categ_class_order either NULL if dot_categ is NULL (no legend displayed) or character string (potentially representing the diff classes of dot_categ)
+    # end management of dot_color
+    if(base::is.null(dot_color) & box_fill == FALSE & dot_alpha <= 0.025){
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") THE FOLLOWING ARGUMENTS WERE SET AS:\ndot.color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox.fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\ndot.alpha = ", saferTool::round2(dot.alpha, 4), "\n-> POTENTIAL OUTLIER DOTS MIGHT NOT BE VISIBLE BECAUSE ALMOST TRANSPARENT")
+        tempo_warn <- base::paste0("(", warn_count,") THE FOLLOWING ARGUMENTS WERE SET AS:\ndot_color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox_fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\nbox_alpha = ", saferTool::round2(box_alpha, 4), "\ndot_alpha = ", saferTool::round2(dot_alpha, 4), "\n-> POTENTIAL OUTLIER DOTS MIGHT NOT BE VISIBLE BECAUSE ALMOST TRANSPARENT")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
     }
-    if(base::is.null(dot.color) & box.fill == FALSE & dot.border.size == 0){
-        tempo_cat <- base::paste0("ERROR IN ", function_name, "\nTHE FOLLOWING ARGUMENTS WERE SET AS:\ndot.color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox.fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\ndot.border.size = 0 (NO BORDER FOR POTENTIAL OUTLIER DOTS)\n-> THESE SETTINGS ARE NOT ALLOWED BECAUSE THE POTENTIAL OUTLIER DOTS WILL NOT BE VISIBLE")
+    if(base::is.null(dot_color) & box_fill == FALSE & dot_border_size == 0){
+        tempo_cat <- base::paste0("ERROR IN ", function_name, "\nTHE FOLLOWING ARGUMENTS WERE SET AS:\ndot_color = NULL (NOT ALL DOTS BUT ONLY POTENTIAL OUTLIER DOTS DISPLAYED)\nbox_fill = FALSE (NO FILLING COLOR FOR BOTH BOXES AND POTENTIAL OUTLIER DOTS)\ndot_border_size = 0 (NO BORDER FOR POTENTIAL OUTLIER DOTS)\n-> THESE SETTINGS ARE NOT ALLOWED BECAUSE THE POTENTIAL OUTLIER DOTS WILL NOT BE VISIBLE")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
     }
-    # integer dot.border.color into gg_palette
-    if( ! base::is.null(dot.border.color)){
-        tempo <- saferDev::arg_check(data = dot.border.color, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+    # integer dot_border_color into gg_palette
+    if( ! base::is.null(dot_border_color)){
+        tempo <- saferDev::arg_check(data = dot_border_color, class = "integer", typeof = "integer", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
         if(tempo$problem == FALSE){ # convert integers into colors
-            dot.border.color <- saferGG::gg_palette(base::max(dot.border.color, na.rm = TRUE))[dot.border.color]
+            dot_border_color <- saferGG::gg_palette(base::max(dot_border_color, na.rm = TRUE))[dot_border_color]
         }
     }
-    # end integer dot.border.color into gg_palette
+    # end integer dot_border_color into gg_palette
     # na detection and removal (done now to be sure of the correct length of categ)
-    column.check <- base::c("categ.color", if( ! base::is.null(dot.color)){"dot.color"}) # 
-    if(base::any(base::is.na(data1[, column.check]))){ # data1 used here instead of data1.ini in case of new NaN created by log conversion (neg values) # normally no NA with is.na
+    column_check <- base::c("categ_color", if( ! base::is.null(dot_color)){"dot_color"}) # 
+    if(base::any(base::is.na(data1[, column_check]))){ # data1 used here instead of data1_ini in case of new NaN created by log conversion (neg values) # normally no NA with is.na
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") NA DETECTED IN COLUMNS ", base::paste(column.check, collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed.row.nb AND $removed.rows)")
+        tempo_warn <- base::paste0("(", warn_count,") NA DETECTED IN COLUMNS ", base::paste(column_check, collapse = " "), " OF data1 AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        for(i2 in 1:base::length(column.check)){
-            if(base::any(base::is.na(data1[, column.check[i2]]))){ # normally no NA with is.na
-                tempo_warn <- base::paste0("NA REMOVAL DUE TO COLUMN ", column.check[i2], " OF data1")
+        for(i2 in 1:base::length(column_check)){
+            if(base::any(base::is.na(data1[, column_check[i2]]))){ # normally no NA with is.na
+                tempo_warn <- base::paste0("NA REMOVAL DUE TO COLUMN ", column_check[i2], " OF data1")
                 warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n", tempo_warn)))
             }
         }
-        tempo <- base::unique(base::unlist(base::lapply(base::lapply(base::c(data1[column.check]), FUN = is.na), FUN = which)))
-        removed.row.nb <- base::c(removed.row.nb, tempo)
-        tempo.removed <- data1[tempo, ] # data1 used here (and not data1.ini) because the categ.color/dot.color columns do not exist in data1.ini and are needed for the class-disappearance check below. CAUTION: done before the data1 subsetting at line below, because the row indexes of tempo correspond to the non subsetted data1
-        removed.rows <- base::rbind(removed.rows, data1.ini[tempo, ], stringsAsFactors = FALSE) # data1.ini used (and not data1, that has the extra categ.color/dot.color columns) to keep the column set of $removed.rows constant whatever the removal pass, and to avoid a rbind error when this pass and the previous NA-removal pass (line above) both remove rows
+        tempo <- base::unique(base::unlist(base::lapply(base::lapply(base::c(data1[column_check]), FUN = is.na), FUN = which)))
+        removed_row_nb <- base::c(removed_row_nb, tempo)
+        tempo_removed <- data1[tempo, ] # data1 used here (and not data1_ini) because the categ_color/dot_color columns do not exist in data1_ini and are needed for the class-disappearance check below. CAUTION: done before the data1 subsetting at line below, because the row indexes of tempo correspond to the non subsetted data1
+        removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE) # data1_ini used (and not data1, that has the extra categ_color/dot_color columns) to keep the column set of $removed_rows constant whatever the removal pass, and to avoid a rbind error when this pass and the previous NA-removal pass (line above) both remove rows
         if(base::length(tempo) != 0){
-            data1 <- data1[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
-            data1.ini <- data1.ini[-tempo, ] # WARNING tempo here and not removed.row.nb because the latter contain more numbers thant the former
-            for(i3 in 1:base::length(column.check)){
-                if(base::any( ! base::unique(tempo.removed[, column.check[i3]]) %in% base::unique(data1[, column.check[i3]]), na.rm = TRUE)){
+            data1 <- data1[-tempo, ] # WARNING tempo here and not removed_row_nb because the latter contain more numbers thant the former
+            data1_ini <- data1_ini[-tempo, ] # WARNING tempo here and not removed_row_nb because the latter contain more numbers thant the former
+            for(i3 in 1:base::length(column_check)){
+                if(base::any( ! base::unique(tempo_removed[, column_check[i3]]) %in% base::unique(data1[, column_check[i3]]), na.rm = TRUE)){
                     warn_count <- warn_count + 1
-                    tempo_warn <- base::paste0("(", warn_count,") IN COLUMN ", column.check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA/Inf REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", base::paste(base::unique(tempo.removed[, column.check[i3]])[ ! base::unique(tempo.removed[, column.check[i3]]) %in% base::unique(data1[, column.check[i3]])], collapse = " "))
+                    tempo_warn <- base::paste0("(", warn_count,") IN COLUMN ", column_check[i3], " OF data1, THE FOLLOWING CLASSES HAVE DISAPPEARED AFTER NA/Inf REMOVAL (IF COLUMN USED IN THE PLOT, THIS CLASS WILL NOT BE DISPLAYED):\n", base::paste(base::unique(tempo_removed[, column_check[i3]])[ ! base::unique(tempo_removed[, column_check[i3]]) %in% base::unique(data1[, column_check[i3]])], collapse = " "))
                     warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
                 }
             }
         }
-        if( ! base::is.null(dot.categ) & ! base::is.null(dot.categ.class.order)){
-            # pass-2 can remove all rows of a dot.categ class (their dot.color was NA):
-            # rebuild dot.categ.class.order and the dot.categ factor from the remaining classes,
+        if( ! base::is.null(dot_categ) & ! base::is.null(dot_categ_class_order)){
+            # pass-2 can remove all rows of a dot_categ class (their dot_color was NA):
+            # rebuild dot_categ_class_order and the dot_categ factor from the remaining classes,
             # otherwise the alpha scale below gets more labels than remaining data levels
-            dot.categ.class.order <- dot.categ.class.order[dot.categ.class.order %in% base::unique(base::as.character(data1[, dot.categ]))]
-            data1[, dot.categ] <- base::factor(base::as.character(data1[, dot.categ]), levels = dot.categ.class.order)
+            dot_categ_class_order <- dot_categ_class_order[dot_categ_class_order %in% base::unique(base::as.character(data1[, dot_categ]))]
+            data1[, dot_categ] <- base::factor(base::as.character(data1[, dot_categ]), levels = dot_categ_class_order)
         }
-        for(i2 in 1:base::length(column.check)){
-            if(column.check[i2] == "categ.color"){
-                categ.color <- base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(data1[, column.check[i2]])] # remove the absent color in the character vector
-                if(base::length(categ.color)== 1L & base::length(base::unlist(categ.class.order[base::length(categ)])) > 1){ # to deal with single color
-                    categ.color <- base::rep(categ.color, base::length(base::unlist(categ.class.order[base::length(categ)])))
+        for(i2 in 1:base::length(column_check)){
+            if(column_check[i2] == "categ_color"){
+                categ_color <- base::levels(data1[, column_check[i2]])[base::levels(data1[, column_check[i2]]) %in% base::unique(data1[, column_check[i2]])] # remove the absent color in the character vector
+                if(base::length(categ_color)== 1L & base::length(base::unlist(categ_class_order[base::length(categ)])) > 1){ # to deal with single color
+                    categ_color <- base::rep(categ_color, base::length(base::unlist(categ_class_order[base::length(categ)])))
                 }
-                data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = base::unique(categ.color))
+                data1[, column_check[i2]] <- base::factor(base::as.character(data1[, column_check[i2]]), levels = base::unique(categ_color))
             }
-            if(column.check[i2] == "dot.color"){
-                dot.color <- base::levels(data1[, column.check[i2]])[base::levels(data1[, column.check[i2]]) %in% base::unique(data1[, column.check[i2]])] # remove the absent color in the character vector
-                if(base::length(dot.color)== 1L & base::length(dot.categ.class.order) > 1){ # to deal with single color. If dot.categ.class.order == NULL (which is systematically the case if dot.categ == NULL), no rep(dot.color, length(dot.categ.class.order)
-                    dot.color <- base::rep(dot.color, base::length(dot.categ.class.order))
+            if(column_check[i2] == "dot_color"){
+                dot_color <- base::levels(data1[, column_check[i2]])[base::levels(data1[, column_check[i2]]) %in% base::unique(data1[, column_check[i2]])] # remove the absent color in the character vector
+                if(base::length(dot_color)== 1L & base::length(dot_categ_class_order) > 1){ # to deal with single color. If dot_categ_class_order == NULL (which is systematically the case if dot_categ == NULL), no rep(dot_color, length(dot_categ_class_order)
+                    dot_color <- base::rep(dot_color, base::length(dot_categ_class_order))
                 }
-                data1[, column.check[i2]] <- base::factor(base::as.character(data1[, column.check[i2]]), levels = base::unique(dot.color))
+                data1[, column_check[i2]] <- base::factor(base::as.character(data1[, column_check[i2]]), levels = base::unique(dot_color))
             }
         }
     }
     # end na detection and removal (done now to be sure of the correct length of categ)
-    # From here, data1 and data.ini have no more NA or NaN
+    # From here, data1 and data_ini have no more NA or NaN
 
     ######## end other checkings
 
@@ -1744,53 +1744,53 @@ gg_box <- function(
 
     #### main code
 
-    # y coordinates recovery (create ini.box.coord, dot.coord and modify data1)
+    # y coordinates recovery (create ini_box_coord, dot_coord and modify data1)
     if(base::length(categ)== 1L){
         # width commputations
-        box.width2 <- box.width
-        box.space <- 0 # to inactivate the shrink that add space between grouped boxes, because no grouped boxes here
+        box_width2 <- box_width
+        box_space <- 0 # to inactivate the shrink that add space between grouped boxes, because no grouped boxes here
         # end width commputations
         # data1 check categ order for dots coordinates recovery
-        data1 <- base::data.frame(data1, categ.check = data1[, categ[1]], stringsAsFactors = TRUE)
-        data1$categ.check <- base::as.integer(data1$categ.check) # to check that data1[, categ[1]] and dot.coord$group are similar, during merging
-        # CAUTION: if classes disappeared during the NA/Inf removal of the color columns above (e.g., categ.color with NA), ggplot2 builds groups only for the remaining classes, with renumbered ids (1, 2, ...), whereas categ.check keeps the ids of the initial factor levels (e.g., 1, 3). Remap categ.check to the renumbered ids, keeping the initial order
-        data1$categ.check <- base::as.integer(base::factor(data1$categ.check, levels = base::sort(x = base::unique(x = data1$categ.check))))
+        data1 <- base::data.frame(data1, categ_check = data1[, categ[1]], stringsAsFactors = TRUE)
+        data1$categ_check <- base::as.integer(data1$categ_check) # to check that data1[, categ[1]] and dot_coord$group are similar, during merging
+        # CAUTION: if classes disappeared during the NA/Inf removal of the color columns above (e.g., categ_color with NA), ggplot2 builds groups only for the remaining classes, with renumbered ids (1, 2, ...), whereas categ_check keeps the ids of the initial factor levels (e.g., 1, 3). Remap categ_check to the renumbered ids, keeping the initial order
+        data1$categ_check <- base::as.integer(base::factor(data1$categ_check, levels = base::sort(x = base::unique(x = data1$categ_check))))
         # end data1 check categ order for dots coordinates recovery
         # per box dots coordinates recovery
-        tempo.gg.name <- "gg.indiv.plot."
-        tempo.gg.count <- 0
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), base::eval(base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add added here to have the facets
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[1]), stroke = dot.border.size, size = dot.size, alpha = dot.alpha, shape = 21))
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box.legend.name, values = if(base::is.null(categ.color)){ # categ.color used for dot colors because at that stage, we do not care about colors
-            # nocov start (unreachable: categ.color is converted to a non-NULL character vector by the categ.color management block above (comment "categ.color not NULL anymore"))
+        tempo_gg_name <- "gg.indiv.plot."
+        tempo_gg_count <- 0
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::eval(base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add added here to have the facets
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[1]), stroke = dot_border_size, size = dot_size, alpha = dot_alpha, shape = 21))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box_legend_name, values = if(base::is.null(categ_color)){ # categ_color used for dot colors because at that stage, we do not care about colors
+            # nocov start (unreachable: categ_color is converted to a non-NULL character vector by the categ_color management block above (comment "categ_color not NULL anymore"))
             base::rep(NA, base::length(base::unique(data1[, categ[1]])))
             # nocov end
-        }else if(base::length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[1]])))}else{categ.color}))
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[1]), coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf})) # fill because this is what is used with geom_box # to easily have the equivalent of the grouped boxes
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(base::length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[1]])))}else{categ.color}))
+        }else if(base::length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[1]])))}else{categ_color}))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[1]), coef = if(box_whisker_kind == "no"){0}else if(box_whisker_kind == "std"){1.5}else if(box_whisker_kind == "max"){Inf})) # fill because this is what is used with geom_box # to easily have the equivalent of the grouped boxes
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box_legend_name, values = if(base::length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[1]])))}else{categ_color}))
         # end per box dots coordinates recovery
     }else if(base::length(categ) == 2L){
         # width commputations
-        box.width2 <- box.width / base::length(base::unique(data1[, categ[base::length(categ)]])) # real width of each box in x-axis unit, among the set of grouped box. Not relevant if no grouped boxes length(categ)== 1L
+        box_width2 <- box_width / base::length(base::unique(data1[, categ[base::length(categ)]])) # real width of each box in x-axis unit, among the set of grouped box. Not relevant if no grouped boxes length(categ)== 1L
         # end width commputations
         # data1 check categ order for dots coordinates recovery
-        tempo.factor <- base::paste0(data1[base::order(data1[, categ[2]], data1[, categ[1]]), categ[2]], "_", data1[base::order(data1[, categ[2]], data1[, categ[1]]), categ[1]])
-        data1 <- base::data.frame(data1[base::order(data1[, categ[2]], data1[, categ[1]]), ], categ.check = base::factor(tempo.factor, levels = base::unique(tempo.factor)), stringsAsFactors = TRUE)
-        data1$categ.check <- base::as.integer(x = data1$categ.check) # to check that data1[, categ[1]] and dot.coord$group are similar, during merging
-        # CAUTION: if classes disappeared during the NA/Inf removal of the color columns above (e.g., categ.color with NA), ggplot2 builds groups only for the remaining classes, with renumbered ids (1, 2, ...), whereas categ.check keeps the ids of the initial factor levels (e.g., 1, 3). Remap categ.check to the renumbered ids, keeping the initial order
-        data1$categ.check <- base::as.integer(base::factor(data1$categ.check, levels = base::sort(x = base::unique(x = data1$categ.check))))
+        tempo_factor <- base::paste0(data1[base::order(data1[, categ[2]], data1[, categ[1]]), categ[2]], "_", data1[base::order(data1[, categ[2]], data1[, categ[1]]), categ[1]])
+        data1 <- base::data.frame(data1[base::order(data1[, categ[2]], data1[, categ[1]]), ], categ_check = base::factor(tempo_factor, levels = base::unique(tempo_factor)), stringsAsFactors = TRUE)
+        data1$categ_check <- base::as.integer(x = data1$categ_check) # to check that data1[, categ[1]] and dot_coord$group are similar, during merging
+        # CAUTION: if classes disappeared during the NA/Inf removal of the color columns above (e.g., categ_color with NA), ggplot2 builds groups only for the remaining classes, with renumbered ids (1, 2, ...), whereas categ_check keeps the ids of the initial factor levels (e.g., 1, 3). Remap categ_check to the renumbered ids, keeping the initial order
+        data1$categ_check <- base::as.integer(base::factor(data1$categ_check, levels = base::sort(x = base::unique(x = data1$categ_check))))
         # per box dots coordinates recovery
-        tempo.gg.name <- "gg.indiv.plot."
-        tempo.gg.count <- 0
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), base::eval(base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add added here to have the facets
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[2]), stroke = dot.border.size, size = dot.size, alpha = dot.alpha, shape = 21))
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box.legend.name, values = if(base::is.null(categ.color)){ # categ.color used for dot colors because at that stage, we do not care about colors
-            # nocov start (unreachable: categ.color is converted to a non-NULL character vector by the categ.color management block above (comment "categ.color not NULL anymore"))
+        tempo_gg_name <- "gg.indiv.plot."
+        tempo_gg_count <- 0
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::eval(base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add added here to have the facets
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[2]), stroke = dot_border_size, size = dot_size, alpha = dot_alpha, shape = 21))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box_legend_name, values = if(base::is.null(categ_color)){ # categ_color used for dot colors because at that stage, we do not care about colors
+            # nocov start (unreachable: categ_color is converted to a non-NULL character vector by the categ_color management block above (comment "categ_color not NULL anymore"))
             base::rep(NA, base::length(base::unique(data1[, categ[2]])))
             # nocov end
-        }else if(base::length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[2]])))}else{categ.color}))
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[2]), coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf})) # fill because this is what is used with geom_box # to easily have the equivalent of the grouped boxes
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(base::length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[2]])))}else{categ.color}))
+        }else if(base::length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[2]])))}else{categ_color}))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[2]), coef = if(box_whisker_kind == "no"){0}else if(box_whisker_kind == "std"){1.5}else if(box_whisker_kind == "max"){Inf})) # fill because this is what is used with geom_box # to easily have the equivalent of the grouped boxes
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box_legend_name, values = if(base::length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[2]])))}else{categ_color}))
         # end per box dots coordinates recovery
     }else{
             # nocov start (unreachable: internal consistency guard - both branches above produce identical dot/box data structures by construction)
@@ -1798,149 +1798,149 @@ gg_box <- function(
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
     }
-    if( ! base::is.null(stat.pos)){
-        stat.just <- saferGG::gg_just(
-            angle = stat.angle, 
+    if( ! base::is.null(stat_pos)){
+        stat_just <- saferGG::gg_just(
+            angle = stat_angle, 
             pos = base::ifelse(
                 vertical == TRUE, 
-                base::ifelse(stat.pos == "top", "bottom", "top"), # "bottom" because we want justification for text that are below the ref point which is the top of the graph. The opposite for "above"
-                base::ifelse(stat.pos == "top", "left", "right") # "left" because we want justification for text that are on the left of the ref point which is the right border of the graph. The opposite for "above"
+                base::ifelse(stat_pos == "top", "bottom", "top"), # "bottom" because we want justification for text that are below the ref point which is the top of the graph. The opposite for "above"
+                base::ifelse(stat_pos == "top", "left", "right") # "left" because we want justification for text that are on the left of the ref point which is the right border of the graph. The opposite for "above"
             ), 
             kind = "text"
         )
     }
     # has in fact no interest because ggplot2 does not create room for geom_text()
-    tempo.data.max <- data1[base::which.max(data1[, y]), ]
-    tempo.data.max <- base::data.frame(tempo.data.max, label = base::formatC(tempo.data.max[, y], digits = 2, drop0trailing = TRUE, format = "f"), stringsAsFactors = TRUE)
+    tempo_data_max <- data1[base::which.max(data1[, y]), ]
+    tempo_data_max <- base::data.frame(tempo_data_max, label = base::formatC(tempo_data_max[, y], digits = 2, drop0trailing = TRUE, format = "f"), stringsAsFactors = TRUE)
     # end has in fact no interest because ggplot2 does not create room for geom_text()
-    tempo.graph.info.ini <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if( ! base::is.null(stat.pos)){' + ggplot2::geom_text(data = tempo.data.max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat.size, color = "black", angle = stat.angle, hjust = stat.just$hjust, vjust = stat.just$vjust)'})))) # added here to have room for annotation
-    dot.coord <- tempo.graph.info.ini$data[[1]]
-    dot.coord$x <- base::as.numeric(dot.coord$x) # because weird class
-    dot.coord$PANEL <- base::as.numeric(dot.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
-    tempo.mean <- stats::aggregate(x = dot.coord$y, by = base::list(dot.coord$group, dot.coord$PANEL), FUN = mean, na.rm = TRUE)
-    base::names(tempo.mean)[base::names(tempo.mean) == "x"] <- "MEAN"
-    base::names(tempo.mean)[base::names(tempo.mean) == "Group.1"] <- "BOX"
-    base::names(tempo.mean)[base::names(tempo.mean) == "Group.2"] <- "PANEL"
-    dot.coord <- base::data.frame(
-        dot.coord[base::order(dot.coord$group, dot.coord$y), ], # dot.coord$PANEL deals below
-        y.check = base::as.double(data1[base::order(data1$categ.check, data1[, y]), y]), 
-        categ.check = data1[base::order(data1$categ.check, data1[, y]), "categ.check"], 
-        dot.color = if(base::is.null(dot.color)){NA}else{data1[base::order(data1$categ.check, data1[, y]), "dot.color"]}, 
-        data1[base::order(data1$categ.check, data1[, y]), ][categ], # avoid the renaming below
+    tempo_graph_info_ini <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "), if( ! base::is.null(stat_pos)){' + ggplot2::geom_text(data = tempo_data_max, mapping = ggplot2::aes_string(x = 1, y = y, label = "label"), size = stat_size, color = "black", angle = stat_angle, hjust = stat_just$hjust, vjust = stat_just$vjust)'})))) # added here to have room for annotation
+    dot_coord <- tempo_graph_info_ini$data[[1]]
+    dot_coord$x <- base::as.numeric(dot_coord$x) # because weird class
+    dot_coord$PANEL <- base::as.numeric(dot_coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
+    tempo_mean <- stats::aggregate(x = dot_coord$y, by = base::list(dot_coord$group, dot_coord$PANEL), FUN = mean, na.rm = TRUE)
+    base::names(tempo_mean)[base::names(tempo_mean) == "x"] <- "MEAN"
+    base::names(tempo_mean)[base::names(tempo_mean) == "Group.1"] <- "BOX"
+    base::names(tempo_mean)[base::names(tempo_mean) == "Group.2"] <- "PANEL"
+    dot_coord <- base::data.frame(
+        dot_coord[base::order(dot_coord$group, dot_coord$y), ], # dot_coord$PANEL deals below
+        y_check = base::as.double(data1[base::order(data1$categ_check, data1[, y]), y]), 
+        categ_check = data1[base::order(data1$categ_check, data1[, y]), "categ_check"], 
+        dot_color = if(base::is.null(dot_color)){NA}else{data1[base::order(data1$categ_check, data1[, y]), "dot_color"]}, 
+        data1[base::order(data1$categ_check, data1[, y]), ][categ], # avoid the renaming below
         stringsAsFactors = TRUE
-    ) # y.check to be sure that the order is the same between the y of data1 and the y of dot.coord
-    # names(dot.coord)[names(dot.coord) == "tempo_categ1"] <- categ[1]
-    if( ! base::is.null(dot.categ)){
-        dot.coord <- base::data.frame(dot.coord, data1[base::order(data1$categ.check, data1[, y]), ][dot.categ], stringsAsFactors = TRUE) # avoid the renaming
+    ) # y_check to be sure that the order is the same between the y of data1 and the y of dot_coord
+    # names(dot_coord)[names(dot_coord) == "tempo_categ1"] <- categ[1]
+    if( ! base::is.null(dot_categ)){
+        dot_coord <- base::data.frame(dot_coord, data1[base::order(data1$categ_check, data1[, y]), ][dot_categ], stringsAsFactors = TRUE) # avoid the renaming
     }
-    if( ! base::is.null(facet.categ)){
-        dot.coord <- base::data.frame(dot.coord, data1[base::order(data1$categ.check, data1[, y]), ][facet.categ], stringsAsFactors = TRUE) # for facet panels
-        tempo.test <- NULL
-        for(i2 in 1:base::length(facet.categ)){
-            if(base::is.factor(x = dot.coord[, facet.categ[i2]])){
-                tempo.test <- base::paste0(tempo.test, ".", base::formatC(base::as.numeric(dot.coord[, facet.categ[i2]]), width = base::nchar(base::max(base::as.numeric(dot.coord[, facet.categ[i2]]), na.rm = TRUE)), flag = "0")) # convert factor into numeric with leading zero for proper ranking # merge the formatC() to create a new factor. The convertion to integer should recreate the correct group number. Here as.numeric is used and not as.integer in case of numeric in facet.categ (because comes from add and not checked by saferDev::arg_check, contrary to categ)
+    if( ! base::is.null(facet_categ)){
+        dot_coord <- base::data.frame(dot_coord, data1[base::order(data1$categ_check, data1[, y]), ][facet_categ], stringsAsFactors = TRUE) # for facet panels
+        tempo_test <- NULL
+        for(i2 in 1:base::length(facet_categ)){
+            if(base::is.factor(x = dot_coord[, facet_categ[i2]])){
+                tempo_test <- base::paste0(tempo_test, ".", base::formatC(base::as.numeric(dot_coord[, facet_categ[i2]]), width = base::nchar(base::max(base::as.numeric(dot_coord[, facet_categ[i2]]), na.rm = TRUE)), flag = "0")) # convert factor into numeric with leading zero for proper ranking # merge the formatC() to create a new factor. The convertion to integer should recreate the correct group number. Here as.numeric is used and not as.integer in case of numeric in facet_categ (because comes from add and not checked by saferDev::arg_check, contrary to categ)
             }else{ # character facet column (facet columns of add are not checked by saferDev::arg_check and can be character): ggplot2 orders the PANEL by the alphabetical order of the values (equivalent to levels of factor(as.character())). Must match this ordering
-                tempo.test <- base::paste0(tempo.test, ".", base::formatC(base::match(x = dot.coord[, facet.categ[i2]], table = base::sort(base::unique(x = base::as.character(x = dot.coord[, facet.categ[i2]])))), width = base::nchar(x = base::length(x = base::unique(x = base::as.character(x = dot.coord[, facet.categ[i2]])))), flag = "0"))
+                tempo_test <- base::paste0(tempo_test, ".", base::formatC(base::match(x = dot_coord[, facet_categ[i2]], table = base::sort(base::unique(x = base::as.character(x = dot_coord[, facet_categ[i2]])))), width = base::nchar(x = base::length(x = base::unique(x = base::as.character(x = dot_coord[, facet_categ[i2]])))), flag = "0"))
             }
         }
-        tempo.test <- base::as.integer(base::factor(tempo.test))
-        if( ! base::identical(base::as.integer(dot.coord$PANEL), tempo.test)){
-            # nocov start (unreachable: internal consistency guard - PANEL is always the box.facet factor index for correctly formed dot.coord)
-            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nas.integer(dot.coord$PANEL) AND tempo.test MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+        tempo_test <- base::as.integer(base::factor(tempo_test))
+        if( ! base::identical(base::as.integer(dot_coord$PANEL), tempo_test)){
+            # nocov start (unreachable: internal consistency guard - PANEL is always the box_facet factor index for correctly formed dot_coord)
+            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nas_integer(dot_coord$PANEL) AND tempo_test MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }
     }
-    if(dot.tidy == TRUE){
-        if( ! base::is.null(dot.categ)){
-            dot.coord <- base::data.frame(dot.coord, tidy_group = data1[base::order(data1$categ.check, data1[, y]), ][, dot.categ], stringsAsFactors = TRUE) # avoid the renaming
+    if(dot_tidy == TRUE){
+        if( ! base::is.null(dot_categ)){
+            dot_coord <- base::data.frame(dot_coord, tidy_group = data1[base::order(data1$categ_check, data1[, y]), ][, dot_categ], stringsAsFactors = TRUE) # avoid the renaming
             # tidy_group_coord is to be able to fuse table when creating the table for dot coordinates
-            if(dot.categ %in% categ){
-                dot.coord <- base::data.frame(dot.coord, tidy_group_coord = dot.coord$group, stringsAsFactors = TRUE)
+            if(dot_categ %in% categ){
+                dot_coord <- base::data.frame(dot_coord, tidy_group_coord = dot_coord$group, stringsAsFactors = TRUE)
             }else{
-                dot.coord <- base::data.frame(dot.coord, tidy_group_coord = base::as.integer(base::factor(base::paste0(
-                    base::formatC(base::as.integer(dot.coord[, categ[1]]), width = base::nchar(base::max(base::as.integer(dot.coord[, categ[1]]), na.rm = TRUE)), flag = "0"), # convert factor into numeric with leading zero for proper ranking
+                dot_coord <- base::data.frame(dot_coord, tidy_group_coord = base::as.integer(base::factor(base::paste0(
+                    base::formatC(base::as.integer(dot_coord[, categ[1]]), width = base::nchar(base::max(base::as.integer(dot_coord[, categ[1]]), na.rm = TRUE)), flag = "0"), # convert factor into numeric with leading zero for proper ranking
                     ".", 
-                    if(base::length(categ) == 2L){base::formatC(base::as.integer(dot.coord[, categ[2]]), width = base::nchar(base::max(base::as.integer(dot.coord[, categ[2]]), na.rm = TRUE)), flag = "0")}, # convert factor into numeric with leading zero for proper ranking
+                    if(base::length(categ) == 2L){base::formatC(base::as.integer(dot_coord[, categ[2]]), width = base::nchar(base::max(base::as.integer(dot_coord[, categ[2]]), na.rm = TRUE)), flag = "0")}, # convert factor into numeric with leading zero for proper ranking
                     if(base::length(categ) == 2L){"."}, 
-                    base::formatC(base::as.integer(dot.coord[, dot.categ]), width = base::nchar(base::max(base::as.integer(dot.coord[, dot.categ]), na.rm = TRUE)), flag = "0") # convert factor into numeric with leading zero for proper ranking
+                    base::formatC(base::as.integer(dot_coord[, dot_categ]), width = base::nchar(base::max(base::as.integer(dot_coord[, dot_categ]), na.rm = TRUE)), flag = "0") # convert factor into numeric with leading zero for proper ranking
                 )), stringsAsFactors = TRUE) # merge the 2 or 3 formatC() to create a new factor. The convertion to integer should recreate the correct group number
                 ) # for tidy dot plots
             }
         }else{
-            dot.coord <- base::data.frame(dot.coord, tidy_group = if(base::length(categ)== 1L){
-                dot.coord[, categ]}else{base::as.integer(base::factor(base::paste0(
-                    base::formatC(base::as.integer(dot.coord[, categ[1]]), width = base::nchar(base::max(base::as.integer(dot.coord[, categ[1]]), na.rm = TRUE)), flag = "0"), # convert factor into numeric with leading zero for proper ranking
+            dot_coord <- base::data.frame(dot_coord, tidy_group = if(base::length(categ)== 1L){
+                dot_coord[, categ]}else{base::as.integer(base::factor(base::paste0(
+                    base::formatC(base::as.integer(dot_coord[, categ[1]]), width = base::nchar(base::max(base::as.integer(dot_coord[, categ[1]]), na.rm = TRUE)), flag = "0"), # convert factor into numeric with leading zero for proper ranking
                     ".", 
-                    base::formatC(base::as.integer(dot.coord[, categ[2]]), width = base::nchar(base::max(base::as.integer(dot.coord[, categ[2]]), na.rm = TRUE)), flag = "0")# convert factor into numeric with leading zero for proper ranking
+                    base::formatC(base::as.integer(dot_coord[, categ[2]]), width = base::nchar(base::max(base::as.integer(dot_coord[, categ[2]]), na.rm = TRUE)), flag = "0")# convert factor into numeric with leading zero for proper ranking
                 )), stringsAsFactors = TRUE) # merge the 2 formatC() to create a new factor. The convertion to integer should recreate the correct group number
                 }) # for tidy dot plots
             # tidy_group_coord is to be able to fuse table when creating the table for dot coordinates
-            dot.coord <- base::data.frame(dot.coord, tidy_group_coord = dot.coord$group, stringsAsFactors = TRUE)
+            dot_coord <- base::data.frame(dot_coord, tidy_group_coord = dot_coord$group, stringsAsFactors = TRUE)
         }
     }
-    if( ! (base::identical(dot.coord$y, dot.coord$y.check) & base::identical(dot.coord$group, dot.coord$categ.check))){
-        tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\n(dot.coord$y AND dot.coord$y.check) AS WELL AS (dot.coord$group AND dot.coord$categ.check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+    if( ! (base::identical(dot_coord$y, dot_coord$y_check) & base::identical(dot_coord$group, dot_coord$categ_check))){
+        tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\n(dot_coord$y AND dot_coord$y_check) AS WELL AS (dot_coord$group AND dot_coord$categ_check) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
     }else{
-        if( ! base::identical(tempo.mean[base::order(tempo.mean$BOX, tempo.mean$PANEL), ]$BOX, base::unique(dot.coord[base::order(dot.coord$group, dot.coord$PANEL), base::c("group", "PANEL")])$group)){
-            # nocov start (unreachable: internal consistency guard - tempo.mean is derived from dot.coord)
-            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\n(tempo.mean$BOX, tempo.mean$PANEL) AND (dot.coord$group, dot.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+        if( ! base::identical(tempo_mean[base::order(tempo_mean$BOX, tempo_mean$PANEL), ]$BOX, base::unique(dot_coord[base::order(dot_coord$group, dot_coord$PANEL), base::c("group", "PANEL")])$group)){
+            # nocov start (unreachable: internal consistency guard - tempo_mean is derived from dot_coord)
+            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\n(tempo_mean$BOX, tempo_mean$PANEL) AND (dot_coord$group, dot_coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }else{
-            tempo <- base::unique(dot.coord[base::order(dot.coord$group, dot.coord$PANEL), base::c(categ, if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! base::is.null(facet.categ)){facet.categ}), drop = FALSE])
+            tempo <- base::unique(dot_coord[base::order(dot_coord$group, dot_coord$PANEL), base::c(categ, if( ! base::is.null(dot_color) & ! base::is.null(dot_categ)){if(dot_categ != ini_dot_categ){dot_categ}}, if( ! base::is.null(facet_categ)){facet_categ}), drop = FALSE])
             # names(tempo) <- paste0(names(tempo), ".mean")
-            tempo.mean <- base::data.frame(tempo.mean[base::order(tempo.mean$BOX, tempo.mean$PANEL), ], tempo, stringsAsFactors = TRUE)
+            tempo_mean <- base::data.frame(tempo_mean[base::order(tempo_mean$BOX, tempo_mean$PANEL), ], tempo, stringsAsFactors = TRUE)
         }
     }
-    # at that stage, categ color and dot color are correctly attributed in data1, box.coord and dot.coord
-    # end y dot coordinates recovery (create ini.box.coord, dot.coord and modify data1)
+    # at that stage, categ color and dot color are correctly attributed in data1, box_coord and dot_coord
+    # end y dot coordinates recovery (create ini_box_coord, dot_coord and modify data1)
     # ylim range
-    if(base::is.null(y.lim)){
-        y.lim <- tempo.graph.info.ini$layout$panel_params[[1]]$y.range # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
-        if(base::any(( ! base::is.finite(y.lim)) | base::is.na(y.lim)) | base::length(y.lim) != 2){ # kept but normally no more Inf in data1 # normally no NA with is.finite, etc.
+    if(base::is.null(y_lim)){
+        y_lim <- tempo_graph_info_ini$layout$panel_params[[1]]$y.range # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+        if(base::any(( ! base::is.finite(y_lim)) | base::is.na(y_lim)) | base::length(y_lim) != 2){ # kept but normally no more Inf in data1 # normally no NA with is.finite, etc.
             # nocov start (unreachable: internal consistency guard - y.range from ggplot_build is always finite for finite data)
-            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\ntempo.graph.info.ini$layout$panel_params[[1]]$y.range[1] CONTAINS NA OR Inf OR HAS LENGTH 1")
+            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\ntempo_graph_info_ini$layout$panel_params[[1]]$y.range[1] CONTAINS NA OR Inf OR HAS LENGTH 1")
            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }
-    }else if(y.log != "no"){
-        y.lim <- base::get(y.log)(y.lim) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
+    }else if(y_log != "no"){
+        y_lim <- base::get(y_log)(y_lim) # no env = sys.nframe(), inherit = FALSE in get() because look for function in the classical scope
     }
-    if(y.log != "no"){
+    if(y_log != "no"){
         # normally this control is not necessary anymore
-        if(base::any( ! base::is.finite(y.lim))){ # normally no NA with is.finite
-            # nocov start (unreachable: y.lim non-finite values are caught by arg_check, and y.lim computed from data is finite after the Inf/NaN row removal)
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ny.lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y.log ARGUMENT SET TO ", y.log, ":\n", base::paste(y.lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
+        if(base::any( ! base::is.finite(y_lim))){ # normally no NA with is.finite
+            # nocov start (unreachable: y_lim non-finite values are caught by arg_check, and y_lim computed from data is finite after the Inf/NaN row removal)
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\ny_lim ARGUMENT CANNOT HAVE ZERO OR NEGATIVE VALUES WITH THE y_log ARGUMENT SET TO ", y_log, ":\n", base::paste(y_lim, collapse = " "), "\nPLEASE, CHECK DATA VALUES (PRESENCE OF ZERO OR INF VALUES)")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }
     }
-    if(base::suppressWarnings(base::all(y.lim %in% c(Inf, -Inf)))){ # all() without na.rm -> ok because y.lim cannot be NA (tested above)
-        # nocov start (unreachable: Inf in y.lim is rejected by arg_check (inf_values = FALSE), and y.lim from ggplot_build is finite for non-empty data1, which is itself checked)
+    if(base::suppressWarnings(base::all(y_lim %in% c(Inf, -Inf)))){ # all() without na.rm -> ok because y_lim cannot be NA (tested above)
+        # nocov start (unreachable: Inf in y_lim is rejected by arg_check (inf_values = FALSE), and y_lim from ggplot_build is finite for non-empty data1, which is itself checked)
         # normally this control is not necessary anymore
-        tempo_cat <- base::paste0("ERROR IN ", function_name, " y.lim CONTAINS Inf VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
+        tempo_cat <- base::paste0("ERROR IN ", function_name, " y_lim CONTAINS Inf VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         # nocov end
     }
-    if(base::suppressWarnings(base::any(base::is.na(y.lim)))){ # normally no NA with is.na
+    if(base::suppressWarnings(base::any(base::is.na(y_lim)))){ # normally no NA with is.na
         # normally this control is not necessary anymore
-            # nocov start (unreachable: y.lim cannot be NA at this stage (checked above))
-        tempo_cat <- base::paste0("ERROR IN ", function_name, " y.lim CONTAINS NA OR NaN VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
+            # nocov start (unreachable: y_lim cannot be NA at this stage (checked above))
+        tempo_cat <- base::paste0("ERROR IN ", function_name, " y_lim CONTAINS NA OR NaN VALUES, MAYBE BECAUSE VALUES FROM data1 ARGUMENTS ARE NA OR Inf ONLY OR BECAUSE OF LOG SCALE REQUIREMENT")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
     }
-    y.lim.order <- base::order(y.lim) # to deal with inverse axis
-    y.lim <- base::sort(y.lim)
-    y.lim[1] <- y.lim[1] - base::abs(y.lim[2] - y.lim[1]) * base::ifelse(base::diff(y.lim.order) > 0, y.bottom.extra.margin, y.top.extra.margin) # diff(y.lim.order) > 0 medians not inversed axis
-    y.lim[2] <- y.lim[2] + base::abs(y.lim[2] - y.lim[1]) * base::ifelse(base::diff(y.lim.order) > 0, y.top.extra.margin, y.bottom.extra.margin) # diff(y.lim.order) > 0 medians not inversed axis
-    if(y.include.zero == TRUE){ # no need to check y.log != "no" because done before
-        y.lim <- base::range(base::c(y.lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+    y_lim_order <- base::order(y_lim) # to deal with inverse axis
+    y_lim <- base::sort(y_lim)
+    y_lim[1] <- y_lim[1] - base::abs(y_lim[2] - y_lim[1]) * base::ifelse(base::diff(y_lim_order) > 0, y_bottom_extra_margin, y_top_extra_margin) # diff(y_lim_order) > 0 medians not inversed axis
+    y_lim[2] <- y_lim[2] + base::abs(y_lim[2] - y_lim[1]) * base::ifelse(base::diff(y_lim_order) > 0, y_top_extra_margin, y_bottom_extra_margin) # diff(y_lim_order) > 0 medians not inversed axis
+    if(y_include_zero == TRUE){ # no need to check y_log != "no" because done before
+        y_lim <- base::range(base::c(y_lim, 0), na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
     }
-    y.lim <- y.lim[y.lim.order]
-    if(base::any(base::is.na(y.lim))){ # normally no NA with is.na
-            # nocov start (unreachable: CODE INCONSISTENCY 2 internal guard - y.lim remains finite)
+    y_lim <- y_lim[y_lim_order]
+    if(base::any(base::is.na(y_lim))){ # normally no NA with is.na
+            # nocov start (unreachable: CODE INCONSISTENCY 2 internal guard - y_lim remains finite)
         tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nCODE INCONSISTENCY 2")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
@@ -1954,31 +1954,31 @@ gg_box <- function(
     
     # drawing
     # constant part
-    tempo.gg.name <- "gg.indiv.plot."
-    tempo.gg.count <- 0
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), base::eval(base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add is directly put here to deal with additional variable of data, like when using facet_grid. No problem if add is a theme, will be dealt below
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::xlab(if(base::is.null(x.lab)){categ[1]}else{x.lab}))
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ylab(if(base::is.null(y.lab)){y}else{y.lab}))
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::ggtitle(title))
+    tempo_gg_name <- "gg.indiv.plot."
+    tempo_gg_count <- 0
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), base::eval(base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add is directly put here to deal with additional variable of data, like when using facet_grid. No problem if add is a theme, will be dealt below
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::xlab(if(base::is.null(x_lab)){categ[1]}else{x_lab}))
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ylab(if(base::is.null(y_lab)){y}else{y_lab}))
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ggtitle(title))
     # text angle management
-    axis.just <- saferGG::gg_just(angle = x.angle, pos = base::ifelse(vertical == TRUE, "bottom", "left"), kind = "axis")
+    axis_just <- saferGG::gg_just(angle = x_angle, pos = base::ifelse(vertical == TRUE, "bottom", "left"), kind = "axis")
     # end text angle management
-    add.check <- TRUE
+    add_check <- TRUE
     if( ! base::is.null(add)){ # if add is NULL, then = 0
         if(base::grepl(pattern = "ggplot2\\s*::\\s*theme", add) == TRUE){
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS theme() AND theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER\n-> article ARGUMENT WILL BE IGNORED")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-            add.check <- FALSE
+            add_check <- FALSE
         }
     }
-    if(add.check == TRUE & article == TRUE){
+    if(add_check == TRUE & article == TRUE){
         # WARNING: not possible to add theme()several times. NO message but the last one overwrites the others
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::theme_classic(base_size = text.size))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme_classic(base_size = text_size))
         if(grid == TRUE){
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
-                text = ggplot2::element_text(size = text.size), 
-                plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), m_gg <- ggplot2::theme(
+                text = ggplot2::element_text(size = text_size), 
+                plot.title = ggplot2::element_text(size = title_text_size), # stronger than text
                 line = ggplot2::element_line(size = 0.5), 
                 legend.key = ggplot2::element_rect(color = "white", size = 1.5), # size of the frame of the legend
                 axis.line.y.left = ggplot2::element_line(colour = "black"), # draw lines for the y axis
@@ -1986,27 +1986,27 @@ gg_box <- function(
                 panel.grid.major.x = if(vertical == TRUE){NULL}else{ggplot2::element_line(colour = "grey85", size = 0.75)},
                 panel.grid.major.y = if(vertical == TRUE){ggplot2::element_line(colour = "grey85", size = 0.75)}else{NULL},
                 panel.grid.minor.y = if(vertical == TRUE){ggplot2::element_line(colour = "grey90", size = 0.25)}else{NULL},
-                axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}else{NULL},
-                axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)},
+                axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis_just$angle, hjust = axis_just$hjust, vjust = axis_just$vjust)}else{NULL},
+                axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis_just$angle, hjust = axis_just$hjust, vjust = axis_just$vjust)},
                 strip.background = ggplot2::element_rect(fill = NA, colour = NA) # for facet background
             ))
         }else{
-            assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
-                text = ggplot2::element_text(size = text.size), 
-                plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
+            assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), m_gg <- ggplot2::theme(
+                text = ggplot2::element_text(size = text_size), 
+                plot.title = ggplot2::element_text(size = title_text_size), # stronger than text
                 line = ggplot2::element_line(size = 0.5), 
                 legend.key = ggplot2::element_rect(color = "white", size = 1.5), # size of the frame of the legend
                 axis.line.y.left = ggplot2::element_line(colour = "black"), 
                 axis.line.x.bottom = ggplot2::element_line(colour = "black"),
-                axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}else{NULL},
-                axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)},
+                axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis_just$angle, hjust = axis_just$hjust, vjust = axis_just$vjust)}else{NULL},
+                axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis_just$angle, hjust = axis_just$hjust, vjust = axis_just$vjust)},
                 strip.background = ggplot2::element_rect(fill = NA, colour = NA)
             ))
         }
-    }else if(add.check == TRUE & article == FALSE){
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), m.gg <- ggplot2::theme(
-            text = ggplot2::element_text(size = text.size), 
-            plot.title = ggplot2::element_text(size = title.text.size), # stronger than text
+    }else if(add_check == TRUE & article == FALSE){
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), m_gg <- ggplot2::theme(
+            text = ggplot2::element_text(size = text_size), 
+            plot.title = ggplot2::element_text(size = title_text_size), # stronger than text
             line = ggplot2::element_line(size = 0.5), 
             legend.key = ggplot2::element_rect(color = "white", size = 1.5), # size of the frame of the legend
             panel.background = ggplot2::element_rect(fill = "grey95"), 
@@ -2017,65 +2017,65 @@ gg_box <- function(
             panel.grid.minor.x = ggplot2::element_blank(), 
             panel.grid.minor.y = ggplot2::element_line(colour = "grey90", size = 0.25), 
             strip.background = ggplot2::element_rect(fill = NA, colour = NA),
-            axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}else{NULL},
-            axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis.just$angle, hjust = axis.just$hjust, vjust = axis.just$vjust)}
+            axis.text.x = if(vertical == TRUE){ggplot2::element_text(angle = axis_just$angle, hjust = axis_just$hjust, vjust = axis_just$vjust)}else{NULL},
+            axis.text.y = if(vertical == TRUE){NULL}else{ggplot2::element_text(angle = axis_just$angle, hjust = axis_just$hjust, vjust = axis_just$vjust)}
         ))
     }
     # Contrary to fun_gg_bar(), cannot plot the boxplot right now, because I need the dots plotted first
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, group = categ[base::length(categ)]), position = ggplot2::position_dodge(width = NULL), color = NA, width = box.width, fill = NA)) # this is to set the graph (i.e., a blanck boxplot to be able to use x coordinates to plot dots before boxes)
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, group = categ[base::length(categ)]), position = ggplot2::position_dodge(width = NULL), color = NA, width = box_width, fill = NA)) # this is to set the graph (i.e., a blanck boxplot to be able to use x coordinates to plot dots before boxes)
     # end constant part
     
     
     
     
     # graphic info recovery (including means)
-    tempo.graph.info <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste0(base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[base::length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, notch = box.notch, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}) + ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[base::length(categ)]])))}else{categ.color})')))) # will be recovered later again, when ylim will be considered
-    tempo.yx.ratio <- (tempo.graph.info$layout$panel_params[[1]]$y.range[2] - tempo.graph.info$layout$panel_params[[1]]$y.range[1]) / (tempo.graph.info$layout$panel_params[[1]]$x.range[2] - tempo.graph.info$layout$panel_params[[1]]$x.range[1])
-    box.coord <- tempo.graph.info$data[[2]] # to have the summary statistics of the plot. Contrary to ini.box.plot, now integrates ylim Here because can be required for stat.pos when just box are plotted
-    box.coord$x <- base::as.numeric(box.coord$x) # because x is of special class that block comparison of values using identical
-    box.coord$PANEL <- base::as.numeric(box.coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
-    box.coord <- box.coord[base::order(box.coord$group, box.coord$PANEL), ]
-    if( ! (base::identical(tempo.mean$BOX, box.coord$group) & base::identical(tempo.mean$PANEL, box.coord$PANEL))){
-            # nocov start (unreachable: internal consistency guard - tempo.mean and box.coord are derived from the same data)
-        tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nidentical(tempo.mean$BOX, box.coord$group) & identical(tempo.mean$PANEL, box.coord$PANEL) DO NOT HAVE THE SAME VALUE ORDER")
+    tempo_graph_info <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste0(base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "), ' + ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, fill = categ[base::length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box_width, notch = box_notch, coef = if(box_whisker_kind == "no"){0}else if(box_whisker_kind == "std"){1.5}else if(box_whisker_kind == "max"){Inf}) + ggplot2::scale_discrete_manual(aesthetics = "fill", name = box_legend_name, values = if(length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[base::length(categ)]])))}else{categ_color})')))) # will be recovered later again, when ylim will be considered
+    tempo_yx_ratio <- (tempo_graph_info$layout$panel_params[[1]]$y.range[2] - tempo_graph_info$layout$panel_params[[1]]$y.range[1]) / (tempo_graph_info$layout$panel_params[[1]]$x.range[2] - tempo_graph_info$layout$panel_params[[1]]$x.range[1])
+    box_coord <- tempo_graph_info$data[[2]] # to have the summary statistics of the plot. Contrary to ini_box_plot, now integrates ylim Here because can be required for stat_pos when just box are plotted
+    box_coord$x <- base::as.numeric(box_coord$x) # because x is of special class that block comparison of values using identical
+    box_coord$PANEL <- base::as.numeric(box_coord$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
+    box_coord <- box_coord[base::order(box_coord$group, box_coord$PANEL), ]
+    if( ! (base::identical(tempo_mean$BOX, box_coord$group) & base::identical(tempo_mean$PANEL, box_coord$PANEL))){
+            # nocov start (unreachable: internal consistency guard - tempo_mean and box_coord are derived from the same data)
+        tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nidentical(tempo_mean$BOX, box_coord$group) & identical(tempo_mean$PANEL, box_coord$PANEL) DO NOT HAVE THE SAME VALUE ORDER")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
     }else{
-        # tempo <- base::c(categ, if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){if(dot.categ != ini.dot.categ){dot.categ}}, if( ! base::is.null(facet.categ)){facet.categ})
-        if(base::any(base::names(tempo.mean) %in% base::names(box.coord), na.rm = TRUE)){
-            base::names(tempo.mean)[base::names(tempo.mean) %in% base::names(box.coord)] <- base::paste0(base::names(tempo.mean)[base::names(tempo.mean) %in% base::names(box.coord)], ".mean")
+        # tempo <- base::c(categ, if( ! base::is.null(dot_color) & ! base::is.null(dot_categ)){if(dot_categ != ini_dot_categ){dot_categ}}, if( ! base::is.null(facet_categ)){facet_categ})
+        if(base::any(base::names(tempo_mean) %in% base::names(box_coord), na.rm = TRUE)){
+            base::names(tempo_mean)[base::names(tempo_mean) %in% base::names(box_coord)] <- base::paste0(base::names(tempo_mean)[base::names(tempo_mean) %in% base::names(box_coord)], ".mean")
         }
-        box.coord <- base::data.frame(box.coord, tempo.mean, stringsAsFactors = TRUE)
+        box_coord <- base::data.frame(box_coord, tempo_mean, stringsAsFactors = TRUE)
     }
     # end graphic info recovery (including means)
     
     
     
     # stat output (will also serve for boxplot and mean display)
-    # x not added now (to do not have them in stat.nolog)
+    # x not added now (to do not have them in stat_nolog)
     stat <- base::data.frame(
-        MIN = box.coord$ymin_final, 
-        QUART1 = box.coord$lower, 
-        MEDIAN = box.coord$middle, 
-        MEAN = box.coord$MEAN, 
-        QUART3 = box.coord$upper, 
-        MAX = box.coord$ymax_final, 
-        WHISK_INF = box.coord$ymin, 
-        BOX_INF = box.coord$lower, 
-        NOTCH_INF = box.coord$notchlower, 
-        NOTCH_SUP = box.coord$notchupper, 
-        BOX_SUP = box.coord$upper, 
-        WHISK_SUP = box.coord$ymax, 
-        OUTLIERS = box.coord["outliers"], 
-        tempo.mean[base::colnames(tempo.mean) != "MEAN"], 
-        COLOR = box.coord$fill, 
+        MIN = box_coord$ymin_final, 
+        QUART1 = box_coord$lower, 
+        MEDIAN = box_coord$middle, 
+        MEAN = box_coord$MEAN, 
+        QUART3 = box_coord$upper, 
+        MAX = box_coord$ymax_final, 
+        WHISK_INF = box_coord$ymin, 
+        BOX_INF = box_coord$lower, 
+        NOTCH_INF = box_coord$notchlower, 
+        NOTCH_SUP = box_coord$notchupper, 
+        BOX_SUP = box_coord$upper, 
+        WHISK_SUP = box_coord$ymax, 
+        OUTLIERS = box_coord["outliers"], 
+        tempo_mean[base::colnames(tempo_mean) != "MEAN"], 
+        COLOR = box_coord$fill, 
         stringsAsFactors = TRUE
-    ) # box.coord["outliers"] written like this because it is a list. X coordinates not put now because several features to set
+    ) # box_coord["outliers"] written like this because it is a list. X coordinates not put now because several features to set
     base::names(stat)[base::names(stat) == "outliers"] <- "OUTLIERS"
-    stat.nolog <- stat # stat.nolog ini will serve for outputs
-    if(y.log != "no"){
-        stat.nolog[base::c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "WHISK_INF", "BOX_INF", "NOTCH_INF", "NOTCH_SUP", "BOX_SUP", "WHISK_SUP")] <- base::ifelse(y.log == "log2", 2, 10)^(stat.nolog[base::c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "WHISK_INF", "BOX_INF", "NOTCH_INF", "NOTCH_SUP", "BOX_SUP", "WHISK_SUP")])
-        stat.nolog$OUTLIERS <- base::lapply(stat.nolog$OUTLIERS, FUN = function(X){base::ifelse(y.log == "log2", 2, 10)^X})
+    stat_nolog <- stat # stat_nolog ini will serve for outputs
+    if(y_log != "no"){
+        stat_nolog[base::c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "WHISK_INF", "BOX_INF", "NOTCH_INF", "NOTCH_SUP", "BOX_SUP", "WHISK_SUP")] <- base::ifelse(y_log == "log2", 2, 10)^(stat_nolog[base::c("MIN", "QUART1", "MEDIAN", "MEAN", "QUART3", "MAX", "WHISK_INF", "BOX_INF", "NOTCH_INF", "NOTCH_SUP", "BOX_SUP", "WHISK_SUP")])
+        stat_nolog$OUTLIERS <- base::lapply(stat_nolog$OUTLIERS, FUN = function(X){base::ifelse(y_log == "log2", 2, 10)^X})
     }
     # end stat output (will also serve for boxplot and mean display)
     
@@ -2086,54 +2086,54 @@ gg_box <- function(
     
     # x coordinates management (for random plotting and for stat display)
     # width commputations
-    width.ini <- base::c(box.coord$xmax - box.coord$xmin)[1] # all the box widths are equal here. Only the first one taken
-    width.correct <- width.ini * box.space / 2
-    if( ! (base::identical(stat$BOX, box.coord$group) & base::identical(stat$PANEL, box.coord$PANEL))){
-            # nocov start (unreachable: internal consistency guard - stat and box.coord are derived from the same data)
-        tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nidentical(stat$BOX, box.coord$group) & identical(stat$PANEL, box.coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+    width_ini <- base::c(box_coord$xmax - box_coord$xmin)[1] # all the box widths are equal here. Only the first one taken
+    width_correct <- width_ini * box_space / 2
+    if( ! (base::identical(stat$BOX, box_coord$group) & base::identical(stat$PANEL, box_coord$PANEL))){
+            # nocov start (unreachable: internal consistency guard - stat and box_coord are derived from the same data)
+        tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nidentical(stat$BOX, box_coord$group) & identical(stat$PANEL, box_coord$PANEL) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
     }else{
         stat <- base::data.frame(
             stat, 
-            X = box.coord$x, 
-            X_BOX_INF = box.coord$xmin + width.correct, 
-            X_BOX_SUP = box.coord$xmax - width.correct, 
-            X_NOTCH_INF = box.coord$x - (box.coord$x - (box.coord$xmin + width.correct)) / 2, 
-            X_NOTCH_SUP = box.coord$x + (box.coord$x - (box.coord$xmin + width.correct)) / 2, 
-            X_WHISK_INF = box.coord$x - (box.coord$x - (box.coord$xmin + width.correct)) * box.whisker.width, 
-            X_WHISK_SUP = box.coord$x + (box.coord$x - (box.coord$xmin + width.correct)) * box.whisker.width, 
-            # tempo.mean[colnames(tempo.mean) != "MEAN"], # already added above
+            X = box_coord$x, 
+            X_BOX_INF = box_coord$xmin + width_correct, 
+            X_BOX_SUP = box_coord$xmax - width_correct, 
+            X_NOTCH_INF = box_coord$x - (box_coord$x - (box_coord$xmin + width_correct)) / 2, 
+            X_NOTCH_SUP = box_coord$x + (box_coord$x - (box_coord$xmin + width_correct)) / 2, 
+            X_WHISK_INF = box_coord$x - (box_coord$x - (box_coord$xmin + width_correct)) * box_whisker_width, 
+            X_WHISK_SUP = box_coord$x + (box_coord$x - (box_coord$xmin + width_correct)) * box_whisker_width, 
+            # tempo_mean[colnames(tempo_mean) != "MEAN"], # already added above
             stringsAsFactors = TRUE
         )
-        stat$COLOR <- base::factor(stat$COLOR, levels = base::unique(categ.color))
-        if( ! base::all(stat$NOTCH_SUP < stat$BOX_SUP & stat$NOTCH_INF > stat$BOX_INF, na.rm = TRUE) & box.notch == TRUE){
+        stat$COLOR <- base::factor(stat$COLOR, levels = base::unique(categ_color))
+        if( ! base::all(stat$NOTCH_SUP < stat$BOX_SUP & stat$NOTCH_INF > stat$BOX_INF, na.rm = TRUE) & box_notch == TRUE){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") SOME NOTCHES ARE BEYOND BOX HINGES. TRY ARGUMENT box.notch = FALSE")
+            tempo_warn <- base::paste0("(", warn_count,") SOME NOTCHES ARE BEYOND BOX HINGES. TRY ARGUMENT box_notch = FALSE")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
     }
-    dot.jitter <- base::c((box.coord$xmax - width.correct) - (box.coord$xmin + width.correct))[1] * dot.jitter # real dot.jitter. (box.coord$xmin + width.correct) - (box.coord$xmax - width.correct))[1] is the width of the box. Is equivalent to (box.coord$x - (box.coord$xmin + width.correct))[1] * 2
+    dot_jitter <- base::c((box_coord$xmax - width_correct) - (box_coord$xmin + width_correct))[1] * dot_jitter # real dot_jitter. (box_coord$xmin + width_correct) - (box_coord$xmax - width_correct))[1] is the width of the box. Is equivalent to (box_coord$x - (box_coord$xmin + width_correct))[1] * 2
     # end width commputations
-    if( ! base::is.null(dot.color)){
+    if( ! base::is.null(dot_color)){
         # random dots
-        if(dot.tidy == FALSE){
-            dot.coord.rd1 <- base::merge(dot.coord, box.coord[base::c("fill", "PANEL", "group", "x")], by = base::c("PANEL", "group"), sort = FALSE) # rd for random. Send the coord of the boxes into the coord data.frame of the dots (in the column x.y). WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
-            if(base::nrow(dot.coord.rd1) != base::nrow(dot.coord)){
+        if(dot_tidy == FALSE){
+            dot_coord_rd1 <- base::merge(dot_coord, box_coord[base::c("fill", "PANEL", "group", "x")], by = base::c("PANEL", "group"), sort = FALSE) # rd for random. Send the coord of the boxes into the coord data.frame of the dots (in the column x.y). WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box_coord. Thus, no need to consider fill column
+            if(base::nrow(dot_coord_rd1) != base::nrow(dot_coord)){
             # nocov start (unreachable: internal consistency guard - merge on PANEL and group keys preserves row count)
-                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd1 DATA FRAME. CODE HAS TO BE MODIFIED")
+                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot_coord_rd1 DATA FRAME. CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }
-            sampled.dot.jitter <- if(base::nrow(dot.coord.rd1)== 1L){stats::runif(n = base::nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2)}else{base::sample(x = stats::runif(n = base::nrow(dot.coord.rd1), min = - dot.jitter / 2, max = dot.jitter / 2), size = base::nrow(dot.coord.rd1), replace = FALSE)}
-            dot.coord.rd2 <- base::data.frame(dot.coord.rd1, dot.x = dot.coord.rd1$x.y + sampled.dot.jitter, stringsAsFactors = TRUE) # set the dot.jitter thanks to runif and dot.jitter range. Then, send the coord of the boxes into the coord data.frame of the dots (in the column x.y)
+            sampled_dot_jitter <- if(base::nrow(dot_coord_rd1)== 1L){stats::runif(n = base::nrow(dot_coord_rd1), min = - dot_jitter / 2, max = dot_jitter / 2)}else{base::sample(x = stats::runif(n = base::nrow(dot_coord_rd1), min = - dot_jitter / 2, max = dot_jitter / 2), size = base::nrow(dot_coord_rd1), replace = FALSE)}
+            dot_coord_rd2 <- base::data.frame(dot_coord_rd1, dot.x = dot_coord_rd1$x.y + sampled_dot_jitter, stringsAsFactors = TRUE) # set the dot_jitter thanks to runif and dot_jitter range. Then, send the coord of the boxes into the coord data.frame of the dots (in the column x.y)
             if(base::length(categ)== 1L){
-                # as.integer(data1[, categ[1]]) keeps the ids of the initial factor levels: remap to the renumbered ids of the remaining classes (same issue as for categ.check above, when classes disappeared during the NA/Inf removal of the color columns)
-                tempo.data1 <- base::unique(base::data.frame(data1[categ[1]], group = base::as.integer(base::factor(base::as.integer(data1[, categ[1]]), levels = base::sort(x = base::unique(x = base::as.integer(data1[, categ[1]]))))), stringsAsFactors = TRUE)) # categ[1] is factor
-                base::names(tempo.data1)[base::names(tempo.data1) == categ[1]] <- base::paste0(categ[1], ".check")
+                # as.integer(data1[, categ[1]]) keeps the ids of the initial factor levels: remap to the renumbered ids of the remaining classes (same issue as for categ_check above, when classes disappeared during the NA/Inf removal of the color columns)
+                tempo_data1 <- base::unique(base::data.frame(data1[categ[1]], group = base::as.integer(base::factor(base::as.integer(data1[, categ[1]]), levels = base::sort(x = base::unique(x = base::as.integer(data1[, categ[1]]))))), stringsAsFactors = TRUE)) # categ[1] is factor
+                base::names(tempo_data1)[base::names(tempo_data1) == categ[1]] <- base::paste0(categ[1], ".check")
                 verif <- base::paste0(categ[1], ".check")
             }else if(base::length(categ) == 2L){
-                tempo.data1 <- base::unique(
+                tempo_data1 <- base::unique(
                     base::data.frame(
                         data1[base::c(categ[1], categ[2])], 
                         group = base::as.integer(base::factor(base::paste0(
@@ -2143,8 +2143,8 @@ gg_box <- function(
                         )), stringsAsFactors = TRUE) # merge the 2 formatC() to create a new factor. The convertion to integer should recreate the correct group number
                     )
                 ) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-                base::names(tempo.data1)[base::names(tempo.data1) == categ[1]] <- base::paste0(categ[1], ".check")
-                base::names(tempo.data1)[base::names(tempo.data1) == categ[2]] <- base::paste0(categ[2], ".check")
+                base::names(tempo_data1)[base::names(tempo_data1) == categ[1]] <- base::paste0(categ[1], ".check")
+                base::names(tempo_data1)[base::names(tempo_data1) == categ[2]] <- base::paste0(categ[2], ".check")
                 verif <- base::c(base::paste0(categ[1], ".check"), base::paste0(categ[2], ".check"))
             }else{
             # nocov start (unreachable: CODE INCONSISTENCY 3 internal guard - categ length is 1 or 2 (arg_check))
@@ -2152,17 +2152,17 @@ gg_box <- function(
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }
-            dot.coord.rd3 <- base::merge(dot.coord.rd2, tempo.data1, by = base::intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have replaced by = "group" by intersect("group", "group") because of an error due to wrong group group merging in dot.coord.rd3
-            if(base::nrow(dot.coord.rd3) != base::nrow(dot.coord) | ( ! saferTool::comp_2d(dot.coord.rd3[categ], dot.coord.rd3[verif])$identical_content)){
+            dot_coord_rd3 <- base::merge(dot_coord_rd2, tempo_data1, by = base::intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have replaced by = "group" by intersect("group", "group") because of an error due to wrong group group merging in dot_coord_rd3
+            if(base::nrow(dot_coord_rd3) != base::nrow(dot_coord) | ( ! saferTool::comp_2d(dot_coord_rd3[categ], dot_coord_rd3[verif])$identical_content)){
             # nocov start (unreachable: internal consistency guard - merge on group keys preserves row count)
-                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.rd3 DATA FRAME. CODE HAS TO BE MODIFIED")
+                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot_coord_rd3 DATA FRAME. CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }
             # end random dots
         }
         # tidy dots
-        # coordinates are recovered during plotting (see dot.coord.tidy1 below)
+        # coordinates are recovered during plotting (see dot_coord_tidy1 below)
         # end tidy dots
     }
     # end x coordinates management (for random plotting and for stat display)
@@ -2171,104 +2171,104 @@ gg_box <- function(
     
     
     
-    # boxplot display before dot display if box.fill = TRUE
-    coord.names <- NULL
+    # boxplot display before dot display if box_fill = TRUE
+    coord_names <- NULL
     # creation of the data frame for (main box + legend) and data frame for means
-    if(box.notch == FALSE){
+    if(box_notch == FALSE){
         for(i3 in 1:base::length(categ)){
             if(i3== 1L){
-                tempo.polygon <- base::data.frame(GROUPX = base::c(base::t(stat[, base::rep(categ[i3], 5)])), stringsAsFactors = TRUE)
+                tempo_polygon <- base::data.frame(GROUPX = base::c(base::t(stat[, base::rep(categ[i3], 5)])), stringsAsFactors = TRUE)
             }else{
-                tempo.polygon <- base::cbind(tempo.polygon, base::c(base::t(stat[, base::rep(categ[i3], 5)])), stringsAsFactors = TRUE)
+                tempo_polygon <- base::cbind(tempo_polygon, base::c(base::t(stat[, base::rep(categ[i3], 5)])), stringsAsFactors = TRUE)
             }
         }
-        base::names(tempo.polygon) <- categ
-        tempo.polygon <- base::data.frame(X = base::c(base::t(stat[, base::c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = base::c(base::t(stat[, base::c("BOX_INF", "BOX_INF", "BOX_SUP", "BOX_SUP", "BOX_INF")])), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = base::as.character(base::c(base::t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
-        if( ! base::is.null(facet.categ)){
-            for(i4 in 1:base::length(facet.categ)){
-                if( ! facet.categ[i4] %in% base::names(tempo.polygon)){ # facet column already present in tempo.polygon if it is also a categ column: do not append a second copy (duplicate column names break ggplot2::geom_path())
-                    tempo.polygon <- base::data.frame(tempo.polygon, base::c(base::t(stat[, base::c(facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4])])), stringsAsFactors = TRUE)
-                    base::names(tempo.polygon)[base::length(base::names(tempo.polygon))] <- facet.categ[i4]
+        base::names(tempo_polygon) <- categ
+        tempo_polygon <- base::data.frame(X = base::c(base::t(stat[, base::c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF")])), Y = base::c(base::t(stat[, base::c("BOX_INF", "BOX_INF", "BOX_SUP", "BOX_SUP", "BOX_INF")])), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = base::as.character(base::c(base::t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo_polygon, stringsAsFactors = TRUE)
+        if( ! base::is.null(facet_categ)){
+            for(i4 in 1:base::length(facet_categ)){
+                if( ! facet_categ[i4] %in% base::names(tempo_polygon)){ # facet column already present in tempo_polygon if it is also a categ column: do not append a second copy (duplicate column names break ggplot2::geom_path())
+                    tempo_polygon <- base::data.frame(tempo_polygon, base::c(base::t(stat[, base::c(facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4])])), stringsAsFactors = TRUE)
+                    base::names(tempo_polygon)[base::length(base::names(tempo_polygon))] <- facet_categ[i4]
                 }
             }
         }
     }else{
         for(i3 in 1:base::length(categ)){
             if(i3== 1L){
-                tempo.polygon <- base::data.frame(GROUPX = base::c(base::t(stat[, base::rep(categ[i3], 11)])), stringsAsFactors = TRUE)
+                tempo_polygon <- base::data.frame(GROUPX = base::c(base::t(stat[, base::rep(categ[i3], 11)])), stringsAsFactors = TRUE)
             }else{
-                tempo.polygon <- base::cbind(tempo.polygon, base::c(base::t(stat[, base::rep(categ[i3], 11)])), stringsAsFactors = TRUE)
+                tempo_polygon <- base::cbind(tempo_polygon, base::c(base::t(stat[, base::rep(categ[i3], 11)])), stringsAsFactors = TRUE)
             }
         }
-        base::names(tempo.polygon) <- categ
-        tempo.polygon <- base::data.frame(X = base::c(base::t(stat[, base::c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_NOTCH_SUP", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF", "X_NOTCH_INF", "X_BOX_INF", "X_BOX_INF")])), Y = base::c(base::t(stat[, base::c("BOX_INF", "BOX_INF", "NOTCH_INF", "MEDIAN", "NOTCH_SUP", "BOX_SUP", "BOX_SUP", "NOTCH_SUP", "MEDIAN", "NOTCH_INF", "BOX_INF")])), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = base::as.character(c(t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo.polygon, stringsAsFactors = TRUE)
-        if( ! base::is.null(facet.categ)){
-            for(i4 in 1:base::length(facet.categ)){
-                if( ! facet.categ[i4] %in% base::names(tempo.polygon)){ # facet column already present in tempo.polygon if it is also a categ column: do not append a second copy (duplicate column names break ggplot2::geom_path())
-                    tempo.polygon <- base::data.frame(tempo.polygon, base::c(base::t(stat[, base::c(facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4], facet.categ[i4])])), stringsAsFactors = TRUE)
-                    base::names(tempo.polygon)[base::length(base::names(tempo.polygon))] <- facet.categ[i4]
+        base::names(tempo_polygon) <- categ
+        tempo_polygon <- base::data.frame(X = base::c(base::t(stat[, base::c("X_BOX_INF", "X_BOX_SUP", "X_BOX_SUP", "X_NOTCH_SUP", "X_BOX_SUP", "X_BOX_SUP", "X_BOX_INF", "X_BOX_INF", "X_NOTCH_INF", "X_BOX_INF", "X_BOX_INF")])), Y = base::c(base::t(stat[, base::c("BOX_INF", "BOX_INF", "NOTCH_INF", "MEDIAN", "NOTCH_SUP", "BOX_SUP", "BOX_SUP", "NOTCH_SUP", "MEDIAN", "NOTCH_INF", "BOX_INF")])), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), BOX = base::as.character(c(t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX", "BOX")]))), tempo_polygon, stringsAsFactors = TRUE)
+        if( ! base::is.null(facet_categ)){
+            for(i4 in 1:base::length(facet_categ)){
+                if( ! facet_categ[i4] %in% base::names(tempo_polygon)){ # facet column already present in tempo_polygon if it is also a categ column: do not append a second copy (duplicate column names break ggplot2::geom_path())
+                    tempo_polygon <- base::data.frame(tempo_polygon, base::c(base::t(stat[, base::c(facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4], facet_categ[i4])])), stringsAsFactors = TRUE)
+                    base::names(tempo_polygon)[base::length(base::names(tempo_polygon))] <- facet_categ[i4]
                 }
             }
         }
     }
-    tempo.polygon$COLOR <- base::factor(tempo.polygon$COLOR, levels = base::unique(categ.color))
-    if( ! base::is.null(categ.class.order)){
+    tempo_polygon$COLOR <- base::factor(tempo_polygon$COLOR, levels = base::unique(categ_color))
+    if( ! base::is.null(categ_class_order)){
         for(i3 in 1:base::length(categ)){
-            tempo.polygon[, categ[i3]] <- base::factor(tempo.polygon[, categ[i3]], levels = categ.class.order[[i3]])
+            tempo_polygon[, categ[i3]] <- base::factor(tempo_polygon[, categ[i3]], levels = categ_class_order[[i3]])
         }
     }
-    # modified name of dot.categ column (e.g., "Categ1_DOT") must be included for boxplot using ridy dots
-    if( ! base::is.null(dot.color) & ! base::is.null(dot.categ)){
-        if(dot.categ != ini.dot.categ){
-            tempo.polygon <- base::data.frame(tempo.polygon, GROUPX = tempo.polygon[, ini.dot.categ], stringsAsFactors = TRUE)
-            base::names(tempo.polygon)[base::names(tempo.polygon) == "GROUPX"] <- dot.categ
+    # modified name of dot_categ column (e.g., "Categ1_DOT") must be included for boxplot using ridy dots
+    if( ! base::is.null(dot_color) & ! base::is.null(dot_categ)){
+        if(dot_categ != ini_dot_categ){
+            tempo_polygon <- base::data.frame(tempo_polygon, GROUPX = tempo_polygon[, ini_dot_categ], stringsAsFactors = TRUE)
+            base::names(tempo_polygon)[base::names(tempo_polygon) == "GROUPX"] <- dot_categ
             
         }
     }
-    tempo.diamon.mean <- base::data.frame(X = base::c(base::t(stat[, base::c("X", "X_NOTCH_INF", "X", "X_NOTCH_SUP", "X")])), Y = base::c(base::t(base::cbind(stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] + (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stat["MEAN"], stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo.yx.ratio, stringsAsFactors = TRUE))), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), GROUP = base::c(base::t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX")])), stringsAsFactors = TRUE) # stringsAsFactors = TRUE for cbind() because stat["MEAN"] is a data frame. Otherwise, stringsAsFactors is not an argument for cbind() on vectors
-    if( ! base::is.null(facet.categ)){
-        for(i3 in 1:base::length(facet.categ)){
-            tempo.diamon.mean <- base::data.frame(tempo.diamon.mean, base::c(base::t(stat[, base::c(facet.categ[i3], facet.categ[i3], facet.categ[i3], facet.categ[i3], facet.categ[i3])])), stringsAsFactors = TRUE)
-            base::names(tempo.diamon.mean)[base::length(base::names(tempo.diamon.mean))] <- facet.categ[i3]
+    tempo_diamon_mean <- base::data.frame(X = base::c(base::t(stat[, base::c("X", "X_NOTCH_INF", "X", "X_NOTCH_SUP", "X")])), Y = base::c(base::t(base::cbind(stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo_yx_ratio, stat["MEAN"], stat["MEAN"] + (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo_yx_ratio, stat["MEAN"], stat["MEAN"] - (stat[, "X"] - stat[, "X_NOTCH_INF"]) * tempo_yx_ratio, stringsAsFactors = TRUE))), COLOR = base::c(base::t(stat[, base::c("COLOR", "COLOR", "COLOR", "COLOR", "COLOR")])), GROUP = base::c(base::t(stat[, base::c("BOX", "BOX", "BOX", "BOX", "BOX")])), stringsAsFactors = TRUE) # stringsAsFactors = TRUE for cbind() because stat["MEAN"] is a data frame. Otherwise, stringsAsFactors is not an argument for cbind() on vectors
+    if( ! base::is.null(facet_categ)){
+        for(i3 in 1:base::length(facet_categ)){
+            tempo_diamon_mean <- base::data.frame(tempo_diamon_mean, base::c(base::t(stat[, base::c(facet_categ[i3], facet_categ[i3], facet_categ[i3], facet_categ[i3], facet_categ[i3])])), stringsAsFactors = TRUE)
+            base::names(tempo_diamon_mean)[base::length(base::names(tempo_diamon_mean))] <- facet_categ[i3]
         }
     }
-    tempo.diamon.mean$COLOR <- base::factor(tempo.diamon.mean$COLOR, levels = base::unique(categ.color))
+    tempo_diamon_mean$COLOR <- base::factor(tempo_diamon_mean$COLOR, levels = base::unique(categ_color))
     # end creation of the data frame for (main box + legend) and data frame for means
-    if(box.fill == TRUE){
-        # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[length(categ)], fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, size = box.line.size, notch = box.notch, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}, alpha = box.alpha, outlier.shape = if( ! base::is.null(dot.color)){NA}else{21}, outlier.color = if( ! base::is.null(dot.color)){NA}else{dot.border.color}, outlier.fill = if( ! base::is.null(dot.color)){NA}else{NULL}, outlier.size = if( ! base::is.null(dot.color)){NA}else{dot.size}, outlier.stroke = if( ! base::is.null(dot.color)){NA}else{dot.border.size}, outlier.alpha = if( ! base::is.null(dot.color)){NA}else{dot.alpha})) # the color, size, etc. of the outliers are dealt here. outlier.color = NA to do not plot outliers when dots are already plotted. Finally, boxplot redrawn (see below)
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_polygon(
-            data = tempo.polygon, 
+    if(box_fill == TRUE){
+        # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[length(categ)], fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box_width, size = box_line_size, notch = box_notch, coef = if(box_whisker_kind == "no"){0}else if(box_whisker_kind == "std"){1.5}else if(box_whisker_kind == "max"){Inf}, alpha = box_alpha, outlier.shape = if( ! base::is.null(dot_color)){NA}else{21}, outlier.color = if( ! base::is.null(dot_color)){NA}else{dot_border_color}, outlier.fill = if( ! base::is.null(dot_color)){NA}else{NULL}, outlier.size = if( ! base::is.null(dot_color)){NA}else{dot_size}, outlier.stroke = if( ! base::is.null(dot_color)){NA}else{dot_border_size}, outlier.alpha = if( ! base::is.null(dot_color)){NA}else{dot_alpha})) # the color, size, etc. of the outliers are dealt here. outlier.color = NA to do not plot outliers when dots are already plotted. Finally, boxplot redrawn (see below)
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_polygon(
+            data = tempo_polygon, 
             mapping = ggplot2::aes_string(x = "X", y = "Y", group = "BOX", fill = categ[base::length(categ)], color = categ[base::length(categ)]), 
-            size = box.line.size, 
-            alpha = box.alpha # works only for fill, not for color
+            size = box_line_size, 
+            alpha = box_alpha # works only for fill, not for color
         ))
-        coord.names <- base::c(coord.names, "main.box")
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
-        coord.names <- base::c(coord.names, "sup.whisker")
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = "black", size = box.line.size, alpha = box.alpha)) # 
-        coord.names <- base::c(coord.names, "inf.whisker")
-        if(box.whisker.width > 0){
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = "black", size = box.line.size, alpha = box.alpha, lineend = "round")) # 
-            coord.names <- base::c(coord.names, "sup.whisker.edge")
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = "black", size = box.line.size, alpha = box.alpha, lineend = "round")) # 
-            coord.names <- base::c(coord.names, "inf.whisker.edge")
+        coord_names <- base::c(coord_names, "main.box")
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = "black", size = box_line_size, alpha = box_alpha)) # 
+        coord_names <- base::c(coord_names, "sup.whisker")
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = "black", size = box_line_size, alpha = box_alpha)) # 
+        coord_names <- base::c(coord_names, "inf.whisker")
+        if(box_whisker_width > 0){
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = "black", size = box_line_size, alpha = box_alpha, lineend = "round")) # 
+            coord_names <- base::c(coord_names, "sup.whisker.edge")
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = "black", size = box_line_size, alpha = box_alpha, lineend = "round")) # 
+            coord_names <- base::c(coord_names, "inf.whisker.edge")
         }
-        if(box.mean == TRUE){
-            # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = stat, mapping = ggplot2::aes_string(x = "X", y = "MEAN", group = categ[length(categ)]), shape = 23, stroke = box.line.size * 2, fill = stat$COLOR, size = box.mean.size, color = "black", alpha = box.alpha)) # group used in aesthetic to do not have it in the legend
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_polygon(
-                data = tempo.diamon.mean, 
+        if(box_mean == TRUE){
+            # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(data = stat, mapping = ggplot2::aes_string(x = "X", y = "MEAN", group = categ[length(categ)]), shape = 23, stroke = box_line_size * 2, fill = stat$COLOR, size = box_mean_size, color = "black", alpha = box_alpha)) # group used in aesthetic to do not have it in the legend
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_polygon(
+                data = tempo_diamon_mean, 
                 mapping = ggplot2::aes(x = X, y = Y, group = GROUP), 
-                fill = tempo.diamon.mean[, "COLOR"], 
-                color = grDevices::hsv(h = 0, s = 0, v = 0, alpha = box.alpha), # outline of the polygon in black but with alpha
-                size = box.line.size, 
-                alpha = box.alpha
+                fill = tempo_diamon_mean[, "COLOR"], 
+                color = grDevices::hsv(h = 0, s = 0, v = 0, alpha = box_alpha), # outline of the polygon in black but with alpha
+                size = box_line_size, 
+                alpha = box_alpha
             ))
-            coord.names <- base::c(coord.names, "mean")
+            coord_names <- base::c(coord_names, "mean")
         }
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = if(box.notch == FALSE){X_BOX_INF}else{X_NOTCH_INF}, xend = if(box.notch == FALSE){X_BOX_SUP}else{X_NOTCH_SUP}, y = MEDIAN, yend = MEDIAN, group = categ[base::length(categ)]), color = "black", size = box.line.size * 2, alpha = box.alpha)) # 
-        coord.names <- base::c(coord.names, "median")
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = if(box_notch == FALSE){X_BOX_INF}else{X_NOTCH_INF}, xend = if(box_notch == FALSE){X_BOX_SUP}else{X_NOTCH_SUP}, y = MEDIAN, yend = MEDIAN, group = categ[base::length(categ)]), color = "black", size = box_line_size * 2, alpha = box_alpha)) # 
+        coord_names <- base::c(coord_names, "median")
     }
-    # end boxplot display before dot display if box.fill = TRUE
+    # end boxplot display before dot display if box_fill = TRUE
     
     
     
@@ -2276,75 +2276,75 @@ gg_box <- function(
     
     
     # dot display
-    if( ! base::is.null(dot.color)){
-        if(dot.tidy == FALSE){
-            if(base::is.null(dot.categ)){
-                if(dot.border.size == 0){
-                    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
-                        data = dot.coord.rd3, 
+    if( ! base::is.null(dot_color)){
+        if(dot_tidy == FALSE){
+            if(base::is.null(dot_categ)){
+                if(dot_border_size == 0){
+                    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(
+                        data = dot_coord_rd3, 
                         mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[base::length(categ)]), 
-                        size = dot.size, 
+                        size = dot_size, 
                         shape = 19, 
-                        color = dot.coord.rd3$dot.color, 
-                        alpha = dot.alpha
+                        color = dot_coord_rd3$dot_color, 
+                        alpha = dot_alpha
                     )) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
                 }else{
-                    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
-                        data = dot.coord.rd3, 
+                    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(
+                        data = dot_coord_rd3, 
                         mapping = ggplot2::aes_string(x = "dot.x", y = "y", group = categ[base::length(categ)]), 
                         shape = 21, 
-                        stroke = dot.border.size, 
-                        color = if(base::is.null(dot.border.color)){dot.coord.rd3$dot.color}else{base::rep(dot.border.color, base::nrow(dot.coord.rd3))}, 
-                        size = dot.size, 
-                        fill = dot.coord.rd3$dot.color, 
-                        alpha = dot.alpha
+                        stroke = dot_border_size, 
+                        color = if(base::is.null(dot_border_color)){dot_coord_rd3$dot_color}else{base::rep(dot_border_color, base::nrow(dot_coord_rd3))}, 
+                        size = dot_size, 
+                        fill = dot_coord_rd3$dot_color, 
+                        alpha = dot_alpha
                     )) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
                 }
             }else{
-                if(dot.border.size == 0){
-                    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
-                        data = dot.coord.rd3, 
-                        mapping = ggplot2::aes_string(x = "dot.x", y = "y", alpha = dot.categ), 
-                        size = dot.size, 
+                if(dot_border_size == 0){
+                    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(
+                        data = dot_coord_rd3, 
+                        mapping = ggplot2::aes_string(x = "dot.x", y = "y", alpha = dot_categ), 
+                        size = dot_size, 
                         shape = 19, 
-                        color = dot.coord.rd3$dot.color
+                        color = dot_coord_rd3$dot_color
                     )) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
                 }else{
-                    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(
-                        data = dot.coord.rd3, 
-                        mapping = ggplot2::aes_string(x = "dot.x", y = "y", alpha = dot.categ), 
-                        size = dot.size, 
+                    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(
+                        data = dot_coord_rd3, 
+                        mapping = ggplot2::aes_string(x = "dot.x", y = "y", alpha = dot_categ), 
+                        size = dot_size, 
                         shape = 21, 
-                        stroke = dot.border.size, 
-                        color = if(base::is.null(dot.border.color)){dot.coord.rd3$dot.color}else{base::rep(dot.border.color, base::nrow(dot.coord.rd3))}, 
-                        fill = dot.coord.rd3$dot.color
+                        stroke = dot_border_size, 
+                        color = if(base::is.null(dot_border_color)){dot_coord_rd3$dot_color}else{base::rep(dot_border_color, base::nrow(dot_coord_rd3))}, 
+                        fill = dot_coord_rd3$dot_color
                     )) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
                 }
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = dot.legend.name, values = base::rep(dot.alpha, base::length(dot.categ.class.order)), guide = ggplot2::guide_legend(override.aes = base::list(fill = dot.color, color = if(base::is.null(dot.border.color)){dot.color}else{dot.border.color}, stroke = dot.border.size, alpha = dot.alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
+                base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = dot_legend_name, values = base::rep(dot_alpha, base::length(dot_categ_class_order)), guide = ggplot2::guide_legend(override.aes = base::list(fill = dot_color, color = if(base::is.null(dot_border_color)){dot_color}else{dot_border_color}, stroke = dot_border_size, alpha = dot_alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor
             }
-            coord.names <- base::c(coord.names, "dots")
-        }else if(dot.tidy == TRUE){
+            coord_names <- base::c(coord_names, "dots")
+        }else if(dot_tidy == TRUE){
             # here plot using group -> no scale
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(
-                data = dot.coord, 
-                mapping = ggplot2::aes_string(x = categ[1], y = "y", group = "group"), # not dot.categ here because the classes of dot.categ create new separations
-                position = ggplot2::position_dodge(width = box.width), 
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_dotplot(
+                data = dot_coord, 
+                mapping = ggplot2::aes_string(x = categ[1], y = "y", group = "group"), # not dot_categ here because the classes of dot_categ create new separations
+                position = ggplot2::position_dodge(width = box_width), 
                 binpositions = "all", 
                 binaxis = "y", 
                 stackdir = "center", 
-                alpha = dot.alpha, 
-                fill = dot.coord$dot.color, 
-                stroke = dot.border.size, 
-                color = if(base::is.null(dot.border.color)){dot.coord$dot.color}else{base::rep(dot.border.color, base::nrow(dot.coord))}, 
+                alpha = dot_alpha, 
+                fill = dot_coord$dot_color, 
+                stroke = dot_border_size, 
+                color = if(base::is.null(dot_border_color)){dot_coord$dot_color}else{base::rep(dot_border_color, base::nrow(dot_coord))}, 
                 show.legend = FALSE, # WARNING: do not use show.legend = TRUE because it uses the arguments outside aes() as aesthetics (here color and fill). Thus I must find a way using ggplot2::scale_discrete_manual()
-                binwidth = (y.lim[2] - y.lim[1]) / dot.tidy.bin.nb
-            )) # geom_dotplot ggplot2 v3.3.0: I had to remove rev() in fill and color # very weird behavior of geom_dotplot ggplot2 v3.2.1, (1) because with aes group = (to avoid legend), the dot plotting is not good in term of coordinates, and (2) because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-            coord.names <- base::c(coord.names, "dots")
-            if( ! base::is.null(dot.categ)){
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_dotplot(
-                    data = dot.coord, 
-                    mapping = ggplot2::aes_string(x = categ[1], y = "y", alpha = dot.categ), # not dot.categ here because the classes of dot.categ create new separations
-                    position = ggplot2::position_dodge(width = box.width), 
+                binwidth = (y_lim[2] - y_lim[1]) / dot_tidy_bin_nb
+            )) # geom_dotplot ggplot2 v3.3.0: I had to remove rev() in fill and color # very weird behavior of geom_dotplot ggplot2 v3.2.1, (1) because with aes group = (to avoid legend), the dot plotting is not good in term of coordinates, and (2) because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have to use fill = dot_coord[rev(order(dot_coord[, categ[1]], decreasing = TRUE)), "dot_color"] to have the good corresponding colors # show_legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+            coord_names <- base::c(coord_names, "dots")
+            if( ! base::is.null(dot_categ)){
+                base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_dotplot(
+                    data = dot_coord, 
+                    mapping = ggplot2::aes_string(x = categ[1], y = "y", alpha = dot_categ), # not dot_categ here because the classes of dot_categ create new separations
+                    position = ggplot2::position_dodge(width = box_width), 
                     binpositions = "all", 
                     binaxis = "y", 
                     stackdir = "center", 
@@ -2352,47 +2352,47 @@ gg_box <- function(
                     stroke = NA, 
                     color = NA, 
                     # WARNING: do not use show.legend = TRUE because it uses the arguments outside aes() as aesthetics (here color and fill). Thus I must find a way using ggplot2::scale_discrete_manual()
-                    binwidth = (y.lim[2] - y.lim[1]) / dot.tidy.bin.nb
-                )) # geom_dotplot ggplot2 v3.3.0: I had to remove rev() in fill and color # very weird behavior of geom_dotplot ggplot2 v3.2.1, (1) because with aes group = (to avoid legend), the dot plotting is not good in term of coordinates, and (2) because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have to use fill = dot.coord[rev(order(dot.coord[, categ[1]], decreasing = TRUE)), "dot.color"] to have the good corresponding colors # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-                # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = dot.legend.name, values = rep(1, length(categ.color)))) # values = rep("black", length(categ.color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
-                coord.names <- base::c(coord.names, "bad_remove")
-                base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = dot.legend.name, values = base::rep(dot.alpha, base::length(dot.categ.class.order)), labels = dot.categ.class.order, guide = ggplot2::guide_legend(title = if(ini.dot.categ == categ[base::length(categ)]){dot.categ}else{ini.dot.categ}, override.aes = base::list(fill = base::levels(dot.coord$dot.color), color = if(base::is.null(dot.border.color)){base::levels(dot.coord$dot.color)}else{dot.border.color}, stroke = dot.border.size, alpha = dot.alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
+                    binwidth = (y_lim[2] - y_lim[1]) / dot_tidy_bin_nb
+                )) # geom_dotplot ggplot2 v3.3.0: I had to remove rev() in fill and color # very weird behavior of geom_dotplot ggplot2 v3.2.1, (1) because with aes group = (to avoid legend), the dot plotting is not good in term of coordinates, and (2) because data1 seems reorderer according to x = categ[1] before plotting. Thus, I have to use fill = dot_coord[rev(order(dot_coord[, categ[1]], decreasing = TRUE)), "dot_color"] to have the good corresponding colors # show_legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+                # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "linetype", name = dot_legend_name, values = rep(1, length(categ_color)))) # values = rep("black", length(categ_color)) are the values of color (which is the border color of dots), and this modify the border color on the plot. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor
+                coord_names <- base::c(coord_names, "bad_remove")
+                base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "alpha", name = dot_legend_name, values = base::rep(dot_alpha, base::length(dot_categ_class_order)), labels = dot_categ_class_order, guide = ggplot2::guide_legend(title = if(ini_dot_categ == categ[base::length(categ)]){dot_categ}else{ini_dot_categ}, override.aes = base::list(fill = base::levels(dot_coord$dot_color), color = if(base::is.null(dot_border_color)){base::levels(dot_coord$dot_color)}else{dot_border_color}, stroke = dot_border_size, alpha = dot_alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor
             }
             # coordinates of tidy dots
-            tempo.coord <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "))))$data # to have the tidy dot coordinates
-            if(base::length(base::which(base::sapply(X = tempo.coord, FUN = function(X){base::any(base::names(X) == "binwidth", na.rm = TRUE)}))) < 1){ # detect the compartment having the dot coordinates (at least one: when dot.categ is not NULL, a second geom_dotplot layer devoted to the alpha legend also has a binwidth column, and the first compartment is the one with the coordinates) of tempo.coord which is the binned data frame
-                # if(length(which(sapply(tempo.coord, FUN = nrow) == nrow(data1))) > if(base::is.null(dot.categ)){1}else{2}){ # this does not work if only one dot per class, thus replaced by above # if(base::is.null(dot.categ)){1}else{2} because 1 dotplot if dot.categ is NULL and 2 dotplots if not, with the second being a blank dotplot with wrong coordinates. Thus take the first in that situation
+            tempo_coord <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "))))$data # to have the tidy dot coordinates
+            if(base::length(base::which(base::sapply(X = tempo_coord, FUN = function(X){base::any(base::names(X) == "binwidth", na.rm = TRUE)}))) < 1){ # detect the compartment having the dot coordinates (at least one: when dot_categ is not NULL, a second geom_dotplot layer devoted to the alpha legend also has a binwidth column, and the first compartment is the one with the coordinates) of tempo_coord which is the binned data frame
+                # if(length(which(sapply(tempo_coord, FUN = nrow) == nrow(data1))) > if(base::is.null(dot_categ)){1}else{2}){ # this does not work if only one dot per class, thus replaced by above # if(base::is.null(dot_categ)){1}else{2} because 1 dotplot if dot_categ is NULL and 2 dotplots if not, with the second being a blank dotplot with wrong coordinates. Thus take the first in that situation
             # nocov start (unreachable: internal consistency guard - the dotplot layer always provides a binwidth column)
-                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nEITHER MORE THAN 1 OR NO COMPARTMENT HAVING A DATA FRAME WITH binwidth AS COLUMN NAME IN THE tempo.coord LIST (FOR TIDY DOT COORDINATES). CODE HAS TO BE MODIFIED")
+                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nEITHER MORE THAN 1 OR NO COMPARTMENT HAVING A DATA FRAME WITH binwidth AS COLUMN NAME IN THE tempo_coord LIST (FOR TIDY DOT COORDINATES). CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }else{
-                # dot.coord.tidy1 <- tempo.coord[[which(sapply(tempo.coord, FUN = nrow) == nrow(data1))[1]]] # this does not work if only one dot per class, thus replaced by above # the second being a blank dotplot with wrong coordinates. Thus take the first whatever situation
-                dot.coord.tidy1 <- tempo.coord[[base::which(base::sapply(X = tempo.coord, FUN = function(X){base::any(base::names(X) == "binwidth", na.rm = TRUE)}))[1]]] # detect the compartment of tempo.coord which is the binned data frame (the first one: when dot.categ is not NULL, the second matching compartment is a blank legend layer)
-                dot.coord.tidy1$x <- base::as.numeric(dot.coord.tidy1$x) # because weird class
-                dot.coord.tidy1$PANEL <- base::as.numeric(dot.coord.tidy1$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
+                # dot_coord_tidy1 <- tempo_coord[[which(sapply(tempo_coord, FUN = nrow) == nrow(data1))[1]]] # this does not work if only one dot per class, thus replaced by above # the second being a blank dotplot with wrong coordinates. Thus take the first whatever situation
+                dot_coord_tidy1 <- tempo_coord[[base::which(base::sapply(X = tempo_coord, FUN = function(X){base::any(base::names(X) == "binwidth", na.rm = TRUE)}))[1]]] # detect the compartment of tempo_coord which is the binned data frame (the first one: when dot_categ is not NULL, the second matching compartment is a blank legend layer)
+                dot_coord_tidy1$x <- base::as.numeric(dot_coord_tidy1$x) # because weird class
+                dot_coord_tidy1$PANEL <- base::as.numeric(dot_coord_tidy1$PANEL) # because numbers as levels. But may be a problem is facet are reordered ?
             }
-            # tempo.box.coord <- merge(box.coord, unique(dot.coord[, c("PANEL", "group", categ)]), by = c("PANEL", "group"), sort = FALSE) # not required anymore because box.coord already contains categ do not add dot.categ and tidy_group_coord here because the coordinates are for stats. Add the categ in box.coord. WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box.coord. Thus, no need to consider fill column
-            # below inactivated because not true when dealing with dot.categ different from categ
-            # if(nrow(tempo.box.coord) != nrow(box.coord)){
-            # tempo_cat <- paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo.box.coord DATA FRAME. CODE HAS TO BE MODIFIED")
+            # tempo_box_coord <- merge(box_coord, unique(dot_coord[, c("PANEL", "group", categ)]), by = c("PANEL", "group"), sort = FALSE) # not required anymore because box_coord already contains categ do not add dot_categ and tidy_group_coord here because the coordinates are for stats. Add the categ in box_coord. WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in box_coord. Thus, no need to consider fill column
+            # below inactivated because not true when dealing with dot_categ different from categ
+            # if(nrow(tempo_box_coord) != nrow(box_coord)){
+            # tempo_cat <- paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT tempo_box_coord DATA FRAME. CODE HAS TO BE MODIFIED")
             # stop(paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n"), call. = FALSE) # == in stop() to be able to add several messages between ==
             # }
-            dot.coord.tidy2 <- base::merge(dot.coord.tidy1, box.coord[base::c("fill", "PANEL", "group", "x", categ)], by = base::c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo.box.coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo.box.coord) are not good in dot.coord.tidy2. It is ok because Categ1 Categ2 from tempo.box.coord are ok with the group column from dot.coord.tidy1. This is due to the fact that dot.coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
-            if(base::nrow(dot.coord.tidy2) != base::nrow(dot.coord)){
+            dot_coord_tidy2 <- base::merge(dot_coord_tidy1, box_coord[base::c("fill", "PANEL", "group", "x", categ)], by = base::c("PANEL", "group"), sort = FALSE) # send the coord of the boxes into the coord data.frame of the dots (in the column x.y).WARNING: by = c("PANEL", "group") without fill column because PANEL & group columns are enough as only one value of x column per group number in tempo_box_coord. Thus, no need to consider fill colum # DANGER: from here the fill.y and x.y (from tempo_box_coord) are not good in dot_coord_tidy2. It is ok because Categ1 Categ2 from tempo_box_coord are ok with the group column from dot_coord_tidy1. This is due to the fact that dot_coord.tidy resulting from geom_dotplot does not make the same groups as the other functions
+            if(base::nrow(dot_coord_tidy2) != base::nrow(dot_coord)){
             # nocov start (unreachable: internal consistency guard - merge on PANEL and group keys preserves row count)
-                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy2 DATA FRAME. CODE HAS TO BE MODIFIED")
+                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot_coord_tidy2 DATA FRAME. CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }
-            # From here, check for dot.coord.tidy3 which wil be important for stat over the plot. WARNING: dot.categ has nothing to do here for stat coordinates. Thus, not in tempo.data1
+            # From here, check for dot_coord_tidy3 which wil be important for stat over the plot. WARNING: dot_categ has nothing to do here for stat coordinates. Thus, not in tempo_data1
             if(base::length(categ)== 1L){
-                # as.integer(data1[, categ[1]]) keeps the ids of the initial factor levels: remap to the renumbered ids of the remaining classes (same issue as for categ.check above, when classes disappeared during the NA/Inf removal of the color columns)
-                tempo.data1 <- base::unique(base::data.frame(data1[categ[1]], group = base::as.integer(base::factor(base::as.integer(data1[, categ[1]]), levels = base::sort(x = base::unique(x = base::as.integer(data1[, categ[1]]))))), stringsAsFactors = TRUE)) # categ[1] is factor
-                base::names(tempo.data1)[base::names(tempo.data1) == categ[1]] <- base::paste0(categ[1], ".check")
+                # as.integer(data1[, categ[1]]) keeps the ids of the initial factor levels: remap to the renumbered ids of the remaining classes (same issue as for categ_check above, when classes disappeared during the NA/Inf removal of the color columns)
+                tempo_data1 <- base::unique(base::data.frame(data1[categ[1]], group = base::as.integer(base::factor(base::as.integer(data1[, categ[1]]), levels = base::sort(x = base::unique(x = base::as.integer(data1[, categ[1]]))))), stringsAsFactors = TRUE)) # categ[1] is factor
+                base::names(tempo_data1)[base::names(tempo_data1) == categ[1]] <- base::paste0(categ[1], ".check")
                 verif <- base::paste0(categ[1], ".check")
             }else if(base::length(categ) == 2L){
-                tempo.data1 <- base::unique(
+                tempo_data1 <- base::unique(
                     base::data.frame(
                         data1[base::c(categ[1], categ[2])], 
                         group = base::as.integer(base::factor(base::paste0(
@@ -2402,8 +2402,8 @@ gg_box <- function(
                         )), stringsAsFactors = TRUE) # merge the 2 formatC() to create a new factor. The convertion to integer should recreate the correct group number
                     )
                 ) # categ[2] first if categ[2] is used to make the categories in ggplot and categ[1] is used to make the x-axis
-                base::names(tempo.data1)[base::names(tempo.data1) == categ[1]] <- base::paste0(categ[1], ".check")
-                base::names(tempo.data1)[base::names(tempo.data1) == categ[2]] <- base::paste0(categ[2], ".check")
+                base::names(tempo_data1)[base::names(tempo_data1) == categ[1]] <- base::paste0(categ[1], ".check")
+                base::names(tempo_data1)[base::names(tempo_data1) == categ[2]] <- base::paste0(categ[2], ".check")
                 verif <- base::c(base::paste0(categ[1], ".check"), base::paste0(categ[2], ".check"))
             }else{
             # nocov start (unreachable: CODE INCONSISTENCY 4 internal guard - categ length is 1 or 2 (arg_check))
@@ -2411,10 +2411,10 @@ gg_box <- function(
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }
-            dot.coord.tidy3 <- base::merge(dot.coord.tidy2, tempo.data1, by = base::intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have tested intersect("group", "group") instead of by = "group". May be come back to by = "group" in case of error. But I did this because of an error in dot.coord.rd3 above
-            if(base::nrow(dot.coord.tidy3) != base::nrow(dot.coord) | ( ! saferTool::comp_2d(dot.coord.tidy3[categ], dot.coord.tidy3[verif])$identical_content)){
+            dot_coord_tidy3 <- base::merge(dot_coord_tidy2, tempo_data1, by = base::intersect("group", "group"), sort = FALSE) # send the factors of data1 into coord. WARNING: I have tested intersect("group", "group") instead of by = "group". May be come back to by = "group" in case of error. But I did this because of an error in dot_coord_rd3 above
+            if(base::nrow(dot_coord_tidy3) != base::nrow(dot_coord) | ( ! saferTool::comp_2d(dot_coord_tidy3[categ], dot_coord_tidy3[verif])$identical_content)){
             # nocov start (unreachable: internal consistency guard - merge on group keys preserves row count)
-                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot.coord.tidy3 DATA FRAME. CODE HAS TO BE MODIFIED")
+                tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nTHE merge() FUNCTION DID NOT RETURN A CORRECT dot_coord_tidy3 DATA FRAME. CODE HAS TO BE MODIFIED")
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
             }
@@ -2425,49 +2425,49 @@ gg_box <- function(
     
     
     
-    # boxplot display (if box.fill = FALSE, otherwise, already plotted above)
-    if(box.fill == TRUE){
+    # boxplot display (if box_fill = FALSE, otherwise, already plotted above)
+    if(box_fill == TRUE){
         # overcome "work only for the filling of boxes, not for the frame. See https://github.com/tidyverse/ggplot2/issues/252"
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = if(base::length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[base::length(categ)]])))}else{categ.color}, guide = ggplot2::guide_legend(order = 1))) #, guide = ggplot2::guide_legend(override.aes = list(fill = levels(tempo.polygon$COLOR), color = "black")))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box.legend.name, values = base::rep(grDevices::hsv(h = 0, s = 0, v = 0, alpha = box.alpha), base::length(base::unique(data1[, categ[base::length(categ)]]))), guide = ggplot2::guide_legend(order = 1))) # , guide = ggplot2::guide_legend(override.aes = list(color = "black", alpha = box.alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor # outline of the polygon in black but with alpha
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box_legend_name, values = if(base::length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[base::length(categ)]])))}else{categ_color}, guide = ggplot2::guide_legend(order = 1))) #, guide = ggplot2::guide_legend(override.aes = list(fill = levels(tempo_polygon$COLOR), color = "black")))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box_legend_name, values = base::rep(grDevices::hsv(h = 0, s = 0, v = 0, alpha = box_alpha), base::length(base::unique(data1[, categ[base::length(categ)]]))), guide = ggplot2::guide_legend(order = 1))) # , guide = ggplot2::guide_legend(override.aes = list(color = "black", alpha = box_alpha)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor # outline of the polygon in black but with alpha
     }else{
-        # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[length(categ)], fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box.width, size = box.line.size, notch = box.notch, alpha = box.alpha, coef = if(box.whisker.kind == "no"){0}else if(box.whisker.kind == "std"){1.5}else if(box.whisker.kind == "max"){Inf}, outlier.shape = if( ! base::is.null(dot.color)){NA}else{21}, outlier.color = if( ! is.null(dot.color)){NA}else{if(dot.border.size == 0){NA}else{dot.border.color}}, outlier.fill = if( ! base::is.null(dot.color)){NA}else{NULL}, outlier.size = if( ! base::is.null(dot.color)){NA}else{dot.size}, outlier.stroke = if( ! base::is.null(dot.color)){NA}else{dot.border.size}, outlier.alpha = if( ! base::is.null(dot.color)){NA}else{dot.alpha})) # the color, size, etc. of the outliers are dealt here. outlier.color = NA to do not plot outliers when dots are already plotted
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_path(
-            data = tempo.polygon, 
+        # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_boxplot(data = data1, mapping = ggplot2::aes_string(x = categ[1], y = y, color = categ[length(categ)], fill = categ[length(categ)]), position = ggplot2::position_dodge(width = NULL), width = box_width, size = box_line_size, notch = box_notch, alpha = box_alpha, coef = if(box_whisker_kind == "no"){0}else if(box_whisker_kind == "std"){1.5}else if(box_whisker_kind == "max"){Inf}, outlier.shape = if( ! base::is.null(dot_color)){NA}else{21}, outlier.color = if( ! is.null(dot_color)){NA}else{if(dot_border_size == 0){NA}else{dot_border_color}}, outlier.fill = if( ! base::is.null(dot_color)){NA}else{NULL}, outlier.size = if( ! base::is.null(dot_color)){NA}else{dot_size}, outlier.stroke = if( ! base::is.null(dot_color)){NA}else{dot_border_size}, outlier.alpha = if( ! base::is.null(dot_color)){NA}else{dot_alpha})) # the color, size, etc. of the outliers are dealt here. outlier.color = NA to do not plot outliers when dots are already plotted
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_path(
+            data = tempo_polygon, 
             mapping = ggplot2::aes_string(x = "X", y = "Y", group = "BOX", color = categ[base::length(categ)]), 
-            size = box.line.size, 
-            alpha = box.alpha, 
+            size = box_line_size, 
+            alpha = box_alpha, 
             lineend = "round", 
             linejoin = "round"
         ))
-        coord.names <- base::c(coord.names, "main.box")
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = if(box.notch == FALSE){X_BOX_INF}else{X_NOTCH_INF}, xend = if(box.notch == FALSE){X_BOX_SUP}else{X_NOTCH_SUP}, y = MEDIAN, yend = MEDIAN, group = categ[base::length(categ)]), color = stat$COLOR, size = box.line.size * 2, alpha = box.alpha)) # 
-        coord.names <- base::c(coord.names, "median")
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha)) # 
-        coord.names <- base::c(coord.names, "sup.whisker")
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha)) # 
-        coord.names <- base::c(coord.names, "inf.whisker")
-        if(box.whisker.width > 0){
-           base:: assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha, lineend = "round")) # 
-            coord.names <- base::c(coord.names, "sup.whisker.edge")
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = stat$COLOR, size = box.line.size, alpha = box.alpha, lineend = "round")) # 
-            coord.names <- c(coord.names, "inf.whisker.edge")
+        coord_names <- base::c(coord_names, "main.box")
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = if(box_notch == FALSE){X_BOX_INF}else{X_NOTCH_INF}, xend = if(box_notch == FALSE){X_BOX_SUP}else{X_NOTCH_SUP}, y = MEDIAN, yend = MEDIAN, group = categ[base::length(categ)]), color = stat$COLOR, size = box_line_size * 2, alpha = box_alpha)) # 
+        coord_names <- base::c(coord_names, "median")
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = stat$COLOR, size = box_line_size, alpha = box_alpha)) # 
+        coord_names <- base::c(coord_names, "sup.whisker")
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X, xend = X, y = BOX_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = stat$COLOR, size = box_line_size, alpha = box_alpha)) # 
+        coord_names <- base::c(coord_names, "inf.whisker")
+        if(box_whisker_width > 0){
+           base:: assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_SUP, yend = WHISK_SUP, group = categ[base::length(categ)]), color = stat$COLOR, size = box_line_size, alpha = box_alpha, lineend = "round")) # 
+            coord_names <- base::c(coord_names, "sup.whisker.edge")
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_segment(data = stat, mapping = ggplot2::aes(x = X_WHISK_INF, xend = X_WHISK_SUP, y = WHISK_INF, yend = WHISK_INF, group = categ[base::length(categ)]), color = stat$COLOR, size = box_line_size, alpha = box_alpha, lineend = "round")) # 
+            coord_names <- c(coord_names, "inf.whisker.edge")
         }
-        if(box.mean == TRUE){
-            # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_point(data = stat, mapping = ggplot2::aes_string(x = "X", y = "MEAN", group = categ[length(categ)]), shape = 23, stroke = box.line.size * 2, color = stat$COLOR, size = box.mean.size, fill = NA, alpha = box.alpha)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_path(
-                data = tempo.diamon.mean, 
+        if(box_mean == TRUE){
+            # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_point(data = stat, mapping = ggplot2::aes_string(x = "X", y = "MEAN", group = categ[length(categ)]), shape = 23, stroke = box_line_size * 2, color = stat$COLOR, size = box_mean_size, fill = NA, alpha = box_alpha)) # group used in aesthetic to do not have it in the legend. Here ggplot2::scale_discrete_manual() cannot be used because of the group easthetic
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_path(
+                data = tempo_diamon_mean, 
                 mapping = ggplot2::aes(x = X, y = Y, group = GROUP), 
-                color = tempo.diamon.mean[, "COLOR"], 
-                size = box.line.size, 
-                alpha = box.alpha, 
+                color = tempo_diamon_mean[, "COLOR"], 
+                size = box_line_size, 
+                alpha = box_alpha, 
                 lineend = "round", 
                 linejoin = "round"
             ))
-            coord.names <- base::c(coord.names, "mean")
+            coord_names <- base::c(coord_names, "mean")
         }
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box.legend.name, values = base::rep(NA, base::length(base::unique(data1[, categ[base::length(categ)]]))))) #, guide = ggplot2::guide_legend(override.aes = list(color = categ.color)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box.legend.name, values = if(base::length(categ.color)== 1L){base::rep(categ.color, base::length(base::unique(data1[, categ[base::length(categ)]])))}else{categ.color}, guide = ggplot2::guide_legend(override.aes = base::list(alpha = if(plot == TRUE & ((base::length(grDevices::dev.list()) > 0 & base::names(grDevices::dev.cur()) == "windows") | (base::length(grDevices::dev.list()) == 0L & base::Sys.info()["sysname"] == "Windows"))){1}else{box.alpha})))) # , guide = ggplot2::guide_legend(override.aes = list(color = as.character(categ.color))))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ.color takes the numbers to make the colors if categ.color is a factor
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "fill", name = box_legend_name, values = base::rep(NA, base::length(base::unique(data1[, categ[base::length(categ)]]))))) #, guide = ggplot2::guide_legend(override.aes = list(color = categ_color)))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_discrete_manual(aesthetics = "color", name = box_legend_name, values = if(base::length(categ_color)== 1L){base::rep(categ_color, base::length(base::unique(data1[, categ[base::length(categ)]])))}else{categ_color}, guide = ggplot2::guide_legend(override.aes = base::list(alpha = if(plot == TRUE & ((base::length(grDevices::dev.list()) > 0 & base::names(grDevices::dev.cur()) == "windows") | (base::length(grDevices::dev.list()) == 0L & base::Sys.info()["sysname"] == "Windows"))){1}else{box_alpha})))) # , guide = ggplot2::guide_legend(override.aes = list(color = as.character(categ_color))))) # values are the values of color (which is the border color in geom_box. WARNING: values = categ_color takes the numbers to make the colors if categ_color is a factor
         if(plot == TRUE & ((base::length(grDevices::dev.list()) > 0 & base::names(grDevices::dev.cur()) == "windows") | (base::length(grDevices::dev.list()) == 0L & base::Sys.info()["sysname"] == "Windows"))){ # if any Graph device already open and this device is "windows", or if no Graph device opened yet and we are on windows system -> prevention of alpha legend bug on windows using value 1
             # to avoid a bug on windows: if alpha argument is different from 1 for lines (transparency), then lines are not correctly displayed in the legend when using the R GUI (bug https://github.com/tidyverse/ggplot2/issues/2452). No bug when using a pdf
             warn_count <- warn_count + 1
@@ -2475,137 +2475,137 @@ gg_box <- function(
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
         }
     }
-    if(box.alpha == 0){ # remove box legend because no boxes drawn
+    if(box_alpha == 0){ # remove box legend because no boxes drawn
         # add this after the scale_xxx_manual() for boxplots
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none", color = "none")) # inactivate the legend
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::guides(fill = "none", color = "none")) # inactivate the legend
     }
-    # end boxplot display (if box.fill = FALSE, otherwise, already plotted above)
+    # end boxplot display (if box_fill = FALSE, otherwise, already plotted above)
     
     
     
     
     # stat display
     # layer after dots but ok, behind dots on the plot
-    if( ! base::is.null(stat.pos)){
+    if( ! base::is.null(stat_pos)){
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") NUMBERS DISPLAYED ARE ", base::ifelse(stat.mean == FALSE, "MEDIANS", "MEANS"))
+        tempo_warn <- base::paste0("(", warn_count,") NUMBERS DISPLAYED ARE ", base::ifelse(stat_mean == FALSE, "MEDIANS", "MEANS"))
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-        if(stat.pos == "top"){
-            tempo.stat <- base::data.frame(stat, Y = y.lim[2], stringsAsFactors = TRUE) # I had to create a data frame for geom_tex() so that facet is taken into account, (ggplot2::annotate() does not deal with facet because no data and mapping arguments). Of note, facet.categ is in tempo.stat, via tempo.mean, via dot.coord
-            if(stat.mean == FALSE){tempo.stat$MEDIAN <- base::formatC(stat.nolog$MEDIAN, digits = 2, drop0trailing = TRUE, format = "f")}else{tempo.stat$MEAN <- base::formatC(stat.nolog$MEAN, digits = 2, drop0trailing = TRUE, format = "f")}
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
-                data = tempo.stat, 
-                mapping = ggplot2::aes_string(x = "X", y = "Y", label = base::ifelse(stat.mean == FALSE, "MEDIAN", "MEAN")),
-                size = stat.size, 
+        if(stat_pos == "top"){
+            tempo_stat <- base::data.frame(stat, Y = y_lim[2], stringsAsFactors = TRUE) # I had to create a data frame for geom_tex() so that facet is taken into account, (ggplot2::annotate() does not deal with facet because no data and mapping arguments). Of note, facet_categ is in tempo_stat, via tempo_mean, via dot_coord
+            if(stat_mean == FALSE){tempo_stat$MEDIAN <- base::formatC(stat_nolog$MEDIAN, digits = 2, drop0trailing = TRUE, format = "f")}else{tempo_stat$MEAN <- base::formatC(stat_nolog$MEAN, digits = 2, drop0trailing = TRUE, format = "f")}
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_text(
+                data = tempo_stat, 
+                mapping = ggplot2::aes_string(x = "X", y = "Y", label = base::ifelse(stat_mean == FALSE, "MEDIAN", "MEAN")),
+                size = stat_size, 
                 color = "black", 
-                angle = stat.angle, 
-                hjust = stat.just$hjust, 
-                vjust = stat.just$vjust
-            )) # stat$X used here because identical to stat.nolog but has the X. WARNING: no need of order() for labels because box.coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
-            coord.names <- base::c(coord.names, "stat.pos")
-        }else if(stat.pos == "above"){
+                angle = stat_angle, 
+                hjust = stat_just$hjust, 
+                vjust = stat_just$vjust
+            )) # stat$X used here because identical to stat_nolog but has the X. WARNING: no need of order() for labels because box_coord$x set the order. For justification, see https://stackoverflow.com/questions/7263849/what-do-hjust-and-vjust-do-when-making-a-plot-using-ggplot
+            coord_names <- base::c(coord_names, "stat_pos")
+        }else if(stat_pos == "above"){
             # stat coordinates
-            if( ! base::is.null(dot.color)){ # for text just above max dot
-                if(dot.tidy == FALSE){
-                    tempo.stat.ini <- dot.coord.rd3
-                }else if(dot.tidy == TRUE){
-                    tempo.stat.ini <- dot.coord.tidy3
-                    tempo.stat.ini$x.y <- tempo.stat.ini$x.x # this is just to be able to use tempo.stat.ini$x.y for untidy or tidy dots (remember that dot.coord.tidy3$x.y is not good, see above)
+            if( ! base::is.null(dot_color)){ # for text just above max dot
+                if(dot_tidy == FALSE){
+                    tempo_stat_ini <- dot_coord_rd3
+                }else if(dot_tidy == TRUE){
+                    tempo_stat_ini <- dot_coord_tidy3
+                    tempo_stat_ini$x.y <- tempo_stat_ini$x.x # this is just to be able to use tempo_stat.ini$x.y for untidy or tidy dots (remember that dot_coord_tidy3$x.y is not good, see above)
                 }
-                stat.coord1 <- stats::aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(base::length(categ)== 1L){base::list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(base::length(categ) == 2L){base::list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ;base::names(x.env) <- if(base::length(categ)== 1L){base::c("group", "PANEL", "x.y", categ[1])}else if(base::length(categ) == 2L){base::c("group", "PANEL", "x.y", categ[1], categ[2])} ; x.env}, FUN = min, na.rm = TRUE)
-                base::names(stat.coord1)[base::names(stat.coord1) == "y"] <- "dot.min"
-                stat.coord2 <- stats::aggregate(x = tempo.stat.ini["y"], by = {x.env <- if(base::length(categ)== 1L){base::list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]])}else if(base::length(categ) == 2L){base::list(tempo.stat.ini$group, tempo.stat.ini$PANEL, tempo.stat.ini$x.y, tempo.stat.ini[, categ[1]], tempo.stat.ini[, categ[2]])} ; base::names(x.env) <- if(base::length(categ)== 1L){base::c("group", "PANEL", "x.y", categ[1])}else if(base::length(categ) == 2L){base::c("group", "PANEL", "x.y", categ[1], categ[2])} ; x.env}, FUN = max, na.rm = TRUE)
-                base::names(stat.coord2) <- base::paste0(base::names(stat.coord2), "_from.dot.max")
-                base::names(stat.coord2)[base::names(stat.coord2) == "y_from.dot.max"] <- "dot.max"
-                stat.coord3 <- base::cbind(box.coord[base::order(box.coord$group, box.coord$PANEL), ], stat.coord1[base::order(stat.coord1$group, stat.coord1$x.y), ], stat.coord2[base::order(stat.coord2$group, stat.coord2$x.y), ], stringsAsFactors = TRUE) # 
-                if( ! base::all(base::identical(base::round(stat.coord3$x, 9), base::round(base::as.numeric(stat.coord3$x.y), 9)), na.rm = TRUE)){ # as.numeric() because stat.coord3$x is class "mapped_discrete" "numeric"
+                stat_coord1 <- stats::aggregate(x = tempo_stat_ini["y"], by = {x_env <- if(base::length(categ)== 1L){base::list(tempo_stat_ini$group, tempo_stat_ini$PANEL, tempo_stat_ini$x.y, tempo_stat_ini[, categ[1]])}else if(base::length(categ) == 2L){base::list(tempo_stat_ini$group, tempo_stat_ini$PANEL, tempo_stat_ini$x.y, tempo_stat_ini[, categ[1]], tempo_stat_ini[, categ[2]])} ;base::names(x_env) <- if(base::length(categ)== 1L){base::c("group", "PANEL", "x.y", categ[1])}else if(base::length(categ) == 2L){base::c("group", "PANEL", "x.y", categ[1], categ[2])} ; x_env}, FUN = min, na.rm = TRUE)
+                base::names(stat_coord1)[base::names(stat_coord1) == "y"] <- "dot.min"
+                stat_coord2 <- stats::aggregate(x = tempo_stat_ini["y"], by = {x_env <- if(base::length(categ)== 1L){base::list(tempo_stat_ini$group, tempo_stat_ini$PANEL, tempo_stat_ini$x.y, tempo_stat_ini[, categ[1]])}else if(base::length(categ) == 2L){base::list(tempo_stat_ini$group, tempo_stat_ini$PANEL, tempo_stat_ini$x.y, tempo_stat_ini[, categ[1]], tempo_stat_ini[, categ[2]])} ; base::names(x_env) <- if(base::length(categ)== 1L){base::c("group", "PANEL", "x.y", categ[1])}else if(base::length(categ) == 2L){base::c("group", "PANEL", "x.y", categ[1], categ[2])} ; x_env}, FUN = max, na.rm = TRUE)
+                base::names(stat_coord2) <- base::paste0(base::names(stat_coord2), "_from.dot.max")
+                base::names(stat_coord2)[base::names(stat_coord2) == "y_from.dot.max"] <- "dot.max"
+                stat_coord3 <- base::cbind(box_coord[base::order(box_coord$group, box_coord$PANEL), ], stat_coord1[base::order(stat_coord1$group, stat_coord1$x.y), ], stat_coord2[base::order(stat_coord2$group, stat_coord2$x.y), ], stringsAsFactors = TRUE) # 
+                if( ! base::all(base::identical(base::round(stat_coord3$x, 9), base::round(base::as.numeric(stat_coord3$x.y), 9)), na.rm = TRUE)){ # as.numeric() because stat_coord3$x is class "mapped_discrete" "numeric"
             # nocov start (unreachable: internal consistency guard - cbind of aligned coordinates preserves x values)
-                    tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nFUSION OF box.coord, stat.coord1 AND stat.coord2 ACCORDING TO box.coord$x, stat.coord1$x.y AND stat.coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED")
+                    tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nFUSION OF box_coord, stat_coord1 AND stat_coord2 ACCORDING TO box_coord$x, stat_coord1$x.y AND stat_coord2$x.y IS NOT CORRECT. CODE HAS TO BE MODIFIED")
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
                 }
-                # text.coord <- stat.coord3[, c("x", "group", "dot.min", "dot.max")]
-                # names(text.coord)[names(text.coord) == "dot.min"] <- "text.min.pos"
-                #names(text.coord)[names(text.coord) == "dot.max"] <- "text.max.pos"
-                box.coord <- box.coord[base::order(box.coord$x, box.coord$group, box.coord$PANEL), ]
-                # text.coord <- text.coord[order(text.coord$x), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
-                stat.coord3 <- stat.coord3[base::order(stat.coord3$x, stat.coord3$group, stat.coord3$PANEL), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text.coord$group), as.integer(box.coord$group)) because with error, the correspondence between x and group is not the same
-                if( ! (base::identical(box.coord$x, stat.coord3$x) & base::identical(box.coord$group, stat.coord3$group) & base::identical(box.coord$PANEL, stat.coord3$PANEL))){
+                # text_coord <- stat_coord3[, c("x", "group", "dot.min", "dot.max")]
+                # names(text_coord)[names(text_coord) == "dot.min"] <- "text.min.pos"
+                #names(text_coord)[names(text_coord) == "dot.max"] <- "text.max.pos"
+                box_coord <- box_coord[base::order(box_coord$x, box_coord$group, box_coord$PANEL), ]
+                # text_coord <- text_coord[order(text_coord$x), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text_coord$group), as.integer(box_coord$group)) because with error, the correspondence between x and group is not the same
+                stat_coord3 <- stat_coord3[base::order(stat_coord3$x, stat_coord3$group, stat_coord3$PANEL), ] # to be sure to have the two objects in the same order for x. WARNING: cannot add identical(as.integer(text_coord$group), as.integer(box_coord$group)) because with error, the correspondence between x and group is not the same
+                if( ! (base::identical(box_coord$x, stat_coord3$x) & base::identical(box_coord$group, stat_coord3$group) & base::identical(box_coord$PANEL, stat_coord3$PANEL))){
             # nocov start (unreachable: internal consistency guard - idem after ordering)
-                    tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\ntext.coord AND box.coord DO NOT HAVE THE SAME x, group AND PANEL COLUMN CONTENT")
+                    tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\ntext_coord AND box_coord DO NOT HAVE THE SAME x, group AND PANEL COLUMN CONTENT")
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
                 }
             }else{
-                stat.coord3 <- box.coord
+                stat_coord3 <- box_coord
             }
-            stat.coord3 <- base::data.frame(
-                stat.coord3, 
-                Y = stat.coord3[, base::ifelse(
-                    base::is.null(dot.color), 
-                    base::ifelse(base::diff(y.lim) > 0, "ymax", "ymin"), 
-                    base::ifelse(base::diff(y.lim) > 0, "ymax_final", "ymin_final")
+            stat_coord3 <- base::data.frame(
+                stat_coord3, 
+                Y = stat_coord3[, base::ifelse(
+                    base::is.null(dot_color), 
+                    base::ifelse(base::diff(y_lim) > 0, "ymax", "ymin"), 
+                    base::ifelse(base::diff(y_lim) > 0, "ymax_final", "ymin_final")
                 )], 
                 stringsAsFactors = TRUE
             ) # ymax is top whisker, ymax_final is top dot
-            # stat.coord3 <- data.frame(stat.coord3, Y = vector("numeric", length = nrow(stat.coord3)), stringsAsFactors = TRUE)
-            # check.Y <- as.logical(stat.coord3$Y) # convert everything in Y into FALSE (because Y is full of zero)
+            # stat_coord3 <- data.frame(stat_coord3, Y = vector("numeric", length = nrow(stat_coord3)), stringsAsFactors = TRUE)
+            # check_Y <- as.logical(stat_coord3$Y) # convert everything in Y into FALSE (because Y is full of zero)
             # end stat coordinates
             # stat display
             # performed twice: first for y values >=0, then y values < 0, because only a single value allowed for hjust anf vjust
-            if(stat.mean == FALSE){
-                tempo.center.ref <- "middle"
+            if(stat_mean == FALSE){
+                tempo_center_ref <- "middle"
             }else{
-                tempo.center.ref <- "MEAN"
+                tempo_center_ref <- "MEAN"
             }
-            # if(base::is.null(dot.color)){
-            # tempo.low.ref <- "ymin"
-            # tempo.high.ref <- "ymax"
+            # if(base::is.null(dot_color)){
+            # tempo_low_ref <- "ymin"
+            # tempo_high_ref <- "ymax"
             # }else{
-            # tempo.low.ref <- "ymin_final"
-            # tempo.high.ref <- "ymax_final"
+            # tempo_low_ref <- "ymin_final"
+            # tempo_high_ref <- "ymax_final"
             # }
-            # tempo.log.high <- if(diff(y.lim) > 0){stat.coord3[, tempo.center.ref] >= 0}else{stat.coord3[, tempo.center.ref] < 0}
-            # tempo.log.low <- if(diff(y.lim) > 0){stat.coord3[, tempo.center.ref] < 0}else{stat.coord3[, tempo.center.ref] >= 0}
-            # stat.coord3$Y[tempo.log.high] <- stat.coord3[tempo.log.high, tempo.high.ref]
-            # stat.coord3$Y[tempo.log.low] <- stat.coord3[tempo.log.low, tempo.low.ref]
+            # tempo_log_high <- if(diff(y_lim) > 0){stat_coord3[, tempo_center_ref] >= 0}else{stat_coord3[, tempo_center_ref] < 0}
+            # tempo_log_low <- if(diff(y_lim) > 0){stat_coord3[, tempo_center_ref] < 0}else{stat_coord3[, tempo_center_ref] >= 0}
+            # stat_coord3$Y[tempo_log_high] <- stat_coord3[tempo_log_high, tempo_high_ref]
+            # stat_coord3$Y[tempo_log_low] <- stat_coord3[tempo_log_low, tempo_low_ref]
             # add distance
-            stat.coord3$Y <- stat.coord3$Y + base::diff(y.lim) * stat.dist / 100
+            stat_coord3$Y <- stat_coord3$Y + base::diff(y_lim) * stat_dist / 100
             # end add distance
             # correct median or mean text format
-            if(y.log != "no"){
-                stat.coord3[, tempo.center.ref] <- base::ifelse(y.log == "log2", 2, 10)^(stat.coord3[, tempo.center.ref])
+            if(y_log != "no"){
+                stat_coord3[, tempo_center_ref] <- base::ifelse(y_log == "log2", 2, 10)^(stat_coord3[, tempo_center_ref])
             }
-            stat.coord3[, tempo.center.ref] <- base::formatC(stat.coord3[, tempo.center.ref], digits = 2, drop0trailing = TRUE, format = "f")
+            stat_coord3[, tempo_center_ref] <- base::formatC(stat_coord3[, tempo_center_ref], digits = 2, drop0trailing = TRUE, format = "f")
             # end correct median or mean text format
-            # if(any(tempo.log.high) == TRUE){
-            # tempo.stat <- stat.coord3[tempo.log.high,]
-            base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
-                data = stat.coord3, 
-                mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo.center.ref),
-                size = stat.size, 
+            # if(any(tempo_log_high) == TRUE){
+            # tempo_stat <- stat_coord3[tempo_log_high,]
+            base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_text(
+                data = stat_coord3, 
+                mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo_center_ref),
+                size = stat_size, 
                 color = "black", 
-                angle = stat.angle, 
-                hjust = stat.just$hjust, 
-                vjust = stat.just$vjust
-            )) # WARNING: no need of order() for labels because box.coord$x set the order
-            coord.names <- base::c(coord.names, "stat.pos")
+                angle = stat_angle, 
+                hjust = stat_just$hjust, 
+                vjust = stat_just$vjust
+            )) # WARNING: no need of order() for labels because box_coord$x set the order
+            coord_names <- base::c(coord_names, "stat_pos")
             # }
-            # if(any(tempo.log.low) == TRUE){
-            # tempo.stat <- stat.coord3[tempo.log.low,]
-            # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::geom_text(
-            # data = tempo.stat, 
-            # mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo.center.ref),
-            # size = stat.size, 
+            # if(any(tempo_log_low) == TRUE){
+            # tempo_stat <- stat_coord3[tempo_log_low,]
+            # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_text(
+            # data = tempo_stat, 
+            # mapping = ggplot2::aes_string(x = "x", y = "Y", label = tempo_center_ref),
+            # size = stat_size, 
             # color = "black", 
-            # hjust = base::ifelse(vertical == TRUE, 0.5, 0.5 + stat.dist), 
-            # vjust = base::ifelse(vertical == TRUE, 0.5 + stat.dist, 0.5)
-            # )) # WARNING: no need of order() for labels because box.coord$x set the order
-            # coord.names <- c(coord.names, "stat.pos.negative")
+            # hjust = base::ifelse(vertical == TRUE, 0.5, 0.5 + stat_dist), 
+            # vjust = base::ifelse(vertical == TRUE, 0.5 + stat_dist, 0.5)
+            # )) # WARNING: no need of order() for labels because box_coord$x set the order
+            # coord_names <- c(coord_names, "stat_pos_negative")
             # }
             # end stat display
         }else{
-            # nocov start (unreachable: CODE INCONSISTENCY 5 internal guard - stat display path is always stat.pos or the else is unreachable)
+            # nocov start (unreachable: CODE INCONSISTENCY 5 internal guard - stat display path is always stat_pos or the else is unreachable)
             tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nCODE INCONSISTENCY 5")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
@@ -2613,8 +2613,8 @@ gg_box <- function(
     }
     # end stat display
     # legend management
-    if(legend.show == FALSE){ # must be here because must be before bef.final.plot <- 
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none", color = "none", alpha = "none")) # inactivate the initial legend
+    if(legend_show == FALSE){ # must be here because must be before bef_final_plot <- 
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::guides(fill = "none", color = "none", alpha = "none")) # inactivate the initial legend
     }
     # end legend management
     
@@ -2626,88 +2626,88 @@ gg_box <- function(
     # the oob argument of scale_y_continuous() https://ggplot2.tidyverse.org/reference/scale_continuous.html
     # see also https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
     # secondary ticks
-    bef.final.plot <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y.lim), oob = scales::rescale_none)}else{ggplot2::coord_flip(ylim = y.lim)}')))) # here I do not need the x-axis and y-axis orientation, I just need the number of main ticks and the legend. I DI NOT UNDERSTAND THE COMMENT HERE BECAUSE WE NEED COORD_FLiP
-    tempo.coord <- bef.final.plot$layout$panel_params[[1]]
-    # y.second.tick.positions: coordinates of secondary ticks (only if y.second.tick.nb argument is non NULL or if y.log argument is different from "no")
-    if(y.log != "no"){ # integer main ticks for log2 and log10
-        tempo.scale <- (base::as.integer(base::min(y.lim, na.rm = TRUE)) - 1):(base::as.integer(base::max(y.lim, na.rm = TRUE)) + 1)
+    bef_final_plot <- ggplot2::ggplot_build(base::eval(base::parse(text = base::paste(base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "), ' + if(vertical == TRUE){ggplot2::scale_y_continuous(expand = c(0, 0), limits = sort(y_lim), oob = scales::rescale_none)}else{ggplot2::coord_flip(ylim = y_lim)}')))) # here I do not need the x-axis and y-axis orientation, I just need the number of main ticks and the legend. I DI NOT UNDERSTAND THE COMMENT HERE BECAUSE WE NEED COORD_FLiP
+    tempo_coord <- bef_final_plot$layout$panel_params[[1]]
+    # y_second_tick_positions: coordinates of secondary ticks (only if y_second_tick_nb argument is non NULL or if y_log argument is different from "no")
+    if(y_log != "no"){ # integer main ticks for log2 and log10
+        tempo_scale <- (base::as.integer(base::min(y_lim, na.rm = TRUE)) - 1):(base::as.integer(base::max(y_lim, na.rm = TRUE)) + 1)
     }else{
-        tempo <- if(base::is.null(base::attributes(tempo.coord$y$breaks))){tempo.coord$y$breaks}else{base::unlist(base::attributes(tempo.coord$y$breaks))}
+        tempo <- if(base::is.null(base::attributes(tempo_coord$y$breaks))){tempo_coord$y$breaks}else{base::unlist(base::attributes(tempo_coord$y$breaks))}
         if(base::all(base::is.na(tempo))){# all() without na.rm -> ok because is.na() cannot be NA
-            # nocov start (unreachable: internal consistency guard - ggplot2 always returns at least one non-NA break for finite y.lim)
-            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nONLY NA IN tempo.coord$y$breaks")
+            # nocov start (unreachable: internal consistency guard - ggplot2 always returns at least one non-NA break for finite y_lim)
+            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nONLY NA IN tempo_coord$y$breaks")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }
-        tempo.scale <- saferGraph::scale2(lim = y.lim, n = base::ifelse(base::is.null(y.tick.nb), base::length(tempo[ ! base::is.na(tempo)]), y.tick.nb)) # in ggplot 3.3.0, tempo.coord$y.major_source replaced by tempo.coord$y$breaks. If fact: n = base::ifelse(base::is.null(y.tick.nb), length(tempo[ ! is.na(tempo)]), y.tick.nb)) replaced by n = base::ifelse(base::is.null(y.tick.nb), 4, y.tick.nb))
+        tempo_scale <- saferGraph::scale2(lim = y_lim, n = base::ifelse(base::is.null(y_tick_nb), base::length(tempo[ ! base::is.na(tempo)]), y_tick_nb)) # in ggplot 3.3.0, tempo_coord$y.major_source replaced by tempo_coord$y$breaks. If fact: n = base::ifelse(base::is.null(y_tick_nb), length(tempo[ ! is.na(tempo)]), y_tick_nb)) replaced by n = base::ifelse(base::is.null(y_tick_nb), 4, y_tick_nb))
     }
-    y.second.tick.values <- NULL
-    y.second.tick.pos <- NULL
-    if(y.log != "no"){
-        tempo <- saferGraph::inter_ticks(lim = y.lim, log = y.log)
-        y.second.tick.values <- tempo$values
-        y.second.tick.pos <- tempo$coordinates
+    y_second_tick_values <- NULL
+    y_second_tick_pos <- NULL
+    if(y_log != "no"){
+        tempo <- saferGraph::inter_ticks(lim = y_lim, log = y_log)
+        y_second_tick_values <- tempo$values
+        y_second_tick_pos <- tempo$coordinates
         # if(vertical == TRUE){ # do not remove in case the bug is fixed
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", y = y.second.tick.pos, yend = y.second.tick.pos, x = tempo.coord$x.range[1], xend = tempo.coord$x.range[1] + base::diff(tempo.coord$x.range) / 80))
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::annotate(geom = "segment", y = y_second_tick_pos, yend = y_second_tick_pos, x = tempo_coord$x.range[1], xend = tempo_coord$x.range[1] + base::diff(tempo_coord$x.range) / 80))
         # }else{ # not working because of the ggplot2 bug
-        # assign(paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(geom = "segment", x = y.second.tick.pos, xend = y.second.tick.pos, y = tempo.coord$y.range[1], yend = tempo.coord$y.range[1] + diff(tempo.coord$y.range) / 80))
+        # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::annotate(geom = "segment", x = y_second_tick_pos, xend = y_second_tick_pos, y = tempo_coord$y.range[1], yend = tempo_coord$y.range[1] + diff(tempo_coord$y.range) / 80))
         # }
-        coord.names <- base::c(coord.names, "y.second.tick.positions")
-    }else if(( ! base::is.null(y.second.tick.nb)) & y.log == "no"){
-        # if(y.second.tick.nb > 0){ #inactivated because already checked before
-        if(base::length(tempo.scale) < 2){
-            tempo_cat1 <- base::c("y.tick.nb", "y.second.tick.nb")
-            tempo_cat2 <- base::sapply(base::list(y.tick.nb, y.second.tick.nb), FUN = base::paste0, collapse = " ")
-            tempo.sep <- base::sapply(base::mapply(" ", base::max(base::nchar(tempo_cat1)) - base::nchar(tempo_cat1) + 3, FUN = rep, SIMPLIFY = FALSE), FUN = base::paste0, collapse = "")
-            tempo_cat <- base::paste0("ERROR IN ", function_name, "\nTHE NUMBER OF GENERATED TICKS FOR THE Y-AXIS IS NOT CORRECT: ", base::length(tempo.scale), "\nUSING THESE ARGUMENT SETTINGS (NO DISPLAY MEANS NULL VALUE):\n", base::paste0(tempo_cat1, tempo.sep, tempo_cat2, collapse = "\n"), "\nPLEASE, TEST OTHER VALUES")
+        coord_names <- base::c(coord_names, "y_second_tick_positions")
+    }else if(( ! base::is.null(y_second_tick_nb)) & y_log == "no"){
+        # if(y_second_tick_nb > 0){ #inactivated because already checked before
+        if(base::length(tempo_scale) < 2){
+            tempo_cat1 <- base::c("y_tick_nb", "y_second_tick_nb")
+            tempo_cat2 <- base::sapply(base::list(y_tick_nb, y_second_tick_nb), FUN = base::paste0, collapse = " ")
+            tempo_sep <- base::sapply(base::mapply(" ", base::max(base::nchar(tempo_cat1)) - base::nchar(tempo_cat1) + 3, FUN = rep, SIMPLIFY = FALSE), FUN = base::paste0, collapse = "")
+            tempo_cat <- base::paste0("ERROR IN ", function_name, "\nTHE NUMBER OF GENERATED TICKS FOR THE Y-AXIS IS NOT CORRECT: ", base::length(tempo_scale), "\nUSING THESE ARGUMENT SETTINGS (NO DISPLAY MEANS NULL VALUE):\n", base::paste0(tempo_cat1, tempo_sep, tempo_cat2, collapse = "\n"), "\nPLEASE, TEST OTHER VALUES")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
         }else{
-            tempo <- saferGraph::inter_ticks(lim = y.lim, log = y.log, breaks = tempo.scale, n = y.second.tick.nb)
+            tempo <- saferGraph::inter_ticks(lim = y_lim, log = y_log, breaks = tempo_scale, n = y_second_tick_nb)
         }
-        y.second.tick.values <- tempo$values
-        y.second.tick.pos <- tempo$coordinates
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::annotate(
+        y_second_tick_values <- tempo$values
+        y_second_tick_pos <- tempo$coordinates
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::annotate(
             geom = "segment", 
-            y = y.second.tick.pos, 
-            yend = y.second.tick.pos, 
-            x = if(vertical == TRUE){tempo.coord$x.range[1]}else{tempo.coord$y.range[1]}, 
-            xend = if(vertical == TRUE){tempo.coord$x.range[1] + base::diff(tempo.coord$x.range) / 80}else{tempo.coord$y.range[1] + base::diff(tempo.coord$y.range) / 80}
+            y = y_second_tick_pos, 
+            yend = y_second_tick_pos, 
+            x = if(vertical == TRUE){tempo_coord$x.range[1]}else{tempo_coord$y.range[1]}, 
+            xend = if(vertical == TRUE){tempo_coord$x.range[1] + base::diff(tempo_coord$x.range) / 80}else{tempo_coord$y.range[1] + base::diff(tempo_coord$y.range) / 80}
         ))
-        coord.names <- base::c(coord.names, "y.second.tick.positions")
+        coord_names <- base::c(coord_names, "y_second_tick_positions")
     }
-    # end y.second.tick.positions
-    # for the ggplot2 bug with y.log, this does not work: eval(parse(text = base::ifelse(vertical == FALSE & y.log == "log10", "ggplot2::scale_x_continuous", "ggplot2::scale_y_continuous")))
-    base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::scale_y_continuous(
-        breaks = tempo.scale, 
-        minor_breaks = y.second.tick.pos, 
-        labels = if(y.log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y.log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y.log == "no"){ggplot2::waiver()}else{
-            # nocov start (unreachable: y.log is restricted to the options c("no", "log2", "log10") by the arg_check() block above)
+    # end y_second_tick_positions
+    # for the ggplot2 bug with y_log, this does not work: eval(parse(text = base::ifelse(vertical == FALSE & y_log == "log10", "ggplot2::scale_x_continuous", "ggplot2::scale_y_continuous")))
+    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_y_continuous(
+        breaks = tempo_scale, 
+        minor_breaks = y_second_tick_pos, 
+        labels = if(y_log == "log10"){scales::trans_format("identity", scales::math_format(10^.x))}else if(y_log == "log2"){scales::trans_format("identity", scales::math_format(2^.x))}else if(y_log == "no"){ggplot2::waiver()}else{
+            # nocov start (unreachable: y_log is restricted to the options c("no", "log2", "log10") by the arg_check() block above)
             tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nCODE INCONSISTENCY 6") ; base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
             # nocov end
         }, # == in stop() to be able to add several messages between ==
         expand = base::c(0, 0), # remove space after after axis limits
-        limits = base::sort(y.lim), # NA indicate that limits must correspond to data limits but ylim() already used
+        limits = base::sort(y_lim), # NA indicate that limits must correspond to data limits but ylim() already used
         oob = scales::rescale_none, 
-        trans = base::ifelse(base::diff(y.lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y.lim decreasing. Thus, do not use. Use ylim() below and after this
+        trans = base::ifelse(base::diff(y_lim) < 0, "reverse", "identity") # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y_lim decreasing. Thus, do not use. Use ylim() below and after this
     ))
     if(vertical == TRUE){
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_cartesian(ylim = y.lim)) # problem of ggplot2::ylim() is that it redraws new breaks # coord_cartesian(ylim = y.lim)) not used because bug -> y-axis label disappearance with y.lim decreasing I DO NOT UNDERSTAND THIS MESSAGE WHILE I USE COORD_CARTESIAN # clip = "off" to have secondary ticks outside plot region does not work
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::coord_cartesian(ylim = y_lim)) # problem of ggplot2::ylim() is that it redraws new breaks # coord_cartesian(ylim = y_lim)) not used because bug -> y-axis label disappearance with y_lim decreasing I DO NOT UNDERSTAND THIS MESSAGE WHILE I USE COORD_CARTESIAN # clip = "off" to have secondary ticks outside plot region does not work
     }else{
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::coord_flip(ylim = y.lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y.lim decreasing. IDEM ABOVE
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::coord_flip(ylim = y_lim)) # clip = "off" to have secondary ticks outside plot region does not work # create the problem of y-axis label disappearance with y_lim decreasing. IDEM ABOVE
         
     }
     # end y scale management (cannot be before dot plot management)
     
     
     # legend management
-    if( ! base::is.null(legend.width)){
-        legend.final <- saferGG::gg_get_legend(ggplot_built = bef.final.plot, lib_path = lib_path) # get legend
-        base::assign(base::paste0(tempo.gg.name, tempo.gg.count <- tempo.gg.count + 1), ggplot2::guides(fill = "none", color = "none", alpha = "none")) # inactivate the initial legend
-        if(base::is.null(legend.final) & plot == TRUE){ # even if any(unlist(legend.disp)) is TRUE
-            # nocov start (unreachable: the box legend (scale_discrete_manual) always exists when legend.width is non-NULL)
-            legend.final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
+    if( ! base::is.null(legend_width)){
+        legend_final <- saferGG::gg_get_legend(ggplot_built = bef_final_plot, lib_path = lib_path) # get legend
+        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::guides(fill = "none", color = "none", alpha = "none")) # inactivate the initial legend
+        if(base::is.null(legend_final) & plot == TRUE){ # even if any(unlist(legend_disp)) is TRUE
+            # nocov start (unreachable: the box legend (scale_discrete_manual) always exists when legend_width is non-NULL)
+            legend_final <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (NON NULL categ ARGUMENT OR legend.show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend.width ARGUMENT\n")
+            tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (NON NULL categ ARGUMENT OR legend_show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend_width ARGUMENT\n")
             warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
             # nocov end
         }
@@ -2716,29 +2716,29 @@ gg_box <- function(
     
     
     # drawing
-    fin.plot <- base::suppressMessages(base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + ")))))
-    grob.save <- NULL
+    fin_plot <- base::suppressMessages(base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + ")))))
+    grob_save <- NULL
     if(plot == TRUE){
-        # following lines inactivated because of problem in warn.recov and message.recov
+        # following lines inactivated because of problem in warn_recov and message_recov
         # assign("env_fun_get_message", new.env())
-        # assign("tempo.gg.name", tempo.gg.name, envir = env_fun_get_message)
-        # assign("tempo.gg.count", tempo.gg.count, envir = env_fun_get_message)
+        # assign("tempo_gg_name", tempo_gg_name, envir = env_fun_get_message)
+        # assign("tempo_gg_count", tempo_gg_count, envir = env_fun_get_message)
         # assign("add", add, envir = env_fun_get_message)
         # two next line: for the moment, I cannot prevent the warning printing
-        # warn.recov <- fun_get_message(paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(base::is.null(add)){NULL}else{add}), kind = "warning", header = FALSE, print.no = FALSE, env = env_fun_get_message) # for recovering warnings printed by ggplot() functions
-        # message.recov <- fun_get_message('print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(base::is.null(add)){NULL}else{add}))))', kind = "message", header = FALSE, print.no = FALSE, env = env_fun_get_message) # for recovering messages printed by ggplot() functions
-        # if( ! (return == TRUE & return.ggplot == TRUE)){ # because return() plots when return.ggplot is TRUE # finally not used -> see return.ggplot description
-        if(base::is.null(legend.width)){
-            grob.save <- base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin.plot)))
+        # warn_recov <- fun_get_message(paste(paste(paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "), if(base::is.null(add)){NULL}else{add}), kind = "warning", header = FALSE, print.no = FALSE, env = env_fun_get_message) # for recovering warnings printed by ggplot() functions
+        # message_recov <- fun_get_message('print(eval(parse(text = paste(paste(paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "), if(base::is.null(add)){NULL}else{add}))))', kind = "message", header = FALSE, print.no = FALSE, env = env_fun_get_message) # for recovering messages printed by ggplot() functions
+        # if( ! (return == TRUE & return_ggplot == TRUE)){ # because return() plots when return_ggplot is TRUE # finally not used -> see return_ggplot description
+        if(base::is.null(legend_width)){
+            grob_save <- base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin_plot)))
         }else{
-            grob.save <-base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin.plot, legend.final, ncol=2, widths=base::c(1, legend.width))))
+            grob_save <-base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(fin_plot, legend_final, ncol=2, widths=base::c(1, legend_width))))
         }
         # }
-        # suppressMessages(suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo.gg.name, 1:tempo.gg.count), collapse = " + "), if(base::is.null(add)){NULL}else{add}))))))
+        # suppressMessages(suppressWarnings(print(eval(parse(text = paste(paste(paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "), if(base::is.null(add)){NULL}else{add}))))))
     }else{
-        # following lines inactivated because of problem in warn.recov and message.recov
-        # message.recov <- NULL
-        # warn.recov <- NULL
+        # following lines inactivated because of problem in warn_recov and message_recov
+        # message_recov <- NULL
+        # warn_recov <- NULL
         warn_count <- warn_count + 1
         tempo_warn <- base::paste0("(", warn_count,") PLOT NOT SHOWN AS REQUESTED")
         warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
@@ -2766,34 +2766,34 @@ gg_box <- function(
     #### end warning output
     
     # output
-    # following lines inactivated because of problem in warn.recov and message.recov
-    # if( ! (base::is.null(warn) & base::is.null(warn.recov) & base::is.null(message.recov))){
-    # warn <- paste0(warn, "\n\n", if(length(warn.recov) > 0 | length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", base::ifelse( ! base::is.null(warn.recov), unique(message.recov), ""), base::ifelse( ! base::is.null(message.recov), unique(message.recov), ""), collapse = "\n\n"), "\n\n")})
-    # }else if( ! (base::is.null(warn) & base::is.null(warn.recov)) & base::is.null(message.recov)){
-    # warn <- paste0(warn, "\n\n", if(length(warn.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(warn.recov), collapse = "\n\n"), "\n\n")})
-    # }else if( ! (base::is.null(warn) & base::is.null(message.recov)) & base::is.null(warn.recov)){
-    # warn <- paste0(warn, "\n\n", if(length(message.recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message.recov), collapse = "\n\n"), "\n\n")})
+    # following lines inactivated because of problem in warn_recov and message_recov
+    # if( ! (base::is.null(warn) & base::is.null(warn_recov) & base::is.null(message_recov))){
+    # warn <- paste0(warn, "\n\n", if(length(warn_recov) > 0 | length(message_recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", base::ifelse( ! base::is.null(warn_recov), unique(message_recov), ""), base::ifelse( ! base::is.null(message_recov), unique(message_recov), ""), collapse = "\n\n"), "\n\n")})
+    # }else if( ! (base::is.null(warn) & base::is.null(warn_recov)) & base::is.null(message_recov)){
+    # warn <- paste0(warn, "\n\n", if(length(warn_recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(warn_recov), collapse = "\n\n"), "\n\n")})
+    # }else if( ! (base::is.null(warn) & base::is.null(message_recov)) & base::is.null(warn_recov)){
+    # warn <- paste0(warn, "\n\n", if(length(message_recov) > 0){paste0(paste0("MESSAGES FROM ggplot2 FUNCTIONS: ", unique(message_recov), collapse = "\n\n"), "\n\n")})
     # }
     if(return == TRUE){
-        tempo.output <- ggplot2::ggplot_build(fin.plot)
-        tempo.output$data <- tempo.output$data[-1] # remove the first data because corresponds to the initial empty boxplot
-        if(base::length(tempo.output$data) != base::length(coord.names)){
-            # nocov start (unreachable: internal consistency guard - coord.names is built in parallel with the layers)
-            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nlength(tempo.output$data) AND length(coord.names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
+        tempo_output <- ggplot2::ggplot_build(fin_plot)
+        tempo_output$data <- tempo_output$data[-1] # remove the first data because corresponds to the initial empty boxplot
+        if(base::length(tempo_output$data) != base::length(coord_names)){
+            # nocov start (unreachable: internal consistency guard - coord_names is built in parallel with the layers)
+            tempo_cat <- base::paste0("INTERNAL CODE ERROR IN ", function_name, "\nlength(tempo_output$data) AND length(coord_names) MUST BE IDENTICAL. CODE HAS TO BE MODIFIED")
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE) # == in stop() to be able to add several messages between ==
             # nocov end
         }else{
-            base::names(tempo.output$data) <- coord.names
-            tempo.output$data <- tempo.output$data[coord.names != "bad_remove"]
+            base::names(tempo_output$data) <- coord_names
+            tempo_output$data <- tempo_output$data[coord_names != "bad_remove"]
         }
-        tempo <- tempo.output$layout$panel_params[[1]]
+        tempo <- tempo_output$layout$panel_params[[1]]
         output <- base::list(
-            data = data1.ini, 
-            stat = stat.nolog, 
-            removed.row.nb = removed.row.nb, 
-            removed.rows = removed.rows, 
-            plot = base::c(tempo.output$data, y.second.tick.values = base::list(y.second.tick.values)), 
-            panel = facet.categ, 
+            data = data1_ini, 
+            stat = stat_nolog, 
+            removed_row_nb = removed_row_nb, 
+            removed_rows = removed_rows, 
+            plot = base::c(tempo_output$data, y_second_tick_values = base::list(y_second_tick_values)), 
+            panel = facet_categ, 
             axes = base::list(
                 x.range = tempo$x.range, 
                 x.labels = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{tempo$x$scale$get_labels()}, # is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
@@ -2803,8 +2803,8 @@ gg_box <- function(
                 y.positions = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{base::unlist(base::attributes(tempo$y$breaks))}
             ), 
             warn = base::paste0("\n", warn, "\n\n"), 
-            ggplot = if(return.ggplot == TRUE){fin.plot}else{NULL}, # fin.plot plots the graph if return == TRUE
-            gtable = if(return.gtable == TRUE){grob.save}else{NULL} 
+            ggplot = if(return_ggplot == TRUE){fin_plot}else{NULL}, # fin_plot plots the graph if return == TRUE
+            gtable = if(return_gtable == TRUE){grob_save}else{NULL} 
         )
         #### output
         base::return(output)
@@ -2812,7 +2812,6 @@ gg_box <- function(
     }
 
 }
-
 
 
 

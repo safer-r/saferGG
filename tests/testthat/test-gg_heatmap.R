@@ -33,8 +33,8 @@ testthat::test_that("gg_heatmap draws heatmaps and returns the expected structur
     # rotate with melted data frames and mask, and data2 rotate path
     output <- saferGG::gg_heatmap(data1 = melted1, data2 = melted2, rotate = TRUE, return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(output, "list")
-    # limit1 provided (else branch of the NULL limit1 path), midpoint1 provided but different from mean of limit1 (warn branch), warn.print = TRUE
-    output <- saferGG::gg_heatmap(data1 = mat1, limit1 = base::c(0, 16), midpoint1 = 8, warn.print = FALSE, return = TRUE, plot = FALSE, safer_check = FALSE)
+    # limit1 provided (else branch of the NULL limit1 path), midpoint1 provided but different from mean of limit1 (warn branch), warn_print = TRUE
+    output <- saferGG::gg_heatmap(data1 = mat1, limit1 = base::c(0, 16), midpoint1 = 8, warn_print = FALSE, return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     output <- saferGG::gg_heatmap(data1 = mat1, limit1 = base::c(0, 16), midpoint1 = 2, return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(output, "list")
@@ -76,10 +76,10 @@ testthat::test_that("gg_heatmap draws heatmaps and returns the expected structur
     # add without +
     testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, add = "ggplot2::theme_void()", safer_check = FALSE), regexp = "MUST START WITH", fixed = TRUE)
     # bad color
-    testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, low.color1 = "notacolor", safer_check = FALSE), regexp = "MUST BE|NOT A", fixed = FALSE)
-    # bad mid.color1, high.color1, color2 (same branch)
-    testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, mid.color1 = "notacolor", safer_check = FALSE), regexp = "mid.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR", fixed = TRUE)
-    testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, high.color1 = "notacolor", safer_check = FALSE), regexp = "high.color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR", fixed = TRUE)
+    testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, low_color1 = "notacolor", safer_check = FALSE), regexp = "MUST BE|NOT A", fixed = FALSE)
+    # bad mid_color1, high_color1, color2 (same branch)
+    testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, mid_color1 = "notacolor", safer_check = FALSE), regexp = "mid_color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR", fixed = TRUE)
+    testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, high_color1 = "notacolor", safer_check = FALSE), regexp = "high_color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR", fixed = TRUE)
     testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, color2 = "notacolor", safer_check = FALSE), regexp = "color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR", fixed = TRUE)
     # limit1 with Inf values: caught by arg_check (inf_values = FALSE) BEFORE the dedicated branch
     testthat::expect_error(object = saferGG::gg_heatmap(data1 = mat1, limit1 = base::c(0, Inf), safer_check = FALSE), regexp ="MUST BE MADE OF NON INFINITE VALUES", fixed = TRUE)
@@ -111,8 +111,8 @@ testthat::test_that("gg_heatmap draws heatmaps and returns the expected structur
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "NO DEFAULT VALUE AND REQUIRE ONE", fixed = TRUE))
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "data1", fixed = TRUE))
     ## end errors
-    # warn.print = TRUE with a warn (limit1 NULL): on.exit warning
-    output_wp <- saferGG::gg_heatmap(data1 = mat1, limit1 = NULL, warn.print = TRUE, return = TRUE, plot = FALSE, safer_check = FALSE)
+    # warn_print = TRUE with a warn (limit1 NULL): on.exit warning
+    output_wp <- saferGG::gg_heatmap(data1 = mat1, limit1 = NULL, warn_print = TRUE, return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(object = output_wp, "list")
     testthat::expect_true(object = base::grepl(x = output_wp$warn, pattern = "THE limit1 ARGUMENT IS NULL", fixed = TRUE))
     # cleanup of all files and devices created during the tests

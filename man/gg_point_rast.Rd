@@ -9,18 +9,18 @@ gg_point_rast(
   mapping = NULL,
   stat = "identity",
   position = "identity",
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE,
+  na_rm = FALSE,
+  show_legend = NA,
+  inherit_aes = TRUE,
   shape = NULL,
   size = NULL,
   stroke = NULL,
   color = NULL,
   fill = NULL,
   alpha = NULL,
-  raster.width = NULL,
-  raster.height = NULL,
-  raster.dpi = 300,
+  raster_width = NULL,
+  raster_height = NULL,
+  raster_dpi = 300,
   lib_path = NULL,
   safer_check = TRUE,
   error_text = ""
@@ -35,11 +35,11 @@ gg_point_rast(
 
 \item{position}{idem}
 
-\item{na.rm}{idem}
+\item{na_rm}{idem}
 
-\item{show.legend}{idem}
+\item{show_legend}{idem}
 
-\item{inherit.aes}{idem}
+\item{inherit_aes}{idem}
 
 \item{shape}{dot shape (as the shape argument of ggplot2::geom_point()). If NULL (default), not used.}
 
@@ -53,11 +53,11 @@ gg_point_rast(
 
 \item{alpha}{dot transparency (as the alpha argument of ggplot2::geom_point()). If NULL (default), not used.}
 
-\item{raster.width}{width of the result image (in inches). Default: determined by the current device parameters.}
+\item{raster_width}{width of the result image (in inches). Default: determined by the current device parameters.}
 
-\item{raster.height}{height of the result image (in inches). Default: determined by the current device parameters.}
+\item{raster_height}{height of the result image (in inches). Default: determined by the current device parameters.}
 
-\item{raster.dpi}{resolution of the result image.}
+\item{raster_dpi}{resolution of the result image.}
 
 \item{lib_path}{Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{unique(c(new, .Library.site, .Library))}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.}
 
@@ -69,7 +69,7 @@ gg_point_rast(
 a raster scatter plot.
 }
 \description{
-equivalent to ggplot2::geom_point() but in raster mode use it like ggplot2::geom_point() with the main raster.dpi additional argument.
+equivalent to ggplot2::geom_point() but in raster mode use it like ggplot2::geom_point() with the main raster_dpi additional argument.
 }
 \details{
 can be long to generate the plot.

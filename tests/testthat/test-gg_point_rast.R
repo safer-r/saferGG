@@ -28,17 +28,17 @@ testthat::test_that("gg_point_rast builds a raster layer", {
 
     ## errors
     # bad na.rm
-    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), na.rm = 1, safer_check = FALSE), regexp = "MUST BE MODE logical", fixed = TRUE)
-    # negative raster.width
-    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), raster.width = -1, safer_check = FALSE), regexp = "NEG", fixed = TRUE)
+    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), na_rm = 1, safer_check = FALSE), regexp = "MUST BE MODE logical", fixed = TRUE)
+    # negative raster_width
+    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), raster_width = -1, safer_check = FALSE), regexp = "NEG", fixed = TRUE)
     # bad show.legend type
-    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), show.legend = "BAD", safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
+    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), show_legend = "BAD", safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
     # bad mapping class (numeric list instead of aes)
     testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = base::list(x = "BAD"), safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
     # fill argument of bad class (numeric)
     testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), fill = 1.5, safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
-    # raster.height of bad class (character)
-    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), raster.height = "BAD", safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
+    # raster_height of bad class (character)
+    testthat::expect_error(object = saferGG::gg_point_rast(data = obs1, mapping = ggplot2::aes(x = x, y = y), raster_height = "BAD", safer_check = FALSE), regexp = "MUST BE", fixed = TRUE)
     # zero-arg call: arg_user_setting_eval NULL path (a bare layer is returned)
     res_zero <- saferGG::gg_point_rast(safer_check = FALSE)
     testthat::expect_s3_class(object = res_zero, class = "LayerInstance")
