@@ -403,7 +403,7 @@ gg_palette <- function(
     #### end second round of checking and data preparation
 
     #### main code
-    hues = base::seq(15, 375, length = n + 1)
+    hues = base::seq(15, 375, length.out = n + 1)
     output <- grDevices::hcl(h = hues, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind == "light"){85}, c = 100)[1:n]
     #### end main code
 
