@@ -2531,6 +2531,23 @@ shape = NA
     # end drawing
     #### end main code
 
+    #### warning output
+    # must be before return()
+    if( ! base::is.null(x = warn) & warn_print == TRUE){
+        base::on.exit(
+            expr = base::warning(
+                base::paste0(
+                    base::sub(pattern = "^ERROR IN ", replacement = "FROM ", x = error_text_start, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE),
+                    warn,
+                    collapse = NULL,
+                    recycle0 = FALSE
+                ), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL
+            ), add = TRUE, after = TRUE
+        )
+    }
+    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
+    #### end warning output
+
     #### output
     if(return == TRUE){
         output <- base::suppressMessages(expr = ggplot2::ggplot_build(plot = fin_plot), classes = "message")
@@ -2599,22 +2616,6 @@ shape = NA
         base::return(output) # this plots the graph if return_ggplot is TRUE and if no assignment
     }
     #### end output
-
-    #### warning output
-    if( ! base::is.null(x = warn)){
-        base::on.exit(
-            expr = base::warning(
-                message = base::paste0(
-                    base::sub(pattern = "^ERROR IN ", replacement = "FROM ", x = error_text_start, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), 
-                    warn, 
-                    collapse = NULL, 
-                    recycle0 = FALSE
-                ), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL
-            ), add = TRUE, after = TRUE
-        )
-    }
-    base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
-    #### end warning output
 }
 
 

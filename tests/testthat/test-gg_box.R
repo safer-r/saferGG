@@ -801,3 +801,13 @@ testthat::test_that("gg_box regressions of saferGG 1.0.0 (warn_print, add facets
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
+
+testthat::test_that("gg_box warn_print = FALSE also silences the saferGraph::inter_ticks() warnings", {
+    obs_tick <- base::data.frame(y = base::c(2.2, 2.3, 2.5, 2.8, 2.7, 2.4), g = base::factor(x = base::rep(x = base::c("a", "b"), times = 3)), stringsAsFactors = TRUE)
+    # y_lim inside one log10 tick interval: inter_ticks() returns the "NO INTER TICKS COMPUTED" warning
+    testthat::expect_no_warning(object = output_tick <- saferGG::gg_box(data1 = obs_tick, y = "y", categ = "g", y_lim = base::c(2.1, 2.9), y_log = "log10", y_top_extra_margin = 0, y_bottom_extra_margin = 0, warn_print = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE))
+    testthat::expect_true(object = base::grepl(pattern = "FROM saferGraph::inter_ticks():\n(1) NO INTER TICKS COMPUTED", x = output_tick$warn, fixed = TRUE))
+    testthat::expect_warning(object = saferGG::gg_box(data1 = obs_tick, y = "y", categ = "g", y_lim = base::c(2.1, 2.9), y_log = "log10", y_top_extra_margin = 0, y_bottom_extra_margin = 0, warn_print = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE), regexp = "NO INTER TICKS COMPUTED", fixed = TRUE)
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
+})

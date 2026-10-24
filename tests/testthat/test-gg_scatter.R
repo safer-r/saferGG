@@ -719,3 +719,13 @@ testthat::test_that("gg_scatter draws scatter plots and returns the expected str
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
+
+testthat::test_that("gg_scatter prints its warnings only when warn_print = TRUE, also with return = TRUE", {
+    obs_wp <- base::data.frame(a = 1:5, b = 1:5)
+    testthat::expect_warning(object = output_wp <- saferGG::gg_scatter(data1 = obs_wp, x = "a", y = "b", plot = FALSE, return = TRUE, warn_print = TRUE, safer_check = FALSE), regexp = "PLOT NOT SHOWN AS REQUESTED", fixed = TRUE)
+    testthat::expect_no_warning(object = output_wp <- saferGG::gg_scatter(data1 = obs_wp, x = "a", y = "b", plot = FALSE, return = TRUE, warn_print = FALSE, safer_check = FALSE))
+    testthat::expect_true(object = base::grepl(pattern = "PLOT NOT SHOWN AS REQUESTED", x = output_wp$warn, fixed = TRUE))
+    testthat::expect_no_warning(object = saferGG::gg_scatter(data1 = obs_wp, x = "a", y = "b", plot = FALSE, return = FALSE, warn_print = FALSE, safer_check = FALSE))
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
+})

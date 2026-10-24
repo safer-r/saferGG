@@ -2644,9 +2644,14 @@ gg_box <- function(
     y_second_tick_values <- NULL
     y_second_tick_pos <- NULL
     if(y_log != "no"){
-        tempo <- saferGraph::inter_ticks(lim = y_lim, log = y_log, breaks = NULL, n = NULL, warn_print = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo <- saferGraph::inter_ticks(lim = y_lim, log = y_log, breaks = NULL, n = NULL, warn_print = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # warn_print = FALSE: the inter_ticks() warnings are added to the warn of this function, printed or not according to the warn_print argument
         y_second_tick_values <- tempo$values
         y_second_tick_pos <- tempo$coordinates
+        if( ! base::is.null(x = tempo$warn)){
+            warn_count <- warn_count + 1
+            tempo_warn <- base::paste0("(", warn_count,") FROM saferGraph::inter_ticks():\n", tempo$warn, collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+        }
         # if(vertical == TRUE){ # do not remove in case the bug is fixed
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotate(geom = "segment", y = y_second_tick_pos, yend = y_second_tick_pos, x = tempo_coord$x.range[1], xend = tempo_coord$x.range[1] + base::diff(x = tempo_coord$x.range) / 80, xmin = NULL, xmax = NULL, ymin = NULL, ymax = NULL, na.rm = FALSE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         # }else{ # not working because of the ggplot2 bug
@@ -2662,10 +2667,17 @@ gg_box <- function(
             tempo_cat <- base::paste0("ERROR IN ", function_name, "\nTHE NUMBER OF GENERATED TICKS FOR THE Y-AXIS IS NOT CORRECT: ", base::length(x = tempo_scale), "\nUSING THESE ARGUMENT SETTINGS (NO DISPLAY MEANS NULL VALUE):\n", base::paste0(tempo_cat1, tempo_sep, tempo_cat2, collapse = "\n", recycle0 = FALSE), "\nPLEASE, TEST OTHER VALUES", collapse = NULL, recycle0 = FALSE)
             base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in stop() to be able to add several messages between ==
         }else{
-            tempo <- saferGraph::inter_ticks(lim = y_lim, log = y_log, breaks = tempo_scale, n = y_second_tick_nb, warn_print = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+            tempo <- saferGraph::inter_ticks(lim = y_lim, log = y_log, breaks = tempo_scale, n = y_second_tick_nb, warn_print = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # warn_print = FALSE: see above
         }
         y_second_tick_values <- tempo$values
         y_second_tick_pos <- tempo$coordinates
+        if( ! base::is.null(x = tempo$warn)){
+            # nocov start (not reached in tests: the breaks from saferGraph::scale2() follow the y_lim order and span y_lim, so inter_ticks() returns no warning)
+            warn_count <- warn_count + 1
+            tempo_warn <- base::paste0("(", warn_count,") FROM saferGraph::inter_ticks():\n", tempo$warn, collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+            # nocov end
+        }
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotate(
             geom = "segment", 
             y = y_second_tick_pos, 

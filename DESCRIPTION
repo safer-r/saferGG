@@ -28,7 +28,7 @@ Imports:
     reshape2,
     saferDev,
     saferGraph,
-    saferTool,
+    saferTool (>= 1.2.0),
     scales
 Suggests: 
     knitr,
