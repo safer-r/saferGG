@@ -354,7 +354,7 @@ gg_get_legend <- function(
     arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
     ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object_name))
     tempo1 <- saferDev::arg_check(data = ggplot_built, class = "ggplot_built", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # before ggplot2 4.0.0
-    tempo2 <- saferDev::arg_check(data = ggplot_built, class = c("ggplot2::ggplot_built", "ggplot_built", "ggplot2::gg", "S7_object"), typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # since ggplot2 4.0.0
+    tempo2 <- saferDev::arg_check(data = ggplot_built, class = base::c("ggplot2::ggplot_built", "ggplot_built", "ggplot2::gg", "S7_object"), typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # since ggplot2 4.0.0
     checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
     if(tempo1$problem == TRUE & tempo2$problem == TRUE){
         argum_check <- base::c(argum_check, tempo1$problem)
@@ -448,14 +448,14 @@ gg_get_legend <- function(
     #### main code
     win_nb <- grDevices::dev.cur()
     grDevices::pdf(file = NULL)
-    tmp <- ggplot2::ggplot_gtable(ggplot_built)
+    tmp <- ggplot2::ggplot_gtable(data = ggplot_built)
     # BEWARE with ggplot_gtable : open a blanck device https://stackoverflow.com/questions/17012518/why-does-this-r-ggplot2-code-bring-up-a-blank-display-device
-    base::invisible(grDevices::dev.off())
+    base::invisible(x = grDevices::dev.off(which = grDevices::dev.cur()))
     if(win_nb > 1){ # to go back to the previous active device, if == 1 means no opened device
-        grDevices::dev.set(win_nb)
+        grDevices::dev.set(which = win_nb)
     }
-    leg <- base::which(base::sapply(tmp$grobs, function(x) {x$name} ) == "guide-box")
-    if(base::length(leg) == 0L){
+    leg <- base::which(x = base::sapply(X = tmp$grobs, FUN = function(x){x$name}, simplify = TRUE, USE.NAMES = TRUE) == "guide-box", arr.ind = FALSE, useNames = TRUE)
+    if(base::length(x = leg) == 0L){
         output <- NULL
     }else{
         output <- tmp$grobs[[leg]]

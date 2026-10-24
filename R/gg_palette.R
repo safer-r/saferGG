@@ -388,11 +388,11 @@ gg_palette <- function(
     ######## end graphic device checking
 
     ######## other checkings
-    if(base::isTRUE(base::all.equal(n, 0))){ # isTRUE(all.equal(n, 0))) is similar to n == 0 but deals with float
+    if(base::isTRUE(x = base::all.equal(target = n, current = 0))){ # isTRUE(all.equal(n, 0))) is similar to n == 0 but deals with float
             tempo_cat <- base::paste0(
             error_text_start, 
             "n ARGUMENT MUST BE A NON ZERO INTEGER. HERE IT IS: ", 
-            base::paste(n, collapse = " ", recycle0 = FALSE), 
+            base::paste(n, sep = " ", collapse = " ", recycle0 = FALSE),
             collapse = NULL, 
             recycle0 = FALSE
         )
@@ -403,8 +403,8 @@ gg_palette <- function(
     #### end second round of checking and data preparation
 
     #### main code
-    hues = base::seq(15, 375, length.out = n + 1)
-    output <- grDevices::hcl(h = hues, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind == "light"){85}, c = 100)[1:n]
+    hues <- base::seq(from = 15, to = 375, length.out = n + 1) # named arguments of base::seq.default(), the method dispatched for numeric values
+    output <- grDevices::hcl(h = hues, c = 100, l = if(kind == "std"){65}else if(kind == "dark"){35}else if(kind == "light"){85}, alpha = NULL, fixup = TRUE)[1:n] # alpha = NULL is what grDevices::hcl() uses when alpha is missing
     #### end main code
 
     #### warning output

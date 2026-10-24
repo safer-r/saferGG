@@ -35,11 +35,13 @@
 #' @importFrom ggplot2 ggproto
 #' @importFrom ggplot2 layer
 #' @importFrom ggplot2 GeomPoint
+#' @importFrom grid gpar
 #' @importFrom grid grid.cap
 #' @importFrom grid grid.points
 #' @importFrom grid popViewport
 #' @importFrom grid pushViewport
 #' @importFrom grid rasterGrob
+#' @importFrom grid unit
 #' @importFrom grid viewport
 #' @importFrom saferDev arg_check
 #' @importFrom saferGraph open2
@@ -364,11 +366,13 @@ gg_point_rast <- function(
                 "grDevices::dev.off", 
                 "grDevices::dev.set", 
                 "grid::grid.cap", 
-                "grid::grid.points", 
-                "grid::popViewport", 
-                "grid::pushViewport", 
-                "grid::rasterGrob", 
-                "grid::viewport", 
+                "grid::gpar",
+                "grid::grid.points",
+                "grid::popViewport",
+                "grid::pushViewport",
+                "grid::rasterGrob",
+                "grid::unit",
+                "grid::viewport",
                 # end functions required in this code
                 # internal functions required in this code
                 "saferDev:::.base_op_check"
@@ -408,7 +412,7 @@ gg_point_rast <- function(
     }
     if( ! base::is.null(x = mapping)){
         tempo1 <- saferDev::arg_check(data = mapping, class = "uneval", typeof = "list", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # ggplot2 < 4.0.0
-        tempo2 <- saferDev::arg_check(data = mapping, class = c("ggplot2::mapping", "uneval", "gg", "S7_object"), typeof = "list", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # ggplot2 >= 4.0.0
+        tempo2 <- saferDev::arg_check(data = mapping, class = base::c("ggplot2::mapping", "uneval", "gg", "S7_object"), typeof = "list", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) # ggplot2 >= 4.0.0
         checked_arg_names <- base::c(checked_arg_names, tempo2$object_name)
         if(tempo1$problem == TRUE & tempo2$problem == TRUE){
             argum_check <- base::c(argum_check, tempo1$problem)
@@ -529,45 +533,51 @@ gg_point_rast <- function(
     # additional functions
     DrawGeomPointRast <- function(data, panel_params, coord, na_rm = FALSE, raster_width = NULL, raster_height = NULL, raster_dpi = raster_dpi){
         if(base::is.null(x = raster_width)){
-            raster_width <- graphics::par("fin")[1]
+            raster_width <- graphics::par("fin", no.readonly = FALSE)[1]
         }
         if(base::is.null(x = raster_height)){
-            raster_height <- graphics::par("fin")[2]
+            raster_height <- graphics::par("fin", no.readonly = FALSE)[2]
         }
         prev_dev_id <- grDevices::dev.cur()
-        p <- ggplot2::GeomPoint$draw_panel(data = data, panel_params = panel_params, coord = coord)
-        dev_id <- Cairo::Cairo(type = "raster", width = raster_width * raster_dpi, height = raster_height * raster_dpi, dpi = raster_dpi, units = "px", bg = "transparent")[1]
-        grid::pushViewport(grid::viewport(width = 1, height = 1))
-        grid::grid.points(x = p$x, y = p$y, pch = p$pch, size = p$size, name = p$name, gp = p$gp, vp = p$vp, draw = TRUE)
-        grid::popViewport()
+        p <- ggplot2::GeomPoint$draw_panel(data = data, panel_params = panel_params, coord = coord, na.rm = FALSE)
+        dev_id <- Cairo::Cairo(width = raster_width * raster_dpi, height = raster_height * raster_dpi, file = "", type = "raster", pointsize = 12, bg = "transparent", canvas = "white", units = "px", dpi = raster_dpi)[1]
+        grid::pushViewport(grid::viewport(x = grid::unit(x = 0.5, units = "npc", data = NULL), y = grid::unit(x = 0.5, units = "npc", data = NULL), width = 1, height = 1, default.units = "npc", just = "centre", gp = grid::gpar(), clip = "inherit", mask = "inherit", xscale = base::c(0, 1), yscale = base::c(0, 1), angle = 0, layout = NULL, layout.pos.row = NULL, layout.pos.col = NULL, name = NULL), recording = TRUE)
+        grid::grid.points(x = p$x, y = p$y, pch = p$pch, size = p$size, default.units = "native", name = p$name, gp = p$gp, draw = TRUE, vp = p$vp)
+        grid::popViewport(n = 1, recording = TRUE)
         cap <- grid::grid.cap()
-        base::invisible(grDevices::dev.off(dev_id))
-        base::invisible(grDevices::dev.set(prev_dev_id))
-        grid::rasterGrob(cap, x = 0, y = 0, width = 1, height = 1, default.units = "native", just = base::c("left", "bottom"))
+        base::invisible(x = grDevices::dev.off(which = dev_id))
+        base::invisible(x = grDevices::dev.set(which = prev_dev_id))
+        grid::rasterGrob(image = cap, x = 0, y = 0, width = 1, height = 1, just = base::c("left", "bottom"), hjust = NULL, vjust = NULL, interpolate = TRUE, default.units = "native", name = NULL, gp = grid::gpar(), vp = NULL)
     }
     # end additional functions
-    GeomPointRast <- ggplot2::ggproto("GeomPointRast", ggplot2::GeomPoint, draw_panel = DrawGeomPointRast)
-    output <- ggplot2::layer(
-        data = data, 
-        mapping = mapping, 
-        stat = stat, 
-        geom = GeomPointRast, 
-        position = position, 
-        show.legend = show_legend, 
-        inherit.aes = inherit_aes, 
-        params = base::list(
-            na.rm = na_rm, 
-            shape = shape, 
-            size = size, 
-            stroke = stroke, 
-            color = color, 
-            fill = fill, 
-            alpha = alpha, 
-            raster_width = raster_width, 
-            raster_height = raster_height, 
-            raster_dpi = raster_dpi
-        )
+    GeomPointRast <- ggplot2::ggproto(`_class` = "GeomPointRast", `_inherit` = ggplot2::GeomPoint, draw_panel = DrawGeomPointRast)
+    tempo_params <- base::list(
+        na.rm = na_rm,
+        shape = shape,
+        size = size,
+        stroke = stroke,
+        color = color,
+        fill = fill,
+        alpha = alpha,
+        raster_width = raster_width,
+        raster_height = raster_height,
+        raster_dpi = raster_dpi
     )
+    # remove the NULL aesthetics (not used, see the arguments description), to prevent the "Ignoring empty aesthetic" warning of ggplot2::layer()
+    tempo_params <- tempo_params[ ! (base::names(x = tempo_params) %in% base::c("shape", "size", "stroke", "color", "fill", "alpha") & base::vapply(X = tempo_params, FUN = base::is.null, FUN.VALUE = base::logical(length = 1), USE.NAMES = TRUE))]
+    output <- ggplot2::layer(
+        geom = GeomPointRast,
+        stat = stat,
+        data = data,
+        mapping = mapping,
+        position = position,
+        params = tempo_params,
+        inherit.aes = inherit_aes,
+        check.aes = TRUE,
+        check.param = TRUE,
+        show.legend = show_legend,
+        key_glyph = NULL
+    ) # layout (ggplot2 >= 4.0.0 only) and layer_class (default: the internal ggplot2 Layer object) arguments not written, to keep the compatibility with ggplot2 < 4.0.0 and to avoid ::: on ggplot2
     # end main code
     #### end main code
 

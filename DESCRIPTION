@@ -11,13 +11,15 @@ Authors@R: c(
   )
 Encoding: UTF-8
 Maintainer: Gael Millot <gael.millot@pasteur.fr>
-Description: Set of functions that perform checks according to the safer-r project recommendations for R function development (see <https://github.com/safer-r>). This includes checking argument values, ensuring correct specification of all mandatory arguments for embedded functions, as well as their explicit package namespace qualification, among other things.
+Description: Set of functions to draw 'ggplot2' graphics (boxplots, scatterplots, donuts, heatmaps, Miami plots, raster layers, color palettes and justification helpers), written according to the safer-r project recommendations for R function development (see <https://github.com/safer-r>). This includes strict checking of argument values, explicit package namespace qualification of all the called functions and explicit writing of all their arguments, among other things.
 URL: <https://github.com/safer-r/saferGG>, <https://safer-r.github.io/saferGG/>
 License: GPL-3
 Config/roxygen2/version: 8.0.0
-Imports: 
+Depends:
+    R (>= 4.3.0)
+Imports:
     Cairo,
-    ggplot2,
+    ggplot2 (>= 4.0.0),
     ggrepel,
     grDevices,
     grid,
@@ -32,4 +34,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
+Remotes:
+    safer-r/saferGraph,
+    safer-r/saferTool
 VignetteBuilder: knitr

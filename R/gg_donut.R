@@ -25,7 +25,7 @@
 #' @param legend_text_size single numeric value of the font size in mm of the legend labels. 
 #' @param legend_box_size single numeric value of the size of the legend squares in mm. 
 #' @param legend_box_space single numeric value of the space between the legend boxes in mm. 
-#' @param legend_limit single positive proportion of the classes displayed in the legend for which the corresponding proportion is over legend_limit. Example: legend_limit = 0.4 means that only the sectors over 40% of the donut will be in the legend. Write "all" for all the sectors in the legend (no limit required). Write NULL (default) for the ten biggest sectors. Warning, when legend_limit is a proportion and leads to 0 sectors represented (limit too high), then 10 sectors will be finally represented in the legend with a warning message.
+#' @param legend_limit single positive proportion of the classes displayed in the legend for which the corresponding proportion is over legend_limit. Example: legend_limit = 0.4 means that only the sectors over 40\% of the donut will be in the legend. Write "all" for all the sectors in the legend (no limit required). Write NULL (default) for the ten biggest sectors. Warning, when legend_limit is a proportion and leads to 0 sectors represented (limit too high), then 10 sectors will be finally represented in the legend with a warning message.
 #' @param legend_add_prop logical (either TRUE or FALSE). add the proportion after the class names in the legend ? 
 #' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()". If the character string contains the "ggplot2::theme" string, then the article argument of gg_donut() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x_angle (check all the arguments). Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions. The call of objects inside the quotes of add can lead to an error if the name of these objects are some of the gg_donut() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'
 #' @param return logical (either TRUE or FALSE). Return the graph parameters?
@@ -49,7 +49,8 @@
     #' $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
 #' @examples
 #' obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
-#' @importFrom ggplot2 aes_string
+#' @importFrom ggplot2 .data
+#' @importFrom ggplot2 aes
 #' @importFrom ggplot2 annotate
 #' @importFrom ggplot2 coord_polar
 #' @importFrom ggplot2 element_text
@@ -465,7 +466,7 @@ gg_donut <- function(
         saferDev:::.pack_and_function_check(
             fun = base::c(
                 "saferDev::arg_check", # write each function preceeded by their package name
-                "ggplot2::aes_string",
+                "ggplot2::aes",
                 "ggplot2::annotate",
                 "ggplot2::coord_polar",
                 "ggplot2::element_text",
@@ -481,6 +482,7 @@ gg_donut <- function(
                 "ggplot2::scale_x_continuous",
                 "ggplot2::theme",
                 "ggplot2::theme_void",
+                "ggplot2::waiver",
                 "ggplot2::ylim",
                 "ggrepel::geom_text_repel",
                 "gridExtra::arrangeGrob",
@@ -488,6 +490,8 @@ gg_donut <- function(
                 "grid::textGrob",
                 "grid::unit",
                 "grDevices::colors",
+                "scales::alpha",
+                "scales::censor",
                 "saferGG::gg_get_legend"
                 # end functions required in this code
                 # internal functions required in this code
@@ -528,10 +532,10 @@ gg_donut <- function(
     tempo <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = freq, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = categ, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(fill_palette)){
+    if( ! base::is.null(x = fill_palette)){
         tempo <- saferDev::arg_check(data = fill_palette, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = base::c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3", "Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"), all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(fill_color)){
+    if( ! base::is.null(x = fill_color)){
         tempo1 <- saferDev::arg_check(data = fill_color, class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
         tempo2 <- saferDev::arg_check(data = fill_color, class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
         tempo3 <- saferDev::arg_check(data = fill_color, class = NULL, typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) # inf values -> problem TRUE -> all three arg_check calls report a problem -> generic message below (dedicated Inf check useless because Inf is of mode double, not integer)
@@ -576,7 +580,7 @@ gg_donut <- function(
     tempo <- saferDev::arg_check(data = border_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = title, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = title_text_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(annotation)){
+    if( ! base::is.null(x = annotation)){
         tempo <- saferDev::arg_check(data = annotation, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         tempo <- saferDev::arg_check(data = annotation_distance, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         tempo <- saferDev::arg_check(data = annotation_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
@@ -584,24 +588,24 @@ gg_donut <- function(
         tempo <- saferDev::arg_check(data = annotation_force_pull, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     tempo <- saferDev::arg_check(data = legend_show, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(legend_width)){
+    if( ! base::is.null(x = legend_width)){
         tempo <- saferDev::arg_check(data = legend_width, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(legend_name)){
+    if( ! base::is.null(x = legend_name)){
         tempo <- saferDev::arg_check(data = legend_name, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     tempo <- saferDev::arg_check(data = legend_text_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = legend_box_size, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = legend_box_space, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = FALSE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(legend_limit)){
-        if(base::all(base::is.character(legend_limit))){
-            tempo <- saferDev::arg_check(data = legend_limit, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = c("all"), all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if( ! base::is.null(x = legend_limit)){
+        if(base::all(base::is.character(x = legend_limit), na.rm = FALSE)){
+            tempo <- saferDev::arg_check(data = legend_limit, class = NULL, typeof = NULL, mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = base::c("all"), all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         }else{
             tempo <- saferDev::arg_check(data = legend_limit, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = TRUE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         }
     }
     tempo <- saferDev::arg_check(data = legend_add_prop, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(add)){
+    if( ! base::is.null(x = add)){
         tempo <- saferDev::arg_check(data = add, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     tempo <- saferDev::arg_check(data = return, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
@@ -762,25 +766,25 @@ gg_donut <- function(
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
     removed_row_nb <- NULL
-    removed_rows <- base::data.frame(stringsAsFactors = FALSE)
+    removed_rows <- base::data.frame(row.names = NULL, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE)
     data1_ini <- data1 # strictly identical to data1
-    if( ! freq %in% base::names(data1)){
+    if( ! freq %in% base::names(x = data1)){
         tempo_cat <- base::paste0(
             error_text_start, 
             "freq ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT", 
             collapse = NULL, 
             recycle0 = FALSE
         )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }else{
-        if(base::all(base::is.na(data1[ , freq]) | base::is.infinite(data1[ , freq]))){
+        if(base::all(base::is.na(x = data1[ , freq]) | base::is.infinite(x = data1[ , freq]), na.rm = FALSE)){
             tempo_cat <- base::paste0(
             error_text_start, 
             "THE freq COLUMN OF data1 CANNOT BE JUST NA OR Inf", 
             collapse = NULL, 
             recycle0 = FALSE
         )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
         tempo <- saferDev::arg_check(data = data1[ , freq], class = NULL, typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = FALSE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
         if(tempo$problem == TRUE){
@@ -790,49 +794,49 @@ gg_donut <- function(
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
         # Inf and NA removal
-        if(base::any(base::is.infinite(data1[, freq]) | base::is.na(data1[, freq]))){
+        if(base::any(base::is.infinite(x = data1[, freq]) | base::is.na(x = data1[, freq]), na.rm = FALSE)){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF Inf OR NA VALUES IN THE ", freq, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-            tempo <- base::which(base::is.infinite(data1_ini[, freq]) | base::is.na(data1_ini[, freq])) # data_ini used for the output
+            tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF Inf OR NA VALUES IN THE ", freq, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+            tempo <- base::which(x = base::is.infinite(x = data1_ini[, freq]) | base::is.na(x = data1_ini[, freq]), arr.ind = FALSE, useNames = TRUE) # data_ini used for the output
             removed_row_nb <- base::c(removed_row_nb, tempo)
-            removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE) # data_ini used for the output
-            data1 <- data1[ ! (base::is.infinite(data1[, freq]) | base::is.na(data1[, freq])), ] #
+            removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE, deparse.level = 1) # data_ini used for the output
+            data1 <- data1[ ! (base::is.infinite(x = data1[, freq]) | base::is.na(x = data1[, freq])), ] #
         }
         # end Inf and NA removal
         # 0 removal
-        if(base::any(data1[, freq] == 0)){
+        if(base::any(data1[, freq] == 0, na.rm = FALSE)){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF 0 VALUES IN THE ", freq, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-            tempo <- base::which(data1[, freq] == 0) # data_ini used for the output
+            tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF 0 VALUES IN THE ", freq, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+            tempo <- base::which(x = data1[, freq] == 0, arr.ind = FALSE, useNames = TRUE) # data_ini used for the output
             removed_row_nb <- base::c(removed_row_nb, tempo)
-            removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE) # data_ini used for the output
+            removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE, deparse.level = 1) # data_ini used for the output
             data1 <- data1[ data1[, freq] != 0, ] #
         }
         # end 0 removal
     }
 
-    if( ! categ %in% base::names(data1)){
+    if( ! categ %in% base::names(x = data1)){
         tempo_cat <- base::paste0(
                 error_text_start, 
                 "categ ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT", 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }else{
-        if(base::nrow(data1) > 0 & base::all(base::is.na(data1[ ,categ]))){
+        if(base::nrow(x = data1) > 0 & base::all(base::is.na(x = data1[ ,categ]), na.rm = FALSE)){
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "THE categ COLUMN OF data1 CANNOT BE JUST NA", 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
         tempo1 <- saferDev::arg_check(data = data1[ , categ], class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
         tempo2 <- saferDev::arg_check(data = data1[ , categ], class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
@@ -843,177 +847,177 @@ gg_donut <- function(
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
         # NA removal
-        if(base::any(base::is.na(data1[, categ]))){
+        if(base::any(base::is.na(x = data1[, categ]), na.rm = FALSE)){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF NA VALUES IN THE ", categ, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)")
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
-            tempo <- base::which(base::is.na(data1_ini[, categ])) # data_ini used for the output
+            tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF NA VALUES IN THE ", categ, " COLUMN OF THE data1 ARGUMENT AND CORRESPONDING ROWS REMOVED (SEE $removed_row_nb AND $removed_rows)", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
+            tempo <- base::which(x = base::is.na(x = data1_ini[, categ]), arr.ind = FALSE, useNames = TRUE) # data_ini used for the output
             removed_row_nb <- base::c(removed_row_nb, tempo)
-            removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE) # data_ini used for the output
-            data1 <- data1[ ! base::is.na(data1[, categ]), ] #
+            removed_rows <- base::rbind(removed_rows, data1_ini[tempo, ], stringsAsFactors = FALSE, deparse.level = 1) # data_ini used for the output
+            data1 <- data1[ ! base::is.na(x = data1[, categ]), ] #
         }
         # end Inf and NA removal
-        if(base::any(base::duplicated(data1[, categ]))){
+        if(base::any(base::duplicated(x = data1[, categ], incomparables = FALSE), na.rm = FALSE)){
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "THE categ COLUMN OF data1 CANNOT CONTAIN DUPLICATED VALUES\n", 
-                base::paste0(data1[, categ][base::duplicated(data1[, categ])], collapse = " "),
+                base::paste0(data1[, categ][base::duplicated(x = data1[, categ], incomparables = FALSE)], collapse = " ", recycle0 = FALSE),
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
     }
 
-    if( ! base::is.null(annotation)){
-        if( ! annotation %in% base::names(data1)){
+    if( ! base::is.null(x = annotation)){
+        if( ! annotation %in% base::names(x = data1)){
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "annotation ARGUMENT MUST BE A COLUMN NAME OF THE data1 ARGUMENT",
                     collapse = NULL, 
                     recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }else{
-            if(base::nrow(data1) > 0 & base::all(base::is.na(data1[ , annotation]))){
+            if(base::nrow(x = data1) > 0 & base::all(base::is.na(x = data1[ , annotation]), na.rm = FALSE)){
                 tempo_cat <- base::paste0(
                     error_text_start, 
                     "IF NON NULL, THE annotation COLUMN OF data1 CANNOT BE JUST NA",
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
-                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             }
             tempo1 <- saferDev::arg_check(data = data1[ , annotation], class = NULL, typeof = "character", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
             tempo2 <- saferDev::arg_check(data = data1[ , annotation], class = "factor", typeof = NULL, mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
             if(tempo1$problem == TRUE & tempo2$problem == TRUE){
                 tempo_cat <- base::paste0(
-            error_text_start, "THE annotation COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"")
-                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            error_text_start, "THE annotation COLUMN OF data1 MUST BE CLASS \"factor\" OR \"character\"", collapse = NULL, recycle0 = FALSE)
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             }
-            if(base::any(base::duplicated(data1[, annotation]))){
+            if(base::any(base::duplicated(x = data1[, annotation], incomparables = FALSE), na.rm = FALSE)){
                 warn_count <- warn_count + 1
-                tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF DUPLICATED VALUES IN THE ", annotation, " COLUMN OF THE data1 ARGUMENT: ", base::paste0(data1[, annotation][base::duplicated(data1[, annotation])], collapse = " "))
-                warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+                tempo_warn <- base::paste0("(", warn_count,") PRESENCE OF DUPLICATED VALUES IN THE ", annotation, " COLUMN OF THE data1 ARGUMENT: ", base::paste0(data1[, annotation][base::duplicated(x = data1[, annotation], incomparables = FALSE)], collapse = " ", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+                warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
             }
         }
     }
-    if(base::nrow(data1) == 0){
+    if(base::nrow(x = data1) == 0){
         tempo_cat <- base::paste0(
-            error_text_start, 
-            "THE data1 ARGUMENT IS EMPTY AFTER Inf, NA AND 0 REMOVAL IN THE ", 
-            freq, base::ifelse(base::is.null(annotation), " AND ", ", "), 
-            categ, base::ifelse(base::is.null(annotation), "", " AND "), 
+            error_text_start,
+            "THE data1 ARGUMENT IS EMPTY AFTER Inf, NA AND 0 REMOVAL IN THE ",
+            freq, base::ifelse(test = base::is.null(x = annotation), yes = " AND ", no = ", "),
+            categ, base::ifelse(test = base::is.null(x = annotation), yes = "", no = " AND "),
             " COLUMNS",
             collapse = NULL, 
             recycle0 = FALSE
         )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
-    if( ! base::is.null(fill_color)){
-        if( ! base::is.numeric(fill_color)){
-            if( ! base::all(fill_color[ ! base::is.na(fill_color)] %in% grDevices::colors() | base::grepl(pattern = "^#", fill_color[ ! base::is.na(fill_color)]), na.rm = TRUE)){
+    if( ! base::is.null(x = fill_color)){
+        if( ! base::is.numeric(x = fill_color)){
+            if( ! base::all(fill_color[ ! base::is.na(x = fill_color)] %in% grDevices::colors(distinct = FALSE) | base::grepl(pattern = "^#", x = fill_color[ ! base::is.na(x = fill_color)], ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = TRUE)){
                 tempo_cat <- base::paste0(
                     error_text_start, 
                     "fill_color ARGUMENT MUST BE A VECTOR OF (1) HEXADECIMAL COLOR STRINGS STARTING BY #, OR (2) COLOR NAMES GIVEN BY grDevices::colors(), OR (3) INTEGER VALUES", 
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
-                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+                base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             }else{
-                fill_color <- base::as.character(fill_color) # remove class factor is any
+                fill_color <- base::as.character(x = fill_color) # remove class factor is any
             }
         }
     }
-    if( ! base::is.numeric(border_color)){
-        if( ! (border_color %in% grDevices::colors() | base::grepl(pattern = "^#", border_color))){
+    if( ! base::is.numeric(x = border_color)){
+        if( ! (border_color %in% grDevices::colors(distinct = FALSE) | base::grepl(pattern = "^#", x = border_color, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE))){
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "border_color ARGUMENT MUST BE (1) A HEXADECIMAL COLOR STRING STARTING BY #, OR (2) A COLOR NAME GIVEN BY grDevices::colors(), OR (3) AN INTEGER VALUE", 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }else{
-            border_color <- base::as.character(border_color) # remove class factor is any
+            border_color <- base::as.character(x = border_color) # remove class factor is any
         }
     }
     # legend name filling
-    if(base::is.null(legend_name)){
+    if(base::is.null(x = legend_name)){
         legend_name <- categ
     }
     # legend_name not NULL anymore
     # end legend name filling
     # verif of add
-    if( ! base::is.null(add)){
-        if( ! base::grepl(pattern = "^\\s*\\+", add)){ # check that the add string start by +
+    if( ! base::is.null(x = add)){
+        if( ! base::grepl(pattern = "^\\s*\\+", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){ # check that the add string start by +
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "add ARGUMENT MUST START WITH \"+\": ", 
-                base::paste(base::unique(add), collapse = " "),
+                base::paste(base::unique(x = add, incomparables = FALSE), sep = " ", collapse = " ", recycle0 = FALSE),
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             
-        }else if( ! base::grepl(pattern = "(ggplot2|lemon)\\s*::", add)){ #
+        }else if( ! base::grepl(pattern = "(ggplot2|lemon)\\s*::", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){ #
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "FOR EASIER FUNCTION DETECTION, add ARGUMENT MUST CONTAIN \"ggplot2::\" OR \"lemon::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", 
-                base::paste(base::unique(add), collapse = " "), 
+                base::paste(base::unique(x = add, incomparables = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
-        }else if( ! base::grepl(pattern = ")\\s*$", add)){ # check that the add string finished by )
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
+        }else if( ! base::grepl(pattern = ")\\s*$", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){ # check that the add string finished by )
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "add ARGUMENT MUST FINISH BY \")\": ", 
-                base::paste(base::unique(add), collapse = " "), 
+                base::paste(base::unique(x = add, incomparables = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
     }
     # end verif of add
     # management of add containing facet
     facet_categ <- NULL
-    if( ! base::is.null(add)){
+    if( ! base::is.null(x = add)){
         facet_check <- TRUE
-        tempo <- base::unlist(base::strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*")) #
-        tempo <- base::sub(x = tempo, pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap")
-        tempo <- base::sub(x = tempo, pattern = "^facet_grid", replacement = "ggplot2::facet_grid")
-        tempo <- base::sub(x = tempo, pattern = "^facet_rep", replacement = "lemon::facet_rep")
+        tempo <- base::unlist(x = base::strsplit(x = add, split = "\\s*\\+\\s*(ggplot2|lemon)\\s*::\\s*", fixed = FALSE, perl = FALSE, useBytes = FALSE), recursive = TRUE, use.names = TRUE) #
+        tempo <- base::sub(pattern = "^facet_wrap", replacement = "ggplot2::facet_wrap", x = tempo, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+        tempo <- base::sub(pattern = "^facet_grid", replacement = "ggplot2::facet_grid", x = tempo, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+        tempo <- base::sub(pattern = "^facet_rep", replacement = "lemon::facet_rep", x = tempo, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
 
-        if(base::any(base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap"))){
-            tempo1 <- base::suppressWarnings(base::eval(expr = base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap")], file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)))
-            facet_categ <- base::list(base::names(tempo1$params$facets)) # list of length 1
+        if(base::any(base::grepl(pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap", x = tempo, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
+            tempo1 <- base::suppressWarnings(expr = base::eval(expr = base::parse(text = tempo[base::grepl(pattern = "ggplot2::facet_wrap|lemon::facet_rep_wrap", x = tempo, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)], file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning")
+            facet_categ <- base::list(base::names(x = tempo1$params$facets)) # list of length 1
             tempo_text <- "facet_wrap OR facet_rep_wrap"
             facet_check <- FALSE
-        }else if(base::grepl(x = add, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")){
-            tempo1 <- base::suppressWarnings(base::eval(expr = base::parse(text = tempo[base::grepl(x = tempo, pattern = "ggplot2::facet_grid|lemon::facet_rep_grid")], file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)))
-            facet_categ <- base::list(base::c(base::names(tempo1$params$rows), base::names(tempo1$params$cols))) # list of length 1
+        }else if(base::grepl(pattern = "ggplot2::facet_grid|lemon::facet_rep_grid", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){
+            tempo1 <- base::suppressWarnings(expr = base::eval(expr = base::parse(text = tempo[base::grepl(pattern = "ggplot2::facet_grid|lemon::facet_rep_grid", x = tempo, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)], file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning")
+            facet_categ <- base::list(base::c(base::names(x = tempo1$params$rows), base::names(x = tempo1$params$cols))) # list of length 1
             tempo_text <- "facet_grid OR facet_rep_grid"
             facet_check <- FALSE
         }
-        if(facet_check == FALSE & ! base::all(facet_categ %in% base::names(data1))){ # WARNING: all(facet_categ %in% names(data1)) is TRUE when facet_categ is NULL
+        if(facet_check == FALSE & ! base::all(facet_categ %in% base::names(x = data1), na.rm = FALSE)){ # WARNING: all(facet_categ %in% names(data1)) is TRUE when facet_categ is NULL
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "DETECTION OF \"", 
                 tempo_text, 
                 "\" STRING IN THE add ARGUMENT BUT PROBLEM OF VARIABLE DETECTION (COLUMN NAMES OF data1)\nTHE DETECTED VARIABLES ARE:\n", 
-                base::paste(facet_categ, collapse = " "), 
-                "\nTHE data1 COLUMN NAMES ARE:\n", 
-                base::paste(base::names(data1), collapse = " "), 
+                base::paste(facet_categ, sep = " ", collapse = " ", recycle0 = FALSE),
+                "\nTHE data1 COLUMN NAMES ARE:\n",
+                base::paste(base::names(x = data1), sep = " ", collapse = " ", recycle0 = FALSE),
                 "\nPLEASE REWRITE THE add STRING AND RERUN",
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(base::is.null(warn), "", base::paste0("IN ADDITION\nWARNING", base::ifelse(warn_count > 1, "S", ""), ":\n\n", warn))), call. = FALSE)
+            base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
         }
     }
     # if facet_categ is not NULL, it is a list of length 1 now
@@ -1024,142 +1028,203 @@ gg_donut <- function(
 
     #### main code
 
-    data1 <- base::data.frame(data1, prop = data1[ , freq] / base::sum(data1[ , freq]))
+    data1 <- base::data.frame(data1, prop = data1[ , freq] / base::sum(data1[ , freq], na.rm = FALSE), check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE) # row.names argument not written on purpose: an explicit row.names = NULL would drop the data1 row names (data.frame() takes them from data1 only when row.names is missing)
     if(legend_add_prop == TRUE){
-        data1[ , categ] <- base::paste0(data1[ , categ], " (", base::round(data1$prop, 2), ")")
+        data1[ , categ] <- base::paste0(data1[ , categ], " (", base::round(x = data1$prop, digits = 2), ")", collapse = NULL, recycle0 = FALSE)
     }
-    data1[ , categ] <- base::factor(data1[ , categ], levels = data1[ , categ][base::order(data1$prop, decreasing = TRUE)]) # reorder so that the donut is according to decreasing proportion starting at the top in a clockwise direction
-    data1 <- data1[base::order(base::as.numeric(data1[ , categ]), decreasing = FALSE), ] # data1[ , categ] with rows in decreasing order, according to prop
-    data1 <- base::data.frame(data1, x = 0) # staked bar at the origin of the donut set to x = 0
+    tempo_levels <- data1[ , categ][base::order(data1$prop, na.last = TRUE, decreasing = TRUE, method = "auto")]
+    data1[ , categ] <- base::factor(x = data1[ , categ], levels = tempo_levels, labels = tempo_levels, exclude = NA, ordered = base::is.ordered(x = data1[ , categ]), nmax = NA) # reorder so that the donut is according to decreasing proportion starting at the top in a clockwise direction
+    data1 <- data1[base::order(base::as.numeric(x = data1[ , categ]), na.last = TRUE, decreasing = FALSE, method = "auto"), ] # data1[ , categ] with rows in decreasing order, according to prop
+    data1 <- base::data.frame(data1, x = 0, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE) # staked bar at the origin of the donut set to x = 0 # row.names argument not written on purpose (see above)
     tempo_gg_name <- "gg.indiv.plot."
     tempo_gg_count <- 0
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), value = base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(add)){""}else{add})))) # add added here to have the facets
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = base::eval(expr = base::parse(file = "", n = NULL, text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
     bar_width = 1
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_col(
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_col(
+        mapping = ggplot2::aes(x = .data[["x"]], y = .data[[freq]], fill = .data[[categ]]),
         data = data1,
-        mapping = ggplot2::aes_string(x = "x", y = freq, fill = categ), 
-        color = border_color, 
-        linewidth = border_size, 
-        width = bar_width
-    )) # size is size of the separation in the donut
+        stat = "identity",
+        position = "stack",
+        color = border_color,
+        linewidth = border_size,
+        width = bar_width,
+        just = 0.5,
+        lineend = "butt",
+        linejoin = "mitre",
+        na.rm = FALSE,
+        show.legend = NA,
+        inherit.aes = TRUE
+    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # size is size of the separation in the donut
     # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_text(
     #     ggplot2::aes(label = Freq), 
     #     position = ggplot2::position_stack(vjust = 0.5)
     # ))
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_x_continuous(
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_x_continuous(
+        name = ggplot2::waiver(),
+        breaks = ggplot2::waiver(),
+        minor_breaks = ggplot2::waiver(),
+        n.breaks = NULL,
+        labels = ggplot2::waiver(),
+        limits = base::c(- bar_width / 2 - (bar_width * hole_size) / (1 - hole_size), base::max(bar_width / 2, annotation_distance, na.rm = FALSE)),
         expand = base::c(0, 0), # prevent extra limits in x axis
-        limits = base::c(- bar_width / 2 - (bar_width * hole_size) / (1 - hole_size), base::max(bar_width / 2, annotation_distance))
-    )) # must be centered on x = 0
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ylim(base::c(0, base::max(base::cumsum(data1[ , freq])))))
+        oob = scales::censor,
+        na.value = NA_real_,
+        transform = "identity",
+        guide = ggplot2::waiver(),
+        position = "bottom",
+        sec.axis = ggplot2::waiver()
+    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # must be centered on x = 0 # trans argument not written because deprecated (replaced by transform)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ylim(base::c(0, base::max(base::cumsum(x = data1[ , freq]), na.rm = FALSE))), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     if(hole_text == TRUE){
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::annotate(
-            geom = "text", 
-            x = - bar_width / 2 - (bar_width * hole_size) / (1 - hole_size), 
-            y = 0, 
-            label = base::sum(data1[ , freq]), 
-            size = hole_text_size
-        ))
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotate(
+            geom = "text",
+            x = - bar_width / 2 - (bar_width * hole_size) / (1 - hole_size),
+            y = 0,
+            xmin = NULL,
+            xmax = NULL,
+            ymin = NULL,
+            ymax = NULL,
+            xend = NULL,
+            yend = NULL,
+            label = base::sum(data1[ , freq], na.rm = FALSE),
+            size = hole_text_size,
+            na.rm = FALSE
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::coord_polar(theta = "y", direction = -1, start = 0, clip = "on"))
-    if(base::is.null(fill_color) & ! base::is.null(fill_palette)){
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_fill_brewer(palette = fill_palette, name = legend_name))
-    }else if( ! base::is.null(fill_color)){
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_fill_manual(values = fill_color, name = legend_name, na.value = "white"))
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::coord_polar(theta = "y", direction = -1, start = 0, clip = "on"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    if(base::is.null(x = fill_color) & ! base::is.null(x = fill_palette)){
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_brewer(name = legend_name, type = "seq", palette = fill_palette, direction = 1, aesthetics = "fill"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    }else if( ! base::is.null(x = fill_color)){
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = fill_color, name = legend_name, aesthetics = "fill", breaks = ggplot2::waiver(), na.value = "white"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
     if(legend_name != ""){
-       base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::labs(fill = legend_name)) # title of the legend
+       base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::labs(fill = legend_name, title = ggplot2::waiver(), subtitle = ggplot2::waiver(), caption = ggplot2::waiver(), tag = ggplot2::waiver(), dictionary = ggplot2::waiver(), alt = ggplot2::waiver(), alt_insight = ggplot2::waiver()), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # title of the legend
     }
 
-    if( ! base::is.null(add)){ # if add is NULL, then = 0
-        if(base::grepl(pattern = "ggplot2\\s*::\\s*theme", add) == TRUE){
+    if( ! base::is.null(x = add)){ # if add is NULL, then = 0
+        if(base::grepl(pattern = "ggplot2\\s*::\\s*theme", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE) == TRUE){
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS ggplot2::theme_void() HAS BEEN INACTIVATED, SO THAT THE USER THEME CAN BE EFFECTIVE")
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+            tempo_warn <- base::paste0("(", warn_count,") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT\n-> INTERNAL GGPLOT2 THEME FUNCTIONS ggplot2::theme_void() HAS BEEN INACTIVATED, SO THAT THE USER THEME CAN BE EFFECTIVE", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
             add_check <- FALSE
         }else{
-            base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme_void())
-            base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme(
-                    legend.text = ggplot2::element_text(size = legend_text_size),
-                    legend.spacing.y = grid::unit(legend_box_space, 'mm')
-            ))
+            base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+            base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
+                    legend.text = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = legend_text_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE),
+                    legend.spacing.y = grid::unit(x = legend_box_space, units = 'mm', data = NULL),
+                    complete = FALSE,
+                    validate = TRUE
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         }
     }else{
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme_void())
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme(
-                legend.text = ggplot2::element_text(size = legend_text_size),
-                legend.spacing.y = grid::unit(legend_box_space, 'mm')
-        ))
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
+                legend.text = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = legend_text_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE),
+                legend.spacing.y = grid::unit(x = legend_box_space, units = 'mm', data = NULL),
+                complete = FALSE,
+                validate = TRUE
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::guides(
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::guides(
         fill = ggplot2::guide_legend(
+            title = ggplot2::waiver(),
+            theme = NULL,
+            position = NULL,
+            direction = NULL,
             override.aes = base::list(color = "white", size  = legend_box_size),
+            nrow = NULL,
+            ncol = NULL,
+            reverse = FALSE,
+            order = 0,
             byrow = TRUE
         )
-    )) # remove border of squares in legend
+    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # remove border of squares in legend
 
     # annotations on slices
-    if( ! base::is.null(annotation)){
-        tempo <- base::rev(base::cumsum(base::rev(data1[ , freq])))
-        data1 <- base::data.frame(data1, text_y = tempo - (tempo - base::c(tempo[-1], 0)) / 2)
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggrepel::geom_text_repel(
-            data = data1, 
-            mapping = ggplot2::aes_string(
-                x = "x", 
-                y = "text_y", 
-                label = annotation
-            ), 
-            size = annotation_size, 
-            force = annotation_force, 
-            force_pull = annotation_force_pull, 
+    if( ! base::is.null(x = annotation)){
+        tempo <- base::rev(x = base::cumsum(x = base::rev(x = data1[ , freq])))
+        data1 <- base::data.frame(data1, text_y = tempo - (tempo - base::c(tempo[-1], 0)) / 2, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE) # row.names argument not written on purpose (see above)
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggrepel::geom_text_repel(
+            mapping = ggplot2::aes(
+                x = .data[["x"]],
+                y = .data[["text_y"]],
+                label = .data[[annotation]]
+            ),
+            data = data1,
+            stat = "identity",
+            # position argument not written because ggrepel::geom_text_repel() forbids position and nudge_x/nudge_y together
+            parse = FALSE,
+            size = annotation_size,
+            box.padding = 0.25,
+            point.padding = 1e-06,
+            min.segment.length = 0.5,
+            arrow = NULL,
+            force = annotation_force,
+            force_pull = annotation_force_pull,
+            max.time = 0.5,
+            max.iter = 10000,
+            max.overlaps = base::getOption(x = "ggrepel.max.overlaps", default = 10),
             nudge_x = annotation_distance, # knowing that the bar is centered on x = 0 and that the right edge is at bar_width / 2, 0 means center of the slice, 0.5 means at the edge if bar_width = 1
-            show.legend = FALSE
-        ))
+            nudge_y = 0,
+            xlim = base::c(NA, NA),
+            ylim = base::c(NA, NA),
+            na.rm = FALSE,
+            show.legend = FALSE,
+            direction = "both",
+            seed = NA,
+            verbose = base::getOption(x = "verbose", default = FALSE),
+            inherit.aes = TRUE
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
     # end annotations on slices
 
     # legend management
-    # removal of part of the legend 
-    if( ! base::is.null(legend_limit)){
-        if(base::is.character(legend_limit)){ # must be all (checked above)
+    # removal of part of the legend
+    if( ! base::is.null(x = legend_limit)){
+        if(base::is.character(x = legend_limit)){ # must be all (checked above)
             legend_limit <- 0
-        }else if(base::sum(data1$prop >= legend_limit) == 0){
+        }else if(base::sum(data1$prop >= legend_limit, na.rm = FALSE) == 0){
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count,") THE legend_limit PARAMETER VALUE (", 
                 legend_limit, 
                 ") IS HIGHER THAN THE HIGHEST PROPORTION IN THE DONUT PLOT (", 
-                base::max(data1$prop), 
+                base::max(data1$prop, na.rm = FALSE),
                 ").\nLIMIT HAS BEEN CHANGED SO THAT THE LEGEND INDICATES THE 10 HIGHEST SECTORS MAX.", 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
             legend_limit <- NULL
         }
     }
-    if(base::is.null(legend_limit)){
-        if(base::length(data1$prop) >= 10){
-            legend_limit <- sort(data1$prop, decreasing = TRUE)[10]
+    if(base::is.null(x = legend_limit)){
+        if(base::length(x = data1$prop) >= 10){
+            legend_limit <- base::sort(x = data1$prop, decreasing = TRUE)[10]
         }else{
             legend_limit <- 0
         }
     }
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::scale_fill_discrete(
-            breaks = base::as.character(data1[ , categ][data1$prop >= legend_limit])
-        )
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_discrete(
+            breaks = base::as.character(x = data1[ , categ][data1$prop >= legend_limit]),
+            palette = NULL,
+            aesthetics = "fill",
+            na.value = "grey50",
+            type = base::getOption(x = "ggplot2.discrete.fill", default = NULL)
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE
     )
     # end removal of part of the legend
     if(legend_show == FALSE){ # must be here because must be before bef_final_plot
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::guides(fill = "none"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # inactivate the initial legend
     }
-    bef_final_plot <- base::suppressWarnings(base::suppressMessages(ggplot2::ggplot_build(plot = base::eval(expr = base::parse(text = base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)))))
-    if( ! base::is.null(legend_width)){
-        legend_plot <- base::suppressWarnings(base::suppressMessages(gg_get_legend(ggplot_built = bef_final_plot, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text))) # get legend
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::guides(fill = "none")) # inactivate the initial legend
-        if(base::is.null(legend_plot)){ # even if any(unlist(legend_disp)) is TRUE # plot value removed from the condition: the gtable must be built even when plot == FALSE (otherwise grid.arrange() fails on a NULL legend.plot and the pdf(NULL) device opened above is not closed)
-            legend_plot <- ggplot2::ggplot()+ggplot2::theme_void() # empty graph instead of legend
+    bef_final_plot <- base::suppressWarnings(expr = base::suppressMessages(expr = ggplot2::ggplot_build(plot = base::eval(expr = base::parse(text = base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))), classes = "message"), classes = "warning")
+    if( ! base::is.null(x = legend_width)){
+        legend_plot <- base::suppressWarnings(expr = base::suppressMessages(expr = saferGG::gg_get_legend(ggplot_built = bef_final_plot, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text), classes = "message"), classes = "warning") # get legend
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::guides(fill = "none"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # inactivate the initial legend
+        if(base::is.null(x = legend_plot)){ # even if any(unlist(legend_disp)) is TRUE # plot value removed from the condition: the gtable must be built even when plot == FALSE (otherwise grid.arrange() fails on a NULL legend.plot and the pdf(NULL) device opened above is not closed)
+            legend_plot <- ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL)) + ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF") # empty graph instead of legend
             warn_count <- warn_count + 1
-            tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (legend_show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend_width ARGUMENT\n")
-            warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+            tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (legend_show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend_width ARGUMENT\n", collapse = NULL, recycle0 = FALSE)
+            warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
         }
     }else{
         legend_plot <- NULL
@@ -1169,42 +1234,59 @@ gg_donut <- function(
     # title
     title_grob <- grid::textGrob(
         label = title,
-        x = grid::unit(0, "lines"), 
-        y = grid::unit(0, "lines"),
+        x = grid::unit(x = 0, units = "lines", data = NULL),
+        y = grid::unit(x = 0, units = "lines", data = NULL),
+        just = "centre",
         hjust = 0,
         vjust = 0,
-        gp = grid::gpar(fontsize = title_text_size)
+        rot = 0,
+        check.overlap = FALSE,
+        default.units = "npc",
+        name = NULL,
+        gp = grid::gpar(fontsize = title_text_size),
+        vp = NULL
     )
     # end title
 
     # drawing
-    grDevices::pdf(file = NULL)
+    grDevices::pdf(file = NULL) # other arguments not written because they have no default value (taken from grDevices::pdf.options())
     grob_save <- NULL
     main_plot <- base::eval(expr = base::parse(text = base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    main_plot_output <- base::suppressMessages(ggplot2::ggplot_build(main_plot))
-    main_grob <- base::suppressMessages(base::suppressWarnings(gridExtra::arrangeGrob(
-        main_plot, 
-        top = if(title == ""){" "}else{title_grob}, 
-        left = " ", 
-        right = " "
-    ))) # , left = " ", right = " " : trick to add margins in the plot. padding =  unit(0.5, "inch") is for top margin above the title
-    if( ! base::is.null(legend_width)){
-        grob_save <- base::suppressMessages(base::suppressWarnings(gridExtra::grid.arrange(main_grob, legend_plot, ncol=2, widths=base::c(1, legend_width)))) # assemble grobs, ggplot, gtable into a gtable that defines the positions of the different elements (as grobs)
+    main_plot_output <- base::suppressMessages(expr = ggplot2::ggplot_build(plot = main_plot), classes = "message")
+    main_grob <- base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::arrangeGrob(
+        grobs = base::list(main_plot),
+        vp = NULL,
+        name = "arrange",
+        as.table = TRUE,
+        respect = FALSE,
+        clip = "off",
+        nrow = NULL,
+        ncol = NULL,
+        widths = NULL,
+        heights = NULL,
+        top = if(title == ""){" "}else{title_grob},
+        bottom = NULL,
+        left = " ",
+        right = " ",
+        padding = grid::unit(x = 0.5, units = "line", data = NULL)
+    ), classes = "warning"), classes = "message") # , left = " ", right = " " : trick to add margins in the plot. padding =  unit(0.5, "inch") is for top margin above the title # layout_matrix argument not written because it has no default value
+    if( ! base::is.null(x = legend_width)){
+        grob_save <- base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(main_grob, legend_plot, ncol = 2, widths = base::c(1, legend_width), newpage = TRUE), classes = "warning"), classes = "message") # assemble grobs, ggplot, gtable into a gtable that defines the positions of the different elements (as grobs)
     }else{
-        grob_save <- base::suppressMessages(base::suppressWarnings(base::print(main_grob)))
+        grob_save <- base::suppressMessages(expr = base::suppressWarnings(expr = base::print(x = main_grob), classes = "warning"), classes = "message")
     }
-    grDevices::dev.off() # inactivate the pdf(NULL) above
+    grDevices::dev.off(which = grDevices::dev.cur()) # inactivate the pdf(NULL) above
     if(plot == TRUE){
-        gridExtra::grid.arrange(grob_save) # plot a gtable (grob)
+        gridExtra::grid.arrange(grob_save, newpage = TRUE) # plot a gtable (grob)
     }else{
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count,") PLOT NOT SHOWN AS REQUESTED")
-        warn <- base::paste0(base::ifelse(base::is.null(warn), tempo_warn, base::paste0(warn, "\n\n", tempo_warn)))
+        tempo_warn <- base::paste0("(", warn_count,") PLOT NOT SHOWN AS REQUESTED", collapse = NULL, recycle0 = FALSE)
+        warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
     }
     # end drawing
 
     #### warning output
-    if(warn_print == TRUE & ! base::is.null(warn)){
+    if(warn_print == TRUE & ! base::is.null(x = warn)){
         base::on.exit(
             expr = base::warning(
                 base::paste0(
@@ -1221,7 +1303,7 @@ gg_donut <- function(
 
     # output
     if(return == TRUE){
-        if(base::is.null(base::unlist(removed_row_nb))){
+        if(base::is.null(x = base::unlist(x = removed_row_nb, recursive = TRUE, use.names = TRUE))){
             removed_row_nb <- NULL
             removed_rows <- NULL
         }
@@ -1234,29 +1316,29 @@ gg_donut <- function(
             panel = facet_categ, 
             axes = base::list(
                 x.range = tempo$x.range, 
-                x.labels = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{ # is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
+                x.labels = if(base::is.null(x = base::attributes(x = tempo$x$breaks))){tempo$x$breaks}else{ # is.null(attributes(tempo$x$breaks)) test if it is number (TRUE) or character (FALSE)
                     # nocov start (unreachable: the polar coordinate panel_params have no x component, so attributes(tempo$x$breaks) is always NULL here)
                     tempo$x$scale$get_labels()
                     # nocov end
                 }, 
-                x.positions = if(base::is.null(base::attributes(tempo$x$breaks))){tempo$x$breaks}else{
+                x.positions = if(base::is.null(x = base::attributes(x = tempo$x$breaks))){tempo$x$breaks}else{
                     # nocov start (unreachable: idem as x.labels)
-                    base::unlist(base::attributes(tempo$x$breaks))
+                    base::unlist(x = base::attributes(x = tempo$x$breaks), recursive = TRUE, use.names = TRUE)
                     # nocov end
                 }, 
                 y.range = tempo$y.range, 
-                y.labels = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{
+                y.labels = if(base::is.null(x = base::attributes(x = tempo$y$breaks))){tempo$y$breaks}else{
                     # nocov start (unreachable: the polar coordinate panel_params have no y component, so attributes(tempo$y$breaks) is always NULL here)
                     tempo$y$scale$get_labels()
                     # nocov end
                 }, 
-                y.positions = if(base::is.null(base::attributes(tempo$y$breaks))){tempo$y$breaks}else{
+                y.positions = if(base::is.null(x = base::attributes(x = tempo$y$breaks))){tempo$y$breaks}else{
                     # nocov start (unreachable: idem as y.labels)
-                    base::unlist(base::attributes(tempo$y$breaks))
+                    base::unlist(x = base::attributes(x = tempo$y$breaks), recursive = TRUE, use.names = TRUE)
                     # nocov end
                 }
             ), 
-            warn = base::paste0("\n", warn, "\n\n"), 
+            warn = base::paste0("\n", warn, "\n\n", collapse = NULL, recycle0 = FALSE),
             ggplot = if(return_ggplot == TRUE){main_plot}else{NULL}, # main plot -> plots the graph if return == TRUE
             gtable = if(return_gtable == TRUE){grob_save}else{NULL} # gtable of the full graph (main + title + legend)
         )

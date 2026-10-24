@@ -72,6 +72,12 @@ install.packages("remotes")
 remotes::install_github("https://github.com/safer-r/saferGG") # or open R as admin and remotes::install_github("https://github.com/safer-r/saferGG", lib = "C:/Program Files/R/R-4.6.0/library")
 ```
 
+The *saferGraph* and *saferTool* dependencies are installed from GitHub (`Remotes:` field of the DESCRIPTION file). If older versions of them are already installed, update them too, otherwise *saferGG* functions can fail (e.g., `invalid argument type` in `gg_box()`):
+
+```r
+remotes::install_github(c("https://github.com/safer-r/saferTool", "https://github.com/safer-r/saferGraph", "https://github.com/safer-r/saferGG"), upgrade = "always")
+```
+
 Older versions can be installed like this:
 
 ```r

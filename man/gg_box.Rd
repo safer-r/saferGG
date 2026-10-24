@@ -20,7 +20,7 @@ gg_box(
   box_mean = TRUE,
   box_whisker_kind = "std",
   box_whisker_width = 0,
-  dot_color = grDevices::grey(0.25),
+  dot_color = grDevices::grey(level = 0.25),
   dot_categ = NULL,
   dot_categ_class_order = NULL,
   dot_legend_name = NULL,
@@ -87,7 +87,7 @@ gg_box(
 
 \item{box_line_size}{single numeric value of line width of boxes and whiskers in mm.}
 
-\item{box_notch}{logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences.}
+\item{box_notch}{logical. Notched boxplot? It TRUE, display notched boxplot, notches corresponding approximately to the 95\% confidence interval of the median (the notch interval is exactly 1.58 x Inter Quartile Range (IQR) / sqrt(n), with n the number of values that made the box). If notch intervals between two boxes do not overlap, it can be interpreted as significant median differences.}
 
 \item{box_alpha}{single numeric value (from 0 to 1) of box transparency (full transparent to full opaque, respectively). To remove boxplots, use box_alpha = 0.}
 
@@ -147,7 +147,7 @@ gg_box(
 
 \item{stat_size}{numeric value of the stat font size in mm. Ignored if stat_pos is NULL.}
 
-\item{stat_dist}{numeric value of the stat distance in percentage of the y-axis range (stat_dist = 5 means move the number displayed at 5% of the y-axis range). Ignored if stat_pos is NULL or "top".}
+\item{stat_dist}{numeric value of the stat distance in percentage of the y-axis range (stat_dist = 5 means move the number displayed at 5\% of the y-axis range). Ignored if stat_pos is NULL or "top".}
 
 \item{stat_angle}{integer value of the angle of stat, using the same rules as in ggplot2. Positive values for counterclockwise rotation: 0 for horizontal, 90 for vertical, 180 for upside down etc. Negative values for clockwise rotation: 0 for horizontal, -90 for vertical, -180 for upside down etc.}
 
@@ -184,10 +184,6 @@ gg_box(
 \item{lib_path}{Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{c(lib_path, .libPaths())}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default) or if the \code{safer_check} argument is \code{FALSE}: only the pathways specified by the current \code{.libPaths()} are used for package calling.}
 
 \item{error_text}{Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}.}
-
-\item{y_second_tick_positions}{coordinates of secondary ticks (only if y_second_tick_nb argument is non-NULL or if y_log argument is different from "no").}
-
-\item{y_second_tick_values}{values of secondary ticks. NULL except if y_second_tick_nb argument is non-NULL or if y_log argument is different from "no").}
 }
 \value{
 A boxplot if plot argument is TRUE.

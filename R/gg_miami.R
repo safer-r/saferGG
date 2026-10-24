@@ -26,8 +26,8 @@
 #' \dontrun{
 #' gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv", chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom_y_column = "AF")
 #' }
+#' @importFrom ggplot2 .data
 #' @importFrom ggplot2 aes
-#' @importFrom ggplot2 aes_string
 #' @importFrom ggplot2 annotation_custom
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 element_line
@@ -46,13 +46,17 @@
 #' @importFrom ggplot2 scale_y_continuous
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 waiver
 #' @importFrom grid gpar
 #' @importFrom grid linesGrob
+#' @importFrom grid unit
 #' @importFrom grid unit.pmax
 #' @importFrom gridExtra grid.arrange
+#' @importFrom grDevices dev.cur
 #' @importFrom grDevices dev.off
 #' @importFrom grDevices png
 #' @importFrom scales math_format
+#' @importFrom scales muted
 #' @importFrom scales rescale_none
 #' @importFrom scales trans_breaks
 #' @importFrom scales trans_format
@@ -406,8 +410,7 @@ gg_miami <- function(
         saferDev:::.pack_and_function_check(
             fun = base::c(
                 # functions required in this code
-                "ggplot2::aes", 
-                "ggplot2::aes_string", 
+                "ggplot2::aes",
                 "ggplot2::annotation_custom", 
                 "ggplot2::element_blank", 
                 "ggplot2::element_line", 
@@ -425,14 +428,18 @@ gg_miami <- function(
                 "ggplot2::scale_x_continuous", 
                 "ggplot2::scale_y_continuous", 
                 "ggplot2::theme", 
-                "ggplot2::theme_bw", 
-                "grid::gpar", 
-                "grid::linesGrob", 
-                "grid::unit.pmax", 
+                "ggplot2::theme_bw",
+                "ggplot2::waiver",
+                "grid::gpar",
+                "grid::linesGrob",
+                "grid::unit",
+                "grid::unit.pmax",
                 "gridExtra::grid.arrange", 
-                "grDevices::dev.off", 
-                "grDevices::png", 
-                "scales::math_format", 
+                "grDevices::dev.cur",
+                "grDevices::dev.off",
+                "grDevices::png",
+                "scales::math_format",
+                "scales::muted",
                 "scales::rescale_none", 
                 "scales::trans_breaks", 
                 "scales::trans_format", 
@@ -478,31 +485,31 @@ gg_miami <- function(
     tempo <- saferDev::arg_check(data = file, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = chr, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = top_y_column, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(bottom_y_column)){
+    if( ! base::is.null(x = bottom_y_column)){
         tempo <- saferDev::arg_check(data = bottom_y_column, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(x_lim)){
+    if( ! base::is.null(x = x_lim)){
         tempo <- saferDev::arg_check(data = x_lim, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     tempo <- saferDev::arg_check(data = vgrid, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(color_column)){
+    if( ! base::is.null(x = color_column)){
         tempo <- saferDev::arg_check(data = color_column, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(dot_border_color)){
+    if( ! base::is.null(x = dot_border_color)){
         tempo <- saferDev::arg_check(data = dot_border_color, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(y_lim1)){
+    if( ! base::is.null(x = y_lim1)){
         tempo <- saferDev::arg_check(data = y_lim1, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(y_lim2)){
+    if( ! base::is.null(x = y_lim2)){
         tempo <- saferDev::arg_check(data = y_lim2, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     tempo <- saferDev::arg_check(data = reverse1, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = reverse2, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(y_threshold1)){
+    if( ! base::is.null(x = y_threshold1)){
         tempo <- saferDev::arg_check(data = y_threshold1, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(y_threshold2)){
+    if( ! base::is.null(x = y_threshold2)){
         tempo <- saferDev::arg_check(data = y_threshold2, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = TRUE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
     tempo <- saferDev::arg_check(data = y_log1, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
@@ -596,7 +603,7 @@ gg_miami <- function(
     dev_list <- grDevices::dev.list() 
     base::on.exit(
         expr = while(base::length(x = grDevices::dev.list()) > base::length(x = dev_list) & grDevices::dev.cur() != 1){
-            grDevices::dev.off() # close the devices opened by the function, in case of error after the device opening
+            grDevices::dev.off(which = grDevices::dev.cur()) # close the devices opened by the function, in case of error after the device opening
         }, 
         add = TRUE, 
         after = TRUE
@@ -627,7 +634,7 @@ gg_miami <- function(
         )
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }else{
-        obs <- utils::read.table(file = file, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
+        obs <- utils::read.table(file = file, header = TRUE, sep = "\t", quote = "\"'", dec = ".", numerals = "allow.loss", as.is = TRUE, tryLogical = TRUE, na.strings = "NA", colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = FALSE, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = "", allowEscapes = FALSE, flush = FALSE, stringsAsFactors = FALSE, fileEncoding = "", encoding = "unknown", skipNul = FALSE)
         if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0){
             empty_obs <- FALSE
         }else{
@@ -644,30 +651,30 @@ gg_miami <- function(
         )
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }else{
-        chr <- utils::read.table(file = chr, sep = "\t", stringsAsFactors = FALSE, header = TRUE, comment.char = "")
+        chr <- utils::read.table(file = chr, header = TRUE, sep = "\t", quote = "\"'", dec = ".", numerals = "allow.loss", as.is = TRUE, tryLogical = TRUE, na.strings = "NA", colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = FALSE, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = "", allowEscapes = FALSE, flush = FALSE, stringsAsFactors = FALSE, fileEncoding = "", encoding = "unknown", skipNul = FALSE)
     }
     # end data import
     # modifications of imported tables
     is_whole <- FALSE
     xmin_plot <- 0 # coordinates for plotting 
     if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0){
-        if(base::any(base::grepl(x = obs$CHROM, pattern = "chr"))){
-            obs$CHROM <- base::sub(x = obs$CHROM, pattern = "chr", replacement = "")
+        if(base::any(base::grepl(pattern = "chr", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
+            obs$CHROM <- base::sub(pattern = "chr", replacement = "", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
         }
-        if(base::any(base::grepl(x = obs$CHROM, pattern = "^X$"))){
-            obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^X$")] <- "23"
+        if(base::any(base::grepl(pattern = "^X$", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
+            obs$CHROM[base::grepl(pattern = "^X$", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)] <- "23"
         }
-        if(base::any(base::grepl(x = obs$CHROM, pattern = "^Y$"))){
-            obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^Y$")] <- "24"
+        if(base::any(base::grepl(pattern = "^Y$", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
+            obs$CHROM[base::grepl(pattern = "^Y$", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)] <- "24"
         }
-        if(base::any(base::grepl(x = obs$CHROM, pattern = "^MT$|^M$"))){
-            obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^MT$|^M$")] <- "25"
+        if(base::any(base::grepl(pattern = "^MT$|^M$", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
+            obs$CHROM[base::grepl(pattern = "^MT$|^M$", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)] <- "25"
         }
-        if(base::any( ! base::grepl(x = obs$CHROM, pattern = "\\d"))){
+        if(base::any( ! base::grepl(pattern = "\\d", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
             tempo_cat <- base::paste0(
                 error_text_start, 
                 "THE chr COLUMN OF THE .tsv FILE HAS LETTERS IN IT, OTHER THAN X, Y and MT:\n", 
-                base::paste0(obs$CHROM[base::grepl(x = obs$CHROM, pattern = "^\\d")], collapse = "\n", recycle0 = FALSE), 
+                base::paste0(obs$CHROM[base::grepl(pattern = "^\\d", x = obs$CHROM, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)], collapse = "\n", recycle0 = FALSE), 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
@@ -676,23 +683,23 @@ gg_miami <- function(
             obs$CHROM <- base::as.integer(x = obs$CHROM)
         }
         # add the chr info to obs
-        obs <- base::data.frame(obs, coord = base::vector(mode = "numeric", length = base::nrow(x = obs)), stringsAsFactors = TRUE)
+        obs <- base::data.frame(obs, coord = base::vector(mode = "numeric", length = base::nrow(x = obs)), row.names = NULL, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = TRUE)
         for(i1 in chr$CHR_NB){
             obs$coord[obs$CHROM == i1] <- obs$POS[obs$CHROM == i1] + chr$LENGTH_CUMUL_TO_ADD[i1]
         }
         # preparation of the x coordinates: three solutions: 1) whole object (see above), 2) single chromo "chr7" or "chr7:0-15", 3) several chromo chr7, chr8" or "chr7:0-15, chr8" or "chr7:0-15, chr8:0-20"
         # The idea is to select rows of chr and potentially restrict some chr limits
-        if( ! base::is.null(x_lim)){
+        if( ! base::is.null(x = x_lim)){
             if(x_lim == "whole"){ #at that stage, x_lim is a single character
                 is_whole <- TRUE
             }else{
-                tempo1 <- base::strsplit(x = x_lim, split = ",")[[1]]
-                tempo1 <- base::gsub(x = tempo1, pattern = " ", replacement = "")
+                tempo1 <- base::strsplit(x = x_lim, split = ",", fixed = FALSE, perl = FALSE, useBytes = FALSE)[[1]]
+                tempo1 <- base::gsub(pattern = " ", replacement = "", x = tempo1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
                 chr_x_lim <- tempo1
                 coord_x_lim <- NULL
                 xmin_x_lim <- NULL
                 xmax_x_lim <- NULL
-                if( ! base::all(base::grepl(x = tempo1, pattern = "^chr.+"))){
+                if( ! base::all(base::grepl(pattern = "^chr.+", x = tempo1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
                     tempo_cat <- base::paste0(
                         error_text_start, 
                         "THE x_lim ARGUMENT MUST START WITH \"chr\" IF NOT \"whole\":\n", 
@@ -702,9 +709,9 @@ gg_miami <- function(
                     )
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
                 }
-                if(base::any(base::grepl(x = tempo1, pattern = ":"))){
+                if(base::any(base::grepl(pattern = ":", x = tempo1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){
                     # means that there are coordinates
-                    if( ! base::all(base::grepl(x = tempo1, pattern = "-"))){ # normally no NA with is.null()
+                    if( ! base::all(base::grepl(pattern = "-", x = tempo1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){ # normally no NA with is.null()
                         tempo_cat <- base::paste0(
                             error_text_start, 
                             "THE x_lim ARGUMENT MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", 
@@ -714,16 +721,16 @@ gg_miami <- function(
                         )
                         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
                     }
-                    tempo2 <- base::strsplit(x = tempo1, split = ":")
-                    chr_x_lim <- base::sapply(X = tempo2, FUN = function(x){x[1]})
-                    chr_x_lim <- base::gsub(x = chr_x_lim, pattern = " ", replacement = "")
-                    coord_x_lim <- base::sapply(X = tempo2, FUN = function(x){x[2]})
-                    tempo3 <- base::strsplit(x = coord_x_lim, split = "-")
-                    xmin_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[1]})
-                    xmin_x_lim <- base::gsub(x = xmin_x_lim, pattern = " ", replacement = "")
-                    xmax_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[2]})
-                    xmax_x_lim <- base::gsub(x = xmax_x_lim, pattern = " ", replacement = "")
-                    if(base::any(base::grepl(x = xmin_x_lim, pattern = "\\D")) | base::any(base::grepl(x = xmax_x_lim, pattern = "\\D"))){ # normally no NA with is.null()
+                    tempo2 <- base::strsplit(x = tempo1, split = ":", fixed = FALSE, perl = FALSE, useBytes = FALSE)
+                    chr_x_lim <- base::sapply(X = tempo2, FUN = function(x){x[1]}, simplify = TRUE, USE.NAMES = TRUE)
+                    chr_x_lim <- base::gsub(pattern = " ", replacement = "", x = chr_x_lim, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+                    coord_x_lim <- base::sapply(X = tempo2, FUN = function(x){x[2]}, simplify = TRUE, USE.NAMES = TRUE)
+                    tempo3 <- base::strsplit(x = coord_x_lim, split = "-", fixed = FALSE, perl = FALSE, useBytes = FALSE)
+                    xmin_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[1]}, simplify = TRUE, USE.NAMES = TRUE)
+                    xmin_x_lim <- base::gsub(pattern = " ", replacement = "", x = xmin_x_lim, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+                    xmax_x_lim <- base::sapply(X = tempo3, FUN = function(x){x[2]}, simplify = TRUE, USE.NAMES = TRUE)
+                    xmax_x_lim <- base::gsub(pattern = " ", replacement = "", x = xmax_x_lim, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)
+                    if(base::any(base::grepl(pattern = "\\D", x = xmin_x_lim, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE) | base::any(base::grepl(pattern = "\\D", x = xmax_x_lim, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE), na.rm = FALSE)){ # normally no NA with is.null()
                         tempo_cat <- base::paste0(
                             error_text_start, 
                             "THE x_lim ARGUMENT MUST BE WRITTEN LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\" IF COORDINATES ARE SPECIFIED: \n", 
@@ -735,7 +742,7 @@ gg_miami <- function(
                     }else{
                         xmin_x_lim <- base::as.integer(x = xmin_x_lim)
                         xmax_x_lim <- base::as.integer(x = xmax_x_lim)
-                        if(base::any(xmax_x_lim - xmin_x_lim < 0)){
+                        if(base::any(xmax_x_lim - xmin_x_lim < 0, na.rm = FALSE)){
                             tempo_cat <- base::paste0(
                                 error_text_start, 
                                 "THE x_lim ARGUMENT MUST BE WRITTEN WITH ORDERED COORDINATES, LIKE THIS \"chr7:0-147000000, chr10:1000000-2000000\", IF COORDINATES ARE SPECIFIED: \n", 
@@ -748,7 +755,7 @@ gg_miami <- function(
                     }
                 }
                 # modification of the chr object for restricted plotting
-                tempo_coord <- base::which(x = chr$CHR %in% chr_x_lim) # which rows of chr to take for plotting
+                tempo_coord <- base::which(x = chr$CHR %in% chr_x_lim, arr.ind = FALSE, useNames = TRUE) # which rows of chr to take for plotting
                 if(base::length(x = tempo_coord) == 0){
                     tempo_cat <- base::paste0(
                         error_text_start, 
@@ -759,7 +766,7 @@ gg_miami <- function(
                     )
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
                 }
-                if(base::any(chr$BP_LENGTH[tempo_coord] - xmax_x_lim < 0)){
+                if(base::any(chr$BP_LENGTH[tempo_coord] - xmax_x_lim < 0, na.rm = FALSE)){
                     tempo_cat <- base::paste0(
                         error_text_start, 
                         "THE x_lim ARGUMENT HAS AT LEAST ONE COORDINATE THAT IS ABOVE THE MAX LENGTH OF THE CHROMO.\nCHROMO LENGTH: ", 
@@ -775,7 +782,7 @@ gg_miami <- function(
                     xmin_plot <- chr$LENGTH_CUMUL[tempo_coord[1] - 1]
                 }
                 chr <- chr[tempo_coord[1]:tempo_coord[base::length(x = tempo_coord)], ]
-                if( ! base::is.null(coord_x_lim)){
+                if( ! base::is.null(x = coord_x_lim)){
                     xmin_plot <- xmin_plot + xmin_x_lim[1] # the left boundary of the plot is corrected
                     chr$LENGTH_CUMUL[base::nrow(x = chr)] <- chr$LENGTH_CUMUL[base::nrow(x = chr)] - chr$BP_LENGTH[base::nrow(x = chr)] + xmax_x_lim[base::length(x = xmax_x_lim)] # the right boundary of the plot is corrected
                     chr$CHR_NAME_POS <- (base::c(xmin_plot, chr$LENGTH_CUMUL[-base::nrow(x = chr)]) + chr$LENGTH_CUMUL) / 2 # the positions of names in the x-axis of the plot are corrected
@@ -836,90 +843,138 @@ gg_miami <- function(
     # plotting
     # fun_open(width = 12, height = 4, pdf.name = base::paste0("plot_read_length_", kind)) # must be systematically opened for main.nf
     png_size <- 1800 # px
-    grDevices::png(filename = "miami.png", width = png_size * 2, height = png_size, units = "px", res = 300)
+    grDevices::png(filename = "miami.png", width = png_size * 2, height = png_size, units = "px", pointsize = 12, bg = "white", res = 300, family = "sans", symbolfamily = "default")
     if(empty_obs == TRUE){
-        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE", lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
-    }else if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0 & ! base::is.null(x_lim)){
+        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+    }else if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0 & ! base::is.null(x = x_lim)){
         marging <- (chr$LENGTH_CUMUL[base::nrow(x = chr)] - xmin_plot) * 0.005 # chr$LENGTH_CUMUL and xmin_plot have been corrected depending on x_lim boundaries
-        y_min_pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::min(x = obs[ , top_y_column], na.rm = TRUE), no = base::min(x = y_lim1))
-        y_max_pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::max(x = obs[ , top_y_column], na.rm = TRUE), no = base::max(x = y_lim1))
+        y_min_pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::min(obs[ , top_y_column], na.rm = TRUE), no = base::min(y_lim1, na.rm = FALSE))
+        y_max_pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::max(obs[ , top_y_column], na.rm = TRUE), no = base::max(y_lim1, na.rm = FALSE))
         tempo_gg_name <- "gg.indiv.plot."
         tempo_gg_count <- 0
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = obs, mapping = ggplot2::aes_string(x = "coord", y = top_y_column)))
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = obs, mapping = ggplot2::aes(x = .data[["coord"]], y = .data[[top_y_column]]), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         if(vgrid == TRUE){
             base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_vline(
+                mapping = NULL, 
+                data = NULL, 
+                stat = "identity", 
+                position = "identity", 
+                na.rm = FALSE, 
+                show.legend = NA, 
+                inherit.aes = FALSE, 
                 xintercept = base::c(xmin_plot, chr$LENGTH_CUMUL), 
                 linewidth = 0.25, 
                 color = "grey80"
-            ))
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         }
-        if( ! base::is.null(y_threshold1)){
+        if( ! base::is.null(x = y_threshold1)){
             base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+                mapping = NULL, 
+                data = NULL, 
+                stat = "identity", 
+                position = "identity", 
+                na.rm = FALSE, 
+                show.legend = NA, 
+                inherit.aes = FALSE, 
                 yintercept = y_threshold1, 
                 linetype = "22", 
                 linewidth = 0.25, 
                 color = "red"
-            ))
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         }
         if(base::is.null(x = color_column)){
             if(base::is.null(x = dot_border_color)){
                 base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                    mapping = ggplot2::aes(color = base::as.factor(x = CHROM)), 
+                    data = NULL, 
+                    stat = "identity", 
+                    position = "identity", 
+                    na.rm = FALSE, 
+                    show.legend = NA, 
+                    inherit.aes = TRUE, 
+                    mapping = ggplot2::aes(color = base::as.factor(x = .data[["CHROM"]])), 
                     alpha = 1, 
                     pch = 16, 
                     size = 1
-                ))
-                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25), aesthetics = "colour", breaks = ggplot2::waiver(), na.value = "grey50"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }else{
                 base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                    mapping = ggplot2::aes(fill = base::as.factor(x = CHROM)), 
+                    data = NULL, 
+                    stat = "identity", 
+                    position = "identity", 
+                    na.rm = FALSE, 
+                    show.legend = NA, 
+                    inherit.aes = TRUE, 
+                    mapping = ggplot2::aes(fill = base::as.factor(x = .data[["CHROM"]])), 
                     alpha = 1, 
                     color = dot_border_color, 
                     pch = 21, 
                     size = 1
-                ))
-                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25), aesthetics = "fill", breaks = ggplot2::waiver(), na.value = "grey50"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
         }else{
             if(base::is.null(x = dot_border_color)){
                 base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                    mapping = ggplot2::aes_string(color = color_column), 
+                    data = NULL, 
+                    stat = "identity", 
+                    position = "identity", 
+                    na.rm = FALSE, 
+                    show.legend = NA, 
+                    inherit.aes = TRUE, 
+                    mapping = ggplot2::aes(color = .data[[color_column]]), 
                     alpha = 1, 
                     pch = 16, 
                     size = 1
-                ))
-                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_gradient2())
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_gradient2(name = ggplot2::waiver(), low = scales::muted(colour = "red", l = 30, c = 70), mid = "white", high = scales::muted(colour = "blue", l = 30, c = 70), midpoint = 0, space = "Lab", na.value = "grey50", transform = "identity", guide = "colourbar", aesthetics = "colour"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }else{
                 base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                    mapping = ggplot2::aes_string(fill = color_column), 
+                    data = NULL, 
+                    stat = "identity", 
+                    position = "identity", 
+                    na.rm = FALSE, 
+                    show.legend = NA, 
+                    inherit.aes = TRUE, 
+                    mapping = ggplot2::aes(fill = .data[[color_column]]), 
                     alpha = 1, 
                     color = dot_border_color, 
                     pch = 21, 
                     size = 1
-                ))
-                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2())
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2(name = ggplot2::waiver(), low = scales::muted(colour = "red", l = 30, c = 70), mid = "white", high = scales::muted(colour = "blue", l = 30, c = 70), midpoint = 0, space = "Lab", na.value = "grey50", transform = "identity", guide = "colourbar", aesthetics = "fill"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
         }
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(
             label = base::paste0(
                 "x_lim: ", 
                 base::ifelse(test = is_whole, yes = "whole genome", no = x_lim), 
-                base::ifelse(test = ! base::is.null(y_threshold1), yes = base::paste0(", top threshold: ", y_threshold1), no = ""), 
-                base::ifelse(test = ! (base::is.null(y_threshold2) & base::is.null(bottom_y_column)), yes = base::paste0(", bottom threshold: ", y_threshold2), no = ""), 
+                base::ifelse(test = ! base::is.null(x = y_threshold1), yes = base::paste0(", top threshold: ", y_threshold1, collapse = NULL, recycle0 = FALSE), no = ""), 
+                base::ifelse(test = ! (base::is.null(x = y_threshold2) & base::is.null(x = bottom_y_column)), yes = base::paste0(", bottom threshold: ", y_threshold2, collapse = NULL, recycle0 = FALSE), no = ""), 
                 base::ifelse(test = y_log1 == TRUE, yes = ", top y-axis: log10", no = ""), 
-                base::ifelse(test = y_log2 == TRUE, yes = ", bottom y-axis: log10", no = "")
-            )
-        ))
+                base::ifelse(test = y_log2 == TRUE, yes = ", bottom y-axis: log10", no = ""), 
+                collapse = NULL, 
+                recycle0 = FALSE
+            ), 
+            subtitle = ggplot2::waiver()
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_x_continuous(
+            minor_breaks = ggplot2::waiver(), 
+            n.breaks = NULL, 
+            na.value = NA_real_, 
+            transform = "identity", 
+            guide = ggplot2::waiver(), 
+            position = "bottom", 
+            sec.axis = ggplot2::waiver(), 
             name = "CHR", 
             expand = base::c(0, 0), # remove space after after axis limits
             oob = scales::rescale_none, 
             labels = chr$CHR_NAME, 
             breaks = chr$CHR_NAME_POS, 
-            limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL) + marging)
-        ))
+            limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL, na.rm = FALSE) + marging)
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         if(y_log1 == TRUE){
-            if(base::any(obs[ , top_y_column] <= 0)){
+            if(base::any(obs[ , top_y_column] <= 0, na.rm = FALSE)){
                 tempo_cat <- base::paste0(
                     error_text_start, 
                     "THE y_log1 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ",
@@ -931,122 +986,191 @@ gg_miami <- function(
                 base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
             }else{
                 base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                    name = ggplot2::waiver(), 
+                    minor_breaks = ggplot2::waiver(), 
+                    n.breaks = NULL, 
+                    na.value = NA_real_, 
+                    guide = ggplot2::waiver(), 
+                    position = "left", 
+                    sec.axis = ggplot2::waiver(), 
                     expand = base::c(0, 0), # remove space after after axis limits
                     limits = if(reverse1 == TRUE){base::c(y_max_pos, y_min_pos)}else{base::c(y_min_pos, y_max_pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
                     oob = scales::rescale_none, 
-                    trans = "log10", 
-                    breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}), 
-                    labels = scales::trans_format(trans = "log10", format = scales::math_format(10^.x))
-                ))
+                    transform = "log10", 
+                    breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}, n = 5), 
+                    labels = scales::trans_format(trans = "log10", format = scales::math_format(expr = 10^.x, format = base::force))
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::annotation_logticks(outside = TRUE))
             }
         }else{
             base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                name = ggplot2::waiver(), 
+                breaks = ggplot2::waiver(), 
+                minor_breaks = ggplot2::waiver(), 
+                n.breaks = NULL, 
+                labels = ggplot2::waiver(), 
+                na.value = NA_real_, 
+                guide = ggplot2::waiver(), 
+                position = "left", 
+                sec.axis = ggplot2::waiver(), 
                 expand = base::c(0, 0), # remove space after after axis limits
                 limits = if(reverse1 == TRUE){base::c(y_max_pos, y_min_pos)}else{base::c(y_min_pos, y_max_pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
                 oob = scales::rescale_none, 
-                trans = "identity"
-            ))
+                transform = "identity"
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         }
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw())
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = "white", accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
-            plot.title = ggplot2::element_text(size = 8), 
+            plot.title = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = 8, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE), 
             legend.position = if(base::is.null(x = color_column)){"none"}else{"right"}, 
             panel.border = ggplot2::element_blank(), 
             panel.grid = ggplot2::element_blank(), 
             axis.ticks.x = ggplot2::element_blank(), 
-            axis.ticks.y.left = ggplot2::element_line(linewidth = 0.25), 
+            axis.ticks.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE), 
             # axis.line.x.bottom = ggplot2::element_line(linewidth = 0.25), # ugly, thus i added geom_hline below
-            axis.line.y.left = ggplot2::element_line(linewidth = 0.25)
-        ))
+            axis.line.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE)
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+            mapping = NULL, 
+            data = NULL, 
+            stat = "identity", 
+            position = "identity", 
+            na.rm = FALSE, 
+            show.legend = NA, 
+            inherit.aes = FALSE, 
             yintercept = base::ifelse(
                 test = base::is.null(x = y_lim1), 
-                yes = base::ifelse(test = reverse1, yes = base::max(x = obs[ , top_y_column], na.rm = TRUE), no = base::min(x = obs[ , top_y_column], na.rm = TRUE)), 
-                no = base::ifelse(test = reverse1, yes = base::max(x = y_lim1), no = base::min(x = y_lim1))
+                yes = base::ifelse(test = reverse1, yes = base::max(obs[ , top_y_column], na.rm = TRUE), no = base::min(obs[ , top_y_column], na.rm = TRUE)), 
+                no = base::ifelse(test = reverse1, yes = base::max(y_lim1, na.rm = FALSE), no = base::min(y_lim1, na.rm = FALSE))
             ), 
             linewidth = 0.25
-        ))
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         # add tick lines if vgrid is FALSE
         if(vgrid == FALSE){
-            gline <- grid::linesGrob(y = base::c(-0.02, 0), gp = grid::gpar(col = "black", lwd = 0.5))
+            gline <- grid::linesGrob(x = grid::unit(x = base::c(0, 1), units = "npc", data = NULL), y = base::c(-0.02, 0), gp = grid::gpar(col = "black", lwd = 0.5), default.units = "npc", arrow = NULL, name = NULL, vp = NULL)
             for(i2 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
-                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline, xmin = i2, xmax = i2, ymin = -Inf, ymax = Inf))
+                base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline, xmin = i2, xmax = i2, ymin = -Inf, ymax = Inf), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
         }
         fin_plot1 <- base::suppressMessages(expr = base::suppressWarnings(expr = base::eval(expr = base::parse(text = base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning"), classes = "message")
         # tempo_output <- ggplot2::ggplot_build(fin_plot1)
         if(base::is.null(x = bottom_y_column)){
-            base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(fin_plot1, ncol = 1, nrow = 1), classes = "warning"), classes = "message")
+            base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(fin_plot1, ncol = 1, nrow = 1, newpage = TRUE), classes = "warning"), classes = "message")
         }else{
-            y_min_pos2 <- base::ifelse(test = base::is.null(x = y_lim2), yes = base::min(x = obs[ , bottom_y_column], na.rm = TRUE), no = base::min(x = y_lim2))
-            y_max_pos2 <- base::ifelse(test = base::is.null(x = y_lim2), yes = base::max(x = obs[ , bottom_y_column], na.rm = TRUE), no = base::max(x = y_lim2))
+            y_min_pos2 <- base::ifelse(test = base::is.null(x = y_lim2), yes = base::min(obs[ , bottom_y_column], na.rm = TRUE), no = base::min(y_lim2, na.rm = FALSE))
+            y_max_pos2 <- base::ifelse(test = base::is.null(x = y_lim2), yes = base::max(obs[ , bottom_y_column], na.rm = TRUE), no = base::max(y_lim2, na.rm = FALSE))
             tempo_gg_name2 <- "gg.indiv.plot."
             tempo_gg_count2 <- 0
-            base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = obs, mapping = ggplot2::aes_string(x = "coord", y = bottom_y_column)))
+            base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = obs, mapping = ggplot2::aes(x = .data[["coord"]], y = .data[[bottom_y_column]]), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             if(vgrid == TRUE){
                 base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_vline(
+                    mapping = NULL, 
+                    data = NULL, 
+                    stat = "identity", 
+                    position = "identity", 
+                    na.rm = FALSE, 
+                    show.legend = NA, 
+                    inherit.aes = FALSE, 
                     xintercept = base::c(xmin_plot, chr$LENGTH_CUMUL), 
                     linewidth = 0.25, 
                     color = "grey80"
-                ))
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
-            if( ! base::is.null(y_threshold2)){
+            if( ! base::is.null(x = y_threshold2)){
                 base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+                    mapping = NULL, 
+                    data = NULL, 
+                    stat = "identity", 
+                    position = "identity", 
+                    na.rm = FALSE, 
+                    show.legend = NA, 
+                    inherit.aes = FALSE, 
                     yintercept = y_threshold2, 
                     linetype = "22", 
                     linewidth = 0.25, 
                     color = "red"
-                ))
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
             if(base::is.null(x = color_column)){
                 if(base::is.null(x = dot_border_color)){
                     base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                        mapping = ggplot2::aes(color = base::as.factor(x = CHROM)), 
+                        data = NULL, 
+                        stat = "identity", 
+                        position = "identity", 
+                        na.rm = FALSE, 
+                        show.legend = NA, 
+                        inherit.aes = TRUE, 
+                        mapping = ggplot2::aes(color = base::as.factor(x = .data[["CHROM"]])), 
                         alpha = 1, 
                         pch = 16, 
                         size = 1
-                    ))
-                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+                    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25), aesthetics = "colour", breaks = ggplot2::waiver(), na.value = "grey50"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 }else{
                     base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                        mapping = ggplot2::aes(fill = base::as.factor(x = CHROM)), 
+                        data = NULL, 
+                        stat = "identity", 
+                        position = "identity", 
+                        na.rm = FALSE, 
+                        show.legend = NA, 
+                        inherit.aes = TRUE, 
+                        mapping = ggplot2::aes(fill = base::as.factor(x = .data[["CHROM"]])), 
                         alpha = 1, 
                         color = dot_border_color, 
                         pch = 21, 
                         size = 1
-                    ))
-                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25)))
+                    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_manual(values = base::rep(x = base::c("grey20", "skyblue"), times = 25), aesthetics = "fill", breaks = ggplot2::waiver(), na.value = "grey50"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 }
             }else{
                 if(base::is.null(x = dot_border_color)){
                     base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                        mapping = ggplot2::aes_string(color = color_column), 
+                        data = NULL, 
+                        stat = "identity", 
+                        position = "identity", 
+                        na.rm = FALSE, 
+                        show.legend = NA, 
+                        inherit.aes = TRUE, 
+                        mapping = ggplot2::aes(color = .data[[color_column]]), 
                         alpha = 1, 
                         pch = 16, 
                         size = 1
-                    ))
-                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_gradient2())
+                    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_color_gradient2(name = ggplot2::waiver(), low = scales::muted(colour = "red", l = 30, c = 70), mid = "white", high = scales::muted(colour = "blue", l = 30, c = 70), midpoint = 0, space = "Lab", na.value = "grey50", transform = "identity", guide = "colourbar", aesthetics = "colour"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 }else{
                     base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(
-                        mapping = ggplot2::aes_string(fill = color_column), 
+                        data = NULL, 
+                        stat = "identity", 
+                        position = "identity", 
+                        na.rm = FALSE, 
+                        show.legend = NA, 
+                        inherit.aes = TRUE, 
+                        mapping = ggplot2::aes(fill = .data[[color_column]]), 
                         alpha = 1, 
                         color = dot_border_color, 
                         pch = 21, 
                         size = 1
-                    ))
-                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2())
+                    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2(name = ggplot2::waiver(), low = scales::muted(colour = "red", l = 30, c = 70), mid = "white", high = scales::muted(colour = "blue", l = 30, c = 70), midpoint = 0, space = "Lab", na.value = "grey50", transform = "identity", guide = "colourbar", aesthetics = "fill"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 }
             }
             base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_x_continuous(
+                name = ggplot2::waiver(), 
+                minor_breaks = ggplot2::waiver(), 
+                n.breaks = NULL, 
+                na.value = NA_real_, 
+                transform = "identity", 
+                guide = ggplot2::waiver(), 
+                position = "bottom", 
+                sec.axis = ggplot2::waiver(), 
                 expand = base::c(0, 0), # remove space after after axis limits
                 oob = scales::rescale_none, 
                 labels = chr$CHR_NAME, 
                 breaks = chr$CHR_NAME_POS, 
-                limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL) + marging)
-            ))
+                limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL, na.rm = FALSE) + marging)
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             if(y_log2 == TRUE){
-                if(base::any(obs[ , bottom_y_column] <= 0)){
+                if(base::any(obs[ , bottom_y_column] <= 0, na.rm = FALSE)){
                     tempo_cat <- base::paste0(
                         error_text_start, 
                         "THE y_log2 ARGUMENT CANNOT BE SET TO TRUE IF 0 OR NEG VALUES IN THE ",
@@ -1058,75 +1182,98 @@ gg_miami <- function(
                     base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", base::ifelse(test = base::is.null(x = warn), yes = "", no = base::paste0("IN ADDITION\nWARNING", base::ifelse(test = warn_count > 1, yes = "S", no = ""), ":\n\n", warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
                 }else{
                     base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                        name = ggplot2::waiver(), 
+                        minor_breaks = ggplot2::waiver(), 
+                        n.breaks = NULL, 
+                        na.value = NA_real_, 
+                        guide = ggplot2::waiver(), 
+                        position = "left", 
+                        sec.axis = ggplot2::waiver(), 
                         expand = base::c(0, 0), # remove space after after axis limits
                         limits = if(reverse2 == TRUE){base::c(y_min_pos2, y_max_pos2)}else{base::c(y_max_pos2, y_min_pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
                         oob = scales::rescale_none, 
-                        trans = "log10", 
-                        breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}), 
-                        labels = scales::trans_format(trans = "log10", format = scales::math_format(10^.x))
-                    ))
+                        transform = "log10", 
+                        breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}, n = 5), 
+                        labels = scales::trans_format(trans = "log10", format = scales::math_format(expr = 10^.x, format = base::force))
+                    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                     # assign(paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1), ggplot2::annotation_logticks(outside = TRUE)) # 
                 }
             }else{
                 base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_continuous(
+                    name = ggplot2::waiver(), 
+                    breaks = ggplot2::waiver(), 
+                    minor_breaks = ggplot2::waiver(), 
+                    n.breaks = NULL, 
+                    labels = ggplot2::waiver(), 
+                    na.value = NA_real_, 
+                    guide = ggplot2::waiver(), 
+                    position = "left", 
+                    sec.axis = ggplot2::waiver(), 
                     expand = base::c(0, 0), # remove space after after axis limits
                     limits = if(reverse2 == TRUE){base::c(y_min_pos2, y_max_pos2)}else{base::c(y_max_pos2, y_min_pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
                     oob = scales::rescale_none, 
-                    trans = "identity" # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y_lim decreasing. Thus, do not use. Use ylim() below and after this
-                ))
+                    transform = "identity" # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y_lim decreasing. Thus, do not use. Use ylim() below and after this
+                ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
-            base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw())
+            base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = "white", accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
                 legend.position = if(base::is.null(x = color_column)){"none"}else{"right"}, 
                 panel.border = ggplot2::element_blank(), 
                 panel.grid = ggplot2::element_blank(), 
-                axis.ticks.y.left = ggplot2::element_line(linewidth = 0.25), 
+                axis.ticks.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE), 
                 # axis.line.x.top = ggplot2::element_line(linewidth = 0.25), # is not displayed. Thus, I add a geom_hline below
-                axis.line.y.left = ggplot2::element_line(linewidth = 0.25), 
+                axis.line.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE), 
                 axis.title.x = ggplot2::element_blank(), 
                 axis.text.x = ggplot2::element_blank(), 
                 axis.ticks.x = ggplot2::element_blank()
-            ))
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             # add x-axis line
             base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
+                mapping = NULL, 
+                data = NULL, 
+                stat = "identity", 
+                position = "identity", 
+                na.rm = FALSE, 
+                show.legend = NA, 
+                inherit.aes = FALSE, 
                 yintercept = base::ifelse(
                     test = base::is.null(x = y_lim2), 
-                    yes = base::ifelse(test = reverse2, yes = base::max(x = obs[ , bottom_y_column], na.rm = TRUE), no = base::min(x = obs[ , bottom_y_column], na.rm = TRUE)), 
-                    no = base::ifelse(test = reverse2, yes = base::max(x = y_lim2), no = base::min(x = y_lim2))
+                    yes = base::ifelse(test = reverse2, yes = base::max(obs[ , bottom_y_column], na.rm = TRUE), no = base::min(obs[ , bottom_y_column], na.rm = TRUE)), 
+                    no = base::ifelse(test = reverse2, yes = base::max(y_lim2, na.rm = FALSE), no = base::min(y_lim2, na.rm = FALSE))
                 ), 
                 linewidth = 0.25
-            ))
+            ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             # add tick lines if vgrid is FALSE
             if(vgrid == FALSE){
-                gline2 <- grid::linesGrob(y = base::c(1, 1.02), gp = grid::gpar(col = "black", lwd = 0.5))
+                gline2 <- grid::linesGrob(x = grid::unit(x = base::c(0, 1), units = "npc", data = NULL), y = base::c(1, 1.02), gp = grid::gpar(col = "black", lwd = 0.5), default.units = "npc", arrow = NULL, name = NULL, vp = NULL)
                 for(i3 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
-                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline2, xmin = i3, xmax = i3, ymin = -Inf, ymax = Inf))
+                    base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline2, xmin = i3, xmax = i3, ymin = -Inf, ymax = Inf), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 }
             }
             fin_plot2 <- base::suppressMessages(expr = base::suppressWarnings(expr = base::eval(expr = base::parse(text = base::paste0(tempo_gg_name2, 1:tempo_gg_count2, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning"), classes = "message")
             gl <- base::lapply(X = base::list(fin_plot1, fin_plot2), FUN = ggplot2::ggplotGrob)
-            wd <- base::do.call(what = grid::unit.pmax, args = base::lapply(X = gl, FUN = "[[", "widths"))
+            wd <- base::do.call(what = grid::unit.pmax, args = base::lapply(X = gl, FUN = "[[", "widths"), quote = FALSE, envir = base::environment(fun = NULL))
             gl <- base::lapply(X = gl, FUN = function(x){x[["widths"]] <- wd ; x})
             if(vgrid == FALSE){
                 gl[[1]]$layout$clip[gl[[1]]$layout$name == "panel"] <- "off"
                 gl[[2]]$layout$clip[gl[[2]]$layout$name == "panel"] <- "off"
             }
-            base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(gl[[1]], gl[[2]], ncol = 1, nrow = 2), classes = "warning"), classes = "message")
+            base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(gl[[1]], gl[[2]], ncol = 1, nrow = 2, newpage = TRUE), classes = "warning"), classes = "message")
         }
     }else{
             # nocov start (unreachable: idem (x_lim = NULL rejected by arg_check))
-        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL", lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
             # nocov end
     } 
     # else already dealt above
     # close the graphic device opened above
     if(grDevices::dev.cur() != 1){
-        grDevices::dev.off()
+        grDevices::dev.off(which = grDevices::dev.cur())
     }
     # end main code
     if(warn_print == TRUE & ! base::is.null(x = warn)){
             # nocov start (unreachable: warn stays NULL because the only warn assignment (x_lim NULL branch) is dead)
-        base::on.exit(expr = base::warning(message = base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL), add = TRUE, after = TRUE)
+        base::on.exit(expr = base::warning(base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL), add = TRUE, after = TRUE)
             # nocov end
     }
     base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
@@ -1137,7 +1284,7 @@ gg_miami <- function(
     #### end warning output
 
     #### output
-    base::return(invisible(NULL))
+    base::return(base::invisible(x = NULL))
     #### end output
     #### end of function
 }

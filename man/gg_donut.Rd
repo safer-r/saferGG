@@ -88,7 +88,7 @@ gg_donut(
 
 \item{legend_box_space}{single numeric value of the space between the legend boxes in mm.}
 
-\item{legend_limit}{single positive proportion of the classes displayed in the legend for which the corresponding proportion is over legend_limit. Example: legend_limit = 0.4 means that only the sectors over 40% of the donut will be in the legend. Write "all" for all the sectors in the legend (no limit required). Write NULL (default) for the ten biggest sectors. Warning, when legend_limit is a proportion and leads to 0 sectors represented (limit too high), then 10 sectors will be finally represented in the legend with a warning message.}
+\item{legend_limit}{single positive proportion of the classes displayed in the legend for which the corresponding proportion is over legend_limit. Example: legend_limit = 0.4 means that only the sectors over 40\% of the donut will be in the legend. Write "all" for all the sectors in the legend (no limit required). Write NULL (default) for the ten biggest sectors. Warning, when legend_limit is a proportion and leads to 0 sectors represented (limit too high), then 10 sectors will be finally represented in the legend with a warning message.}
 
 \item{legend_add_prop}{logical (either TRUE or FALSE). add the proportion after the class names in the legend ?}
 

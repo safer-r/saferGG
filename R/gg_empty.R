@@ -16,13 +16,17 @@
 #' gg_empty()
 #' # all the arguments.
 #' gg_empty(text = "NO GRAPH", text_size = 8, title = "GRAPH1", title_size = 10, lib_path = NULL)
+#' @importFrom ggplot2 .data
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 element_rect
 #' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 geom_text
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 ggtitle
+#' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_void
+#' @importFrom ggplot2 waiver
+#' @importFrom scales alpha
 #' @export
 gg_empty <- function(
         text = NULL, 
@@ -321,8 +325,11 @@ gg_empty <- function(
                 "ggplot2::geom_text",
                 "ggplot2::ggplot",
                 "ggplot2::ggtitle",
+                "ggplot2::theme",
                 "ggplot2::theme_void",
+                "ggplot2::waiver",
                 "saferDev::arg_check",
+                "scales::alpha",
                 # end functions required in this code
                 # internal functions required in this code
                 "saferDev:::.base_op_check"
@@ -400,7 +407,7 @@ gg_empty <- function(
             base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "THESE ARGUMENTS ARE", no = "THIS ARGUMENT IS"), 
             " NOT CLASS \"character\":\n", 
             base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), 
-            "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n_HERE, ARGUMENTS ARE TYPE:\n", 
+            "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n.HERE, ARGUMENTS ARE TYPE:\n", 
             base::paste0(base::sapply(X = tempo_arg, FUN = function(x){base::paste0(x, ": \"", base::typeof(x = base::get(x = x, pos = -1L, envir = base::parent.frame(n = 3), mode = "any", inherits = FALSE)), '"', collapse = NULL, recycle0 = FALSE)}), collapse = "\n", recycle0 = FALSE), # parent.frame(n = 3) because the get() is evaluated inside the FUN closure of sapply. But sapply(FUN) calls lapply(FUN) internally !! So parent.frame(n = 1) is the internal lapply() frame called by sapply, parent.frame(n = 2) is sapply's frame, parent.frame(n = 3) is BACKBONE's frame. NB: paste0() and typeof() are primitives and add no frame.
             intern_error_text_end, 
             collapse = NULL, 
@@ -498,17 +505,18 @@ gg_empty <- function(
     tempo_gg_name <- "gg.indiv.plot."
     tempo_gg_count <- 0
     # no need loop part
-    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ggplot())
-    if( ! base::is.null(text)){
-        base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_text(data = base::data.frame(x = 1, y = 1, stringsAsFactors = TRUE), ggplot2::aes(x = x, y = y, label = text), size = text_size))
+    # pos = -1 and envir = base::environment(fun = NULL): assignment in the environment of the present function, as the default pos = -1 of base::assign()
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    if( ! base::is.null(x = text)){
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_text(mapping = ggplot2::aes(x = .data[["x"]], y = .data[["y"]], label = text), data = base::data.frame(x = 1, y = 1, row.names = NULL, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = TRUE), stat = "identity", position = "nudge", size = text_size, parse = FALSE, check_overlap = FALSE, size.unit = "mm", na.rm = FALSE, show.legend = NA, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
-    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::ggtitle(title))
-    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::theme_void())
-    base::assign(base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), m_gg <- ggplot2::theme(
-        panel.background = ggplot2::element_rect(fill = "white", color = NA),
-        plot.title = ggplot2::element_text(size = title_size) # stronger than text
-    ))
-    final <- base::suppressWarnings(base::eval(base::parse(text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + "))))
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(label = title, subtitle = ggplot2::waiver()), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # default values of ggplot2::theme_void() (its paper default uses alpha(), re-exported by ggplot2 from scales)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = m_gg <- ggplot2::theme(
+        panel.background = ggplot2::element_rect(fill = "white", colour = NULL, linewidth = NULL, linetype = NULL, color = NA, linejoin = NULL, inherit.blank = FALSE), # deprecated size argument not written
+        plot.title = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = title_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE) # stronger than text
+    ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # the other arguments of ggplot2::theme() have no default value and are not written, since writing them would add theme elements
+    final <- base::suppressWarnings(expr = base::eval(expr = base::parse(file = "", n = NULL, text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = NULL, recycle0 = FALSE), sep = " ", collapse = " + ", recycle0 = FALSE), prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning")
     #### end main code
 
     #### warning output

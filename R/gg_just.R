@@ -394,21 +394,21 @@ gg_just <- function(
     # justifications
     if(pos %in% base::c("bottom", "top")){
         # code below is for if(pos == "bottom"){
-        if(base::any(base::sapply(FUN = all.equal, base::c(-360, -180, 0, 180, 360), angle) == TRUE)){ # equivalent of angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360 but deals with floats
+        if(base::any(base::sapply(X = base::c(-360, -180, 0, 180, 360), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){ # equivalent of angle == -360 | angle == -180 | angle == 0 | angle == 180 | angle == 360 but deals with floats
             hjust <- 0.5
             if(kind == "text"){
-                if(base::any(base::sapply(FUN = all.equal, base::c(-360, 0, 360), angle) == TRUE)){
+                if(base::any(base::sapply(X = base::c(-360, 0, 360), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
                     vjust <- 1
-                }else if(base::any(base::sapply(FUN = all.equal, base::c(-180, 180), angle) == TRUE)){
+                }else if(base::any(base::sapply(X = base::c(-180, 180), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
                     vjust <- 0
                 }
             }else{
                 vjust <- 0.5
             }
-        }else if(base::any(base::sapply(FUN = all.equal, base::c(-270, 90), angle) == TRUE)){
+        }else if(base::any(base::sapply(X = base::c(-270, 90), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
             hjust <- 1
             vjust <- 0.5
-        }else if(base::any(base::sapply(FUN = all.equal, base::c(-90, 270), angle) == TRUE)){
+        }else if(base::any(base::sapply(X = base::c(-90, 270), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
             hjust <- 0
             vjust <- 0.5
         }else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){
@@ -435,21 +435,21 @@ gg_just <- function(
         }
     }else if(pos %in% base::c("left", "right")){
         # code below is for if(pos == "left"){
-        if(base::any(base::sapply(FUN = all.equal, base::c(-270, -90, 90, 270), angle) == TRUE)){ # equivalent of angle == -270 | angle == -90 | angle == 90 | angle == 270 but deals with floats
+        if(base::any(base::sapply(X = base::c(-270, -90, 90, 270), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){ # equivalent of angle == -270 | angle == -90 | angle == 90 | angle == 270 but deals with floats
             hjust <- 0.5
             if(kind == "text"){
-                if(base::any(base::sapply(FUN = all.equal, base::c(-90, 90), angle) == TRUE)){
+                if(base::any(base::sapply(X = base::c(-90, 90), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
                     vjust <- 0
-                }else if(base::any(base::sapply(FUN = all.equal, base::c(-270, 270), angle) == TRUE)){
+                }else if(base::any(base::sapply(X = base::c(-270, 270), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
                     vjust <- 1
                 }
             }else{
                 vjust <- 0.5
             }
-        }else if(base::any(base::sapply(FUN = all.equal, base::c(-360, 0, 360), angle) == TRUE)){
+        }else if(base::any(base::sapply(X = base::c(-360, 0, 360), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
             hjust <- 1
             vjust <- 0.5
-        }else if(base::any(base::sapply(FUN = all.equal, base::c(-180, 180), angle) == TRUE)){
+        }else if(base::any(base::sapply(X = base::c(-180, 180), FUN = base::all.equal, current = angle, simplify = TRUE, USE.NAMES = TRUE) == TRUE, na.rm = FALSE)){
             hjust <- 0
             vjust <- 0.5
         }else if((angle > -360 & angle < -270) | (angle > 0 & angle < 90)){

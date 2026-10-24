@@ -38,7 +38,8 @@
 #' }
 #' gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 #' gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)), data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
-#' @importFrom ggplot2 aes_string
+#' @importFrom ggplot2 .data
+#' @importFrom ggplot2 aes
 #' @importFrom ggplot2 coord_fixed
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 element_text
@@ -51,6 +52,7 @@
 #' @importFrom ggplot2 scale_discrete_manual
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_classic
+#' @importFrom ggplot2 waiver
 #' @importFrom reshape2 melt
 #' @importFrom saferDev arg_check
 #' @importFrom saferTool round2
@@ -411,8 +413,8 @@ gg_heatmap <- function(
             fun = base::c(
                 # functions required in this code
                 "saferDev::arg_check", 
-                "ggplot2::aes_string", 
-                "ggplot2::coord_fixed", 
+                "ggplot2::aes",
+                "ggplot2::coord_fixed",
                 "ggplot2::element_blank", 
                 "ggplot2::element_text", 
                 "ggplot2::geom_raster", 
@@ -423,8 +425,9 @@ gg_heatmap <- function(
                 "ggplot2::scale_fill_gradient2", 
                 "ggplot2::scale_discrete_manual", 
                 "ggplot2::theme", 
-                "ggplot2::theme_classic", 
-                "reshape2::melt", 
+                "ggplot2::theme_classic",
+                "ggplot2::waiver",
+                "reshape2::melt",
                 "saferTool::round2", 
                 # end functions required in this code
                 # internal functions required in this code
@@ -462,9 +465,9 @@ gg_heatmap <- function(
     checked_arg_names <- NULL # for function debbuging: used by r_debugging_tools
     arg_check_error_text <- base::paste0("ERROR ", embed_error_text, "\n\n", collapse = NULL, recycle0 = FALSE) # must be used instead of error_text = embed_error_text when several arg_check are performed on the same argument (tempo1, tempo2, see below)
     ee <- base::expression(argum_check <- base::c(argum_check, tempo$problem) , text_check <- base::c(text_check, tempo$text) , checked_arg_names <- base::c(checked_arg_names, tempo$object_name))
-    if(base::all(base::is.matrix(data1))){
-        tempo <- saferDev::arg_check(data = data1, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    }else if(base::all(base::is.data.frame(data1))){
+    if(base::all(base::is.matrix(x = data1), na.rm = FALSE)){
+        tempo <- saferDev::arg_check(data = data1, class = base::c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    }else if(base::all(base::is.data.frame(x = data1), na.rm = FALSE)){
         tempo <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         if(tempo$problem == FALSE){
             # structure of reshape2::melt() data frame
@@ -473,7 +476,7 @@ gg_heatmap <- function(
             tempo <- saferDev::arg_check(data = data1[, 3], class = NULL, typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = "COLUMN 3 OF data1 (reshape2::melt() DATA FRAME)", data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
         }
     }else{
-        tempo_check <- saferDev::arg_check(data = data1, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+        tempo_check <- saferDev::arg_check(data = data1, class = base::c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
         tempo_check <- saferDev::arg_check(data = data1, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = TRUE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
         tempo_cat <- base::paste0(
             arg_check_error_text, 
@@ -486,7 +489,7 @@ gg_heatmap <- function(
     }
     tempo <- saferDev::arg_check(data = legend_name1, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = low_color1, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if(tempo$problem == FALSE & ! (base::all(low_color1 %in% grDevices::colors()) | base::grepl(pattern = "^#", low_color1))){ # check that all strings of low_color1 start by #
+    if(tempo$problem == FALSE & ! (base::all(low_color1 %in% grDevices::colors(distinct = FALSE), na.rm = FALSE) | base::grepl(pattern = "^#", x = low_color1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE))){ # check that all strings of low_color1 start by #
         tempo_cat <- base::paste0(
             arg_check_error_text, 
             "low_color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()", 
@@ -496,9 +499,9 @@ gg_heatmap <- function(
         text_check <- base::c(text_check, tempo_cat)
         argum_check <- base::c(argum_check, TRUE)
     }
-    if( ! base::is.null(mid_color1)){
+    if( ! base::is.null(x = mid_color1)){
         tempo <- saferDev::arg_check(data = mid_color1, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-        if(tempo$problem == FALSE & ! (base::all(mid_color1 %in% grDevices::colors()) | base::grepl(pattern = "^#", mid_color1))){ # check that all strings of mid_color1 start by #
+        if(tempo$problem == FALSE & ! (base::all(mid_color1 %in% grDevices::colors(distinct = FALSE), na.rm = FALSE) | base::grepl(pattern = "^#", x = mid_color1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE))){ # check that all strings of mid_color1 start by #
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
                 "mid_color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()", 
@@ -510,7 +513,7 @@ gg_heatmap <- function(
         }
     }
     tempo <- saferDev::arg_check(data = high_color1, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if(tempo$problem == FALSE & ! (base::all(high_color1 %in% grDevices::colors()) | base::grepl(pattern = "^#", high_color1))){ # check that all strings of high_color1 start by #
+    if(tempo$problem == FALSE & ! (base::all(high_color1 %in% grDevices::colors(distinct = FALSE), na.rm = FALSE) | base::grepl(pattern = "^#", x = high_color1, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE))){ # check that all strings of high_color1 start by #
         tempo_cat <- base::paste0(
             arg_check_error_text, 
             "high_color1 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()", 
@@ -520,9 +523,9 @@ gg_heatmap <- function(
         text_check <- base::c(text_check, tempo_cat)
         argum_check <- base::c(argum_check, TRUE)
     }
-    if( ! base::is.null(limit1)){
+    if( ! base::is.null(x = limit1)){
         tempo <- saferDev::arg_check(data = limit1, class = NULL, typeof = NULL, mode = "numeric", length = 2, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = FALSE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-        if(tempo$problem == FALSE & base::any(limit1 %in% base::c(Inf, -Inf))){
+        if(tempo$problem == FALSE & base::any(limit1 %in% base::c(Inf, -Inf), na.rm = FALSE)){
             # nocov start (unreachable: arg_check with inf_values = FALSE already rejects Inf in limit1, so the condition of the enclosing if is contradictory)
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
@@ -535,13 +538,13 @@ gg_heatmap <- function(
             # nocov end
         }
     }
-    if( ! base::is.null(midpoint1)){
+    if( ! base::is.null(x = midpoint1)){
         tempo <- saferDev::arg_check(data = midpoint1, class = NULL, typeof = NULL, mode = "numeric", length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     }
-    if( ! base::is.null(data2)){
-        if(base::all(base::is.matrix(data2))){
-            tempo <- saferDev::arg_check(data = data2, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-            if(tempo$problem == FALSE & ! base::all(base::unique(x = data2) %in% base::c(0, 1))){
+    if( ! base::is.null(x = data2)){
+        if(base::all(base::is.matrix(x = data2), na.rm = FALSE)){
+            tempo <- saferDev::arg_check(data = data2, class = base::c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+            if(tempo$problem == FALSE & ! base::all(base::unique(x = data2, incomparables = FALSE) %in% base::c(0, 1), na.rm = FALSE)){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
                     "MATRIX IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK MATRIX)", 
@@ -550,32 +553,32 @@ gg_heatmap <- function(
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
-            }else if(tempo$problem == FALSE & base::all(base::is.matrix(data1)) & ! base::identical(x = base::dim(data1), y = base::dim(data2))){ # matrix and matrix
+            }else if(tempo$problem == FALSE & base::all(base::is.matrix(x = data1), na.rm = FALSE) & ! base::identical(x = base::dim(x = data1), y = base::dim(x = data2), num.eq = TRUE, single.NA = TRUE, attrib.as.set = TRUE, ignore.bytecode = TRUE, ignore.environment = FALSE, ignore.srcref = TRUE, extptr.as.ref = FALSE)){ # matrix and matrix
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
                     "MATRIX DIMENSION IN data2 MUST BE IDENTICAL AS MATRIX DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", 
-                    base::paste(base::dim(data2), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::dim(x = data2), sep = " ", collapse = " ", recycle0 = FALSE), 
                     "\n", 
-                    base::paste(base::dim(data1), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::dim(x = data1), sep = " ", collapse = " ", recycle0 = FALSE), 
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
-            }else if(tempo$problem == FALSE & base::all(base::is.data.frame(data1)) & base::nrow(data1) != base::prod(base::dim(data2))){ # reshape2 and matrix
+            }else if(tempo$problem == FALSE & base::all(base::is.data.frame(x = data1), na.rm = FALSE) & base::nrow(x = data1) != base::prod(base::dim(x = data2), na.rm = FALSE)){ # reshape2 and matrix
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
                     "DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSIONS OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", 
-                    base::paste(base::nrow(data1), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::nrow(x = data1), sep = " ", collapse = " ", recycle0 = FALSE), 
                     "\n", 
-                    base::paste(base::prod(base::dim(data2)), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::prod(base::dim(x = data2), na.rm = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
             }
-        }else if(base::all(base::is.data.frame(data2))){
+        }else if(base::all(base::is.data.frame(x = data2), na.rm = FALSE)){
             tempo <- saferDev::arg_check(data = data2, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
             if(tempo$problem == FALSE){
                 # structure of reshape2::melt() data frame
@@ -583,7 +586,7 @@ gg_heatmap <- function(
                 tempo <- saferDev::arg_check(data = data2[, 2], class = NULL, typeof = "integer", mode = NULL, length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = "COLUMN 2 OF data2 (reshape2::melt() DATA FRAME)", data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
                 tempo <- saferDev::arg_check(data = data2[, 3], class = NULL, typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = "COLUMN 3 OF data2 (reshape2::melt() DATA FRAME)", data_arg = FALSE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
             }
-            if(tempo$problem == FALSE & ! base::all(base::unique(x = data2[, 3]) %in% base::c(0, 1))){
+            if(tempo$problem == FALSE & ! base::all(base::unique(x = data2[, 3], incomparables = FALSE) %in% base::c(0, 1), na.rm = FALSE)){
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
                     "THIRD COLUMN OF DATA FRAME IN data2 MUST BE MADE OF 0 AND 1 ONLY (MASK DATA FRAME)", 
@@ -592,25 +595,25 @@ gg_heatmap <- function(
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
-            }else if(tempo$problem == FALSE & base::all(base::is.data.frame(data1)) & ! base::identical(x = base::dim(data1), y = base::dim(data2))){ # data frame and data frame
+            }else if(tempo$problem == FALSE & base::all(base::is.data.frame(x = data1), na.rm = FALSE) & ! base::identical(x = base::dim(x = data1), y = base::dim(x = data2), num.eq = TRUE, single.NA = TRUE, attrib.as.set = TRUE, ignore.bytecode = TRUE, ignore.environment = FALSE, ignore.srcref = TRUE, extptr.as.ref = FALSE)){ # data frame and data frame
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
                     "DATA FRAME DIMENSION IN data2 MUST BE IDENTICAL TO DATA FRAME DIMENSION IN data1. HERE IT IS RESPECTIVELY:\n", 
-                    base::paste(base::dim(data2), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::dim(x = data2), sep = " ", collapse = " ", recycle0 = FALSE), 
                     "\n", 
-                    base::paste(base::dim(data1), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::dim(x = data1), sep = " ", collapse = " ", recycle0 = FALSE), 
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
                 text_check <- base::c(text_check, tempo_cat)
                 argum_check <- base::c(argum_check, TRUE)
-            }else if(tempo$problem == FALSE & base::all(base::is.matrix(data1)) & base::nrow(data2) != base::prod(base::dim(data1))){ # reshape2 and matrix
+            }else if(tempo$problem == FALSE & base::all(base::is.matrix(x = data1), na.rm = FALSE) & base::nrow(x = data2) != base::prod(base::dim(x = data1), na.rm = FALSE)){ # reshape2 and matrix
                 tempo_cat <- base::paste0(
                     arg_check_error_text, 
                     "DATA FRAME IN data2 MUST HAVE ROW NUMBER EQUAL TO PRODUCT OF DIMENSION OF data1 MATRIX. HERE IT IS RESPECTIVELY:\n", 
-                    base::paste(base::nrow(data2), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::nrow(x = data2), sep = " ", collapse = " ", recycle0 = FALSE), 
                     "\n", 
-                    base::paste(base::prod(base::dim(data1)), collapse = " ", recycle0 = FALSE), 
+                    base::paste(base::prod(base::dim(x = data1), na.rm = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                     collapse = NULL, 
                     recycle0 = FALSE
                 )
@@ -618,7 +621,7 @@ gg_heatmap <- function(
                 argum_check <- base::c(argum_check, TRUE)
             }
         }else{
-            tempo_check <- saferDev::arg_check(data = data2, class = c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
+            tempo_check <- saferDev::arg_check(data = data2, class = base::c("matrix", "array"), typeof = NULL, mode = "numeric", length = NULL, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
             tempo_check <- saferDev::arg_check(data = data2, class = "data.frame", typeof = NULL, mode = NULL, length = 3, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
@@ -631,7 +634,7 @@ gg_heatmap <- function(
         }
     }
     tempo <- saferDev::arg_check(data = color2, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if(tempo$problem == FALSE & ! (base::all(color2 %in% grDevices::colors()) | base::grepl(pattern = "^#", color2))){ # check that all strings of color2 start by #
+    if(tempo$problem == FALSE & ! (base::all(color2 %in% grDevices::colors(distinct = FALSE), na.rm = FALSE) | base::grepl(pattern = "^#", x = color2, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE))){ # check that all strings of color2 start by #
         tempo_cat <- base::paste0(
             arg_check_error_text, 
             "color2 ARGUMENT MUST BE A HEXADECIMAL COLOR VECTOR STARTING BY # AND/OR COLOR NAMES GIVEN BY grDevices::colors()", 
@@ -649,33 +652,33 @@ gg_heatmap <- function(
     tempo <- saferDev::arg_check(data = show_scale, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = return, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     tempo <- saferDev::arg_check(data = plot, class = NULL, typeof = "logical", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if( ! base::is.null(add)){
+    if( ! base::is.null(x = add)){
         tempo <- saferDev::arg_check(data = add, class = NULL, typeof = "character", mode = NULL, length = 1, prop = FALSE, double_as_integer_allowed = FALSE, options = NULL, all_options_in_data = FALSE, na_contain = FALSE, neg_values = TRUE, inf_values = TRUE, print = FALSE, data_name = NULL, data_arg = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) ; base::eval(expr = ee, envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-        if(tempo$problem == FALSE & ! base::grepl(pattern = "^\\+", add)){ # check that the add string start by +
+        if(tempo$problem == FALSE & ! base::grepl(pattern = "^\\+", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){ # check that the add string start by +
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
                 "add ARGUMENT MUST START WITH \"+\": ", 
-                base::paste(base::unique(x = add), collapse = " ", recycle0 = FALSE), 
+                base::paste(base::unique(x = add, incomparables = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
             text_check <- base::c(text_check, tempo_cat)
             argum_check <- base::c(argum_check, TRUE)
-        }else if(tempo$problem == FALSE & ! base::grepl(pattern = "ggplot2::", add)){ #
+        }else if(tempo$problem == FALSE & ! base::grepl(pattern = "ggplot2::", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){ #
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
                 "add ARGUMENT MUST CONTAIN \"ggplot2::\" IN FRONT OF EACH GGPLOT2 FUNCTION: ", 
-                base::paste(base::unique(x = add), collapse = " ", recycle0 = FALSE), 
+                base::paste(base::unique(x = add, incomparables = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
             text_check <- base::c(text_check, tempo_cat)
             argum_check <- base::c(argum_check, TRUE)
-        }else if(tempo$problem == FALSE & ! base::grepl(pattern = ")$", add)){ # check that the add string  finished by )
+        }else if(tempo$problem == FALSE & ! base::grepl(pattern = ")$", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE)){ # check that the add string  finished by )
             tempo_cat <- base::paste0(
                 arg_check_error_text, 
                 "add ARGUMENT MUST FINISH BY \")\": ", 
-                base::paste(base::unique(x = add), collapse = " ", recycle0 = FALSE), 
+                base::paste(base::unique(x = add, incomparables = FALSE), sep = " ", collapse = " ", recycle0 = FALSE), 
                 collapse = NULL, 
                 recycle0 = FALSE
             )
@@ -774,23 +777,23 @@ gg_heatmap <- function(
     #### end second round of checking and data preparation
 
     #### main code
-    if(base::all(base::is.matrix(data1))){
-        data1 <- reshape2::melt(data1) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
+    if(base::all(base::is.matrix(x = data1), na.rm = FALSE)){
+        data1 <- reshape2::melt(data = data1, na.rm = FALSE, value.name = "value") # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
     }
     if(rotate == TRUE){
         data1[, 1] <- base::rev(x = data1[, 1])
     }
-    if(base::is.null(limit1)){
-        if(base::any( ! base::is.finite(x = data1[, 3]))){
+    if(base::is.null(x = limit1)){
+        if(base::any( ! base::is.finite(x = data1[, 3]), na.rm = FALSE)){
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count, ") THE data1 ARGUMENT CONTAINS -Inf OR Inf VALUES IN THE THIRD COLUMN, THAT WILL NOT BE CONSIDERED IN THE PLOT RANGE", collapse = NULL, recycle0 = FALSE)
             warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
         }
-        limit1 <- base::range(x = data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
+        limit1 <- base::range(data1[, 3], na.rm = TRUE, finite = TRUE) # finite = TRUE removes all the -Inf and Inf except if only this. In that case, whatever the -Inf and/or Inf present, output -Inf;Inf range. Idem with NA only
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count, ") THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(data = limit1, dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), collapse = " ", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+        tempo_warn <- base::paste0("(", warn_count, ") THE limit1 ARGUMENT IS NULL -> RANGE OF data1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(data = limit1, dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), sep = " ", collapse = " ", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
         warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
-        if(base::suppressWarnings(expr = base::any(limit1 %in% base::c(Inf, -Inf)))){
+        if(base::suppressWarnings(expr = base::any(limit1 %in% base::c(Inf, -Inf), na.rm = FALSE), classes = "warning")){
             # nocov start (unreachable: round2() at line 788 errors before this branch when the computed range is -Inf or Inf)
             tempo_cat <- base::paste0(
                 "ERROR IN ", 
@@ -804,43 +807,43 @@ gg_heatmap <- function(
             # nocov end
         }
     }else{
-        limit1 <- base::sort(x = limit1)
+        limit1 <- base::sort(x = limit1, decreasing = FALSE)
     }
-    if(base::is.null(midpoint1)){
+    if(base::is.null(x = midpoint1)){
         midpoint1 <- base::mean(x = limit1, na.rm = TRUE)
         warn_count <- warn_count + 1
-        tempo_warn <- base::paste0("(", warn_count, ") THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(data = midpoint1, dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), collapse = " ", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
+        tempo_warn <- base::paste0("(", warn_count, ") THE midpoint1 ARGUMENT IS NULL -> MEAN OF limit1 ARGUMENT HAS BEEN TAKEN: ", base::paste(saferTool::round2(data = midpoint1, dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), sep = " ", collapse = " ", recycle0 = FALSE), collapse = NULL, recycle0 = FALSE)
         warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
     }else if(saferTool::round2(data = midpoint1, dec_nb = 9, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text) != saferTool::round2(data = base::mean(x = limit1, na.rm = TRUE), dec_nb = 9, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text)){
         warn_count <- warn_count + 1
         tempo_warn <- base::paste0("(", warn_count, ") THE midpoint1 ARGUMENT (", saferTool::round2(data = base::mean(x = midpoint1, na.rm = TRUE), dec_nb = 9, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), ") DOES NOT CORRESPOND TO THE MEAN OF THE limit1 ARGUMENT (", saferTool::round2(data = base::mean(x = limit1, na.rm = TRUE), dec_nb = 9, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), "). COLOR SCALE IS NOT LINEAR", collapse = NULL, recycle0 = FALSE)
         warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
     }
-    if( ! base::is.null(data2)){
-        if(base::all(base::is.matrix(data2))){
-            data2 <- reshape2::melt(data2) # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
+    if( ! base::is.null(x = data2)){
+        if(base::all(base::is.matrix(x = data2), na.rm = FALSE)){
+            data2 <- reshape2::melt(data = data2, na.rm = FALSE, value.name = "value") # transform a matrix into a data frame with 2 coordinates columns and the third intensity column
         }
         if(rotate == TRUE){
             data2[, 1] <- base::rev(x = data2[, 1])
         }
-        data2[, 3] <- base::factor(x = data2[, 3]) # to converte continuous scale into discrete scale
+        data2[, 3] <- base::factor(x = data2[, 3], exclude = NA, ordered = base::is.ordered(x = data2[, 3]), nmax = NA) # levels and labels not written: their defaults are computed from x inside base::factor(). # to converte continuous scale into discrete scale
     }
     tempo_gg_name <- "gg.indiv.plot."
     tempo_gg_count <- 0 # to facilitate debugging
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot())
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_raster(data = data1, mapping = ggplot2::aes_string(x = base::names(x = data1)[base::ifelse(test = rotate == FALSE, yes = 2, no = 1)], y = base::names(x = data1)[base::ifelse(test = rotate == FALSE, yes = 1, no = 2)], fill = base::names(x = data1)[3]), show.legend = show_scale)) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2(low = low_color1, high = high_color1, mid = mid_color1, midpoint = midpoint1, limit = limit1, breaks = base::c(limit1[1], midpoint1, limit1[2]), labels = saferTool::round2(data = base::c(limit1[1], midpoint1, limit1[2]), dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), name = legend_name1))
-    if( ! base::is.null(data2)){
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = base::names(x = data2)[base::ifelse(test = rotate == FALSE, yes = 2, no = 1)], y = base::names(x = data2)[base::ifelse(test = rotate == FALSE, yes = 1, no = 2)], alpha = base::names(x = data2)[3]), fill = color2, show.legend = FALSE))
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_discrete_manual(aesthetics = "alpha", values = if(invert2 == FALSE){base::c(0, alpha2)}else{base::c(alpha2, 0)}, guide = FALSE))
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_raster(mapping = ggplot2::aes(x = .data[[base::names(x = data1)[base::ifelse(test = rotate == FALSE, yes = 2, no = 1)]]], y = .data[[base::names(x = data1)[base::ifelse(test = rotate == FALSE, yes = 1, no = 2)]]], fill = .data[[base::names(x = data1)[3]]]), data = data1, stat = "identity", position = "identity", interpolate = FALSE, hjust = 0.5, vjust = 0.5, na.rm = FALSE, show.legend = show_scale, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2(name = legend_name1, limits = limit1, breaks = base::c(limit1[1], midpoint1, limit1[2]), labels = saferTool::round2(data = base::c(limit1[1], midpoint1, limit1[2]), dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), low = low_color1, mid = mid_color1, high = high_color1, midpoint = midpoint1, space = "Lab", na.value = "grey50", transform = "identity", guide = "colourbar", aesthetics = "fill"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    if( ! base::is.null(x = data2)){
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_raster(mapping = ggplot2::aes(x = .data[[base::names(x = data2)[base::ifelse(test = rotate == FALSE, yes = 2, no = 1)]]], y = .data[[base::names(x = data2)[base::ifelse(test = rotate == FALSE, yes = 1, no = 2)]]], alpha = .data[[base::names(x = data2)[3]]]), data = data2, stat = "identity", position = "identity", fill = color2, interpolate = FALSE, hjust = 0.5, vjust = 0.5, na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_discrete_manual(aesthetics = "alpha", values = if(invert2 == FALSE){base::c(0, alpha2)}else{base::c(alpha2, 0)}, breaks = ggplot2::waiver(), guide = "none"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::geom_raster(data = data2, mapping = ggplot2::aes_string(x = names(data2)[ifelse(rotate == FALSE, 2, 1)], y = names(data2)[ifelse(rotate == FALSE, 1, 2)], group = names(data2)[3]), fill = data2[, 3], alpha = alpha2, show.legend = FALSE)) # BEWARE: this does not work if NA present, because geom_raster() has a tendency to complete empty spaces, and thus, behave differently than geom_tile(). See https://github.com/tidyverse/ggplot2/issues/3025
     }
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::coord_fixed()) # x = y
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_reverse())
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(label = title))
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::coord_fixed(ratio = 1), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # x = y
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_y_reverse(), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(label = title, subtitle = ggplot2::waiver()), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     add_check <- TRUE
-    if( ! base::is.null(add)){ # if add is NULL, then = 0
-        if(base::grepl(pattern = "ggplot2::theme", add) == TRUE){
+    if( ! base::is.null(x = add)){ # if add is NULL, then = 0
+        if(base::grepl(pattern = "ggplot2::theme", x = add, ignore.case = FALSE, perl = FALSE, fixed = FALSE, useBytes = FALSE) == TRUE){
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count, ") \"ggplot2::theme\" STRING DETECTED IN THE add ARGUMENT -> INTERNAL GGPLOT2 THEME FUNCTIONS ggplot2::theme() AND ggplot2::theme_classic() HAVE BEEN INACTIVATED, TO BE USED BY THE USER", collapse = NULL, recycle0 = FALSE)
             warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
@@ -848,21 +851,21 @@ gg_heatmap <- function(
         }
     }
     if(add_check == TRUE){
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_classic(base_size = text_size))
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_classic(base_size = text_size, base_family = "", header_family = NULL, base_line_size = text_size / 22, base_rect_size = text_size / 22, ink = "black", paper = "white", accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme(
-            text = ggplot2::element_text(size = text_size), 
-            plot.title = ggplot2::element_text(size = title_text_size), # stronger than text
+            text = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = text_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE),
+            plot.title = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = title_text_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE), # stronger than text
             line = ggplot2::element_blank(), 
             axis.title = ggplot2::element_blank(), 
             axis.text = ggplot2::element_blank(), 
             axis.ticks = ggplot2::element_blank(), 
             panel.background = ggplot2::element_blank()
-        ))
+        ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
     if(plot == TRUE){
-        tempo_string <- base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + ", recycle0 = FALSE)
-        if( ! base::is.null(add)){
-            tempo_string <- base::paste(tempo_string, add, collapse = " ", recycle0 = FALSE)
+        tempo_string <- base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = NULL, recycle0 = FALSE), sep = " ", collapse = " + ", recycle0 = FALSE)
+        if( ! base::is.null(x = add)){
+            tempo_string <- base::paste(tempo_string, add, sep = " ", collapse = " ", recycle0 = FALSE)
         }
         base::print(x = base::eval(expr = base::parse(text = tempo_string, file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)))
     }else{
@@ -870,16 +873,16 @@ gg_heatmap <- function(
         tempo_warn <- base::paste0("(", warn_count, ") PLOT NOT SHOWN AS REQUESTED", collapse = NULL, recycle0 = FALSE)
         warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
     }
-    if(warn_print == TRUE & ! base::is.null(warn)){
-        base::on.exit(expr = base::warning(message = base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE), add = TRUE, after = TRUE)
+    if(warn_print == TRUE & ! base::is.null(x = warn)){
+        base::on.exit(expr = base::warning(base::paste0("FROM ", function_name, ":\n\n", warn, collapse = NULL, recycle0 = FALSE), call. = FALSE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL), add = TRUE, after = TRUE)
     }
     base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
     if(return == TRUE){
-        output <- ggplot2::ggplot_build(plot = base::eval(expr = base::parse(text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count), collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)))
+        output <- ggplot2::ggplot_build(plot = base::eval(expr = base::parse(text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = NULL, recycle0 = FALSE), sep = " ", collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)))
         output <- output$data
-        base::names(output)[1] <- "heatmap"
-        if( ! base::is.null(data2)){
-            base::names(output)[2] <- "mask"
+        base::names(x = output)[1] <- "heatmap"
+        if( ! base::is.null(x = data2)){
+            base::names(x = output)[2] <- "mask"
         }
         base::return(base::list(data = output, axes = output$layout$panel_params[[1]], scale = base::c(limit1[1], midpoint1, limit1[2]), warn = warn))
     }
@@ -890,7 +893,7 @@ gg_heatmap <- function(
     #### end warning output
 
     #### output
-    base::return(invisible(NULL))
+    base::return(base::invisible(x = NULL))
     #### end output
     #### end of function
 }
