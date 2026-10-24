@@ -777,3 +777,27 @@ testthat::expect_type(output_tidycat, "list")
     base::unlink(x = tempo_dir, recursive = TRUE, force = TRUE)
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
+
+testthat::test_that("gg_box regressions of saferGG 1.0.0 (warn_print, add facets, comp_2d field names)", {
+    base::set.seed(1)
+    obs_reg <- base::data.frame(y = stats::rnorm(n = 40, mean = 0, sd = 1), g = base::factor(x = base::rep(x = base::c("a", "b"), times = 20)), h = base::factor(x = base::rep(x = base::c("x", "y"), each = 20)), stringsAsFactors = TRUE)
+    base::set.seed(NULL)
+    # bug 1: warn_print = FALSE must not print the warnings, but warn must still be returned
+    testthat::expect_no_warning(object = output_wp <- saferGG::gg_box(data1 = obs_reg, y = "y", categ = "g", dot_color = "same", warn_print = FALSE, plot = FALSE, return = TRUE, safer_check = FALSE))
+    testthat::expect_true(object = base::grepl(pattern = "dot_color ARGUMENT HAS BEEN SET TO \"same\"", x = output_wp$warn, fixed = TRUE))
+    testthat::expect_warning(object = saferGG::gg_box(data1 = obs_reg, y = "y", categ = "g", dot_color = "same", warn_print = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE), regexp = "dot_color ARGUMENT HAS BEEN SET TO \"same\"", fixed = TRUE)
+    # bug 2: a non-NULL add (facets) must not fail with "object 'arg.names' not found"
+    output_add <- saferGG::gg_box(data1 = obs_reg, y = "y", categ = "g", add = "+ggplot2::facet_wrap(~h)", plot = FALSE, return = TRUE, safer_check = FALSE)
+    testthat::expect_type(object = output_add, "list")
+    # bug 3: comp_2d() field used by gg_box must exist in the saferTool output (identical_content, not identical.content)
+    tempo_comp <- saferTool::comp_2d(data1 = obs_reg["g"], data2 = obs_reg["g"], safer_check = FALSE, lib_path = NULL, error_text = "")
+    testthat::expect_true(object = "identical_content" %in% base::names(x = tempo_comp))
+    testthat::expect_true(object = tempo_comp$identical_content)
+    # bug 3: dots drawn (dot_categ set) must not fail with "invalid argument type"
+    output_dot <- saferGG::gg_box(data1 = obs_reg, y = "y", categ = "g", dot_categ = "h", plot = FALSE, return = TRUE, return_ggplot = TRUE, return_gtable = FALSE, safer_check = FALSE)
+    testthat::expect_s3_class(object = output_dot$ggplot, class = "ggplot")
+    output_dot_tidy <- saferGG::gg_box(data1 = obs_reg, y = "y", categ = "g", dot_categ = "h", dot_tidy = TRUE, plot = FALSE, return = TRUE, return_ggplot = FALSE, return_gtable = FALSE, safer_check = FALSE)
+    testthat::expect_type(object = output_dot_tidy, "list")
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
+})

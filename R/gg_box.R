@@ -2750,7 +2750,7 @@ gg_box <- function(
 
     #### warning output
     # must be before return()
-    if( ! base::is.null(x = warn)){
+    if( ! base::is.null(x = warn) & warn_print == TRUE){
         base::on.exit(
             expr = base::warning(
                 base::paste0(
