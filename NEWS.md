@@ -1,6 +1,7 @@
 # saferGG 1.0.0
 
 ## Major changes
+- Backbone v21.1: the invented `x` argument names (absent from the called function signature, for instance `base::any(x = ...)`, `base::all(x = ...)`, `base::sum(x = ...)`, `base::order(x = ...)`) are removed from all the function calls.
 - Full migration of all functions to the safer-r backbone v21.0: exact `class`/`typeof`/`mode` argument checking through `saferDev::arg_check()` (saferDev 2.0.0 semantics: exact class matching, e.g. `class = c("matrix", "array")`, `double_as_integer_allowed`, per-R-version handling via multiple `arg_check()` calls).
 - Internal shared functions now called directly as `saferDev:::.pack_and_function_check()` and `saferDev:::.base_op_check()` (saferDev imported in DESCRIPTION).
 - New functions: `gg_donut()`, `gg_heatmap()`, `gg_miami()`, `gg_point_rast()`, `gg_scatter()`.

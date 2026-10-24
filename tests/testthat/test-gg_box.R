@@ -86,7 +86,7 @@ testthat::test_that("gg_box draws boxplots and returns the expected structure", 
     output <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", dot_color = "same", dot_border_color = "red", return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     # x_lab as expression
-    output <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", x_lab = base::expression(x = paste("LAB")), return = TRUE, plot = FALSE, safer_check = FALSE)
+    output <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", x_lab = base::expression(paste("LAB")), return = TRUE, plot = FALSE, safer_check = FALSE)
     testthat::expect_type(output, "list")
     # y_lim
     output <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", y_lim = base::c(0, 5), return = TRUE, plot = FALSE, safer_check = FALSE)
