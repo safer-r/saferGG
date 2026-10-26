@@ -195,7 +195,7 @@ Warning: if geom_stick_base is NULL, the bottom limit of the y-axis is taken as 
 
 \item{grid}{logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present)}
 
-\item{add}{character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
+\item{add}{character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. Layers of add (e.g., "+ ggplot2::geom_hline(yintercept = 0)", "+ ggplot2::annotate(geom = 'text', x = 1, y = 0, label = 'a')") are drawn above the other layers, and their data are not returned in the $plot compartment of the output
 WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
 If the character string contains the "ggplot2::theme" string, then the article argument of gg_scatter() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x_angle (check all the arguments)
 Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions

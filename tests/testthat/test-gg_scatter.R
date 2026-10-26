@@ -729,3 +729,27 @@ testthat::test_that("gg_scatter prints its warnings only when warn_print = TRUE,
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
+
+testthat::test_that("gg_scatter add argument accepts extra layers (geom_hline(), geom_vline(), geom_abline(), annotate())", {
+    obs_lay <- base::data.frame(a = base::c(1, 2, 3, 4, 5, 6), b = base::c(2, 1, 4, 3, 6, 5), g = base::factor(x = base::rep(x = base::c("A", "B"), times = 3)), f = base::factor(x = base::rep(x = base::c("u", "v"), each = 3)), stringsAsFactors = TRUE)
+    output_ref <- saferGG::gg_scatter(data1 = obs_lay, x = "a", y = "b", categ = "g", plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+    for(tempo_add in base::c("+ ggplot2::geom_hline(yintercept = 3)", "+ ggplot2::geom_vline(xintercept = 3)", "+ ggplot2::geom_abline(intercept = 0, slope = 1)", "+ ggplot2::annotate(geom = \"text\", x = 2, y = 5, label = \"a\")")){
+        # before the fix: "INTERNAL ERROR 5" (length(output$data) AND length(coord_names) MUST BE IDENTICAL)
+        output_lay <- saferGG::gg_scatter(data1 = obs_lay, x = "a", y = "b", add = tempo_add, plot = FALSE, return = TRUE, warn_print = FALSE, safer_check = FALSE)
+        testthat::expect_type(object = output_lay, "list")
+        output_lay <- saferGG::gg_scatter(data1 = base::list(obs_lay, obs_lay), x = base::list("a", "a"), y = base::list("b", "b"), categ = base::list("g", "g"), add = tempo_add, plot = FALSE, return = TRUE, warn_print = FALSE, safer_check = FALSE)
+        testthat::expect_type(object = output_lay, "list")
+    }
+    # the add layer is the last layer of the plot and is not returned in $plot
+    output_lay <- saferGG::gg_scatter(data1 = obs_lay, x = "a", y = "b", categ = "g", add = "+ ggplot2::geom_hline(yintercept = 3)", plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+    testthat::expect_equal(object = base::length(x = output_lay$ggplot$layers), expected = base::length(x = output_ref$ggplot$layers) + 1L)
+    testthat::expect_s3_class(object = output_lay$ggplot$layers[[base::length(x = output_lay$ggplot$layers)]]$geom, class = "GeomHline")
+    testthat::expect_identical(object = base::names(x = output_lay$plot), expected = base::names(x = output_ref$plot))
+    testthat::expect_identical(object = output_lay$plot[[1]], expected = output_ref$plot[[1]])
+    # with facets, the add layer is drawn in each panel
+    output_lay <- saferGG::gg_scatter(data1 = obs_lay, x = "a", y = "b", add = "+ ggplot2::facet_grid(cols = ggplot2::vars(f)) + ggplot2::geom_hline(yintercept = 3)", plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+    tempo_built <- ggplot2::ggplot_build(plot = output_lay$ggplot)
+    testthat::expect_identical(object = base::as.integer(x = tempo_built$data[[base::length(x = tempo_built$data)]]$PANEL), expected = base::c(1L, 2L))
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
+})

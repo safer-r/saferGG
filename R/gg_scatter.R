@@ -91,7 +91,7 @@
 #' @param legend_name character string of the legend title. If legend_name is NULL and categ argument is not NULL, then legend_name <- categ. If data1 is a list, then legend_name must be a list of character strings, of same size as data1, with compartment 1 related to compartment 1 of data1, etc. Some of the list compartments can be NULL, and other not
 #' @param article logical. If TRUE, use an article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (e.g., add = "+ggplot2::theme_classic()" for the exact classic ggplot theme
 #' @param grid logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present)
-#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL
+#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. Layers of add (e.g., "+ ggplot2::geom_hline(yintercept = 0)", "+ ggplot2::annotate(geom = 'text', x = 1, y = 0, label = 'a')") are drawn above the other layers, and their data are not returned in the $plot compartment of the output
 #' WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()"
 #' If the character string contains the "ggplot2::theme" string, then the article argument of gg_scatter() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x_angle (check all the arguments)
 #' Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions
@@ -1842,11 +1842,17 @@ gg_scatter <- function(
     
     
     
+    # add management
+    # the add string is evaluated once here. Its non layer components (facets, scales, coords, labs, theme) are used as the first element of the plot (add_gg), while its layers (geom_hline(), annotate(), etc.) are removed from add_gg and added at the end of the final plot only (add_layers), because the names of the returned layer data (coord_names) are built in parallel with the internal layers
+    add_gg <- base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    add_layers <- add_gg$layers
+    add_gg$layers <- base::list()
+    # end add management
     # no need loop part
     coord_names <- NULL
     tempo_gg_name <- "gg.indiv.plot."
     tempo_gg_count <- 0
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = add_gg, pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::xlab(label = if(base::is.null(x = x_lab)){x[[1]]}else{x_lab}), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ylab(label = if(base::is.null(x = y_lab)){y[[1]]}else{y_lab}), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(label = title, subtitle = ggplot2::waiver()), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
@@ -2510,6 +2516,11 @@ shape = NA
     # end scale management
 
 
+    # add layers management
+    if(base::length(x = add_layers) > 0L){
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = add_layers, pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # layers of add, drawn above the other layers (see the add management section)
+    }
+    # end add layers management
 
 
     # drawing
@@ -2551,6 +2562,7 @@ shape = NA
     #### output
     if(return == TRUE){
         output <- base::suppressMessages(expr = ggplot2::ggplot_build(plot = fin_plot), classes = "message")
+        output$data <- output$data[base::seq_len(length.out = base::length(x = output$data) - base::length(x = add_layers))] # remove the last data that correspond to the layers of add
         # output$data <- output$data[-1] # yes for boxplot but not for scatter # remove the first data because corresponds to the initial empty boxplot
         if(base::length(x = output$data) != base::length(x = coord_names)){
             # nocov start (unreachable: internal consistency guard - coord_names is built in parallel with the layers)

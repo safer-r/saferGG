@@ -8,6 +8,7 @@
 
 ## Bug fixes
 - `gg_box()`: fixed crash when the `add` argument contains layers (`geom_hline()`, `geom_abline()`: "replacement has 0 rows"; `annotate()`: "Discrete value supplied to a continuous scale"). The layers of `add` are now drawn above the boxes and dots, while its other components (facets, scales, theme, labs) are used as before.
+- `gg_scatter()`: fixed "INTERNAL ERROR 5" with `return = TRUE` when the `add` argument contains layers (`geom_hline()`, `geom_vline()`, `geom_abline()`, `annotate()`). The layers of `add` are now drawn above the other layers and their data are not returned in the `$plot` compartment.
 - `gg_box()`: fixed crash of `dot.tidy = TRUE` with non-NULL `dot.categ` (the `binwidth` check also matched the second blank `geom_dotplot` legend layer).
 - `gg_scatter()`: fixed wrong `fake_categ` column length when a `geom_hline`/`geom_vline` compartment with `categ = NULL` is not the last data frame of a multi-`data1` call.
 
