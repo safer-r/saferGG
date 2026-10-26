@@ -811,3 +811,29 @@ testthat::test_that("gg_box warn_print = FALSE also silences the saferGraph::int
     while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })
+
+testthat::test_that("gg_box add argument accepts extra layers (geom_hline(), geom_abline(), annotate())", {
+    obs_lay <- base::data.frame(time = base::c(9.5, 10.2, 10.8, 9.9, 19.6, 20.4, 20.9, 19.8), g1 = base::factor(x = base::rep(x = base::c("G", "H"), each = 4)), g2 = base::factor(x = base::rep(x = base::c("A", "B"), times = 4)), f = base::factor(x = base::rep(x = base::c("u", "v"), each = 2, times = 2)), stringsAsFactors = TRUE)
+    output_ref <- saferGG::gg_box(data1 = obs_lay, y = "time", categ = "g1", plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+    for(tempo_add in base::c("+ ggplot2::geom_hline(yintercept = 15)", "+ ggplot2::geom_abline(intercept = 0, slope = 1)", "+ ggplot2::annotate(geom = \"text\", x = 1, y = 12, label = \"a\")")){
+        for(tempo_categ in base::list("g1", base::c("g1", "g2"))){
+            for(tempo_vertical in base::c(TRUE, FALSE)){
+                # before the fix: "replacement has 0 rows" (geom_hline(), geom_abline()) or "Discrete value supplied to a continuous scale" (annotate())
+                output_lay <- saferGG::gg_box(data1 = obs_lay, y = "time", categ = tempo_categ, vertical = tempo_vertical, add = tempo_add, plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+                testthat::expect_type(object = output_lay, "list")
+            }
+        }
+    }
+    # the add layer is the last layer of the plot and is not returned in $plot
+    output_lay <- saferGG::gg_box(data1 = obs_lay, y = "time", categ = "g1", add = "+ ggplot2::geom_hline(yintercept = 15)", plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+    testthat::expect_equal(object = base::length(x = output_lay$ggplot$layers), expected = base::length(x = output_ref$ggplot$layers) + 1L)
+    testthat::expect_s3_class(object = output_lay$ggplot$layers[[base::length(x = output_lay$ggplot$layers)]]$geom, class = "GeomHline")
+    testthat::expect_identical(object = base::names(x = output_lay$plot), expected = base::names(x = output_ref$plot))
+    testthat::expect_identical(object = output_lay$plot$dots, expected = output_ref$plot$dots)
+    # with facets, the add layer is drawn in each panel
+    output_lay <- saferGG::gg_box(data1 = obs_lay, y = "time", categ = "g1", add = "+ ggplot2::facet_grid(cols = ggplot2::vars(f)) + ggplot2::geom_hline(yintercept = 15)", plot = FALSE, return = TRUE, return_ggplot = TRUE, warn_print = FALSE, safer_check = FALSE)
+    tempo_built <- ggplot2::ggplot_build(plot = output_lay$ggplot)
+    testthat::expect_identical(object = base::as.integer(x = tempo_built$data[[base::length(x = tempo_built$data)]]$PANEL), expected = base::c(1L, 2L))
+    while(base::length(x = grDevices::dev.list()) > 0){ grDevices::dev.off() }
+    base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
+})

@@ -59,7 +59,7 @@
 #' @param legend_width single proportion (between 0 and 1) indicating the relative width of the legend sector (on the right of the plot) relative to the width of the plot. Value 1 means that the window device width is split in 2, half for the plot and half for the legend. Value 0 means no room for the legend, which will overlay the plot region. Write NULL to inactivate the legend sector. In such case, ggplot2 will manage the room required for the legend display, meaning that the width of the plotting region can vary between graphs, depending on the text in the legend.
 #' @param article logical. If TRUE, use an article theme (article like). If FALSE, use a classic related ggplot theme. Use the add argument (e.g., add = "+ggplot2::theme_classic()" for the exact classic ggplot theme.
 #' @param grid logical. Draw lines in the background to better read the box values? Not considered if article == FALSE (grid systematically present).
-#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()". If the character string contains the "ggplot2::theme" string, then the article argument of gg_box() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x_angle (check all the arguments). Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions. The call of objects inside the quotes of add can lead to an error if the name of these objects are some of the gg_box() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'    
+#' @param add character string allowing to add more ggplot2 features (dots, lines, themes, facet, etc.). Ignored if NULL. WARNING: (1) the string must start with "+", (2) the string must finish with ")" and (3) each function must be preceded by "ggplot2::". Example: "+ ggplot2::coord_flip() + ggplot2::theme_bw()". If the character string contains the "ggplot2::theme" string, then the article argument of gg_box() (see above) is ignored with a warning. In addition, some arguments can be overwritten, like x_angle (check all the arguments). Layers of add (e.g., "+ ggplot2::geom_hline(yintercept = 0)", "+ ggplot2::annotate(geom = 'text', x = 1, y = 0, label = 'a')") are drawn above the boxes and dots, and are not used to compute the y-axis limits (use y_lim if necessary). Their data are not returned in the $plot compartment of the output. Handle the add argument with caution since added functions can create conflicts with the preexisting internal ggplot2 functions. The call of objects inside the quotes of add can lead to an error if the name of these objects are some of the gg_box() arguments. Indeed, the function will use the internal argument instead of the global environment object. Example article <- "a" in the working environment and add = '+ ggplot2::ggtitle(article)'. The risk here is to have TRUE as title. To solve this, use add = '+ ggplot2::ggtitle(get("article", envir = .GlobalEnv))'    
 #' @param return logical. Return the graph parameters?.
 #' @param return_ggplot logical. Return the ggplot object in the output list? Ignored if return argument is FALSE. WARNING: always assign the gg_box() function (e.g., a <- gg_box()) if return_ggplot argument is TRUE, otherwise, double plotting is performed. See $ggplot in the RETURN section below for more details.
 #' @param return_gtable logical. Return the ggplot object as gtable of grobs in the output list? Ignored if plot argument is FALSE. Indeed, the graph must be plotted to get the grobs dispositions. See $gtable in the RETURN section below for more details.
@@ -1743,6 +1743,13 @@ gg_box <- function(
 
     #### main code
 
+    # add management
+    # the add string is evaluated once here. Its non layer components (facets, scales, coords, labs, theme) are used as the first element of every plot below (add_gg), while its layers (geom_hline(), annotate(), etc.) are removed from add_gg and added at the end of the final plot only (add_layers), because the code below relies on the layer order of the built plots (e.g., ggplot_build()$data[[1]] must be the dots) and on a discrete x-axis scale, set by the first layer
+    add_gg <- base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    add_layers <- add_gg$layers
+    add_gg$layers <- base::list()
+    # end add management
+
     # y coordinates recovery (create ini_box_coord, dot_coord and modify data1)
     if(base::length(x = categ)== 1L){
         # width commputations
@@ -1758,7 +1765,7 @@ gg_box <- function(
         # per box dots coordinates recovery
         tempo_gg_name <- "gg.indiv.plot."
         tempo_gg_count <- 0
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = add_gg, pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
         # in this function, ggplot2::aes(...)[base::c(<other aesthetics>, "x", "y")] reproduces the aesthetic order of the former ggplot2::aes_string() (x and y last): ggplot2 numbers the default groups according to the order of the discrete aesthetics, and the internal checks of the dot and box coordinates rely on this numbering
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = .data[[categ[1]]], y = .data[[y]], color = .data[[categ[1]]])[base::c("colour", "x", "y")], stroke = dot_border_size, size = dot_size, alpha = dot_alpha, shape = 21, stat = "identity", position = "identity", na.rm = FALSE, show.legend = NA, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_discrete_manual(aesthetics = "color", name = box_legend_name, values = if(base::is.null(x = categ_color)){ # categ_color used for dot colors because at that stage, we do not care about colors
@@ -1782,7 +1789,7 @@ gg_box <- function(
         # per box dots coordinates recovery
         tempo_gg_name <- "gg.indiv.plot."
         tempo_gg_count <- 0
-        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = add_gg, pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add added here to have the facets
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = .data[[categ[1]]], y = .data[[y]], color = .data[[categ[2]]])[base::c("colour", "x", "y")], stroke = dot_border_size, size = dot_size, alpha = dot_alpha, shape = 21, stat = "identity", position = "identity", na.rm = FALSE, show.legend = NA, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_discrete_manual(aesthetics = "color", name = box_legend_name, values = if(base::is.null(x = categ_color)){ # categ_color used for dot colors because at that stage, we do not care about colors
             # nocov start (unreachable: categ_color is converted to a non-NULL character vector by the categ_color management block above (comment "categ_color not NULL anymore"))
@@ -1956,7 +1963,7 @@ gg_box <- function(
     # constant part
     tempo_gg_name <- "gg.indiv.plot."
     tempo_gg_count <- 0
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = base::eval(expr = base::parse(text = base::paste0("ggplot2::ggplot()", if(base::is.null(x = add)){""}else{add}, collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add is directly put here to deal with additional variable of data, like when using facet_grid. No problem if add is a theme, will be dealt below
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = add_gg, pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # add is directly put here to deal with additional variable of data, like when using facet_grid. No problem if add is a theme, will be dealt below
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::xlab(label = if(base::is.null(x = x_lab)){categ[1]}else{x_lab}), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ylab(label = if(base::is.null(x = y_lab)){y}else{y_lab}), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(label = title, subtitle = ggplot2::waiver()), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
@@ -2725,6 +2732,13 @@ gg_box <- function(
         }
     }
     # end legend management
+
+
+    # add layers management
+    if(base::length(x = add_layers) > 0L){
+        base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = add_layers, pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # layers of add, drawn above the boxes and dots (see the add management section)
+    }
+    # end add layers management
     
     
     # drawing
@@ -2788,6 +2802,7 @@ gg_box <- function(
     # }
     if(return == TRUE){
         tempo_output <- ggplot2::ggplot_build(plot = fin_plot)
+        tempo_output$data <- tempo_output$data[base::seq_len(length.out = base::length(x = tempo_output$data) - base::length(x = add_layers))] # remove the last data that correspond to the layers of add
         tempo_output$data <- tempo_output$data[-1] # remove the first data because corresponds to the initial empty boxplot
         if(base::length(x = tempo_output$data) != base::length(x = coord_names)){
             # nocov start (unreachable: internal consistency guard - coord_names is built in parallel with the layers)
