@@ -51,7 +51,7 @@ gg_point_rast(
 
 \item{fill}{dot fill color (as the fill argument of ggplot2::geom_point()). If NULL (default), not used.}
 
-\item{alpha}{dot transparency (as the alpha argument of ggplot2::geom_point()). If NULL (default), not used.}
+\item{alpha}{single numeric value (from 0 to 1) of dot transparency (as the alpha argument of ggplot2::geom_point()). If NULL (default), not used.}
 
 \item{raster_width}{width of the result image (in inches). Default: determined by the current device parameters.}
 

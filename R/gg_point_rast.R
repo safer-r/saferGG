@@ -18,7 +18,7 @@
 #' @param stroke dot border size (as the stroke argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param color dot color or dot border color (as the color argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param fill dot fill color (as the fill argument of ggplot2::geom_point()). If NULL (default), not used.
-#' @param alpha dot transparency (as the alpha argument of ggplot2::geom_point()). If NULL (default), not used.
+#' @param alpha single numeric value (from 0 to 1) of dot transparency (as the alpha argument of ggplot2::geom_point()). If NULL (default), not used.
 #' @param raster_width width of the result image (in inches). Default: determined by the current device parameters.
 #' @param raster_height height of the result image (in inches). Default: determined by the current device parameters.
 #' @param raster_dpi resolution of the result image.
