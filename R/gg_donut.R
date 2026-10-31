@@ -48,7 +48,15 @@
     #' $ggplot: ggplot object that can be used for reprint (use print($ggplot) or update (use $ggplot + ggplot2::...). NULL if return_ggplot argument is FALSE. Warning: the legend is not in $ggplot as it is in a separated grob (use $gtable to get it). Of note, a non-null $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot
     #' $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot
 #' @examples
-#' obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
+#' obs1 <- data.frame(
+#'     Km = c(20, 10, 1, 5),
+#'     Car = c("TUUT", "WIIM", "BIP", "WROUM"),
+#'     Color1 = 1:4,
+#'     color2 = c("red", "blue", "green", "black"),
+#'     Country = c("FR", "UK", "US", NA),
+#'     stringsAsFactors = TRUE
+#' )
+#' gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
 #' @importFrom ggplot2 .data
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 annotate

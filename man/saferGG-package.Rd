@@ -4,15 +4,15 @@
 \name{saferGG-package}
 \alias{saferGG}
 \alias{saferGG-package}
-\title{saferGG: ggplot2 graphics}
+\title{saferGG: 'ggplot2' Graphics}
 \description{
 Set of functions to draw 'ggplot2' graphics (boxplots, scatterplots, donuts, heatmaps, Miami plots, raster layers, color palettes and justification helpers), written according to the safer-r project recommendations for R function development (see \url{https://github.com/safer-r}). This includes strict checking of argument values, explicit package namespace qualification of all the called functions and explicit writing of all their arguments, among other things.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item <\url{https://github.com/safer-r/saferGG>}
-  \item <\url{https://safer-r.github.io/saferGG/>}
+  \item \url{https://github.com/safer-r/saferGG}
+  \item Report bugs at \url{https://github.com/safer-r/saferGG/issues}
 }
 
 }

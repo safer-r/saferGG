@@ -6,3 +6,7 @@
 ^check$
 ^pkgdown$
 ^\.github$
+^Rplots\.pdf$
+^README\.md$
+^cran-comments\.md$
+^CRAN-SUBMISSION$

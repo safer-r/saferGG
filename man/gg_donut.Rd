@@ -133,5 +133,13 @@ For ggplot2 specifications, see: https://ggplot2.tidyverse.org/articles/ggplot2-
 - Size arguments (hole_text_size, border_size, title_text_size and annotation_size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE)).
 }
 \examples{
-obs1 <- data.frame(Km = c(20, 10, 1, 5), Car = c("TUUT", "WIIM", "BIP", "WROUM"), Color1 = 1:4, color2 = c("red", "blue", "green", "black"), Country = c("FR", "UK", "US", NA), stringsAsFactors = TRUE) ; gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
+obs1 <- data.frame(
+    Km = c(20, 10, 1, 5),
+    Car = c("TUUT", "WIIM", "BIP", "WROUM"),
+    Color1 = 1:4,
+    color2 = c("red", "blue", "green", "black"),
+    Country = c("FR", "UK", "US", NA),
+    stringsAsFactors = TRUE
+)
+gg_donut(data1 = obs1, freq = "Km", categ = "Car", annotation = "Country")
 }

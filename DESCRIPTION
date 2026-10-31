@@ -1,6 +1,6 @@
 Package: saferGG
 Type: Package
-Title: ggplot2 graphics
+Title: 'ggplot2' Graphics
 Version: 1.0.0
 Date: 2026-10-15
 Authors@R: c(
@@ -12,7 +12,8 @@ Authors@R: c(
 Encoding: UTF-8
 Maintainer: Gael Millot <gael.millot@pasteur.fr>
 Description: Set of functions to draw 'ggplot2' graphics (boxplots, scatterplots, donuts, heatmaps, Miami plots, raster layers, color palettes and justification helpers), written according to the safer-r project recommendations for R function development (see <https://github.com/safer-r>). This includes strict checking of argument values, explicit package namespace qualification of all the called functions and explicit writing of all their arguments, among other things.
-URL: <https://github.com/safer-r/saferGG>, <https://safer-r.github.io/saferGG/>
+URL: https://github.com/safer-r/saferGG
+BugReports: https://github.com/safer-r/saferGG/issues
 License: GPL-3
 Config/roxygen2/version: 8.0.0
 Depends:
@@ -30,11 +31,9 @@ Imports:
     saferGraph,
     saferTool (>= 1.2.0),
     scales
-Suggests: 
+Suggests:
     knitr,
+    pkgload,
     rmarkdown,
     testthat (>= 3.0.0)
-Remotes:
-    safer-r/saferGraph,
-    safer-r/saferTool
 VignetteBuilder: knitr

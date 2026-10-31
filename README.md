@@ -1,5 +1,5 @@
 
-# saferGG <a href="">[<img src="man/figures/saferGG.png" align="right" height="140" />](https://safer-r.github.io/saferGG)</a>
+# saferGG <a href="https://github.com/safer-r/saferGG">[<img src="man/figures/saferGG.png" align="right" height="140" />](https://github.com/safer-r/saferGG)</a>
 
 <br />
 
@@ -8,7 +8,7 @@
 [![Codecov test coverage](https://codecov.io/github/safer-r/saferGG/coverage.svg?branch=main)](https://app.codecov.io/github/safer-r/saferGG?branch=main)
 [![CRAN status](https://img.shields.io/cran/v/saferGG.svg)](https://cran.r-project.org/package=saferGG)
 [![downloads](https://cranlogs.r-pkg.org/badges/saferGG)](https://www.rdocumentation.org/trends)
-[![](https://img.shields.io/badge/license-GPL3.0-green.svg)](https://opensource.org/licenses/MITgpl-3-0)
+[![](https://img.shields.io/badge/license-GPL3.0-green.svg)](https://opensource.org/license/gpl-3.0)
 [![rworkflows](https://github.com/safer-r/saferGG/actions/workflows/rworkflows.yml/badge.svg)](https://github.com/safer-r/saferGG/actions/workflows/rworkflows.yml)
 [![Safer-R Status](https://img.shields.io/badge/Safer--R%20status-backbone%20v21.2-crimson)](https://github.com/safer-r/saferMake/tree/main/inst)
 <!-- badges: end -->
@@ -65,18 +65,14 @@ The different *saferGG* releases are tagged [here](https://github.com/safer-r/sa
 
 ## Installation
 
-*saferGG* can be currently be installed from GitHub:
+*saferGG* can be currently be installed from GitHub, together with its *saferTool* and *saferGraph* dependencies, which are not on CRAN yet:
 
 ```r
 install.packages("remotes")
-remotes::install_github("https://github.com/safer-r/saferGG") # or open R as admin and remotes::install_github("https://github.com/safer-r/saferGG", lib = "C:/Program Files/R/R-4.6.0/library")
+remotes::install_github(c("https://github.com/safer-r/saferTool", "https://github.com/safer-r/saferGraph", "https://github.com/safer-r/saferGG"), upgrade = "always") # or open R as admin and add lib = "C:/Program Files/R/R-4.6.0/library"
 ```
 
-The *saferGraph* and *saferTool* dependencies are installed from GitHub (`Remotes:` field of the DESCRIPTION file). If older versions of them are already installed, update them too, otherwise *saferGG* functions can fail (e.g., `invalid argument type` in `gg_box()`):
-
-```r
-remotes::install_github(c("https://github.com/safer-r/saferTool", "https://github.com/safer-r/saferGraph", "https://github.com/safer-r/saferGG"), upgrade = "always")
-```
+This also updates older installed versions of *saferTool* and *saferGraph*, otherwise *saferGG* functions can fail (e.g., `invalid argument type` in `gg_box()`).
 
 Older versions can be installed like this:
 
