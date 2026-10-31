@@ -271,26 +271,21 @@ gg_scatter <- function(
 
     #### argument primary checking
 
-    ######## arg with no default values
-    mandat_args <- base::c(
-        "data1", 
-        "x", 
-        "y"
-    )
-    tempo <- base::eval(expr = base::parse(text = base::paste0("base::c(base::missing(", base::paste0(mandat_args, collapse = "),base::missing(", recycle0 = FALSE), "))", collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
-    if(base::any(tempo, na.rm = TRUE)){
+    ######## arg ... forbidden
+    # nocov start
+    # codecov inactivated because it is an internal control of code writing, impossible to cover with argument values.
+    if("..." %in% arg_names) {
+        # This check is here in case the developer has not correctly written the argument of its function
         tempo_cat <- base::paste0(
-            error_text_start, 
-            "FOLLOWING ARGUMENT", 
-            base::ifelse(test = base::sum(tempo, na.rm = TRUE) > 1, yes = "S HAVE", no = " HAS"), 
-            " NO DEFAULT VALUE AND REQUIRE ONE:\n", 
-            base::paste0(mandat_args[tempo], collapse = "\n", recycle0 = FALSE), 
-            collapse = NULL, 
+            error_text_start,
+            "ARGUMENT ... IS NOT ALLOWED IN SAFER-R FUNCTIONS.\n\nPLEASE, REWRITE YOUR FUNCTION CORRECTLY.",
+            collapse = NULL,
             recycle0 = FALSE
         )
-        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
-    ######## end arg with no default values
+    # nocov end
+    ######## end arg ... forbidden
 
     ######## mandatory arg of safer-r functions
     mandat_args <- base::c("lib_path", "safer_check", "error_text")
@@ -298,17 +293,38 @@ gg_scatter <- function(
     if(base::any(tempo_log, na.rm = TRUE)) {
         # This check is here in case the developer has not correctly written the argument of its function
         tempo_cat <- base::paste0(
-            error_text_start, 
-            "FOLLOWING ARGUMENT", 
-            base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "S ARE", no = " IS"), 
-            " MANDATORY IN SAFER-R FUNCTIONS:\n", 
-            base::paste0(mandat_args[tempo_log], collapse = "\n", recycle0 = FALSE), 
-            collapse = NULL, 
+            error_text_start,
+            "FOLLOWING ARGUMENT",
+            base::ifelse(test = base::sum(tempo_log, na.rm = TRUE) > 1, yes = "S ARE", no = " IS"),
+            " MANDATORY IN SAFER-R FUNCTIONS:\n",
+            base::paste0(mandat_args[tempo_log], collapse = "\n", recycle0 = FALSE),
+            collapse = NULL,
             recycle0 = FALSE
         )
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }
     ######## end mandatory arg of safer-r functions
+
+    ######## arg with no default values
+    no_def_args <- base::c(
+        "data1",
+        "x",
+        "y"
+    )
+    tempo <- base::eval(expr = base::parse(text = base::paste0("base::c(base::missing(", base::paste0(no_def_args, collapse = "),base::missing(", recycle0 = FALSE), "))", collapse = NULL, recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
+    if(base::any(tempo, na.rm = TRUE)){
+        tempo_cat <- base::paste0(
+            error_text_start,
+            "FOLLOWING ARGUMENT",
+            base::ifelse(test = base::sum(tempo, na.rm = TRUE) > 1, yes = "S HAVE", no = " HAS"),
+            " NO DEFAULT VALUE AND REQUIRE ONE:\n",
+            base::paste0(no_def_args[tempo], collapse = "\n", recycle0 = FALSE),
+            collapse = NULL,
+            recycle0 = FALSE
+        )
+        base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL) # == in base::stop() to be able to add several messages between ==
+    }
+    ######## end arg with no default values
 
     ######## management of NULL arguments
     # before NA checking because base::is.na(NULL) return logical(0) and base::all(logical(0)) is TRUE (but secured with & base::length(x = x) > 0)
@@ -565,13 +581,14 @@ gg_scatter <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "ggplot2::aes",
                 "ggplot2::annotate",
+                "scales::alpha",
                 "ggplot2::coord_cartesian",
-                "ggplot2::coord_flip",
                 "ggplot2::element_line",
                 "ggplot2::element_rect",
                 "ggplot2::element_text",
@@ -587,26 +604,22 @@ gg_scatter <- function(
                 "ggplot2::scale_fill_manual",
                 "ggplot2::scale_shape_manual",
                 "ggplot2::scale_x_continuous",
-                "ggplot2::scale_x_reverse",
                 "ggplot2::scale_y_continuous",
-                "ggplot2::scale_y_reverse",
                 "ggplot2::theme",
-                "ggplot2::theme_bw",
                 "ggplot2::theme_classic",
                 "ggplot2::theme_void",
                 "ggplot2::waiver",
                 "ggplot2::xlab",
                 "ggplot2::ylab",
-                "grDevices::dev.list",
-                "grid::convertUnit",
-                "grid::unit",
                 "gridExtra::grid.arrange",
                 "scales::math_format",
                 "scales::rescale_none",
                 "scales::trans_format",
                 "saferGraph::scale2", 
                 "saferGraph::inter_ticks",
-                "Cairo::Cairo",
+                "saferTool::round2",
+                "saferGG::gg_palette",
+                "saferGG::gg_just",
                 "saferGG::gg_point_rast",
                 "saferGG::gg_get_legend",
                 "saferGG::gg_empty",
@@ -622,9 +635,17 @@ gg_scatter <- function(
     }
     ######## end check of the required functions from the required packages
 
+    ######## escaping CRAN submission NOTE for internal functions
+
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
+    # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
+    # not mandatory if your function is not designed for submission to the CRAN
+
+    ######## end escaping CRAN submission NOTE for internal functions
+
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }
@@ -2296,7 +2317,7 @@ shape = NA
             # nocov end
             }
         }else if(plot == TRUE){ # means all FALSE
-            legend_final <- ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL))+ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = ggplot2::alpha(colour = "black", alpha = 0), accent = "#3366FF") # empty graph instead of legend
+            legend_final <- ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL))+ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF") # empty graph instead of legend
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (NON-NULL categ ARGUMENT OR legend_show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON-NULL legend_width ARGUMENT\n", collapse = NULL, recycle0 = FALSE)
             warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)

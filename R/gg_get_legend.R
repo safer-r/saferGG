@@ -312,7 +312,8 @@ gg_get_legend <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "saferDev::arg_check", 
@@ -330,6 +331,7 @@ gg_get_legend <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -337,7 +339,7 @@ gg_get_legend <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }
@@ -447,7 +449,7 @@ gg_get_legend <- function(
 
     #### main code
     win_nb <- grDevices::dev.cur()
-    grDevices::pdf(file = NULL)
+    grDevices::pdf(file = NULL, width = , height = , onefile = , family = , title = , fonts = , version = , paper = , encoding = , bg = , fg = , pointsize = , pagecentre = , colormodel = , useDingbats = , useKerning = , fillOddEven = , compress = , timestamp = , producer = , author = )
     tmp <- ggplot2::ggplot_gtable(data = ggplot_built)
     # BEWARE with ggplot_gtable : open a blanck device https://stackoverflow.com/questions/17012518/why-does-this-r-ggplot2-code-bring-up-a-blank-display-device
     base::invisible(x = grDevices::dev.off(which = grDevices::dev.cur()))

@@ -463,7 +463,8 @@ gg_donut <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 "saferDev::arg_check", # write each function preceeded by their package name
                 "ggplot2::aes",
@@ -487,9 +488,6 @@ gg_donut <- function(
                 "ggrepel::geom_text_repel",
                 "gridExtra::arrangeGrob",
                 "gridExtra::grid.arrange",
-                "grid::textGrob",
-                "grid::unit",
-                "grDevices::colors",
                 "scales::alpha",
                 "scales::censor",
                 "saferGG::gg_get_legend"
@@ -506,6 +504,7 @@ gg_donut <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -513,7 +512,7 @@ gg_donut <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }
@@ -1072,7 +1071,8 @@ gg_donut <- function(
         transform = "identity",
         guide = ggplot2::waiver(),
         position = "bottom",
-        sec.axis = ggplot2::waiver()
+        # trans = base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of the deprecated trans argument (written without the lifecycle package, not imported by saferGG)
+        sec.axis = ggplot2::waiver(), trans = base::quote(expr = )
     ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # must be centered on x = 0 # trans argument not written because deprecated (replaced by transform)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ylim(base::c(0, base::max(base::cumsum(x = data1[ , freq]), na.rm = FALSE))), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     if(hole_text == TRUE){
@@ -1113,7 +1113,7 @@ gg_donut <- function(
                     legend.text = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = legend_text_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE),
                     legend.spacing.y = grid::unit(x = legend_box_space, units = 'mm', data = NULL),
                     complete = FALSE,
-                    validate = TRUE
+                    validate = TRUE, line = , rect = , text = , title = , point = , polygon = , geom = , spacing = , margins = , aspect.ratio = , axis.title = , axis.title.x = , axis.title.x.top = , axis.title.x.bottom = , axis.title.y = , axis.title.y.left = , axis.title.y.right = , axis.text = , axis.text.x = , axis.text.x.top = , axis.text.x.bottom = , axis.text.y = , axis.text.y.left = , axis.text.y.right = , axis.text.theta = , axis.text.r = , axis.ticks = , axis.ticks.x = , axis.ticks.x.top = , axis.ticks.x.bottom = , axis.ticks.y = , axis.ticks.y.left = , axis.ticks.y.right = , axis.ticks.theta = , axis.ticks.r = , axis.minor.ticks.x.top = , axis.minor.ticks.x.bottom = , axis.minor.ticks.y.left = , axis.minor.ticks.y.right = , axis.minor.ticks.theta = , axis.minor.ticks.r = , axis.ticks.length = , axis.ticks.length.x = , axis.ticks.length.x.top = , axis.ticks.length.x.bottom = , axis.ticks.length.y = , axis.ticks.length.y.left = , axis.ticks.length.y.right = , axis.ticks.length.theta = , axis.ticks.length.r = , axis.minor.ticks.length = , axis.minor.ticks.length.x = , axis.minor.ticks.length.x.top = , axis.minor.ticks.length.x.bottom = , axis.minor.ticks.length.y = , axis.minor.ticks.length.y.left = , axis.minor.ticks.length.y.right = , axis.minor.ticks.length.theta = , axis.minor.ticks.length.r = , axis.line = , axis.line.x = , axis.line.x.top = , axis.line.x.bottom = , axis.line.y = , axis.line.y.left = , axis.line.y.right = , axis.line.theta = , axis.line.r = , legend.background = , legend.margin = , legend.spacing = , legend.spacing.x = , legend.key = , legend.key.size = , legend.key.height = , legend.key.width = , legend.key.spacing = , legend.key.spacing.x = , legend.key.spacing.y = , legend.key.justification = , legend.frame = , legend.ticks = , legend.ticks.length = , legend.axis.line = , legend.text.position = , legend.title = , legend.title.position = , legend.position = , legend.position.inside = , legend.direction = , legend.byrow = , legend.justification = , legend.justification.top = , legend.justification.bottom = , legend.justification.left = , legend.justification.right = , legend.justification.inside = , legend.location = , legend.box = , legend.box.just = , legend.box.margin = , legend.box.background = , legend.box.spacing = , panel.background = , panel.border = , panel.spacing = , panel.spacing.x = , panel.spacing.y = , panel.grid = , panel.grid.major = , panel.grid.minor = , panel.grid.major.x = , panel.grid.major.y = , panel.grid.minor.x = , panel.grid.minor.y = , panel.ontop = , panel.widths = , panel.heights = , plot.background = , plot.title = , plot.title.position = , plot.subtitle = , plot.caption = , plot.caption.position = , plot.tag = , plot.tag.position = , plot.tag.location = , plot.margin = , strip.background = , strip.background.x = , strip.background.y = , strip.clip = , strip.placement = , strip.text = , strip.text.x = , strip.text.x.bottom = , strip.text.x.top = , strip.text.y = , strip.text.y.left = , strip.text.y.right = , strip.switch.pad.grid = , strip.switch.pad.wrap = 
             ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         }
     }else{
@@ -1122,7 +1122,7 @@ gg_donut <- function(
                 legend.text = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = legend_text_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE),
                 legend.spacing.y = grid::unit(x = legend_box_space, units = 'mm', data = NULL),
                 complete = FALSE,
-                validate = TRUE
+                validate = TRUE, line = , rect = , text = , title = , point = , polygon = , geom = , spacing = , margins = , aspect.ratio = , axis.title = , axis.title.x = , axis.title.x.top = , axis.title.x.bottom = , axis.title.y = , axis.title.y.left = , axis.title.y.right = , axis.text = , axis.text.x = , axis.text.x.top = , axis.text.x.bottom = , axis.text.y = , axis.text.y.left = , axis.text.y.right = , axis.text.theta = , axis.text.r = , axis.ticks = , axis.ticks.x = , axis.ticks.x.top = , axis.ticks.x.bottom = , axis.ticks.y = , axis.ticks.y.left = , axis.ticks.y.right = , axis.ticks.theta = , axis.ticks.r = , axis.minor.ticks.x.top = , axis.minor.ticks.x.bottom = , axis.minor.ticks.y.left = , axis.minor.ticks.y.right = , axis.minor.ticks.theta = , axis.minor.ticks.r = , axis.ticks.length = , axis.ticks.length.x = , axis.ticks.length.x.top = , axis.ticks.length.x.bottom = , axis.ticks.length.y = , axis.ticks.length.y.left = , axis.ticks.length.y.right = , axis.ticks.length.theta = , axis.ticks.length.r = , axis.minor.ticks.length = , axis.minor.ticks.length.x = , axis.minor.ticks.length.x.top = , axis.minor.ticks.length.x.bottom = , axis.minor.ticks.length.y = , axis.minor.ticks.length.y.left = , axis.minor.ticks.length.y.right = , axis.minor.ticks.length.theta = , axis.minor.ticks.length.r = , axis.line = , axis.line.x = , axis.line.x.top = , axis.line.x.bottom = , axis.line.y = , axis.line.y.left = , axis.line.y.right = , axis.line.theta = , axis.line.r = , legend.background = , legend.margin = , legend.spacing = , legend.spacing.x = , legend.key = , legend.key.size = , legend.key.height = , legend.key.width = , legend.key.spacing = , legend.key.spacing.x = , legend.key.spacing.y = , legend.key.justification = , legend.frame = , legend.ticks = , legend.ticks.length = , legend.axis.line = , legend.text.position = , legend.title = , legend.title.position = , legend.position = , legend.position.inside = , legend.direction = , legend.byrow = , legend.justification = , legend.justification.top = , legend.justification.bottom = , legend.justification.left = , legend.justification.right = , legend.justification.inside = , legend.location = , legend.box = , legend.box.just = , legend.box.margin = , legend.box.background = , legend.box.spacing = , panel.background = , panel.border = , panel.spacing = , panel.spacing.x = , panel.spacing.y = , panel.grid = , panel.grid.major = , panel.grid.minor = , panel.grid.major.x = , panel.grid.major.y = , panel.grid.minor.x = , panel.grid.minor.y = , panel.ontop = , panel.widths = , panel.heights = , plot.background = , plot.title = , plot.title.position = , plot.subtitle = , plot.caption = , plot.caption.position = , plot.tag = , plot.tag.position = , plot.tag.location = , plot.margin = , strip.background = , strip.background.x = , strip.background.y = , strip.clip = , strip.placement = , strip.text = , strip.text.x = , strip.text.x.bottom = , strip.text.x.top = , strip.text.y = , strip.text.y.left = , strip.text.y.right = , strip.switch.pad.grid = , strip.switch.pad.wrap = 
         ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::guides(
@@ -1221,7 +1221,7 @@ gg_donut <- function(
         legend_plot <- base::suppressWarnings(expr = base::suppressMessages(expr = saferGG::gg_get_legend(ggplot_built = bef_final_plot, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text), classes = "message"), classes = "warning") # get legend
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::guides(fill = "none"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # inactivate the initial legend
         if(base::is.null(x = legend_plot)){ # even if any(unlist(legend_disp)) is TRUE # plot value removed from the condition: the gtable must be built even when plot == FALSE (otherwise grid.arrange() fails on a NULL legend.plot and the pdf(NULL) device opened above is not closed)
-            legend_plot <- ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL)) + ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF") # empty graph instead of legend
+            legend_plot <- ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(x = , y = ), environment = base::environment(fun = NULL)) + ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF") # empty graph instead of legend
             warn_count <- warn_count + 1
             tempo_warn <- base::paste0("(", warn_count,") LEGEND REQUESTED (legend_show ARGUMENT SET TO TRUE)\nBUT IT SEEMS THAT THE PLOT HAS NO LEGEND -> EMPTY LEGEND SPACE CREATED BECAUSE OF THE NON NULL legend_width ARGUMENT\n", collapse = NULL, recycle0 = FALSE)
             warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
@@ -1249,7 +1249,7 @@ gg_donut <- function(
     # end title
 
     # drawing
-    grDevices::pdf(file = NULL) # other arguments not written because they have no default value (taken from grDevices::pdf.options())
+    grDevices::pdf(file = NULL, width = , height = , onefile = , family = , title = , fonts = , version = , paper = , encoding = , bg = , fg = , pointsize = , pagecentre = , colormodel = , useDingbats = , useKerning = , fillOddEven = , compress = , timestamp = , producer = , author = ) # other arguments not written because they have no default value (taken from grDevices::pdf.options())
     grob_save <- NULL
     main_plot <- base::eval(expr = base::parse(text = base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = " + ", recycle0 = FALSE), file = "", n = NULL, prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL))
     main_plot_output <- base::suppressMessages(expr = ggplot2::ggplot_build(plot = main_plot), classes = "message")
@@ -1268,7 +1268,7 @@ gg_donut <- function(
         bottom = NULL,
         left = " ",
         right = " ",
-        padding = grid::unit(x = 0.5, units = "line", data = NULL)
+        padding = grid::unit(x = 0.5, units = "line", data = NULL), layout_matrix = 
     ), classes = "warning"), classes = "message") # , left = " ", right = " " : trick to add margins in the plot. padding =  unit(0.5, "inch") is for top margin above the title # layout_matrix argument not written because it has no default value
     if( ! base::is.null(x = legend_width)){
         grob_save <- base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(main_grob, legend_plot, ncol = 2, widths = base::c(1, legend_width), newpage = TRUE), classes = "warning"), classes = "message") # assemble grobs, ggplot, gtable into a gtable that defines the positions of the different elements (as grobs)
@@ -1284,6 +1284,7 @@ gg_donut <- function(
         warn <- base::paste0(base::ifelse(test = base::is.null(x = warn), yes = tempo_warn, no = base::paste0(warn, "\n\n", tempo_warn, collapse = NULL, recycle0 = FALSE)), collapse = NULL, recycle0 = FALSE)
     }
     # end drawing
+    #### end main code
 
     #### warning output
     if(warn_print == TRUE & ! base::is.null(x = warn)){
@@ -1301,7 +1302,7 @@ gg_donut <- function(
     base::on.exit(expr = base::options(warning.length = ini_warning_length), add = TRUE, after = TRUE)
     #### end warning output
 
-    # output
+    #### output
     if(return == TRUE){
         if(base::is.null(x = base::unlist(x = removed_row_nb, recursive = TRUE, use.names = TRUE))){
             removed_row_nb <- NULL
@@ -1344,9 +1345,7 @@ gg_donut <- function(
         )
         base::return(output) # this plots the graph if return_ggplot is TRUE and if no assignment
     }
-    # end output
-
-    # end main code
+    #### end output
 }
 
 

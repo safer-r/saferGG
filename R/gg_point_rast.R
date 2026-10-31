@@ -353,26 +353,15 @@ gg_point_rast <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "saferDev::arg_check", 
                 "Cairo::Cairo", 
                 "ggplot2::ggproto", 
                 "ggplot2::layer", 
-                "ggplot2::GeomPoint", 
-                "graphics::par", 
-                "grDevices::dev.cur", 
-                "grDevices::dev.off", 
-                "grDevices::dev.set", 
-                "grid::grid.cap", 
-                "grid::gpar",
-                "grid::grid.points",
-                "grid::popViewport",
-                "grid::pushViewport",
-                "grid::rasterGrob",
-                "grid::unit",
-                "grid::viewport",
+                "ggplot2::GeomPoint",
                 # end functions required in this code
                 # internal functions required in this code
                 "saferDev:::.base_op_check"
@@ -385,13 +374,16 @@ gg_point_rast <- function(
     ######## end check of the required functions from the required packages
 
     ######## escaping CRAN submission NOTE for internal functions
+
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
+
     ######## end escaping CRAN submission NOTE for internal functions
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }

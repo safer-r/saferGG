@@ -37,8 +37,9 @@ gg_empty <- function(
         safer_check = TRUE,
         error_text = ""
 ){
-
-
+    # DEBUGGING
+    # text = "NO GRAPH" ; text_size = 12 ; title = "" ; title_size = 8 ; lib_path = NULL ; safer_check = TRUE ; error_text = ""
+    # function_name <- "gg_empty()" ; arg_user_setting = base::list(text = "NO GRAPH", text_size = 12, title = "", title_size = 8, lib_path = NULL, safer_check = TRUE, error_text = "") ; arg_names <- base::c("text", "text_size", "title", "title_size", "lib_path", "safer_check", "error_text")
 
     #### package name
     package_name <- "saferGG" # write NULL if the function developed is not in a package
@@ -316,7 +317,8 @@ gg_empty <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "ggplot2::aes",
@@ -343,6 +345,7 @@ gg_empty <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -350,7 +353,7 @@ gg_empty <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }
@@ -408,7 +411,7 @@ gg_empty <- function(
             " NOT CLASS \"character\":\n", 
             base::paste0(tempo_arg[tempo_log], collapse = "\n", recycle0 = FALSE), 
             "\nIf saferMake::saferMake() HAS BEEN USED TO MODIFY YOUR FUNCTION, PLEASE RESTART WITH YOUR MAIN CODE AND SELECT PROPER CLASS, TYPE AND/OR MODE FOR YOUR ARGUMENTS\n.HERE, ARGUMENTS ARE TYPE:\n", 
-            base::paste0(base::sapply(X = tempo_arg, FUN = function(x){base::paste0(x, ": \"", base::typeof(x = base::get(x = x, pos = -1L, envir = base::parent.frame(n = 3), mode = "any", inherits = FALSE)), '"', collapse = NULL, recycle0 = FALSE)}), collapse = "\n", recycle0 = FALSE), # parent.frame(n = 3) because the get() is evaluated inside the FUN closure of sapply. But sapply(FUN) calls lapply(FUN) internally !! So parent.frame(n = 1) is the internal lapply() frame called by sapply, parent.frame(n = 2) is sapply's frame, parent.frame(n = 3) is BACKBONE's frame. NB: paste0() and typeof() are primitives and add no frame.
+            base::paste0(base::sapply(X = tempo_arg, FUN = function(x){base::paste0(x, ": \"", base::typeof(x = base::get(x = x, pos = -1L, envir = base::parent.frame(n = 3), mode = "any", inherits = FALSE)), "\"", collapse = NULL, recycle0 = FALSE)}, simplify = TRUE, USE.NAMES = TRUE), collapse = "\n", recycle0 = FALSE), # parent.frame(n = 3) because the get() is evaluated inside the FUN closure of sapply. But sapply(FUN) calls lapply(FUN) internally !! So parent.frame(n = 1) is the internal lapply() frame called by sapply, parent.frame(n = 2) is sapply's frame, parent.frame(n = 3) is BACKBONE's frame. NB: paste0() and typeof() are primitives and add no frame.
             intern_error_text_end, 
             collapse = NULL, 
             recycle0 = FALSE
@@ -506,15 +509,16 @@ gg_empty <- function(
     tempo_gg_count <- 0
     # no need loop part
     # pos = -1 and envir = base::environment(fun = NULL): assignment in the environment of the present function, as the default pos = -1 of base::assign()
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(x = , y = ), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     if( ! base::is.null(x = text)){
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_text(mapping = ggplot2::aes(x = .data[["x"]], y = .data[["y"]], label = text), data = base::data.frame(x = 1, y = 1, row.names = NULL, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = TRUE), stat = "identity", position = "nudge", size = text_size, parse = FALSE, check_overlap = FALSE, size.unit = "mm", na.rm = FALSE, show.legend = NA, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggtitle(label = title, subtitle = ggplot2::waiver()), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_void(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = scales::alpha(colour = "black", alpha = 0), accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # default values of ggplot2::theme_void() (its paper default uses alpha(), re-exported by ggplot2 from scales)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = m_gg <- ggplot2::theme(
-        panel.background = ggplot2::element_rect(fill = "white", colour = NULL, linewidth = NULL, linetype = NULL, color = NA, linejoin = NULL, inherit.blank = FALSE), # deprecated size argument not written
-        plot.title = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = title_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE) # stronger than text
+    # size = base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of the deprecated size argument (written without the lifecycle package, not imported by saferGG)
+        panel.background = ggplot2::element_rect(fill = "white", colour = NULL, linewidth = NULL, linetype = NULL, color = NA, linejoin = NULL, inherit.blank = FALSE, size = base::quote(expr = )), # deprecated size argument not written
+        plot.title = ggplot2::element_text(family = NULL, face = NULL, colour = NULL, size = title_size, hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL, color = NULL, margin = NULL, debug = NULL, inherit.blank = FALSE), line = , rect = , text = , title = , point = , polygon = , geom = , spacing = , margins = , aspect.ratio = , axis.title = , axis.title.x = , axis.title.x.top = , axis.title.x.bottom = , axis.title.y = , axis.title.y.left = , axis.title.y.right = , axis.text = , axis.text.x = , axis.text.x.top = , axis.text.x.bottom = , axis.text.y = , axis.text.y.left = , axis.text.y.right = , axis.text.theta = , axis.text.r = , axis.ticks = , axis.ticks.x = , axis.ticks.x.top = , axis.ticks.x.bottom = , axis.ticks.y = , axis.ticks.y.left = , axis.ticks.y.right = , axis.ticks.theta = , axis.ticks.r = , axis.minor.ticks.x.top = , axis.minor.ticks.x.bottom = , axis.minor.ticks.y.left = , axis.minor.ticks.y.right = , axis.minor.ticks.theta = , axis.minor.ticks.r = , axis.ticks.length = , axis.ticks.length.x = , axis.ticks.length.x.top = , axis.ticks.length.x.bottom = , axis.ticks.length.y = , axis.ticks.length.y.left = , axis.ticks.length.y.right = , axis.ticks.length.theta = , axis.ticks.length.r = , axis.minor.ticks.length = , axis.minor.ticks.length.x = , axis.minor.ticks.length.x.top = , axis.minor.ticks.length.x.bottom = , axis.minor.ticks.length.y = , axis.minor.ticks.length.y.left = , axis.minor.ticks.length.y.right = , axis.minor.ticks.length.theta = , axis.minor.ticks.length.r = , axis.line = , axis.line.x = , axis.line.x.top = , axis.line.x.bottom = , axis.line.y = , axis.line.y.left = , axis.line.y.right = , axis.line.theta = , axis.line.r = , legend.background = , legend.margin = , legend.spacing = , legend.spacing.x = , legend.spacing.y = , legend.key = , legend.key.size = , legend.key.height = , legend.key.width = , legend.key.spacing = , legend.key.spacing.x = , legend.key.spacing.y = , legend.key.justification = , legend.frame = , legend.ticks = , legend.ticks.length = , legend.axis.line = , legend.text = , legend.text.position = , legend.title = , legend.title.position = , legend.position = , legend.position.inside = , legend.direction = , legend.byrow = , legend.justification = , legend.justification.top = , legend.justification.bottom = , legend.justification.left = , legend.justification.right = , legend.justification.inside = , legend.location = , legend.box = , legend.box.just = , legend.box.margin = , legend.box.background = , legend.box.spacing = , panel.border = , panel.spacing = , panel.spacing.x = , panel.spacing.y = , panel.grid = , panel.grid.major = , panel.grid.minor = , panel.grid.major.x = , panel.grid.major.y = , panel.grid.minor.x = , panel.grid.minor.y = , panel.ontop = , panel.widths = , panel.heights = , plot.background = , plot.title.position = , plot.subtitle = , plot.caption = , plot.caption.position = , plot.tag = , plot.tag.position = , plot.tag.location = , plot.margin = , strip.background = , strip.background.x = , strip.background.y = , strip.clip = , strip.placement = , strip.text = , strip.text.x = , strip.text.x.bottom = , strip.text.x.top = , strip.text.y = , strip.text.y.left = , strip.text.y.right = , strip.switch.pad.grid = , strip.switch.pad.wrap = , complete = FALSE, validate = TRUE # stronger than text
     ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # the other arguments of ggplot2::theme() have no default value and are not written, since writing them would add theme elements
     final <- base::suppressWarnings(expr = base::eval(expr = base::parse(file = "", n = NULL, text = base::paste(base::paste0(tempo_gg_name, 1:tempo_gg_count, collapse = NULL, recycle0 = FALSE), sep = " ", collapse = " + ", recycle0 = FALSE), prompt = "?", keep.source = base::getOption(x = "keep.source", default = NULL), srcfile = NULL, encoding = "unknown"), envir = base::environment(fun = NULL), enclos = base::environment(fun = NULL)), classes = "warning")
     #### end main code

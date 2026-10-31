@@ -407,7 +407,8 @@ gg_miami <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "ggplot2::aes",
@@ -430,20 +431,12 @@ gg_miami <- function(
                 "ggplot2::theme", 
                 "ggplot2::theme_bw",
                 "ggplot2::waiver",
-                "grid::gpar",
-                "grid::linesGrob",
-                "grid::unit",
-                "grid::unit.pmax",
-                "gridExtra::grid.arrange", 
-                "grDevices::dev.cur",
-                "grDevices::dev.off",
-                "grDevices::png",
+                "gridExtra::grid.arrange",
                 "scales::math_format",
                 "scales::muted",
                 "scales::rescale_none", 
                 "scales::trans_breaks", 
-                "scales::trans_format", 
-                "utils::read.table", 
+                "scales::trans_format",
                 "saferDev::arg_check", 
                 "saferGG::gg_empty"
                 # end functions required in this code
@@ -459,6 +452,7 @@ gg_miami <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -466,7 +460,7 @@ gg_miami <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }
@@ -634,7 +628,7 @@ gg_miami <- function(
         )
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }else{
-        obs <- utils::read.table(file = file, header = TRUE, sep = "\t", quote = "\"'", dec = ".", numerals = "allow.loss", as.is = TRUE, tryLogical = TRUE, na.strings = "NA", colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = FALSE, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = "", allowEscapes = FALSE, flush = FALSE, stringsAsFactors = FALSE, fileEncoding = "", encoding = "unknown", skipNul = FALSE)
+        obs <- utils::read.table(file = file, header = TRUE, sep = "\t", quote = "\"'", dec = ".", numerals = "allow.loss", row.names = , col.names = , as.is = TRUE, tryLogical = TRUE, na.strings = "NA", colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = FALSE, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = "", allowEscapes = FALSE, flush = FALSE, stringsAsFactors = FALSE, fileEncoding = "", encoding = "unknown", text = , skipNul = FALSE)
         if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0){
             empty_obs <- FALSE
         }else{
@@ -651,7 +645,7 @@ gg_miami <- function(
         )
         base::stop(base::paste0("\n\n================\n\n", tempo_cat, "\n\n================\n\n", collapse = NULL, recycle0 = FALSE), call. = FALSE, domain = NULL)
     }else{
-        chr <- utils::read.table(file = chr, header = TRUE, sep = "\t", quote = "\"'", dec = ".", numerals = "allow.loss", as.is = TRUE, tryLogical = TRUE, na.strings = "NA", colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = FALSE, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = "", allowEscapes = FALSE, flush = FALSE, stringsAsFactors = FALSE, fileEncoding = "", encoding = "unknown", skipNul = FALSE)
+        chr <- utils::read.table(file = chr, header = TRUE, sep = "\t", quote = "\"'", dec = ".", numerals = "allow.loss", row.names = , col.names = , as.is = TRUE, tryLogical = TRUE, na.strings = "NA", colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = FALSE, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = "", allowEscapes = FALSE, flush = FALSE, stringsAsFactors = FALSE, fileEncoding = "", encoding = "unknown", text = , skipNul = FALSE)
     }
     # end data import
     # modifications of imported tables
@@ -684,7 +678,8 @@ gg_miami <- function(
         }
         # add the chr info to obs
         obs <- base::data.frame(obs, coord = base::vector(mode = "numeric", length = base::nrow(x = obs)), row.names = NULL, check.rows = FALSE, check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = TRUE)
-        for(i1 in chr$CHR_NB){
+        for(i0 in base::seq_along(along.with = chr$CHR_NB)){
+            i1 <- chr$CHR_NB[i0]
             obs$coord[obs$CHROM == i1] <- obs$POS[obs$CHROM == i1] + chr$LENGTH_CUMUL_TO_ADD[i1]
         }
         # preparation of the x coordinates: three solutions: 1) whole object (see above), 2) single chromo "chr7" or "chr7:0-15", 3) several chromo chr7, chr8" or "chr7:0-15, chr8" or "chr7:0-15, chr8:0-20"
@@ -843,7 +838,7 @@ gg_miami <- function(
     # plotting
     # fun_open(width = 12, height = 4, pdf.name = base::paste0("plot_read_length_", kind)) # must be systematically opened for main.nf
     png_size <- 1800 # px
-    grDevices::png(filename = "miami.png", width = png_size * 2, height = png_size, units = "px", pointsize = 12, bg = "white", res = 300, family = "sans", symbolfamily = "default")
+    grDevices::png(filename = "miami.png", width = png_size * 2, height = png_size, units = "px", pointsize = 12, bg = "white", res = 300, family = "sans", symbolfamily = "default") # restoreConsole (Windows only), type and antialias (default values depending on the operating system) not written: the arguments of grDevices::png() differ between Windows and the other systems
     if(empty_obs == TRUE){
         saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
     }else if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0 & ! base::is.null(x = x_lim)){
@@ -891,7 +886,7 @@ gg_miami <- function(
                     na.rm = FALSE, 
                     show.legend = NA, 
                     inherit.aes = TRUE, 
-                    mapping = ggplot2::aes(color = base::as.factor(x = .data[["CHROM"]])), 
+                    mapping = ggplot2::aes(color = base::as.factor(x = .data[["CHROM"]]), x = , y = ), 
                     alpha = 1, 
                     pch = 16, 
                     size = 1
@@ -905,7 +900,7 @@ gg_miami <- function(
                     na.rm = FALSE, 
                     show.legend = NA, 
                     inherit.aes = TRUE, 
-                    mapping = ggplot2::aes(fill = base::as.factor(x = .data[["CHROM"]])), 
+                    mapping = ggplot2::aes(fill = base::as.factor(x = .data[["CHROM"]]), x = , y = ), 
                     alpha = 1, 
                     color = dot_border_color, 
                     pch = 21, 
@@ -922,7 +917,7 @@ gg_miami <- function(
                     na.rm = FALSE, 
                     show.legend = NA, 
                     inherit.aes = TRUE, 
-                    mapping = ggplot2::aes(color = .data[[color_column]]), 
+                    mapping = ggplot2::aes(color = .data[[color_column]], x = , y = ), 
                     alpha = 1, 
                     pch = 16, 
                     size = 1
@@ -936,7 +931,7 @@ gg_miami <- function(
                     na.rm = FALSE, 
                     show.legend = NA, 
                     inherit.aes = TRUE, 
-                    mapping = ggplot2::aes(fill = .data[[color_column]]), 
+                    mapping = ggplot2::aes(fill = .data[[color_column]], x = , y = ), 
                     alpha = 1, 
                     color = dot_border_color, 
                     pch = 21, 
@@ -971,7 +966,8 @@ gg_miami <- function(
             oob = scales::rescale_none, 
             labels = chr$CHR_NAME, 
             breaks = chr$CHR_NAME_POS, 
-            limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL, na.rm = FALSE) + marging)
+            # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+            limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL, na.rm = FALSE) + marging), trans = base::quote(expr = )
         ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         if(y_log1 == TRUE){
             if(base::any(obs[ , top_y_column] <= 0, na.rm = FALSE)){
@@ -998,7 +994,8 @@ gg_miami <- function(
                     oob = scales::rescale_none, 
                     transform = "log10", 
                     breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}, n = 5), 
-                    labels = scales::trans_format(trans = "log10", format = scales::math_format(expr = 10^.x, format = base::force))
+                    # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                    labels = scales::trans_format(trans = "log10", format = scales::math_format(expr = 10^.x, format = base::force)), trans = base::quote(expr = )
                 ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 # assign(paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1), ggplot2::annotation_logticks(outside = TRUE))
             }
@@ -1016,7 +1013,8 @@ gg_miami <- function(
                 expand = base::c(0, 0), # remove space after after axis limits
                 limits = if(reverse1 == TRUE){base::c(y_max_pos, y_min_pos)}else{base::c(y_min_pos, y_max_pos)}, # NA indicate that limits must correspond to data limits but ylim() already used
                 oob = scales::rescale_none, 
-                transform = "identity"
+                # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                transform = "identity", trans = base::quote(expr = )
             ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         }
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = "white", accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
@@ -1026,9 +1024,11 @@ gg_miami <- function(
             panel.border = ggplot2::element_blank(), 
             panel.grid = ggplot2::element_blank(), 
             axis.ticks.x = ggplot2::element_blank(), 
-            axis.ticks.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE), 
+            # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+            axis.ticks.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE, size = base::quote(expr = )), 
             # axis.line.x.bottom = ggplot2::element_line(linewidth = 0.25), # ugly, thus i added geom_hline below
-            axis.line.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE)
+            # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+            axis.line.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE, size = base::quote(expr = )), line = , rect = , text = , title = , point = , polygon = , geom = , spacing = , margins = , aspect.ratio = , axis.title = , axis.title.x = , axis.title.x.top = , axis.title.x.bottom = , axis.title.y = , axis.title.y.left = , axis.title.y.right = , axis.text = , axis.text.x = , axis.text.x.top = , axis.text.x.bottom = , axis.text.y = , axis.text.y.left = , axis.text.y.right = , axis.text.theta = , axis.text.r = , axis.ticks = , axis.ticks.x.top = , axis.ticks.x.bottom = , axis.ticks.y = , axis.ticks.y.right = , axis.ticks.theta = , axis.ticks.r = , axis.minor.ticks.x.top = , axis.minor.ticks.x.bottom = , axis.minor.ticks.y.left = , axis.minor.ticks.y.right = , axis.minor.ticks.theta = , axis.minor.ticks.r = , axis.ticks.length = , axis.ticks.length.x = , axis.ticks.length.x.top = , axis.ticks.length.x.bottom = , axis.ticks.length.y = , axis.ticks.length.y.left = , axis.ticks.length.y.right = , axis.ticks.length.theta = , axis.ticks.length.r = , axis.minor.ticks.length = , axis.minor.ticks.length.x = , axis.minor.ticks.length.x.top = , axis.minor.ticks.length.x.bottom = , axis.minor.ticks.length.y = , axis.minor.ticks.length.y.left = , axis.minor.ticks.length.y.right = , axis.minor.ticks.length.theta = , axis.minor.ticks.length.r = , axis.line = , axis.line.x = , axis.line.x.top = , axis.line.x.bottom = , axis.line.y = , axis.line.y.right = , axis.line.theta = , axis.line.r = , legend.background = , legend.margin = , legend.spacing = , legend.spacing.x = , legend.spacing.y = , legend.key = , legend.key.size = , legend.key.height = , legend.key.width = , legend.key.spacing = , legend.key.spacing.x = , legend.key.spacing.y = , legend.key.justification = , legend.frame = , legend.ticks = , legend.ticks.length = , legend.axis.line = , legend.text = , legend.text.position = , legend.title = , legend.title.position = , legend.position.inside = , legend.direction = , legend.byrow = , legend.justification = , legend.justification.top = , legend.justification.bottom = , legend.justification.left = , legend.justification.right = , legend.justification.inside = , legend.location = , legend.box = , legend.box.just = , legend.box.margin = , legend.box.background = , legend.box.spacing = , panel.background = , panel.spacing = , panel.spacing.x = , panel.spacing.y = , panel.grid.major = , panel.grid.minor = , panel.grid.major.x = , panel.grid.major.y = , panel.grid.minor.x = , panel.grid.minor.y = , panel.ontop = , panel.widths = , panel.heights = , plot.background = , plot.title.position = , plot.subtitle = , plot.caption = , plot.caption.position = , plot.tag = , plot.tag.position = , plot.tag.location = , plot.margin = , strip.background = , strip.background.x = , strip.background.y = , strip.clip = , strip.placement = , strip.text = , strip.text.x = , strip.text.x.bottom = , strip.text.x.top = , strip.text.y = , strip.text.y.left = , strip.text.y.right = , strip.switch.pad.grid = , strip.switch.pad.wrap = , complete = FALSE, validate = TRUE
         ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
         base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
             mapping = NULL, 
@@ -1048,7 +1048,9 @@ gg_miami <- function(
         # add tick lines if vgrid is FALSE
         if(vgrid == FALSE){
             gline <- grid::linesGrob(x = grid::unit(x = base::c(0, 1), units = "npc", data = NULL), y = base::c(-0.02, 0), gp = grid::gpar(col = "black", lwd = 0.5), default.units = "npc", arrow = NULL, name = NULL, vp = NULL)
-            for(i2 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
+            tempo_vline_pos <- base::c(xmin_plot, chr$LENGTH_CUMUL)
+            for(i0 in base::seq_along(along.with = tempo_vline_pos)){
+                i2 <- tempo_vline_pos[i0]
                 base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline, xmin = i2, xmax = i2, ymin = -Inf, ymax = Inf), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
         }
@@ -1100,7 +1102,7 @@ gg_miami <- function(
                         na.rm = FALSE, 
                         show.legend = NA, 
                         inherit.aes = TRUE, 
-                        mapping = ggplot2::aes(color = base::as.factor(x = .data[["CHROM"]])), 
+                        mapping = ggplot2::aes(color = base::as.factor(x = .data[["CHROM"]]), x = , y = ), 
                         alpha = 1, 
                         pch = 16, 
                         size = 1
@@ -1114,7 +1116,7 @@ gg_miami <- function(
                         na.rm = FALSE, 
                         show.legend = NA, 
                         inherit.aes = TRUE, 
-                        mapping = ggplot2::aes(fill = base::as.factor(x = .data[["CHROM"]])), 
+                        mapping = ggplot2::aes(fill = base::as.factor(x = .data[["CHROM"]]), x = , y = ), 
                         alpha = 1, 
                         color = dot_border_color, 
                         pch = 21, 
@@ -1131,7 +1133,7 @@ gg_miami <- function(
                         na.rm = FALSE, 
                         show.legend = NA, 
                         inherit.aes = TRUE, 
-                        mapping = ggplot2::aes(color = .data[[color_column]]), 
+                        mapping = ggplot2::aes(color = .data[[color_column]], x = , y = ), 
                         alpha = 1, 
                         pch = 16, 
                         size = 1
@@ -1145,7 +1147,7 @@ gg_miami <- function(
                         na.rm = FALSE, 
                         show.legend = NA, 
                         inherit.aes = TRUE, 
-                        mapping = ggplot2::aes(fill = .data[[color_column]]), 
+                        mapping = ggplot2::aes(fill = .data[[color_column]], x = , y = ), 
                         alpha = 1, 
                         color = dot_border_color, 
                         pch = 21, 
@@ -1167,7 +1169,8 @@ gg_miami <- function(
                 oob = scales::rescale_none, 
                 labels = chr$CHR_NAME, 
                 breaks = chr$CHR_NAME_POS, 
-                limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL, na.rm = FALSE) + marging)
+                # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                limits = base::c(xmin_plot - marging, base::max(chr$LENGTH_CUMUL, na.rm = FALSE) + marging), trans = base::quote(expr = )
             ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             if(y_log2 == TRUE){
                 if(base::any(obs[ , bottom_y_column] <= 0, na.rm = FALSE)){
@@ -1194,7 +1197,8 @@ gg_miami <- function(
                         oob = scales::rescale_none, 
                         transform = "log10", 
                         breaks = scales::trans_breaks(trans = "log10", inv = function(x){10^x}, n = 5), 
-                        labels = scales::trans_format(trans = "log10", format = scales::math_format(expr = 10^.x, format = base::force))
+                        # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                        labels = scales::trans_format(trans = "log10", format = scales::math_format(expr = 10^.x, format = base::force)), trans = base::quote(expr = )
                     ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                     # assign(paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1), ggplot2::annotation_logticks(outside = TRUE)) # 
                 }
@@ -1212,7 +1216,8 @@ gg_miami <- function(
                     expand = base::c(0, 0), # remove space after after axis limits
                     limits = if(reverse2 == TRUE){base::c(y_min_pos2, y_max_pos2)}else{base::c(y_max_pos2, y_min_pos2)}, # NA indicate that limits must correspond to data limits but ylim() already used
                     oob = scales::rescale_none, 
-                    transform = "identity" # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y_lim decreasing. Thus, do not use. Use ylim() below and after this
+                    # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                    transform = "identity", trans = base::quote(expr = ) # equivalent to ggplot2::scale_y_reverse() but create the problem of y-axis label disappearance with y_lim decreasing. Thus, do not use. Use ylim() below and after this
                 ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             }
             base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::theme_bw(base_size = 11, base_family = "", header_family = NULL, base_line_size = 11 / 22, base_rect_size = 11 / 22, ink = "black", paper = "white", accent = "#3366FF"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
@@ -1220,12 +1225,14 @@ gg_miami <- function(
                 legend.position = if(base::is.null(x = color_column)){"none"}else{"right"}, 
                 panel.border = ggplot2::element_blank(), 
                 panel.grid = ggplot2::element_blank(), 
-                axis.ticks.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE), 
+                # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                axis.ticks.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE, size = base::quote(expr = )), 
                 # axis.line.x.top = ggplot2::element_line(linewidth = 0.25), # is not displayed. Thus, I add a geom_hline below
-                axis.line.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE), 
+                # base::quote(expr = ): value returned by lifecycle::deprecated(), the default value of this deprecated argument (written without the lifecycle package, not imported by saferGG)
+                axis.line.y.left = ggplot2::element_line(colour = NULL, linewidth = 0.25, linetype = NULL, lineend = NULL, color = NULL, linejoin = NULL, arrow = NULL, arrow.fill = NULL, inherit.blank = FALSE, size = base::quote(expr = )), 
                 axis.title.x = ggplot2::element_blank(), 
                 axis.text.x = ggplot2::element_blank(), 
-                axis.ticks.x = ggplot2::element_blank()
+                axis.ticks.x = ggplot2::element_blank(), line = , rect = , text = , title = , point = , polygon = , geom = , spacing = , margins = , aspect.ratio = , axis.title = , axis.title.x.top = , axis.title.x.bottom = , axis.title.y = , axis.title.y.left = , axis.title.y.right = , axis.text = , axis.text.x.top = , axis.text.x.bottom = , axis.text.y = , axis.text.y.left = , axis.text.y.right = , axis.text.theta = , axis.text.r = , axis.ticks = , axis.ticks.x.top = , axis.ticks.x.bottom = , axis.ticks.y = , axis.ticks.y.right = , axis.ticks.theta = , axis.ticks.r = , axis.minor.ticks.x.top = , axis.minor.ticks.x.bottom = , axis.minor.ticks.y.left = , axis.minor.ticks.y.right = , axis.minor.ticks.theta = , axis.minor.ticks.r = , axis.ticks.length = , axis.ticks.length.x = , axis.ticks.length.x.top = , axis.ticks.length.x.bottom = , axis.ticks.length.y = , axis.ticks.length.y.left = , axis.ticks.length.y.right = , axis.ticks.length.theta = , axis.ticks.length.r = , axis.minor.ticks.length = , axis.minor.ticks.length.x = , axis.minor.ticks.length.x.top = , axis.minor.ticks.length.x.bottom = , axis.minor.ticks.length.y = , axis.minor.ticks.length.y.left = , axis.minor.ticks.length.y.right = , axis.minor.ticks.length.theta = , axis.minor.ticks.length.r = , axis.line = , axis.line.x = , axis.line.x.top = , axis.line.x.bottom = , axis.line.y = , axis.line.y.right = , axis.line.theta = , axis.line.r = , legend.background = , legend.margin = , legend.spacing = , legend.spacing.x = , legend.spacing.y = , legend.key = , legend.key.size = , legend.key.height = , legend.key.width = , legend.key.spacing = , legend.key.spacing.x = , legend.key.spacing.y = , legend.key.justification = , legend.frame = , legend.ticks = , legend.ticks.length = , legend.axis.line = , legend.text = , legend.text.position = , legend.title = , legend.title.position = , legend.position.inside = , legend.direction = , legend.byrow = , legend.justification = , legend.justification.top = , legend.justification.bottom = , legend.justification.left = , legend.justification.right = , legend.justification.inside = , legend.location = , legend.box = , legend.box.just = , legend.box.margin = , legend.box.background = , legend.box.spacing = , panel.background = , panel.spacing = , panel.spacing.x = , panel.spacing.y = , panel.grid.major = , panel.grid.minor = , panel.grid.major.x = , panel.grid.major.y = , panel.grid.minor.x = , panel.grid.minor.y = , panel.ontop = , panel.widths = , panel.heights = , plot.background = , plot.title = , plot.title.position = , plot.subtitle = , plot.caption = , plot.caption.position = , plot.tag = , plot.tag.position = , plot.tag.location = , plot.margin = , strip.background = , strip.background.x = , strip.background.y = , strip.clip = , strip.placement = , strip.text = , strip.text.x = , strip.text.x.bottom = , strip.text.x.top = , strip.text.y = , strip.text.y.left = , strip.text.y.right = , strip.switch.pad.grid = , strip.switch.pad.wrap = , complete = FALSE, validate = TRUE
             ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
             # add x-axis line
             base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_hline(
@@ -1246,7 +1253,9 @@ gg_miami <- function(
             # add tick lines if vgrid is FALSE
             if(vgrid == FALSE){
                 gline2 <- grid::linesGrob(x = grid::unit(x = base::c(0, 1), units = "npc", data = NULL), y = base::c(1, 1.02), gp = grid::gpar(col = "black", lwd = 0.5), default.units = "npc", arrow = NULL, name = NULL, vp = NULL)
-                for(i3 in base::c(xmin_plot, chr$LENGTH_CUMUL)){
+                tempo_vline_pos <- base::c(xmin_plot, chr$LENGTH_CUMUL)
+                for(i0 in base::seq_along(along.with = tempo_vline_pos)){
+                    i3 <- tempo_vline_pos[i0]
                     base::assign(x = base::paste0(tempo_gg_name2, tempo_gg_count2 <- tempo_gg_count2 + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::annotation_custom(grob = gline2, xmin = i3, xmax = i3, ymin = -Inf, ymax = Inf), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
                 }
             }
@@ -1286,5 +1295,4 @@ gg_miami <- function(
     #### output
     base::return(base::invisible(x = NULL))
     #### end output
-    #### end of function
 }

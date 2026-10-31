@@ -26,9 +26,12 @@ gg_just <- function(
     pos = "bottom", 
     kind = "axis",
     safer_check = TRUE, 
-    lib_path = NULL, 
+    lib_path = NULL,
     error_text = ""
 ){
+    # DEBUGGING
+    # angle = 45 ; pos = "bottom" ; kind = "axis" ; safer_check = TRUE ; lib_path = NULL ; error_text = ""
+    # function_name <- "gg_just()" ; arg_user_setting = base::list(angle = 45, pos = "bottom", kind = "axis", safer_check = TRUE, lib_path = NULL, error_text = "") ; arg_names <- base::c("angle", "pos", "kind", "safer_check", "lib_path", "error_text")
 
     #### package name
     package_name <- "saferGG" # write NULL if the function developed is not in a package
@@ -304,7 +307,8 @@ gg_just <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "saferDev::arg_check", # write each function preceeded by their package name
@@ -321,6 +325,7 @@ gg_just <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -328,7 +333,7 @@ gg_just <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }

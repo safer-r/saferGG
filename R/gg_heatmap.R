@@ -409,7 +409,8 @@ gg_heatmap <- function(
 
     ######## check of the required functions from the required packages
     if(safer_check == TRUE){
-        saferDev:::.pack_and_function_check(
+        .pack_and_function_check <- utils::getFromNamespace(x = ".pack_and_function_check", ns = "saferDev", pos = -1, envir = )
+        .pack_and_function_check(
             fun = base::c(
                 # functions required in this code
                 "saferDev::arg_check", 
@@ -442,6 +443,7 @@ gg_heatmap <- function(
 
     ######## escaping CRAN submission NOTE for internal functions
 
+    .base_op_check <- utils::getFromNamespace(x = ".base_op_check", ns = "saferDev", pos = -1, envir = )
     # add here in the internal functions that are used in your main code (copy-paste the line above and replace .base_op_check by the name of the internal function
     # not mandatory if your function is not designed for submission to the CRAN
 
@@ -449,7 +451,7 @@ gg_heatmap <- function(
 
     ######## critical operator checking
     if(safer_check == TRUE){
-        saferDev:::.base_op_check(
+        .base_op_check(
             error_text = embed_error_text
         )
     }
@@ -826,11 +828,11 @@ gg_heatmap <- function(
         if(rotate == TRUE){
             data2[, 1] <- base::rev(x = data2[, 1])
         }
-        data2[, 3] <- base::factor(x = data2[, 3], exclude = NA, ordered = base::is.ordered(x = data2[, 3]), nmax = NA) # levels and labels not written: their defaults are computed from x inside base::factor(). # to converte continuous scale into discrete scale
+        data2[, 3] <- base::factor(x = data2[, 3], exclude = NA, ordered = base::is.ordered(x = data2[, 3]), nmax = NA, levels = , labels = ) # levels and labels not written: their defaults are computed from x inside base::factor(). # to converte continuous scale into discrete scale
     }
     tempo_gg_name <- "gg.indiv.plot."
     tempo_gg_count <- 0 # to facilitate debugging
-    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
+    base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::ggplot(data = NULL, mapping = ggplot2::aes(x = , y = ), environment = base::environment(fun = NULL)), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::geom_raster(mapping = ggplot2::aes(x = .data[[base::names(x = data1)[base::ifelse(test = rotate == FALSE, yes = 2, no = 1)]]], y = .data[[base::names(x = data1)[base::ifelse(test = rotate == FALSE, yes = 1, no = 2)]]], fill = .data[[base::names(x = data1)[3]]]), data = data1, stat = "identity", position = "identity", interpolate = FALSE, hjust = 0.5, vjust = 0.5, na.rm = FALSE, show.legend = show_scale, inherit.aes = TRUE), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE) # show.legend option do not remove the legend, only the aesthetic of the legend (dot, line, etc.)
     base::assign(x = base::paste0(tempo_gg_name, tempo_gg_count <- tempo_gg_count + 1, collapse = NULL, recycle0 = FALSE), value = ggplot2::scale_fill_gradient2(name = legend_name1, limits = limit1, breaks = base::c(limit1[1], midpoint1, limit1[2]), labels = saferTool::round2(data = base::c(limit1[1], midpoint1, limit1[2]), dec_nb = 2, after_lead_zero = TRUE, safer_check = FALSE, lib_path = lib_path, error_text = embed_error_text), low = low_color1, mid = mid_color1, high = high_color1, midpoint = midpoint1, space = "Lab", na.value = "grey50", transform = "identity", guide = "colourbar", aesthetics = "fill"), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     if( ! base::is.null(x = data2)){
@@ -859,7 +861,7 @@ gg_heatmap <- function(
             axis.title = ggplot2::element_blank(), 
             axis.text = ggplot2::element_blank(), 
             axis.ticks = ggplot2::element_blank(), 
-            panel.background = ggplot2::element_blank()
+            panel.background = ggplot2::element_blank(), rect = , title = , point = , polygon = , geom = , spacing = , margins = , aspect.ratio = , axis.title.x = , axis.title.x.top = , axis.title.x.bottom = , axis.title.y = , axis.title.y.left = , axis.title.y.right = , axis.text.x = , axis.text.x.top = , axis.text.x.bottom = , axis.text.y = , axis.text.y.left = , axis.text.y.right = , axis.text.theta = , axis.text.r = , axis.ticks.x = , axis.ticks.x.top = , axis.ticks.x.bottom = , axis.ticks.y = , axis.ticks.y.left = , axis.ticks.y.right = , axis.ticks.theta = , axis.ticks.r = , axis.minor.ticks.x.top = , axis.minor.ticks.x.bottom = , axis.minor.ticks.y.left = , axis.minor.ticks.y.right = , axis.minor.ticks.theta = , axis.minor.ticks.r = , axis.ticks.length = , axis.ticks.length.x = , axis.ticks.length.x.top = , axis.ticks.length.x.bottom = , axis.ticks.length.y = , axis.ticks.length.y.left = , axis.ticks.length.y.right = , axis.ticks.length.theta = , axis.ticks.length.r = , axis.minor.ticks.length = , axis.minor.ticks.length.x = , axis.minor.ticks.length.x.top = , axis.minor.ticks.length.x.bottom = , axis.minor.ticks.length.y = , axis.minor.ticks.length.y.left = , axis.minor.ticks.length.y.right = , axis.minor.ticks.length.theta = , axis.minor.ticks.length.r = , axis.line = , axis.line.x = , axis.line.x.top = , axis.line.x.bottom = , axis.line.y = , axis.line.y.left = , axis.line.y.right = , axis.line.theta = , axis.line.r = , legend.background = , legend.margin = , legend.spacing = , legend.spacing.x = , legend.spacing.y = , legend.key = , legend.key.size = , legend.key.height = , legend.key.width = , legend.key.spacing = , legend.key.spacing.x = , legend.key.spacing.y = , legend.key.justification = , legend.frame = , legend.ticks = , legend.ticks.length = , legend.axis.line = , legend.text = , legend.text.position = , legend.title = , legend.title.position = , legend.position = , legend.position.inside = , legend.direction = , legend.byrow = , legend.justification = , legend.justification.top = , legend.justification.bottom = , legend.justification.left = , legend.justification.right = , legend.justification.inside = , legend.location = , legend.box = , legend.box.just = , legend.box.margin = , legend.box.background = , legend.box.spacing = , panel.border = , panel.spacing = , panel.spacing.x = , panel.spacing.y = , panel.grid = , panel.grid.major = , panel.grid.minor = , panel.grid.major.x = , panel.grid.major.y = , panel.grid.minor.x = , panel.grid.minor.y = , panel.ontop = , panel.widths = , panel.heights = , plot.background = , plot.title.position = , plot.subtitle = , plot.caption = , plot.caption.position = , plot.tag = , plot.tag.position = , plot.tag.location = , plot.margin = , strip.background = , strip.background.x = , strip.background.y = , strip.clip = , strip.placement = , strip.text = , strip.text.x = , strip.text.x.bottom = , strip.text.x.top = , strip.text.y = , strip.text.y.left = , strip.text.y.right = , strip.switch.pad.grid = , strip.switch.pad.wrap = , complete = FALSE, validate = TRUE
         ), pos = -1, envir = base::environment(fun = NULL), inherits = FALSE, immediate = TRUE)
     }
     if(plot == TRUE){
@@ -895,5 +897,4 @@ gg_heatmap <- function(
     #### output
     base::return(base::invisible(x = NULL))
     #### end output
-    #### end of function
 }
