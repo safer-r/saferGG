@@ -27,16 +27,19 @@
 #' @param error_text Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}. Of note, in \code{arg_check()}, \code{error_text} is also used at the end of the string returned when no problem is detected.
 #' @returns a raster scatter plot.
 #' @examples
-#' \dontrun{
-#' # Two pdf in the current directory
+#' \donttest{
+#' # Raster and vectorial pdf files written in the temporary directory, to compare their sizes
 #' set.seed(1)
-#' data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE)
-#' saferGraph::open2(pdf.name = "Raster")
+#' data1 = data.frame(x = rnorm(10000), y = rnorm(10000), stringsAsFactors = TRUE)
+#' file1 <- base::file.path(base::tempdir(check = FALSE), "Raster.pdf", fsep = .Platform$file.sep)
+#' file2 <- base::file.path(base::tempdir(check = FALSE), "Vectorial.pdf", fsep = .Platform$file.sep)
+#' grDevices::pdf(file = file1)
 #' ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y))
-#' saferGraph::open2(pdf.name = "Vectorial")
+#' grDevices::dev.off(which = grDevices::dev.cur())
+#' grDevices::pdf(file = file2)
 #' ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y))
-#' base::dev.off()
-#' base::dev.off()
+#' grDevices::dev.off(which = grDevices::dev.cur())
+#' base::file.size(file1, file2) # sizes in bytes
 #' }
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 ggproto

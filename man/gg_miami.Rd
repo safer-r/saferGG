@@ -28,9 +28,9 @@ gg_miami(
 )
 }
 \arguments{
-\item{file}{single character string of the vcf.tsv file path. Example: "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv".}
+\item{file}{single character string of the path of the tab-separated file of observations (with a header, as the tsv files obtained from vcf files), containing at least the CHROM column (chromosome names, like "chr1", "1", "X", "Y" or "MT") and the POS column (positions in the chromosomes), plus the columns used in the top_y_column, bottom_y_column and color_column arguments. See the example below.}
 
-\item{chr}{single character string of the human chromo infos file.tsv path. Example: chr_path = "/mnt/c/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt".}
+\item{chr}{single character string of the path of the tab-separated file of chromosome information (with a header and one row per chromosome, ordered by chromosome number), containing the columns CHR (chromosome name, like "chr1"), BP_LENGTH (chromosome length in bp), LENGTH_CUMUL (cumulative length of the chromosomes), LENGTH_CUMUL_TO_ADD (cumulative length of the previous chromosomes), CHR_NAME_POS (position of the chromosome name on the x-axis), CHR_NAME (chromosome name displayed) and CHR_NB (chromosome number). See the example below.}
 
 \item{top_y_column}{single character string of any of the quantitative column of the vcf.tsv file for the y-axis of the manhattan plot at the top of the miami plot. Can also be an added column through the tsv_extra_fields parameter.}
 
@@ -75,10 +75,31 @@ NULL. Draws the miami plot (and writes a miami.png file in the current working d
 Plot two ggplot2 manhattan plots in mirror.
 }
 \examples{
-\dontrun{
-path <- "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/"
-gg_miami(file = paste0(path, "other/fisher.tsv"),
-    chr = paste0(path, "hg19_grch37p5_chr_size_cumul.txt"),
-    top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom_y_column = "AF")
+\donttest{
+# gg_miami() writes the miami.png file in the working directory: here, the temporary directory
+ini_wd <- base::setwd(dir = base::tempdir(check = FALSE))
+# chromosome information file (3 chromosomes of 1 Mb)
+chr_info <- base::data.frame(CHR = base::c("chr1", "chr2", "chr3"),
+    BP_LENGTH = base::c(1e6, 1e6, 1e6), LENGTH_CUMUL = base::c(1e6, 2e6, 3e6),
+    LENGTH_CUMUL_TO_ADD = base::c(0, 1e6, 2e6), CHR_NAME_POS = base::c(5e5, 15e5, 25e5),
+    CHR_NAME = 1:3, CHR_NB = 1:3, row.names = NULL, check.rows = FALSE, check.names = TRUE,
+    fix.empty.names = TRUE, stringsAsFactors = FALSE)
+utils::write.table(x = chr_info, file = "chr_info.tsv", append = FALSE, quote = FALSE,
+    sep = "\t", eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE,
+    qmethod = "escape", fileEncoding = "")
+# observation file (100 random positions per chromosome)
+base::set.seed(seed = 1, kind = NULL, normal.kind = NULL, sample.kind = NULL)
+obs <- base::data.frame(CHROM = base::rep(x = base::c("chr1", "chr2", "chr3"), each = 100),
+    POS = base::sample(x = 1e6, size = 300, replace = TRUE, prob = NULL),
+    NEG_LOG10_P_VALUE = stats::rexp(n = 300, rate = 1),
+    AF = stats::runif(n = 300, min = 0, max = 1), row.names = NULL, check.rows = FALSE,
+    check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE)
+utils::write.table(x = obs, file = "obs.tsv", append = FALSE, quote = FALSE, sep = "\t",
+    eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = "escape",
+    fileEncoding = "")
+gg_miami(file = "obs.tsv", chr = "chr_info.tsv", top_y_column = "NEG_LOG10_P_VALUE",
+    bottom_y_column = "AF")
+base::file.exists("miami.png")
+base::setwd(dir = ini_wd)
 }
 }

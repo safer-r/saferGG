@@ -65,7 +65,7 @@ The different *saferGG* releases are tagged [here](https://github.com/safer-r/sa
 
 ## Installation
 
-*saferGG* can be currently be installed from GitHub, together with its *saferTool* and *saferGraph* dependencies, which are not on CRAN yet:
+*saferGG* can currently be installed from GitHub, together with its *saferTool* and *saferGraph* dependencies, which are not on CRAN yet:
 
 ```r
 install.packages("remotes")
@@ -86,7 +86,7 @@ remotes::install_github(paste0("https://github.com/safer-r/saferGG/tree/", v))
 ## Licence
 
 This package can be redistributed and/or modified under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-Distributed in the hope that it will be useful, but without any warranty; without even the implied warranty of merchandability or fitness for a particular purpose.
+Distributed in the hope that it will be useful, but without any warranty; without even the implied warranty of merchantability or fitness for a particular purpose.
 See the GNU General Public License for more details at https://www.gnu.org/licenses or in the Licence.txt attached file.
 
 <br />

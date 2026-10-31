@@ -78,15 +78,18 @@ solve the transparency problems with some GUI.
 this function is derived from the geom_point_rast() function, created by Viktor Petukhov , and present in the ggrastr package (https://rdrr.io/github/VPetukhov/ggrastr/src/R/geom-point-rast.R, MIT License, Copyright (c) 2017 Viktor Petukhov). Has been placed here to minimize package dependencies.
 }
 \examples{
-\dontrun{
-# Two pdf in the current directory
+\donttest{
+# Raster and vectorial pdf files written in the temporary directory, to compare their sizes
 set.seed(1)
-data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE)
-saferGraph::open2(pdf.name = "Raster")
+data1 = data.frame(x = rnorm(10000), y = rnorm(10000), stringsAsFactors = TRUE)
+file1 <- base::file.path(base::tempdir(check = FALSE), "Raster.pdf", fsep = .Platform$file.sep)
+file2 <- base::file.path(base::tempdir(check = FALSE), "Vectorial.pdf", fsep = .Platform$file.sep)
+grDevices::pdf(file = file1)
 ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y))
-saferGraph::open2(pdf.name = "Vectorial")
+grDevices::dev.off(which = grDevices::dev.cur())
+grDevices::pdf(file = file2)
 ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y))
-base::dev.off()
-base::dev.off()
+grDevices::dev.off(which = grDevices::dev.cur())
+base::file.size(file1, file2) # sizes in bytes
 }
 }

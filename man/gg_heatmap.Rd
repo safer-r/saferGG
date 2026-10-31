@@ -96,10 +96,10 @@ gg_heatmap(data1 = matrix(1:16, ncol = 4), legend_name1 = "VALUE", title = "GRAP
 # diagonal matrix
 gg_heatmap(data1 = matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4))
 gg_heatmap(data1 = reshape2::melt(matrix(c(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), ncol = 4)))
-\dontrun{
-# Error messages
-gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 5), ncol = 5))
-}
+# Error message
+base::try(expr = gg_heatmap(data1 = matrix(1:16, ncol = 4), data2 = matrix(rep(c(1,0,0,0), 5),
+    ncol = 5)), silent = FALSE, outFile = base::getOption(x = "try.outFile",
+    default = base::stderr()))
 gg_heatmap(data1 = matrix(1:16, ncol = 4),
     data2 = reshape2::melt(matrix(rep(c(1,0,0,0), 4), ncol = 4)))
 gg_heatmap(data1 = reshape2::melt(matrix(1:16, ncol = 4)),

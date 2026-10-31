@@ -1,6 +1,6 @@
 Package: saferGG
 Type: Package
-Title: 'ggplot2' Graphics
+Title: Boxplots, Scatterplots, Heatmaps and Other 'ggplot2' Graphics
 Version: 1.0.0
 Date: 2026-10-15
 Authors@R: c(
