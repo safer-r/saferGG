@@ -619,7 +619,7 @@ testthat::test_that("gg_scatter draws scatter plots and returns the expected str
     testthat::expect_type(output_yy, "list")
     testthat::expect_true(object = base::grepl(x = output_yy$warn, pattern = "THE y ARGUMENT DOES NOT CONTAIN IDENTICAL COLUMN NAMES", fixed = TRUE))
     # Windows-transparency warns (windows device open): dot layers 1, 2, 3 and line layers 1, 2, 3
-    if(Sys.info()[["sysname"]] == "Windows"){
+    if(Sys.info()[["sysname"]] == "Windows" & ! testthat::is_checking()){ # screen devices are forbidden by R CMD check --as-cran
         obs_win <- base::data.frame(x = 1:10, y = (1:10) * 2, grp = base::rep(x = c("A", "B"), each = 5), stringsAsFactors = TRUE)
         grDevices::windows(width = 7, height = 7)
         output_win1 <- saferGG::gg_scatter(data1 = obs_win, x = "x", y = "y", categ = "grp", alpha = 0.5, dot_shape = 1, legend_show = TRUE, plot = TRUE, return = TRUE, safer_check = FALSE)
@@ -691,7 +691,7 @@ testthat::test_that("gg_scatter draws scatter plots and returns the expected str
     testthat::expect_type(object = output_art, "list")
     # plot = TRUE with legend_width = NULL: print branch (windows device must be open on Windows)
     if(Sys.info()[["sysname"]] == "Windows"){
-        grDevices::windows(width = 7, height = 7)
+        grDevices::pdf(file = NULL, width = 7, height = 7) # file device, not a screen device
         output_print <- saferGG::gg_scatter(data1 = obs1, x = "x", y = "y", plot = TRUE, return = TRUE, safer_check = FALSE)
         testthat::expect_type(object = output_print, "list")
         grDevices::dev.off()

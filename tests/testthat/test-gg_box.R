@@ -692,7 +692,7 @@ testthat::expect_type(output_tidycat, "list")
     output_mean <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", stat_mean = TRUE, plot = FALSE, return = TRUE, safer_check = FALSE)
     testthat::expect_type(object = output_mean, "list")
     # Windows transparency warn (windows device + plot + legend_width + alpha < 1)
-    if(Sys.info()[["sysname"]] == "Windows"){
+    if(Sys.info()[["sysname"]] == "Windows" & ! testthat::is_checking()){ # screen devices are forbidden by R CMD check --as-cran
         grDevices::windows(width = 7, height = 7)
         output_win <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", dot_alpha = 0.5, legend_width = 0.2, plot = TRUE, return = TRUE, safer_check = FALSE)
         testthat::expect_true(object = base::grepl(x = output_win$warn, pattern = "TRANSPARENCY OF THE LINES IS INACTIVATED IN THE LEGEND", fixed = TRUE))
@@ -700,7 +700,7 @@ testthat::expect_type(output_tidycat, "list")
     }
     # plot = TRUE with legend_width = NULL: grid.arrange single plot branch
     if(Sys.info()[["sysname"]] == "Windows"){
-        grDevices::windows(width = 7, height = 7)
+        grDevices::pdf(file = NULL, width = 7, height = 7) # file device, not a screen device
         output_print <- saferGG::gg_box(data1 = obs1, y = "y", categ = "grp", legend_width = NULL, plot = TRUE, return = TRUE, return_gtable = TRUE, safer_check = FALSE)
         testthat::expect_type(object = output_print, "list")
         testthat::expect_s3_class(object = output_print$gtable, class = "gtable")
