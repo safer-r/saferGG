@@ -1,5 +1,5 @@
 # tests for the gg_miami() function of the saferGG package
-# the function writes a miami.png file in the current directory: the tests run in a temporary directory
+# the function draws on the current graphic device: the plots of the tests are drawn in a pdf device written in the temporary directory
 
 testthat::test_that("gg_miami draws manhattan and miami plots", {
 
@@ -32,13 +32,17 @@ testthat::test_that("gg_miami draws manhattan and miami plots", {
     ## end data argument values
 
     ## initialization of tests
-    # none
+    pdf_file <- base::file.path(base::tempdir(), "gg_miami_test.pdf")
+    grDevices::pdf(file = pdf_file, width = 12, height = 6, paper = "special", title = "gg_miami_test")
+    test_dev <- grDevices::dev.cur()
     ## end initialization of tests
 
     ## tests
     # manhattan only
+    ini_wd_files <- base::list.files(path = base::getwd(), all.files = TRUE, recursive = FALSE)
     testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top_y_column = "PVAL1", bottom_y_column = NULL, safer_check = FALSE))
-    testthat::expect_true(object = base::file.exists("miami.png"))
+    testthat::expect_equal(object = base::list.files(path = base::getwd(), all.files = TRUE, recursive = FALSE), expected = ini_wd_files) # no file written in the working directory (no miami.png anymore)
+    testthat::expect_equal(object = grDevices::dev.cur(), expected = test_dev) # plot drawn on the current device, kept open
     # full miami with x_lim as chromosome
     testthat::expect_no_error(object = saferGG::gg_miami(file = file1, chr = file2, top_y_column = "PVAL1", bottom_y_column = "PVAL2", x_lim = "chr1", safer_check = FALSE))
     # x_lim on a non-first chromosome: exercises the tempo_coord[1] > 1 branch (xmin_plot offset)
@@ -138,7 +142,8 @@ testthat::test_that("gg_miami draws manhattan and miami plots", {
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "NO DEFAULT VALUE AND REQUIRE ONE", fixed = TRUE))
     testthat::expect_true(object = base::grepl(x = res_zero, pattern = "file", fixed = TRUE))
     ## end errors
-    # cleanup of all files created during the tests
-    base::unlink(x = base::c(file1, file2, file3, file4, file5, file6, file7, "miami.png"))
+    # cleanup of the device and of all files created during the tests
+    base::invisible(x = grDevices::dev.off(which = test_dev))
+    base::unlink(x = base::c(file1, file2, file3, file4, file5, file6, file7, pdf_file))
     base::rm(list = base::ls()) # to avoid a warning that block CRAN tests
 })

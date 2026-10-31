@@ -21,18 +21,19 @@
 #' @param lib_path Vector of characters specifying the absolute pathways of the directories containing the required packages for the function, if not in the default directories. Useful when R packages are not installed in the default directories because of lack of admin rights. More precisely, \code{lib_path} is passed through the \code{new} argument of \code{.libPaths()} so that the new library paths are \code{unique(c(new, .Library.site, .Library))}. Warning: \code{.libPaths()} is restored to the initial paths, after function execution. Ignored if \code{NULL} (default): only the pathways specified by the current \code{.libPaths()} are used for package calling.
 #' @param safer_check Single logical value. Perform the "safer" checks? If \code{TRUE}, checkings are performed before main code running (see the \href{https://github.com/safer-r}{safer-r project}): 1) required functions and related packages effectively present in local R libraries and 2) R classical operators (like \code{"<-"}) not overwritten by another package because of the R scope. Warning: must be set to \code{FALSE} if this function is used inside another "safer" function to avoid pointless multiple checkings.
 #' @param error_text Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}. Of note, in \code{arg_check()}, \code{error_text} is also used at the end of the string returned when no problem is detected.
-#' @returns NULL. Draws the miami plot (and writes a miami.png file in the current working directory, as done by the initial design of the function).
+#' @returns NULL (invisibly). The miami plot is drawn on the current graphic device, as the plots of the other saferGG functions: no file is written by the function. To save the plot in a file, open the corresponding graphic device before running the function (with \code{grDevices::png()} or \code{grDevices::pdf()} for instance) and close it after (with \code{grDevices::dev.off()}), as in the example below.
 #' @examples
 #' \donttest{
-#' # gg_miami() writes the miami.png file in the working directory: here, the temporary directory
-#' ini_wd <- base::setwd(dir = base::tempdir(check = FALSE))
+#' # input files of the example, written in the temporary directory of the R session
+#' chr_file <- base::file.path(base::tempdir(check = FALSE), "chr_info.tsv", fsep = "/")
+#' obs_file <- base::file.path(base::tempdir(check = FALSE), "obs.tsv", fsep = "/")
 #' # chromosome information file (3 chromosomes of 1 Mb)
 #' chr_info <- base::data.frame(CHR = base::c("chr1", "chr2", "chr3"),
 #'     BP_LENGTH = base::c(1e6, 1e6, 1e6), LENGTH_CUMUL = base::c(1e6, 2e6, 3e6),
 #'     LENGTH_CUMUL_TO_ADD = base::c(0, 1e6, 2e6), CHR_NAME_POS = base::c(5e5, 15e5, 25e5),
 #'     CHR_NAME = 1:3, CHR_NB = 1:3, row.names = NULL, check.rows = FALSE, check.names = TRUE,
 #'     fix.empty.names = TRUE, stringsAsFactors = FALSE)
-#' utils::write.table(x = chr_info, file = "chr_info.tsv", append = FALSE, quote = FALSE,
+#' utils::write.table(x = chr_info, file = chr_file, append = FALSE, quote = FALSE,
 #'     sep = "\t", eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE,
 #'     qmethod = "escape", fileEncoding = "")
 #' # observation file (100 random positions per chromosome)
@@ -42,13 +43,19 @@
 #'     NEG_LOG10_P_VALUE = stats::rexp(n = 300, rate = 1),
 #'     AF = stats::runif(n = 300, min = 0, max = 1), row.names = NULL, check.rows = FALSE,
 #'     check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE)
-#' utils::write.table(x = obs, file = "obs.tsv", append = FALSE, quote = FALSE, sep = "\t",
+#' utils::write.table(x = obs, file = obs_file, append = FALSE, quote = FALSE, sep = "\t",
 #'     eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = "escape",
 #'     fileEncoding = "")
-#' gg_miami(file = "obs.tsv", chr = "chr_info.tsv", top_y_column = "NEG_LOG10_P_VALUE",
+#' # miami plot drawn on the current graphic device
+#' gg_miami(file = obs_file, chr = chr_file, top_y_column = "NEG_LOG10_P_VALUE",
 #'     bottom_y_column = "AF")
-#' base::file.exists("miami.png")
-#' base::setwd(dir = ini_wd)
+#' # miami plot saved in a png file of the temporary directory
+#' grDevices::png(filename = base::file.path(base::tempdir(check = FALSE), "miami.png", fsep = "/"),
+#'     width = 3600, height = 1800, units = "px", pointsize = 12, bg = "white", res = 300,
+#'     family = "sans", symbolfamily = "default")
+#' gg_miami(file = obs_file, chr = chr_file, top_y_column = "NEG_LOG10_P_VALUE",
+#'     bottom_y_column = "AF")
+#' grDevices::dev.off(which = grDevices::dev.cur())
 #' }
 #' @importFrom ggplot2 .data
 #' @importFrom ggplot2 aes
@@ -76,9 +83,6 @@
 #' @importFrom grid unit
 #' @importFrom grid unit.pmax
 #' @importFrom gridExtra grid.arrange
-#' @importFrom grDevices dev.cur
-#' @importFrom grDevices dev.off
-#' @importFrom grDevices png
 #' @importFrom scales math_format
 #' @importFrom scales muted
 #' @importFrom scales rescale_none
@@ -615,24 +619,13 @@ gg_miami <- function(
 
     ######## graphic device checking
     # optional section: remove the code if no graphics used in your functions
-    # BEWARE: unlike most of the safer functions, this function opens a graphic device (grDevices::png()) in the main code. Thus, instead of checking the number of devices on exit, the graphic devices opened during the execution are closed on exit (in case of error after the device opening)
-    # nocov start
-    # codecov inactivated because it is an internal control of code writing, impossible to cover with argument values.
-    dev_list <- grDevices::dev.list() 
-    base::on.exit(
-        expr = while(base::length(x = grDevices::dev.list()) > base::length(x = dev_list) & grDevices::dev.cur() != 1){
-            grDevices::dev.off(which = grDevices::dev.cur()) # close the devices opened by the function, in case of error after the device opening
-        }, 
-        add = TRUE, 
-        after = TRUE
-    )
-    # end close the devices opened by the function
+    # check of the number of graphic devices on exit not performed: the plot is drawn on the current graphic device, which is opened by gridExtra::grid.arrange() if no device is open (expected, as for any plotting function, like in gg_box())
+    # restore the graphic parameters on exit
     if(base::length(x = grDevices::dev.list()) > 0){
         par_ini <- base::suppressWarnings(expr = graphics::par(no.readonly = TRUE), classes = "warning") # to recover the present graphical parameters
         base::on.exit(expr = base::suppressWarnings(expr = graphics::par(par_ini, no.readonly = TRUE), classes = "warning"), add = TRUE, after = TRUE)
     }
     # end restore the graphic parameters on exit
-    # nocov end
     ######## end graphic device checking
 
     ######## other checkings
@@ -859,12 +852,10 @@ gg_miami <- function(
     }
     # end modifications of imported tables
 
-    # plotting
-    # fun_open(width = 12, height = 4, pdf.name = base::paste0("plot_read_length_", kind)) # must be systematically opened for main.nf
-    png_size <- 1800 # px
-    grDevices::png(filename = "miami.png", width = png_size * 2, height = png_size, units = "px", pointsize = 12, bg = "white", res = 300, family = "sans", symbolfamily = "default") # restoreConsole (Windows only), type and antialias (default values depending on the operating system) not written: the arguments of grDevices::png() differ between Windows and the other systems
+    # plotting, on the current graphic device (no file written, as in the other saferGG functions)
     if(empty_obs == TRUE){
-        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+        empty_plot <- saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE region PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) # gg_empty() returns the plot without drawing it
+        base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(empty_plot, ncol = 1, nrow = 1, newpage = TRUE), classes = "warning"), classes = "message")
     }else if(base::length(x = obs) > 0 & base::nrow(x = obs) > 0 & ! base::is.null(x = x_lim)){
         marging <- (chr$LENGTH_CUMUL[base::nrow(x = chr)] - xmin_plot) * 0.005 # chr$LENGTH_CUMUL and xmin_plot have been corrected depending on x_lim boundaries
         y_min_pos <- base::ifelse(test = base::is.null(x = y_lim1), yes = base::min(obs[ , top_y_column], na.rm = TRUE), no = base::min(y_lim1, na.rm = FALSE))
@@ -1295,14 +1286,11 @@ gg_miami <- function(
         }
     }else{
             # nocov start (unreachable: idem (x_lim = NULL rejected by arg_check))
-        saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text)
+        empty_plot <- saferGG::gg_empty(text = "NO PLOT DRAWN\nTHE x_lim PARAMETER\nMIGHT BE OUTSIDE\nOF THE RANGE OF THE VCF FILE\nOR THE RANGE OF THE region PARAMETER\nOR NULL", text_size = 12, title = NULL, title_size = 8, lib_path = lib_path, safer_check = FALSE, error_text = embed_error_text) # gg_empty() returns the plot without drawing it
+        base::suppressMessages(expr = base::suppressWarnings(expr = gridExtra::grid.arrange(empty_plot, ncol = 1, nrow = 1, newpage = TRUE), classes = "warning"), classes = "message")
             # nocov end
-    } 
-    # else already dealt above
-    # close the graphic device opened above
-    if(grDevices::dev.cur() != 1){
-        grDevices::dev.off(which = grDevices::dev.cur())
     }
+    # else already dealt above
     # end main code
     if(warn_print == TRUE & ! base::is.null(x = warn)){
             # nocov start (unreachable: warn stays NULL because the only warn assignment (x_lim NULL branch) is dead)

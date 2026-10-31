@@ -1,6 +1,7 @@
 # saferGG 1.0.0
 
 ## Major changes
+- gg_miami(): the miami plot is now drawn on the current graphic device, as the plots of the other saferGG functions, instead of being always written in a miami.png file of the working directory (CRAN policy: no file written outside the temporary directory by default). To get the png file, open a `grDevices::png()` device before running the function and close it after (see the example). The "NO PLOT DRAWN" panel of an observation file without rows is now drawn.
 - Backbone v21.1: the invented `x` argument names (absent from the called function signature, for instance `base::any(x = ...)`, `base::all(x = ...)`, `base::sum(x = ...)`, `base::order(x = ...)`) are removed from all the function calls.
 - Backbone v21.2: the lib_path argument is now checked whatever the value of safer_check (the `if(safer_check == TRUE){` and `}` lines around the check of lib_path are commented, because lib_path is used outside the safer_check checkings, for instance in the `saferDev::arg_check()` calls): an incorrect lib_path now returns an error even with `safer_check = FALSE`. The documentation of the safer_check argument no longer lists the lib_path check, and the documentation of the lib_path argument no longer says that lib_path is ignored if safer_check is FALSE.
 - gg_scatter(): the check of lib_path now adds lib_path to the initial library paths (as in the other functions), instead of replacing them by lib_path, which dropped the user library paths.

@@ -69,22 +69,23 @@ gg_miami(
 \item{error_text}{Single character string used to add information in error messages returned by the function, notably if the function is inside other functions, which is practical for debugging. Example: \code{error_text = " INSIDE <PACKAGE_1>::<FUNCTION_1> INSIDE <PACKAGE_2>::<FUNCTION_2>."}. If \code{NULL}, converted into \code{""}. Of note, in \code{arg_check()}, \code{error_text} is also used at the end of the string returned when no problem is detected.}
 }
 \value{
-NULL. Draws the miami plot (and writes a miami.png file in the current working directory, as done by the initial design of the function).
+NULL (invisibly). The miami plot is drawn on the current graphic device, as the plots of the other saferGG functions: no file is written by the function. To save the plot in a file, open the corresponding graphic device before running the function (with \code{grDevices::png()} or \code{grDevices::pdf()} for instance) and close it after (with \code{grDevices::dev.off()}), as in the example below.
 }
 \description{
 Plot two ggplot2 manhattan plots in mirror.
 }
 \examples{
 \donttest{
-# gg_miami() writes the miami.png file in the working directory: here, the temporary directory
-ini_wd <- base::setwd(dir = base::tempdir(check = FALSE))
+# input files of the example, written in the temporary directory of the R session
+chr_file <- base::file.path(base::tempdir(check = FALSE), "chr_info.tsv", fsep = "/")
+obs_file <- base::file.path(base::tempdir(check = FALSE), "obs.tsv", fsep = "/")
 # chromosome information file (3 chromosomes of 1 Mb)
 chr_info <- base::data.frame(CHR = base::c("chr1", "chr2", "chr3"),
     BP_LENGTH = base::c(1e6, 1e6, 1e6), LENGTH_CUMUL = base::c(1e6, 2e6, 3e6),
     LENGTH_CUMUL_TO_ADD = base::c(0, 1e6, 2e6), CHR_NAME_POS = base::c(5e5, 15e5, 25e5),
     CHR_NAME = 1:3, CHR_NB = 1:3, row.names = NULL, check.rows = FALSE, check.names = TRUE,
     fix.empty.names = TRUE, stringsAsFactors = FALSE)
-utils::write.table(x = chr_info, file = "chr_info.tsv", append = FALSE, quote = FALSE,
+utils::write.table(x = chr_info, file = chr_file, append = FALSE, quote = FALSE,
     sep = "\t", eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE,
     qmethod = "escape", fileEncoding = "")
 # observation file (100 random positions per chromosome)
@@ -94,12 +95,18 @@ obs <- base::data.frame(CHROM = base::rep(x = base::c("chr1", "chr2", "chr3"), e
     NEG_LOG10_P_VALUE = stats::rexp(n = 300, rate = 1),
     AF = stats::runif(n = 300, min = 0, max = 1), row.names = NULL, check.rows = FALSE,
     check.names = TRUE, fix.empty.names = TRUE, stringsAsFactors = FALSE)
-utils::write.table(x = obs, file = "obs.tsv", append = FALSE, quote = FALSE, sep = "\t",
+utils::write.table(x = obs, file = obs_file, append = FALSE, quote = FALSE, sep = "\t",
     eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE, qmethod = "escape",
     fileEncoding = "")
-gg_miami(file = "obs.tsv", chr = "chr_info.tsv", top_y_column = "NEG_LOG10_P_VALUE",
+# miami plot drawn on the current graphic device
+gg_miami(file = obs_file, chr = chr_file, top_y_column = "NEG_LOG10_P_VALUE",
     bottom_y_column = "AF")
-base::file.exists("miami.png")
-base::setwd(dir = ini_wd)
+# miami plot saved in a png file of the temporary directory
+grDevices::png(filename = base::file.path(base::tempdir(check = FALSE), "miami.png", fsep = "/"),
+    width = 3600, height = 1800, units = "px", pointsize = 12, bg = "white", res = 300,
+    family = "sans", symbolfamily = "default")
+gg_miami(file = obs_file, chr = chr_file, top_y_column = "NEG_LOG10_P_VALUE",
+    bottom_y_column = "AF")
+grDevices::dev.off(which = grDevices::dev.cur())
 }
 }
