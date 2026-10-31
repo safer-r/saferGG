@@ -24,7 +24,10 @@
 #' @returns NULL. Draws the miami plot (and writes a miami.png file in the current working directory, as done by the initial design of the function).
 #' @examples
 #' \dontrun{
-#' gg_miami(file = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/other/fisher.tsv", chr = "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/hg19_grch37p5_chr_size_cumul.txt", top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom_y_column = "AF")
+#' path <- "C:/Users/gmillot/Documents/Git_projects/fisher_for_vcf/dataset/"
+#' gg_miami(file = paste0(path, "other/fisher.tsv"),
+#'     chr = paste0(path, "hg19_grch37p5_chr_size_cumul.txt"),
+#'     top_y_column = "NEG_LOG10_P_VALUE_CARRIER_MODEL", bottom_y_column = "AF")
 #' }
 #' @importFrom ggplot2 .data
 #' @importFrom ggplot2 aes

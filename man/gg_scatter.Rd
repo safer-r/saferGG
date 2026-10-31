@@ -248,7 +248,15 @@ Rows containing NA in data1[, c(x, y, categ)] will be removed before processing,
 Size arguments (dot_size, dot_border_size, line_size, text_size and title_text_size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE)).
 }
 \examples{
-set.seed(1) ; obs1 <- base::data.frame(Km = c(2, 1, 6, 5, 4, 7), Time = c(2, 1, 6, 5, 4, 7)^2, Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"), Color1 = base::rep(c("coral", "lightblue"), each = 3), stringsAsFactors = TRUE) ; gg_scatter(data1 = obs1, x = "Km", y = "Time")
+set.seed(1)
+obs1 <- base::data.frame(
+    Km = c(2, 1, 6, 5, 4, 7),
+    Time = c(2, 1, 6, 5, 4, 7)^2,
+    Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"),
+    Color1 = base::rep(c("coral", "lightblue"), each = 3),
+    stringsAsFactors = TRUE
+)
+gg_scatter(data1 = obs1, x = "Km", y = "Time")
 }
 \author{
 Gael Millot <gael.millot@pasteur.fr>

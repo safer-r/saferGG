@@ -29,7 +29,14 @@
 #' @examples
 #' \dontrun{
 #' # Two pdf in the current directory
-#' set.seed(1) ; data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE) ; saferGraph::open2(pdf.name = "Raster") ; ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; saferGraph::open2(pdf.name = "Vectorial") ; ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y)) ; base::dev.off() ; base::dev.off()
+#' set.seed(1)
+#' data1 = data.frame(x = rnorm(100000), y = rnorm(100000), stringsAsFactors = TRUE)
+#' saferGraph::open2(pdf.name = "Raster")
+#' ggplot2::ggplot() + gg_point_rast(data = data1, mapping = ggplot2::aes(x = x, y = y))
+#' saferGraph::open2(pdf.name = "Vectorial")
+#' ggplot2::ggplot() + ggplot2::geom_point(data = data1, mapping = ggplot2::aes(x = x, y = y))
+#' base::dev.off()
+#' base::dev.off()
 #' }
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 ggproto

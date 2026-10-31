@@ -202,5 +202,15 @@ Plot ggplot2 boxplots + dots + means. For ggplot2 specifications, see: https://g
 -To remove boxes and have only dots, use box_alpha = 0
 }
 \examples{
-set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; gg_box(data1 = obs1, y = "Time", categ = "Categ1")
+set.seed(1)
+obs1 <- data.frame(
+    Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)),
+    Categ1 = rep(c("CAT", "DOG"), times = 40),
+    Categ2 = rep(c("A", "B", "C", "D"), each = 20),
+    Color1 = rep(c("coral", "lightblue"), times = 40),
+    Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20),
+    stringsAsFactors = TRUE
+)
+set.seed(NULL)
+gg_box(data1 = obs1, y = "Time", categ = "Categ1")
 }

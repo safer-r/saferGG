@@ -128,7 +128,15 @@
 #' Size arguments (dot_size, dot_border_size, line_size, text_size and title_text_size) are in mm. See Hadley comment in https://stackoverflow.com/questions/17311917/ggplot2-the-unit-of-size. See also http://sape.inf.usi.ch/quick-reference/ggplot2/size). Unit object are not accepted, but conversion can be used (e.g., grid::convertUnit(grid::unit(0.2, "inches"), "mm", valueOnly = TRUE)).
 #' @author Gael Millot <gael.millot@pasteur.fr>
 #' @examples
-#' set.seed(1) ; obs1 <- base::data.frame(Km = c(2, 1, 6, 5, 4, 7), Time = c(2, 1, 6, 5, 4, 7)^2, Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"), Color1 = base::rep(c("coral", "lightblue"), each = 3), stringsAsFactors = TRUE) ; gg_scatter(data1 = obs1, x = "Km", y = "Time")
+#' set.seed(1)
+#' obs1 <- base::data.frame(
+#'     Km = c(2, 1, 6, 5, 4, 7),
+#'     Time = c(2, 1, 6, 5, 4, 7)^2,
+#'     Car = c("TUUT", "TUUT", "TUUT", "WIIM", "WIIM", "WIIM"),
+#'     Color1 = base::rep(c("coral", "lightblue"), each = 3),
+#'     stringsAsFactors = TRUE
+#' )
+#' gg_scatter(data1 = obs1, x = "Km", y = "Time")
 #' @importFrom Cairo Cairo
 #' @importFrom ggplot2 .data aes annotate coord_cartesian coord_flip element_line element_rect element_text facet_grid facet_wrap geom_point ggplot ggplot_build ggtitle guide_legend guides scale_discrete_manual scale_fill_manual scale_shape_manual scale_x_continuous scale_x_reverse scale_y_continuous scale_y_reverse theme theme_bw theme_classic theme_void waiver xlab ylab
 #' @importFrom grDevices dev.list dev.cur

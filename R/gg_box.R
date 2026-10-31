@@ -71,7 +71,17 @@
 #' @returns A boxplot if plot argument is TRUE.
 #' @returns A list of the graph info if return argument is TRUE: $data: the initial data with graphic information added; $stat: the graphic statistics (mostly equivalent to ggplot_build()$data[[2]]); $removed_row_nb: which rows have been removed due to NA/Inf detection in y and categ columns (NULL if no row removed); $removed_rows: removed rows (NULL if no row removed); $plot: the graphic box and dot coordinates; $dots: dot coordinates; $main.box: coordinates of boxes; $median: median coordinates; $sup.whisker: coordinates of top whiskers (y for base and y.end for extremities); $inf.whisker: coordinates of bottom whiskers (y for base and y.end for extremities); $sup.whisker.edge: coordinates of top whisker edges (x and xend); $inf.whisker.edge: coordinates of bottom whisker edges(x and xend); $mean: diamond mean coordinates (only if box_mean argument is TRUE); $stat_pos: coordinates of stat numbers (only if stat_pos argument is not NULL); $panel: the variable names used for the panels (NULL if no panels). WARNING: NA can be present according to ggplot2 upgrade to v3.3.0; $axes: the x-axis and y-axis info; $warn: the warning messages. Use cat() for proper display. NULL if no warning. WARNING: warning messages delivered by the internal ggplot2 functions are not apparent when using the argument plot = FALSE; $ggplot: ggplot object that can be used for reprint (use print(...$ggplot) or update (use ...$ggplot + ggplot2::...). NULL if return_ggplot argument is FALSE. Of note, a non-NULL $ggplot in the output list is sometimes annoying as the manipulation of this list prints the plot; $gtable: gtable object that can be used for reprint (use gridExtra::grid.arrange(...$ggplot) or with additionnal grobs (see the grob decomposition in the examples). NULL if return_ggplot argument is FALSE. Contrary to $ggplot, a non-NULL $gtable in the output list is not annoying as the manipulation of this list does not print the plot; 
 #' @examples
-#' set.seed(1) ; obs1 <- data.frame(Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)), Categ1 = rep(c("CAT", "DOG"), times = 40), Categ2 = rep(c("A", "B", "C", "D"), each = 20), Color1 = rep(c("coral", "lightblue"), times = 40), Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20), stringsAsFactors = TRUE) ; set.seed(NULL) ; gg_box(data1 = obs1, y = "Time", categ = "Categ1")
+#' set.seed(1)
+#' obs1 <- data.frame(
+#'     Time = c(rnorm(20, 100, 10), rnorm(20, 200, 50), rnorm(20, 500, 60), rnorm(20, 100, 50)),
+#'     Categ1 = rep(c("CAT", "DOG"), times = 40),
+#'     Categ2 = rep(c("A", "B", "C", "D"), each = 20),
+#'     Color1 = rep(c("coral", "lightblue"), times = 40),
+#'     Color2 = rep(c("#9F2108", "#306100", "#007479", "#8500C0"), each = 20),
+#'     stringsAsFactors = TRUE
+#' )
+#' set.seed(NULL)
+#' gg_box(data1 = obs1, y = "Time", categ = "Categ1")
 #' @importFrom ggplot2 .data
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 annotate

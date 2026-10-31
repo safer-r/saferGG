@@ -8,9 +8,23 @@
 #' @returns a list of class c("gtable", "gTree", "grob", "gDesc"), providing legend information of ggplot_built objet, or NULL if the ggplot_built object has no legend.
 #' @examples
 #' # Simple example
-#' obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time, fill = group)) ; gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))  
+#' obs1 <- data.frame(
+#'     time = 1:20,
+#'     group = rep(c("CLASS_1", "CLASS_2"), times = 10),
+#'     stringsAsFactors = TRUE
+#' )
+#' p <- ggplot2::ggplot() +
+#'     ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time, fill = group))
+#' gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))
 #' # NULL result because no legend in the ggplot
-#' obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; p <- ggplot2::ggplot() + ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time)) ; gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))  
+#' obs1 <- data.frame(
+#'     time = 1:20,
+#'     group = rep(c("CLASS_1", "CLASS_2"), times = 10),
+#'     stringsAsFactors = TRUE
+#' )
+#' p <- ggplot2::ggplot() +
+#'     ggplot2::geom_point(data = obs1, mapping = ggplot2::aes(x = group, y = time))
+#' gg_get_legend(ggplot_built = ggplot2::ggplot_build(p))
 #' @importFrom ggplot2 ggplot_gtable
 #' @importFrom saferDev arg_check
 #' @export

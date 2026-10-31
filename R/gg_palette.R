@@ -12,10 +12,14 @@
 #' The vector of hexadecimal colors.
 #' @examples
 #' gg_palette(n = 2) # output of the function
-#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)) # the ggplot2 palette when asking for 7 different colors
-#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)[5]) # selection of the 5th color of the ggplot2 palette made of 7 different colors
-#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "dark")) # the ggplot2 palette made of 7 darkened colors
-#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "light")) # the ggplot2 palette made of 7 lighten colors
+#' # the ggplot2 palette when asking for 7 different colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7))
+#' # selection of the 5th color of the ggplot2 palette made of 7 different colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7)[5])
+#' # the ggplot2 palette made of 7 darkened colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "dark"))
+#' # the ggplot2 palette made of 7 lighten colors
+#' plot(1:7, pch = 16, cex = 5, col = gg_palette(n = 7, kind = "light"))
 #' @importFrom saferDev arg_check
 #' @export
 gg_palette <- function(

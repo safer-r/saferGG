@@ -11,11 +11,97 @@
 #' @examples
 #' gg_just(angle = 45, pos = "bottom")
 #' gg_just(angle = (360*2 + 45), pos = "left")
-#' output <- gg_just(angle = 45, pos = "bottom") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust))
-#' output <- gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.y = ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)) + ggplot2::coord_flip()
-#' output1 <- gg_just(angle = 90, pos = "bottom") ; output2 <- gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1:20, group = rep(c("CLASS_1", "CLASS_2"), times = 10), stringsAsFactors = TRUE) ; ggplot2::ggplot() + ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time), stat = "identity") + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust, vjust = output1$vjust), axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust, vjust = output2$vjust))
-#' output <- gg_just(angle = -45, pos = "left") ; obs1 <- data.frame(time = 1, km = 1, bird = "pigeon", stringsAsFactors = FALSE) ; ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point() + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust)
-#' obs1 <- data.frame(time = 1:10, km = 1:10, bird = c(NA, NA, NA, "pigeon", NA, "cat", NA, NA, NA, NA), stringsAsFactors = FALSE) ; for(i0 in c("text", "axis")){for(i1 in c("top", "right", "bottom", "left")){for(i2 in c(0, 45, 90, 135, 180, 225, 270, 315, 360)){output <- gg_just(angle = i2, pos = i1, kind = i0) ; title <- paste0("kind: ", i0, " | pos: ", i1, " | angle = ", i2, " | hjust: ", output$hjust, " | vjust: ", output$vjust) ; if(i0 == "text"){print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point(color = gg_palette(1), alpha = 0.5) + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle, hjust = output$hjust, vjust = output$vjust) + ggplot2::theme(title = ggplot2::element_text(size = 5)))}else{print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) + ggplot2::geom_point(color = gg_palette(1), alpha = 0.5) + ggplot2::ggtitle(title) + ggplot2::geom_text(mapping = ggplot2::aes(label = bird)) + ggplot2::scale_x_continuous(position = ifelse(i1 == "top", "top", "bottom")) + ggplot2::scale_y_continuous(position = ifelse(i1 == "right", "right", "left")) + ggplot2::theme(title = ggplot2::element_text(size = 5), axis.text.x = if(i1 %in% c("top", "bottom")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}, axis.text.y = if(i1 %in% c("right", "left")){ggplot2::element_text(angle = output$angle, hjust = output$hjust, vjust = output$vjust)}))}}}}
+#' output <- gg_just(angle = 45, pos = "bottom")
+#' obs1 <- data.frame(
+#'     time = 1:20,
+#'     group = rep(c("CLASS_1", "CLASS_2"), times = 10),
+#'     stringsAsFactors = TRUE
+#' )
+#' ggplot2::ggplot() +
+#'     ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time),
+#'         stat = "identity") +
+#'     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = output$angle,
+#'         hjust = output$hjust, vjust = output$vjust))
+#' output <- gg_just(angle = -45, pos = "left")
+#' obs1 <- data.frame(
+#'     time = 1:20,
+#'     group = rep(c("CLASS_1", "CLASS_2"), times = 10),
+#'     stringsAsFactors = TRUE
+#' )
+#' ggplot2::ggplot() +
+#'     ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time),
+#'         stat = "identity") +
+#'     ggplot2::theme(axis.text.y = ggplot2::element_text(angle = output$angle,
+#'         hjust = output$hjust, vjust = output$vjust)) +
+#'     ggplot2::coord_flip()
+#' output1 <- gg_just(angle = 90, pos = "bottom")
+#' output2 <- gg_just(angle = -45, pos = "left")
+#' obs1 <- data.frame(
+#'     time = 1:20,
+#'     group = rep(c("CLASS_1", "CLASS_2"), times = 10),
+#'     stringsAsFactors = TRUE
+#' )
+#' ggplot2::ggplot() +
+#'     ggplot2::geom_bar(data = obs1, mapping = ggplot2::aes(x = group, y = time),
+#'         stat = "identity") +
+#'     ggplot2::theme(
+#'         axis.text.x = ggplot2::element_text(angle = output1$angle, hjust = output1$hjust,
+#'             vjust = output1$vjust),
+#'         axis.text.y = ggplot2::element_text(angle = output2$angle, hjust = output2$hjust,
+#'             vjust = output2$vjust)
+#'     )
+#' output <- gg_just(angle = -45, pos = "left")
+#' obs1 <- data.frame(time = 1, km = 1, bird = "pigeon", stringsAsFactors = FALSE)
+#' ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) +
+#'     ggplot2::geom_point() +
+#'     ggplot2::geom_text(mapping = ggplot2::aes(label = bird), angle = output$angle,
+#'         hjust = output$hjust, vjust = output$vjust)
+#' \donttest{
+#' # 72 plots: all the combinations of kind, pos and angle
+#' obs1 <- data.frame(
+#'     time = 1:10,
+#'     km = 1:10,
+#'     bird = c(NA, NA, NA, "pigeon", NA, "cat", NA, NA, NA, NA),
+#'     stringsAsFactors = FALSE
+#' )
+#' for(i0 in c("text", "axis")){
+#'     for(i1 in c("top", "right", "bottom", "left")){
+#'         for(i2 in c(0, 45, 90, 135, 180, 225, 270, 315, 360)){
+#'             output <- gg_just(angle = i2, pos = i1, kind = i0)
+#'             title <- paste0("kind: ", i0, " | pos: ", i1, " | angle = ", i2,
+#'                 " | hjust: ", output$hjust, " | vjust: ", output$vjust)
+#'             if(i0 == "text"){
+#'                 print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) +
+#'                     ggplot2::geom_point(color = gg_palette(1), alpha = 0.5) +
+#'                     ggplot2::ggtitle(title) +
+#'                     ggplot2::geom_text(mapping = ggplot2::aes(label = bird),
+#'                         angle = output$angle, hjust = output$hjust, vjust = output$vjust) +
+#'                     ggplot2::theme(title = ggplot2::element_text(size = 5)))
+#'             }else{
+#'                 print(ggplot2::ggplot(data = obs1, mapping = ggplot2::aes(x = time, y = km)) +
+#'                     ggplot2::geom_point(color = gg_palette(1), alpha = 0.5) +
+#'                     ggplot2::ggtitle(title) +
+#'                     ggplot2::geom_text(mapping = ggplot2::aes(label = bird)) +
+#'                     ggplot2::scale_x_continuous(
+#'                         position = ifelse(i1 == "top", "top", "bottom")) +
+#'                     ggplot2::scale_y_continuous(
+#'                         position = ifelse(i1 == "right", "right", "left")) +
+#'                     ggplot2::theme(
+#'                         title = ggplot2::element_text(size = 5),
+#'                         axis.text.x = if(i1 %in% c("top", "bottom")){
+#'                             ggplot2::element_text(angle = output$angle,
+#'                                 hjust = output$hjust, vjust = output$vjust)
+#'                         },
+#'                         axis.text.y = if(i1 %in% c("right", "left")){
+#'                             ggplot2::element_text(angle = output$angle,
+#'                                 hjust = output$hjust, vjust = output$vjust)
+#'                         }
+#'                     ))
+#'             }
+#'         }
+#'     }
+#' }
+#' }
 #' @importFrom saferDev arg_check
 #' @details
 #' - justification behave differently on plot, depending whether it is used for annotayed text or for axis labelling. Indeed the latter has labelling constrained.
