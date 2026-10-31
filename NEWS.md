@@ -2,6 +2,8 @@
 
 ## Major changes
 - Backbone v21.1: the invented `x` argument names (absent from the called function signature, for instance `base::any(x = ...)`, `base::all(x = ...)`, `base::sum(x = ...)`, `base::order(x = ...)`) are removed from all the function calls.
+- Backbone v21.2: the lib_path argument is now checked whatever the value of safer_check (the `if(safer_check == TRUE){` and `}` lines around the check of lib_path are commented, because lib_path is used outside the safer_check checkings, for instance in the `saferDev::arg_check()` calls): an incorrect lib_path now returns an error even with `safer_check = FALSE`. The documentation of the safer_check argument no longer lists the lib_path check, and the documentation of the lib_path argument no longer says that lib_path is ignored if safer_check is FALSE.
+- gg_scatter(): the check of lib_path now adds lib_path to the initial library paths (as in the other functions), instead of replacing them by lib_path, which dropped the user library paths.
 - Full migration of all functions to the safer-r backbone v21.0: exact `class`/`typeof`/`mode` argument checking through `saferDev::arg_check()` (saferDev 2.0.0 semantics: exact class matching, e.g. `class = c("matrix", "array")`, `double_as_integer_allowed`, per-R-version handling via multiple `arg_check()` calls).
 - Internal shared functions now called directly as `saferDev:::.pack_and_function_check()` and `saferDev:::.base_op_check()` (saferDev imported in DESCRIPTION).
 - New functions: `gg_donut()`, `gg_heatmap()`, `gg_miami()`, `gg_point_rast()`, `gg_scatter()`.

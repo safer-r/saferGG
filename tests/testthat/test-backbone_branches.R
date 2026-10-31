@@ -126,7 +126,7 @@ testthat::test_that("safer_check argument checking (backbone)", {
 
 testthat::test_that("check of lib_path (backbone)", {
     for(fn in base::names(x = base_calls)){
-        # safer_check must be TRUE for the lib_path block to run
+        # backbone v21.2: the lib_path block runs whatever safer_check (lib_path used outside if(safer_check == TRUE){})
         # non-character lib_path with safer_check = TRUE
         msg <- run_mod(fn = fn, mod_args = list(safer_check = TRUE, lib_path = 1))
         testthat::expect_true(object = base::grepl(x = msg, pattern = "THE DIRECTORY PATH INDICATED IN THE lib_path ARGUMENT MUST BE A VECTOR OF CHARACTERS", fixed = TRUE), label = base::paste0(fn, ": lib_path numeric"))
@@ -136,6 +136,9 @@ testthat::test_that("check of lib_path (backbone)", {
         # non-existing directory
         msg3 <- run_mod(fn = fn, mod_args = list(safer_check = TRUE, lib_path = "Z:/BAD_PATH_DOES_NOT_EXIST"))
         testthat::expect_true(object = base::grepl(x = msg3, pattern = "NOT EXIST"), label = base::paste0(fn, ": lib_path non existing"))
+        # lib_path is checked even when safer_check is FALSE (backbone v21.2: lib_path used outside if(safer_check == TRUE){}, so the lib_path check is always executed)
+        msg3b <- run_mod(fn = fn, mod_args = list(safer_check = FALSE, lib_path = "Z:/BAD_PATH_DOES_NOT_EXIST"))
+        testthat::expect_true(object = base::grepl(x = msg3b, pattern = "NOT EXIST"), label = base::paste0(fn, ": lib_path non existing with safer_check = FALSE"))
         # multiple paths: plural message
         msg4 <- run_mod(fn = fn, mod_args = list(safer_check = TRUE, lib_path = base::c("Z:/BAD1", "Z:/BAD2")))
         testthat::expect_true(object = base::grepl(x = msg4, pattern = "PATHS", fixed = TRUE), label = base::paste0(fn, ": lib_path plural"))
